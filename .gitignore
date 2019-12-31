@@ -1,0 +1,11 @@
+.idea/
+.bash_history
+.picasa.ini
+.viminfo
+vendor/
+error.log
+.php_cs.cache
+FileManager.json
+gosass.bat
+static/
+
