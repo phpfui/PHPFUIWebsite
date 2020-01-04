@@ -8,7 +8,6 @@ class Home extends \PHPFUI\InstaDoc\Section
 	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
-		$container->add($fullClassPath);
 
 		$parsedown = new \Parsedown();
 
