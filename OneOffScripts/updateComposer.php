@@ -117,10 +117,6 @@ foreach ($installed as $install)
 			{
 			echo "Did not load {$install['name']}\n";
 			}
-		if (! $sourceDir)
-			{
-//			$sourceDir = 'NoNamespace';
-			}
 
 		echo "destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
 

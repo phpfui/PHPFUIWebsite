@@ -31,6 +31,15 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			return $container;
 			}
 
+		$comments = $this->reflection->getDocComment();
+		if ($comments)
+			{
+			$docblock = $this->factory->create($comments);
+			$callout = new \PHPFUI\Callout('secondary');
+			$callout->add($docblock->getSummary());
+			$container->add($callout);
+			}
+
 		$table = new \PHPFUI\Table();
 		$table->addClass('hover');
 		$table->addClass('unstriped');
@@ -55,15 +64,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$container->add($table);
-
-		$comments = $this->reflection->getDocComment();
-		if ($comments)
-			{
-			$docblock = $this->factory->create($comments);
-			$callout = new \PHPFUI\Callout('secondary');
-			$callout->add($docblock->getSummary());
-			$container->add($callout);
-			}
 
 		$tabs = new \PHPFUI\Tabs();
 		$tabs->addTab('Public', $this->getContent('isPublic'), true);

@@ -67,7 +67,7 @@ class HTML5Element extends Base
 	 *
 	 * @return string
 	 */
-	public function getElement()
+	public function getElement() : string
 		{
 		return $this->element;
 		}
@@ -77,7 +77,7 @@ class HTML5Element extends Base
 	 *
 	 * @return bool if there is a tool tip associated with this element
 	 */
-	public function hasToolTip()
+	public function hasToolTip() : bool
 		{
 		return $this->tooltip !== null;
 		}
@@ -183,7 +183,7 @@ class HTML5Element extends Base
 	 * @param string $value of the attribute, blank for just a plain attribute
 	 *
 	 */
-	public function addAttribute(string $attribute, string $value = '') : Base
+	public function addAttribute(string $attribute, string $value = '') : HTML5Element
 		{
 		if (! isset($this->attributes[$attribute]))
 			{
@@ -203,7 +203,7 @@ class HTML5Element extends Base
 	 * @param string $class name to add
 	 *
 	 */
-	public function addClass(string $class) : Base
+	public function addClass(string $class) : HTML5Element
 		{
 		foreach (explode(' ', $class) as $oneClass)
 			{
@@ -218,7 +218,7 @@ class HTML5Element extends Base
 	 *
 	 *
 	 */
-	public function deleteAttribute(string $attribute) : Base
+	public function deleteAttribute(string $attribute) : HTML5Element
 		{
 		unset($this->attributes[$attribute]);
 
@@ -229,7 +229,7 @@ class HTML5Element extends Base
 	 * Deletes all attributes
 	 *
 	 */
-	public function deleteAttributes() : Base
+	public function deleteAttributes() : HTML5Element
 		{
 		$this->attributes = [];
 
@@ -241,7 +241,7 @@ class HTML5Element extends Base
 	 *
 	 *
 	 */
-	public function deleteClass(string $classToDelete) : Base
+	public function deleteClass(string $classToDelete) : HTML5Element
 		{
 		unset($this->classes[$classToDelete]);
 
@@ -310,7 +310,7 @@ class HTML5Element extends Base
 	 *
 	 * @return string
 	 */
-	public function getId()
+	public function getId() : string
 		{
 		if (null === $this->id)
 			{
@@ -325,7 +325,7 @@ class HTML5Element extends Base
 	 *
 	 * @return string
 	 */
-	public function getIdAttribute()
+	public function getIdAttribute() : string
 		{
 		if (! $this->hasId())
 			{
@@ -357,7 +357,7 @@ class HTML5Element extends Base
 	 *
 	 * @return Base
 	 */
-	public function newId()
+	public function newId() : HTML5Element
 		{
 		++self::$masterId;
 		$this->id = 'id' . self::$masterId;
@@ -371,7 +371,7 @@ class HTML5Element extends Base
 	 * @param string $value of the attribute, blank for just a plain attribute
 	 *
 	 */
-	public function setAttribute(string $attribute, string $value = '') : Base
+	public function setAttribute(string $attribute, string $value = '') : HTML5Element
 		{
 		$this->attributes[$attribute] = $value;
 
@@ -384,7 +384,7 @@ class HTML5Element extends Base
 	 * @param string $id id will have 'id' prepended to it when retrieved
 	 *
 	 */
-	public function setId($id) : Base
+	public function setId($id) : HTML5Element
 		{
 		$this->id = $id;
 
@@ -392,11 +392,9 @@ class HTML5Element extends Base
 		}
 
 	/**
-	 *  Transfers attributes into this object from the passed object
-	 *
-	 *
+	 *  Moves attributes into this object from the passed object
 	 */
-	public function transferAttributes(Base $from) : Base
+	public function transferAttributes(Base $from) : HTML5Element
 		{
 		$this->attributes = array_merge($this->attributes, $from->attributes);
 		$from->attributes = [];
@@ -405,11 +403,9 @@ class HTML5Element extends Base
 		}
 
 	/**
-	 *  Transfers attributes into this object from the passed object
-	 *
-	 *
+	 *  Moves classes into this object from the passed object
 	 */
-	public function transferClasses(Base $from) : Base
+	public function transferClasses(Base $from) : HTML5Element
 		{
 		$this->classes = array_merge($this->classes, $from->classes);
 		$from->classes = [];

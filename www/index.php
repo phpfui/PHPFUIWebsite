@@ -10,7 +10,7 @@ if (true)
 	$fileManager->addNamespace('Gitonomy', '../Gitonomy', true);
 	$fileManager->addNamespace('Highlight', '../Highlight', true);
 	$fileManager->addNamespace('Symfony', '../Symfony', true);
-	$fileManager->addNamespace('\\', '../NoNamespace', true);
+	$fileManager->addNamespace('\\', '../NoNameSpace', true);
 	}
 else
 	{

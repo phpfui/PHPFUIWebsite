@@ -1,8 +1,7 @@
 {
-	"minimum-stability": "dev",
 	"require": {
 		"php": ">=7.2",
-		"phpfui/instadoc": "dev-master",
-		"phpdocumentor/reflection-docblock": "^5.0@dev"
+		"phpfui/instadoc": "^1.0",
+		"phpdocumentor/reflection-docblock": "^5.0"
 	}
 }
