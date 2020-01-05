@@ -186,7 +186,7 @@ class FileManager
 		foreach ($files as $file)
 			{
 			$class = substr($file, strlen($namespaceInfo[0]));
-
+			$class = str_replace('/', '\\', $class);
 			if (0 === strpos($class, $namespace))
 				{
 				$class = substr($class, strlen($namespace));
