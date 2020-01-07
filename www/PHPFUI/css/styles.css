@@ -8112,36 +8112,36 @@ header {
 }
 
 .constant {
-  color: darkred;
+	color: darkred;
 }
 
 .keyword {
-  color: purple;
+	color: purple;
 }
 
 .type {
-  color: DarkSlateBlue;
+	color: DarkSlateBlue;
 }
 
 .number {
-  color: navy;
+	color: navy;
 }
 
 .string {
-  color: green;
+	color: green;
 }
 
 .operator {
-  color: SlateGray;
+	color: SlateGray;
 }
 
 .variable {
-  color: black;
+	color: black;
 }
 
 .name {
-  color: black;
-  font-weight: bold;
+	color: black;
+	font-weight: bold;
 }
 
 /*# sourceMappingURL=styles.css.map */
