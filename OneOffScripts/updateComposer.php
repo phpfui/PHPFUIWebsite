@@ -83,13 +83,6 @@ foreach ($installed as $install)
 		continue;
 		}
 
-//	if (strpos($install['name'], 'parsedown'))
-//		{
-//		print_r($install);
-//		echo "\n";
-//		}
-//	continue;
-
 	if (isset($install['autoload']))
 		{
 		$autoload = $install['autoload'];
