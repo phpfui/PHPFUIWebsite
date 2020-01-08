@@ -4,16 +4,9 @@ namespace PHPFUI\InstaDoc;
 
 class FileManager
 	{
-	private const CLASSES = '.Classes';
-	private const GIT = '.Git';
-	private const NAMESPACE = '.Namespace';
-
-	private const REPO_ROOT = '.Root';
-	private const ROOT_NAMESPACE = '\\';
 	private $composerJsonPath = '';
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];
-	private $namespaces = [];
 
 	private $version = 1;
 
@@ -44,10 +37,7 @@ class FileManager
 	 */
 	public function addNamespace(string $namespace, string $directory, bool $localGit = false) : FileManager
 		{
-		$this->includedNamespaces[$namespace][FileManager::REPO_ROOT] = $directory;
-		$this->includedNamespaces[$namespace][] = $directory;
-		$this->includedNamespaces[$namespace][FileManager::GIT] = $localGit;
-		$this->includedNamespaces[$namespace][FileManager::CLASSES] = [];
+		$this->includedNamespaces[] = [$namespace, $directory, $localGit];
 
 		return $this;
 		}
@@ -72,59 +62,17 @@ class FileManager
 		}
 
 	/**
-	 * Returns all directories in a namespace index by namespace.
-	 *
-	 * Array contains all directories in the namespace in an integer
-	 * index array plus the following indexes:
-	 *
-	 * .Root containing the namespace root directory
-	 * .Git true if in the local git repo
-	 */
-	public function getAllNamespaceDirectories(bool $rescan = true) : array
-		{
-		if (! $rescan)
-			{
-			return $this->namespaces;
-			}
-
-		$directories = [];
-
-		if ($this->composerJsonPath)
-			{
-			$directories = $this->getAllVendorDirectories($this->composerJsonPath);
-			}
-		$directories = array_merge($directories, $this->includedNamespaces);
-
-		foreach ($this->excludedNamespaces as $namespace)
-			{
-			unset($directories[$namespace]);
-			}
-
-		ksort($directories);
-
-		return $this->namespaces = $directories;
-		}
-
-	/**
-	 * Return all the namespaces currently indexed as an array.
-	 */
-	public function getAllNamespaces() : array
-		{
-		return array_diff(array_keys($this->namespaces), $this->excludedNamespaces);
-		}
-
-	/**
 	 * Read the composer files to get all namespaces for include
 	 * libraries.
 	 */
-	public function getAllVendorDirectories() : array
+	private function loadVendorDirectories() : void
 		{
-		$composerJsonPath = $this->composerJsonPath;
-
-		if (is_dir($composerJsonPath))
+		if (! $this->composerJsonPath)
 			{
-			$composerJsonPath .= '/composer.lock';
+			return;
 			}
+
+		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
 		$composerJsonPath = str_replace('//', '/', $composerJsonPath);
 		$json = json_decode(@file_get_contents($composerJsonPath), true);
 
@@ -132,188 +80,97 @@ class FileManager
 			{
 			throw new \Exception("{$composerJsonPath} does not appear to be a valid composer.lock file");
 			}
-		$dir = str_replace('composer.lock', '', $composerJsonPath);
-		$directories = [];
 
 		foreach ($json['packages'] as $package)
 			{
-			$packagePath = $dir . 'vendor/' . $package['name'];
+			$packagePath = $this->composerJsonPath . 'vendor/' . $package['name'];
 			$autoload = $package['autoload'] ?? [];
 			$namespace = $sourceDir = '';
 			$autoLoadTypes = ['psr-4', 'psr-0', 'classmap'];
 
 			foreach ($autoLoadTypes as $type)
 				{
+				$path = $packagePath . '/';
+				$path = str_replace('\\', '/', $path);
+				$path = str_replace('//', '/', $path);
 				foreach ($autoload[$type] ?? [] as $namespace => $sourceDir)
 					{
-					if ('integer' == gettype($namespace))
+					if ($type == 'psr-4')
 						{
-						$namespace = '\\';
+						if (is_array($sourceDir))
+							{
+							foreach ($sourceDir as $dir)
+								{
+								NamespaceTree::addNamespace($namespace, $path . $dir);
+								}
+							}
+						else
+							{
+							NamespaceTree::addNamespace($namespace, $path . $sourceDir);
+							}
 						}
-					// if no trailing \, then it must be root namespace
-					if (false === strstr($namespace, '\\'))
+					elseif ($type == 'psr-0')
 						{
-						$namespace = '\\';
-						}
-					$namespace = substr($namespace, 0, strlen($namespace) - 1);
+						if (is_array($sourceDir))
+							{
+							foreach ($sourceDir as $dir)
+								{
+								if ($dir)
+									{
 
-					if (! $namespace)
-						{
-						$namespace = FileManager::ROOT_NAMESPACE;
-						}
-					$path = $packagePath . '/';
-					$path = str_replace('\\', '/', $path);
-					$path = str_replace('//', '/', $path);
-					$directories[$namespace][FileManager::GIT] = false;
-					$directories[$namespace][FileManager::REPO_ROOT] = $path;
-					$directories[$namespace][] = $path . $sourceDir;
-					$directories[$namespace][FileManager::CLASSES] = [];
-					}
-				}
-			}
-
-		return $directories;
-		}
-
-	/**
-	 * Returns all files in a namespace indexed by class name.
-	 */
-	public function getClassesInNamespace(string $namespace) : array
-		{
-		if (! empty($this->namespaces[$namespace][FileManager::CLASSES]))
-			{
-			return $this->namespaces[$namespace][FileManager::CLASSES];
-			}
-
-		$classes = [];
-
-		$extension = '.php';
-		$files = $this->getFilesInNamespace($namespace, $extension);
-		$namespaceInfo = $this->namespaces[$namespace];
-
-		foreach ($files as $file)
-			{
-			$class = substr($file, strlen($namespaceInfo[0]));
-			$class = str_replace('/', '\\', $class);
-			if (0 === strpos($class, $namespace))
-				{
-				$class = substr($class, strlen($namespace));
-				}
-			$classes[$file] = substr($class, 0, strlen($class) - strlen($extension));
-			}
-
-		return $this->namespaces[$namespace][FileManager::CLASSES] = $classes;
-		}
-
-	/**
-	 * Returns an array of files in the given namespace.  Searches
-	 * all subdirectories.  Pass in an extention (starting with .)
-	 * if you want to limit the search to specific directories.
-	 */
-	public function getFilesInNamespace(string $namespace, string $extension = '') : array
-		{
-		$files = [];
-
-		if (! isset($this->namespaces[$namespace]))
-			{
-			throw new \Exception('In ' . __METHOD__ . " -> {$namespace} was not found.");
-			}
-
-		foreach ($this->namespaces[$namespace] as $key => $directory)
-			{
-			if ('integer' != gettype($key))
-				{
-				continue;
-				}
-
-			if (is_file($directory))
-				{
-				if ($this->hasExtension($filename, $extension))
-					{
-					$files[] = $directory;
-					}
-				}
-			else
-				{
-				$directory = str_replace('\\', '/', $directory);
-				$rdi = new \RecursiveDirectoryIterator($directory);
-				$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
-
-				foreach ($iterator as $filename => $fileInfo)
-					{
-					if (! $fileInfo->isDir() && $this->hasExtension($filename, $extension))
-						{
-						$files[] = $filename;
+									$dir .= $namespace;
+									$dir = str_replace('\\', '/', $dir);
+									}
+								NamespaceTree::addNamespace($namespace, $path . $dir);
+								}
+							}
+						else
+							{
+							if ($sourceDir)
+								{
+								$sourceDir .= $namespace;
+								$sourceDir = str_replace('\\', '/', $sourceDir);
+								}
+							NamespaceTree::addNamespace($namespace, $path . $sourceDir);
+							}
 						}
 					}
 				}
 			}
-
-		return $files;
-		}
-
-	public function getFilesInRepository($namespace, string $extension) : array
-		{
-		if (! empty($this->namespaces[$namespace][$extension]))
-			{
-			return $this->namespaces[$namespace][$extension];
-			}
-
-		$files = [];
-
-		$directory = str_replace('\\', '/', $this->namespaces[$namespace][FileManager::REPO_ROOT]);
-		$rdi = new \RecursiveDirectoryIterator($directory);
-		$iterator = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
-
-		foreach ($iterator as $filename => $fileInfo)
-			{
-			if (! $fileInfo->isDir() && $this->hasExtension($filename, $extension))
-				{
-				$files[] = $filename;
-				}
-			}
-
-		sort($files);
-
-		return $this->namespaces[$namespace][$extension] = $files;
-		}
-
-	/**
-	 * Returns true if the namespace is in the local git repo.
-	 */
-	public function getGit(string $namespace) : bool
-		{
-		$parts = explode('\\', $namespace);
-
-		return $this->namespaces[$parts[0]][FileManager::GIT] ?? false;
 		}
 
 	/**
 	 * Load the namespace index. Pass in a specific file to load, or
-	 * nothing to default to FileManager.json in the project root
+	 * nothing to default to FileManager.serial in the project root
 	 * directory.
 	 *
 	 * If the file is missing, it will be regenerated and saved.
 	 */
-	public function load(string $file = '') : FileManager
+	public function load(string $file = '') : bool
 		{
 		$file = $this->getSerializedName($file);
 
-		if (! file_exists($file))
+		$returnValue = true;
+		if (! \PHPFUI\InstaDoc\NamespaceTree::load($file))
 			{
 			$this->rescan();
-			// load classes for each namespace
-			foreach ($this->getAllNamespaces() as $namespace)
-				{
-				$this->getClassesInNamespace($namespace);
-				$this->getFilesInRepository($namespace, '.md');
-				}
 			$this->save($file);
+			$returnValue = false;
 			}
 
-		$this->namespaces = json_decode(file_get_contents($this->getSerializedName($file)), true);
+		return $returnValue;
+		}
 
-		return $this;
+	/**
+	 * Save the namespace index. Pass in a specific file to save, or
+	 * nothing to default to FileManager.serial in the project root
+	 * directory.
+	 */
+	public function save(string $file = '') : bool
+		{
+		$file = $this->getSerializedName($file);
+
+		return \PHPFUI\InstaDoc\NamespaceTree::save($file);
 		}
 
 	/**
@@ -321,19 +178,17 @@ class FileManager
 	 */
 	public function rescan() : FileManager
 		{
-		$this->namespaces = $this->getAllNamespaceDirectories();
+		$this->loadVendorDirectories();
 
-		return $this;
-		}
+		foreach ($this->includedNamespaces as $parameters)
+			{
+			NamespaceTree::addNameSpace($parameters[0], $parameters[1], $parameters[2]);
+			}
 
-	/**
-	 * Save the namespace index.  Pass in a specific file to save it
-	 * in, or nothing to default to FileManager.json in the project
-	 * root directory.
-	 */
-	public function save(string $file = '') : FileManager
-		{
-		file_put_contents($this->getSerializedName($file), json_encode($this->namespaces));
+		foreach ($this->excludedNamespaces as $namespace)
+			{
+			NamespaceTree::deleteNamespace($namespace);
+			}
 
 		return $this;
 		}
@@ -343,22 +198,10 @@ class FileManager
 		if (! $file)
 			{
 			$class = __CLASS__;
-			$file = '../' . substr($class, strrpos($class, '\\') + 1) . '.json';
+			$file = '../' . substr($class, strrpos($class, '\\') + 1) . '.serial';
 			}
 
 		return $file;
-		}
-
-	private function hasExtension(string $filename, string $extension) : bool
-		{
-		if (! $extension)
-			{
-			return true;
-			}
-
-		$retVal = strripos($filename, $extension) == strlen($filename) - strlen($extension);
-
-		return $retVal;
 		}
 
 	}

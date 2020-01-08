@@ -5,7 +5,7 @@
 vendor/
 error.log
 .php_cs.cache
-FileManager.json
+FileManager.serial
 gosass.bat
 static/
 

@@ -178,15 +178,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 						if ($parameter->hasType())
 							{
 							$type = $parameter->getType();
-							if ($type->allowsNull())
-								{
-								$info .= '?';
-								}
 							$info .= $this->getColor('type', $this->getValueString($type));
-							}
-						else
-							{
-//							$info .= $this->getColor('type', 'mixed');
 							}
 						$info .= ' ';
 						$info .= $this->getColor('variable', '$' . $parameter->getName());
