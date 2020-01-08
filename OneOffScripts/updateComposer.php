@@ -111,6 +111,11 @@ foreach ($installed as $install)
 			echo "Did not load {$install['name']}\n";
 			}
 
+		if (is_array($sourceDir))
+			{
+			$sourceDir = $sourceDir[0];
+			}
+
 		echo "destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
 
 		if ($destDir && $sourceDir)
