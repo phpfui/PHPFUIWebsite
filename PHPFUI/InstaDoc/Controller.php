@@ -63,7 +63,6 @@ class Controller
 		$page->setGenerating($this->generating);
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
-
 		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
 			$mainColumn->add($this->getSection('landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
@@ -303,7 +302,10 @@ class Controller
 		$this->parameters = [];
 		foreach (Controller::VALID_PARAMETERS as $key => $value)
 			{
-			$this->parameters[$key] = $parameters[$key] ?? '';
+			if (isset($parameters[$key]) && strlen($parameters[$key]))
+				{
+				$this->parameters[$key] = $parameters[$key];
+				}
 			}
 
 		return $this;
