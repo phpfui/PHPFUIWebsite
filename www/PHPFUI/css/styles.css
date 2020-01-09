@@ -4882,10 +4882,10 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
 }
 .breadcrumbs li:not(:last-child)::after {
   position: relative;
-  margin: 0 0.75rem;
+  margin: 0 0;
   opacity: 1;
   content: "/";
-  color: #cacaca;
+  color: black;
 }
 .breadcrumbs a {
   color: #1779ba;
@@ -8109,39 +8109,6 @@ header {
 
 .button-group {
   flex-wrap: wrap;
-}
-
-.constant {
-	color: darkred;
-}
-
-.keyword {
-	color: purple;
-}
-
-.type {
-	color: DarkSlateBlue;
-}
-
-.number {
-	color: navy;
-}
-
-.string {
-	color: green;
-}
-
-.operator {
-	color: SlateGray;
-}
-
-.variable {
-	color: black;
-}
-
-.name {
-	color: black;
-	font-weight: bold;
 }
 
 /*# sourceMappingURL=styles.css.map */

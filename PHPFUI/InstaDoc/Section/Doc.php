@@ -106,12 +106,13 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			foreach ($constants as $name => $value)
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
+				$docBlock = $this->getDocBlock($constant);
 
 				if ($accessType != 'isStatic' && $constant->$accessType())
 					{
 					$info = $this->getAccess($constant) . ' ' . $this->getColor('constant', $this->getColor('constant', $this->getName($constant, $name))) . ' = ' . $this->getValueString($value);
 
-					$info .= $this->getComments($constant);
+					$info .= $this->getComments($docBlock);
 
 					$table->addRow([$this->section($section), $info]);
 					$section = '';
@@ -128,6 +129,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				{
 				if ($property->$accessType())
 					{
+					$docBlock = $this->getDocBlock($property);
 					$info = $this->getAccess($property) . ' ';
 					if ($property->isStatic())
 						{
@@ -141,7 +143,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 					$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
 
-					$info .= $this->getComments($property);
+					$info .= $this->getComments($docBlock);
 
 					$table->addRow([$this->section($section), $info]);
 					$section = '';
@@ -159,6 +161,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				{
 				if ($method->$accessType())
 					{
+					$docBlock = $this->getDocBlock($method);
 					$info = '';
 					foreach ($types as $type)
 						{
@@ -193,7 +196,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 						{
 						$info .= ' : ' . $this->getClassName($method->getReturnType()->getName());
 						}
-					$info .= $this->getComments($method);
+					$info .= $this->getComments($docBlock);
 
 					$table->addRow([$this->section($section), $info]);
 					$section = '';
@@ -265,22 +268,31 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $name;
 		}
 
-	private function getComments($method) : string
+	private function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
 		{
 		$comments = $method->getDocComment();
 		if (! $comments)
 			{
-			return '';
+			return null;
 			}
 
-		$docblock = $this->factory->create($comments);
+		return $this->factory->create($comments);
+		}
+
+
+	private function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+		{
+		if (! $docBlock)
+			{
+			return '';
+			}
 
 		$gridX = new \PHPFUI\GridX();
 		$cell1 = new \PHPFUI\Cell(1);
 		$cell1->add('&nbsp;');
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
-		$cell11->add($docblock->getSummary());
+		$cell11->add($docBlock->getSummary());
 		$gridX->add($cell11);
 
 		return $gridX;

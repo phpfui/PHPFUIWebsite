@@ -46,7 +46,6 @@ class Controller
 		{
 		$this->fileManager = $fileManager;
 		$this->page = new Page();
-		\PHPFUI\Page::setDebug(1);
 
 		foreach ($this->page->getQueryParameters() as $parameter => $value)
 			{

@@ -27,23 +27,18 @@ class Git extends \PHPFUI\InstaDoc\Section
 		{
 		$container = new \PHPFUI\Container();
 
-		$container->add(new \PHPFUI\SubHeader('.git support coming soon'));
-
-		return $container;
-
 		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
 		$result = $repo->run('show-branch');
 		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
-		$fullClassPath = substr(str_replace('\\', '/', $fullClassPath), 3);
 		$log = $repo->getLog($branch, $fullClassPath, 0, 10);
-		$container->add(get_class($log));
 		$table = new \PHPFUI\Table();
-		$table->setHeaders(['Title', 'Date']);
+		$table->setHeaders(['Title', 'Name', 'Date']);
+		$localTZ = new \DateTimeZone(date_default_timezone_get());
 		foreach ($log->getCommits() as $commit)
 			{
-			$container->add($commit->getShortMessage());
 			$row['Title'] = $commit->getShortMessage();
-			$container->add($commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a'));
+			$row['Name'] = \PHPFUI\Link::email($commit->getCommitterEmail(), $commit->getCommitterName(), 'Your commit ' . $commit->getHash());
+			$row['Date'] = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
 			$table->addRow($row);
 			}
 		$container->add($table);

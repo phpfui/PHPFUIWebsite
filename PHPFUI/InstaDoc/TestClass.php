@@ -33,8 +33,11 @@ class TestClass
 	 * importance that just seem to meander and never get to the
 	 * point and be concise and to the point, but that is the point,
 	 * that there is no point. Pointless really.....
+	 *
+	 * @param string $fred nothing to note here
+	 * @param $unknown $unknown is pi
 	 */
-	protected function protected_function_no_return(string $fred, $unknown = 3.14) {}
+	protected function protected_function_no_return(string $fred, $unknown = 3.14) : void {}
 
 	public function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => "reasoner"]) : array
 		{
