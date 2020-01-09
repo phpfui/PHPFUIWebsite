@@ -12,6 +12,8 @@ class Controller
 	// parameters
 	public const CLASS_NAME = 'c';
 	public const CSS_FILE = 'CSS';
+	public const GIT_LIMIT = 'gl';
+	public const GIT_ONPAGE = 'gp';
 	public const NAMESPACE = 'n';
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
@@ -24,6 +26,8 @@ class Controller
 		Controller::TAB_SIZE => '',
 		Controller::CSS_FILE => '',
 		Controller::PAGE => '',
+		Controller::GIT_LIMIT => '',
+		Controller::GIT_ONPAGE => '',
 		];
 
 	// valid static page parameters
@@ -35,22 +39,15 @@ class Controller
 	private $homePageMarkdown = [];
 
 	private $page;
-	private $requestedClass = '';
-	private $requestedCSS = 'qtcreator_dark';
-	private $requestedNamespace = '';
-	private $requestedTs = 2;
 	private $siteTitle = 'PHPFUI/InstaDoc';
 	private $generating = '';
+	private $parameters = [];
 
 	public function __construct(FileManager $fileManager)
 		{
 		$this->fileManager = $fileManager;
-		$this->page = new Page();
-
-		foreach ($this->page->getQueryParameters() as $parameter => $value)
-			{
-			$this->setParameter($parameter, $value);
-			}
+		$this->page = $this->getPage();
+		$this->setParameters($this->page->getQueryParameters());
 		}
 
 	public function addHomePageMarkdown(string $path) : Controller
@@ -64,33 +61,32 @@ class Controller
 		{
 		$page = $this->getPage();
 		$page->setGenerating($this->generating);
-		$page->setParameters($this->getParameters());
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
 
-		if (! $this->requestedClass && $this->requestedNamespace)
+		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
-			$mainColumn->add($this->getSection('landing')->generate($page, $this->requestedNamespace));
+			$mainColumn->add($this->getSection('landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
 			}
-		elseif ($this->requestedClass && $this->requestedNamespace)
+		elseif ($this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
-			$fullClassName = $this->requestedNamespace . '\\' . $this->requestedClass;
-			$tree = NamespaceTree::findNamespace($this->requestedNamespace);
+			$fullClassName = $this->getParameter(Controller::NAMESPACE) . '\\' . $this->getParameter(Controller::CLASS_NAME);
+			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAMESPACE));
 			$files = $tree->getClassFilenames();
 			$fullClassPath = $files[$fullClassName] ?? '';
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
 			$mainColumn->add($section->getMenu($fullClassName));
 
-			if (Controller::DOC_PAGE == $this->currentPage)
+			if (Controller::DOC_PAGE == $this->getParameter(Controller::PAGE))
 				{
 				$mainColumn->add($this->getSection('doc')->generate($page, $fullClassPath));
 				}
-			elseif (Controller::GIT_PAGE == $this->currentPage)
+			elseif (Controller::GIT_PAGE == $this->getParameter(Controller::PAGE))
 				{
 				$mainColumn->add($this->getSection('git')->generate($page, $fullClassPath));
 				}
-			elseif (Controller::FILE_PAGE == $this->currentPage)
+			elseif (Controller::FILE_PAGE == $this->getParameter(Controller::PAGE))
 				{
 				$mainColumn->add($this->getSection('file')->generate($page, $fullClassPath));
 				}
@@ -209,8 +205,8 @@ class Controller
 			return $this->accordionMenu;
 			}
 
-		NamespaceTree::setActiveClass($this->requestedClass);
-		NamespaceTree::setActiveNamespace($this->requestedNamespace);
+		NamespaceTree::setActiveClass($this->getParameter(Controller::CLASS_NAME));
+		NamespaceTree::setActiveNamespace($this->getParameter(Controller::NAMESPACE));
 		NamespaceTree::setController($this);
 		$this->accordionMenu = new \PHPFUI\AccordionMenu();
 		NamespaceTree::populateMenu($this->accordionMenu);
@@ -220,7 +216,7 @@ class Controller
 
 	public function getPage() : PageInterface
 		{
-		$page = new Page();
+		$page = new Page($this);
 		$page->setPageName($this->siteTitle);
 
 		return $page;
@@ -234,19 +230,6 @@ class Controller
 		$url = $this->getUrl($parameters);
 
 		return $url;
-		}
-
-	public function getParameters() : array
-		{
-		$parameters = [
-			Controller::NAMESPACE => $this->requestedNamespace,
-			Controller::CLASS_NAME => $this->requestedClass,
-			Controller::TAB_SIZE => $this->requestedTs,
-			Controller::CSS_FILE => $this->requestedCSS,
-			Controller::PAGE => $this->currentPage,
-			];
-
-		return $parameters;
 		}
 
 	public function getSection(string $sectionName) : Section
@@ -263,6 +246,15 @@ class Controller
 
 	public function getUrl(array $parameters) : string
 		{
+		// nuke blank parameters
+		foreach ($parameters as $key => $value)
+			{
+			if (! strlen($value))
+				{
+				unset($parameters[$key]);
+				}
+			}
+
 		if (! $this->generating)
 			{
 			$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
@@ -291,45 +283,39 @@ class Controller
 		return $this;
 		}
 
-	public function setParameter(string $parameter, string $value) : Controller
+	public function getParameters() : array
 		{
-		switch ($parameter)
+		return $this->parameters;
+		}
+
+	public function getParameter(string $parameter, ?string $default = null) : string
+		{
+		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
 			{
-			case Controller::NAMESPACE:
-				$this->requestedNamespace = $value;
+			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
+			}
 
-				break;
+		return $this->parameters[$parameter] ?? $default ?? '';
+		}
 
-			case Controller::CLASS_NAME:
-				$this->requestedClass = $value;
-
-				break;
-
-			case Controller::TAB_SIZE:
-				$this->requestedTs = $value;
-
-				break;
-
-			case Controller::CSS_FILE:
-				$this->requestedCSS = $value;
-
-				break;
-
-			case Controller::PAGE:
-				$this->currentPage = $value;
-
-				break;
+	public function setParameters(array $parameters) : Controller
+		{
+		$this->parameters = [];
+		foreach (Controller::VALID_PARAMETERS as $key => $value)
+			{
+			$this->parameters[$key] = $parameters[$key] ?? '';
 			}
 
 		return $this;
 		}
 
-	public function setParameters(array $parameters) : Controller
+	public function setParameter(string $parameter, string $value) : Controller
 		{
-		foreach ($parameters as $key => $value)
+		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
 			{
-			$this->setParameter($key, $value);
+			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
 			}
+		$this->parameters[$parameter] = $value;
 
 		return $this;
 		}

@@ -7,12 +7,13 @@ class Page extends \PHPFUI\Page implements PageInterface
 
 	private $mainColumn;
 	private $menu;
-	private $parameters = [];
+	private $controller;
 	private $generating = '';
 
-	public function __construct()
+	public function __construct(Controller $controller)
 		{
 		parent::__construct();
+		$this->controller = $controller;
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
 		}
@@ -94,13 +95,6 @@ class Page extends \PHPFUI\Page implements PageInterface
 		return $this;
 		}
 
-	public function setParameters(array $parameters) : Page
-		{
-		$this->parameters = $parameters;
-
-		return $this;
-		}
-
 	private function addConfigModal(\PHPFUI\HTML5Element $modalLink) : void
 		{
 		$modal = new \PHPFUI\Reveal($this, $modalLink);
@@ -109,9 +103,9 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$form->setAttribute('method', 'get');
 		$form->setAreYouSure(false);
 		$fieldSet = new \PHPFUI\FieldSet('Configuration');
-		$parameters = $this->parameters;
 
-		foreach ([Controller::CSS_FILE, Controller::TAB_SIZE, 'submit'] as $value)
+		$parameters = $this->controller->getParameters();
+		foreach ([Controller::CSS_FILE, Controller::TAB_SIZE] as $value)
 			{
 			unset($parameters[$value]);
 			}
@@ -120,12 +114,13 @@ class Page extends \PHPFUI\Page implements PageInterface
 			{
 			$fieldSet->add(new \PHPFUI\Input\Hidden($name, $value));
 			}
-		$cssSelector = new CSSSelector($this, $this->parameters[Controller::CSS_FILE]);
+
+		$cssSelector = new CSSSelector($this, $this->controller->getParameter(Controller::CSS_FILE, 'qtcreator_dark'));
 		$cssSelector->setLabel('Code Formating Style');
 		$cssSelector->setToolTip('Sets the style sheet for PHP code');
 		$fieldSet->add($cssSelector);
 
-		$tabStop = new \PHPFUI\Input\Number(Controller::TAB_SIZE, 'Tab Stop Spaces', $this->parameters[Controller::TAB_SIZE]);
+		$tabStop = new \PHPFUI\Input\Number(Controller::TAB_SIZE, 'Tab Stop Spaces', $this->controller->getParameter(Controller::TAB_SIZE, 2));
 		$tabStop->setAttribute('min', 0);
 		$tabStop->setAttribute('max', 10);
 		$tabStop->setToolTip('Indent tabbed files with this number of spaces');

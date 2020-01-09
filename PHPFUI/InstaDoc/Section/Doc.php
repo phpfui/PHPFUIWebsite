@@ -321,10 +321,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$text .= $comma;
 					if ($index != $key)
 						{
-						$text .= $this->getValueString($key) . ' ';
+						$text .= $this->getValueString($key) . ' ' . $this->getColor('operator', '=>') . ' ';
 						}
 					++$index;
-					$text .= $this->getColor('operator', '=>') . ' ' . $this->getValueString($part);
+					$text .= $this->getValueString($part);
 					$comma = ', ';
 					}
 				$text .= $this->getColor('operator', ']');

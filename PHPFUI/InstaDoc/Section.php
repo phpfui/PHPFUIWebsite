@@ -52,7 +52,10 @@ class Section
 
 		$currentPage = $this->controller->getParameters()[Controller::PAGE];
 		$parts = $this->controller->getClassParts($className);
-		$this->controller->setParameters($parts);
+		foreach ($parts as $key => $value)
+			{
+			$this->controller->setParameter($key, $value);
+			}
 		$docItem = new \PHPFUI\MenuItem('Docs', $this->controller->getPageUrl(Controller::DOC_PAGE));
 		$docItem->setActive(Controller::DOC_PAGE == $currentPage);
 		$menu->addMenuItem($docItem);
