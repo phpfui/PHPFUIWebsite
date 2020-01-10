@@ -8144,4 +8144,16 @@ header {
   font-weight: bold;
 }
 
+.git-removed {
+  background-color: mistyrose;
+}
+
+.git-unchanged {
+  color: black;
+}
+
+.git-added {
+  background-color: Aquamarine;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -25,14 +25,16 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$table = new \PHPFUI\Table();
 		$table->setHeaders(['Title', 'Name', 'Date', 'Diff']);
 		$localTZ = new \DateTimeZone(date_default_timezone_get());
+		$parameters = $this->controller->getParameters();
 
 		foreach ($log->getCommits() as $commit)
 			{
 			$row['Title'] = $commit->getShortMessage();
 			$row['Name'] = \PHPFUI\Link::email($commit->getCommitterEmail(), $commit->getCommitterName(), 'Your commit ' . $commit->getHash());
 			$row['Date'] = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
-			$revealLink = new \PHPFUI\Link('', $commit->getShortHash(), false);
-			$this->getReveal($page, $revealLink, $commit);
+			$revealLink = new \PHPFUI\FAIcon('fas', 'search');
+			$parameters[\PHPFUI\InstaDoc\Controller::GIT_SHA1] = $commit->getHash();
+			$this->getReveal($page, $revealLink, $this->controller->getUrl($parameters));
 			$row['Diff'] = $revealLink;
 
 			$table->addRow($row);
@@ -51,28 +53,13 @@ class Git extends \PHPFUI\InstaDoc\Section
 		return $container;
 		}
 
-	private function getReveal(\PHPFUI\Page $page, \PHPFUI\HTML5Element $opener, \Gitonomy\Git\Commit $commit) : \PHPFUI\Reveal
+	private function getReveal(\PHPFUI\Page $page, \PHPFUI\HTML5Element $opener, string $url) : \PHPFUI\Reveal
 		{
 		$reveal = new \PHPFUI\Reveal($page, $opener);
 		$reveal->addClass('large');
-
-		$container = new \PHPFUI\Container();
-		$container->add(new \PHPFUI\Header('Commit ' . $commit->getHash(), 5));
-
-		$localTZ = new \DateTimeZone(date_default_timezone_get());
-		$date = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
-
-		$container->add(new \PHPFUI\MultiColumn($commit->getCommitterName(), $date));
-
-//		$files = $commit->getDiff()->getFiles();
-//
-//		$table = new \PHPFUI\Table();
-//		foreach ($files as $file)
-//			{
-//			$table->addRow([print_r($file->toArray(), true)]);
-//			}
-//		$container->add($table);
-		$reveal->add($container);
+		$div = new \PHPFUI\HTML5Element('div');
+		$reveal->add($div);
+		$reveal->loadUrlOnOpen($url, $div->getId());
 
 		return $reveal;
 		}

@@ -14,6 +14,7 @@ class Controller
 	public const CSS_FILE = 'CSS';
 	public const GIT_LIMIT = 'gl';
 	public const GIT_ONPAGE = 'gp';
+	public const GIT_SHA1 = 'gs';
 	public const NAMESPACE = 'n';
 	public const PAGE = 'p';
 	public const TAB_SIZE = 't';
@@ -28,6 +29,7 @@ class Controller
 		Controller::PAGE => '',
 		Controller::GIT_LIMIT => '',
 		Controller::GIT_ONPAGE => '',
+		Controller::GIT_SHA1 => '',
 		];
 
 	// valid static page parameters
@@ -73,6 +75,72 @@ class Controller
 			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAMESPACE));
 			$files = $tree->getClassFilenames();
 			$fullClassPath = $files[$fullClassName] ?? '';
+			if ($this->getParameter(Controller::GIT_SHA1))
+				{
+				$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
+				$container = new \PHPFUI\Container();
+
+				$sha1 = $this->getParameter(Controller::GIT_SHA1);
+				$container->add(new \PHPFUI\Header('Commit ' . $sha1, 5));
+
+				$commit = $repo->getCommit($sha1);
+				if (! $commit)
+					{
+					$container->add('Commit not found');
+					return "{$container}";
+					}
+
+				$localTZ = new \DateTimeZone(date_default_timezone_get());
+				$date = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
+
+				$container->add(new \PHPFUI\MultiColumn($commit->getCommitterName(), $date));
+
+				$targetFile = str_replace('\\', '/', $fullClassName) . '.php';
+				$file = 0;
+				$files = $commit->getDiff()->getFiles();
+
+				if (empty($files))
+					{
+					$container->add("No diffs found for this commit.");
+					return "{$container}";
+					}
+
+				foreach ($commit->getDiff()->getFiles() as $file)
+					{
+					if ($file->getName() == $targetFile)
+						{
+						break;
+						}
+					$file = 0;
+					}
+				$classes = [
+					\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-removed',
+					\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
+					\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-added',
+					];
+				if ($file)
+					{
+					$codeBlock = new \PHPFUI\HTML5Element('pre');
+					foreach ($file->getChanges() as $change)
+						{
+						foreach ($change->getLines() as $line)
+							{
+							list($type, $code) = $line;
+							$span = new \PHPFUI\HTML5Element('span');
+							$span->addClass($classes[$type]);
+							$span->add(\PHPFUI\TextHelper::htmlentities($code));
+							$codeBlock->add($span . "\n");
+							}
+						}
+					$container->add($codeBlock);
+					}
+				else
+					{
+					$container->add("{$targetFile} not found in commit");
+					}
+
+				return "{$container}";
+				}
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
 			$mainColumn->add($section->getMenu($fullClassName));
