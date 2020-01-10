@@ -233,8 +233,6 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$table->addClass('unstriped');
 		$table->addClass('stack');
 
-		\PHPFUI\Base::setDebug(1);
-
 		$constants = $this->reflection->getConstants();
 
 		if ($constants)

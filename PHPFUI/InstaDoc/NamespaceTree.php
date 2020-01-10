@@ -77,7 +77,7 @@ class NamespaceTree
 				}
 			elseif (strpos($filename, '.md') == $filenameLength - 3)
 				{
-				$node->md[$filename] = true;
+				$node->md[$directory . '/' . $filename] = true;
 				}
 			}
 		}
@@ -273,6 +273,23 @@ class NamespaceTree
 
 		return $currentMenu;
 		}
+
+	public static function getAllMDFiles(?NamespaceTree $tree = null, array $files = []) : array
+		{
+		if (! $tree)
+			{
+			$tree = self::getRoot();
+			}
+		$files = $files + $tree->md;
+
+		foreach ($tree->children as $child)
+			{
+			$files = self::getAllMDFiles($child, $files);
+			}
+
+		return $files;
+		}
+
 
 	private static function getRoot() : NamespaceTree
 		{
