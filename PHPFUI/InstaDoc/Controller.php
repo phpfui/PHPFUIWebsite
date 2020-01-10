@@ -20,7 +20,7 @@ class Controller
 	public const TAB_SIZE = 't';
 
 	// allowed page sections
-	private const SECTIONS = ['git', 'file', 'doc', 'landing', 'home'];
+	private const SECTIONS = ['Git', 'File', 'Doc', 'Landing', 'Home', 'GitDiff'];
 	private const VALID_PARAMETERS = [
 		Controller::NAMESPACE => '',
 		Controller::CLASS_NAME => '',
@@ -67,7 +67,7 @@ class Controller
 		$mainColumn = new \PHPFUI\Container();
 		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
-			$mainColumn->add($this->getSection('landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
+			$mainColumn->add($this->getSection('Landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
 			}
 		elseif ($this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
@@ -77,69 +77,7 @@ class Controller
 			$fullClassPath = $files[$fullClassName] ?? '';
 			if ($this->getParameter(Controller::GIT_SHA1))
 				{
-				$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
-				$container = new \PHPFUI\Container();
-
-				$sha1 = $this->getParameter(Controller::GIT_SHA1);
-				$container->add(new \PHPFUI\Header('Commit ' . $sha1, 5));
-
-				$commit = $repo->getCommit($sha1);
-				if (! $commit)
-					{
-					$container->add('Commit not found');
-					return "{$container}";
-					}
-
-				$localTZ = new \DateTimeZone(date_default_timezone_get());
-				$date = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
-
-				$container->add(new \PHPFUI\MultiColumn($commit->getCommitterName(), $date));
-
-				$targetFile = str_replace('\\', '/', $fullClassName) . '.php';
-				$file = 0;
-				$files = $commit->getDiff()->getFiles();
-
-				if (empty($files))
-					{
-					$container->add("No diffs found for this commit.");
-					return "{$container}";
-					}
-
-				foreach ($commit->getDiff()->getFiles() as $file)
-					{
-					if ($file->getName() == $targetFile)
-						{
-						break;
-						}
-					$file = 0;
-					}
-				$classes = [
-					\Gitonomy\Git\Diff\FileChange::LINE_ADD => 'git-removed',
-					\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
-					\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-added',
-					];
-				if ($file)
-					{
-					$codeBlock = new \PHPFUI\HTML5Element('pre');
-					foreach ($file->getChanges() as $change)
-						{
-						foreach ($change->getLines() as $line)
-							{
-							list($type, $code) = $line;
-							$span = new \PHPFUI\HTML5Element('span');
-							$span->addClass($classes[$type]);
-							$span->add(\PHPFUI\TextHelper::htmlentities($code));
-							$codeBlock->add($span . "\n");
-							}
-						}
-					$container->add($codeBlock);
-					}
-				else
-					{
-					$container->add("{$targetFile} not found in commit");
-					}
-
-				return "{$container}";
+				return $this->getSection('GitDiff')->generate($page, $fullClassName);
 				}
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
@@ -147,24 +85,24 @@ class Controller
 
 			if (Controller::DOC_PAGE == $this->getParameter(Controller::PAGE))
 				{
-				$mainColumn->add($this->getSection('doc')->generate($page, $fullClassPath));
+				$mainColumn->add($this->getSection('Doc')->generate($page, $fullClassPath));
 				}
 			elseif (Controller::GIT_PAGE == $this->getParameter(Controller::PAGE))
 				{
-				$mainColumn->add($this->getSection('git')->generate($page, $fullClassPath));
+				$mainColumn->add($this->getSection('Git')->generate($page, $fullClassPath));
 				}
 			elseif (Controller::FILE_PAGE == $this->getParameter(Controller::PAGE))
 				{
-				$mainColumn->add($this->getSection('file')->generate($page, $fullClassPath));
+				$mainColumn->add($this->getSection('File')->generate($page, $fullClassPath));
 				}
 			else
 				{
-				$mainColumn->add($this->getSection('doc')->generate($page, $fullClassPath));
+				$mainColumn->add($this->getSection('Doc')->generate($page, $fullClassPath));
 				}
 			}
 		else
 			{
-			$mainColumn->add($this->getSection('home')->generate($page, ''));
+			$mainColumn->add($this->getSection('Home')->generate($page, ''));
 			}
 		$page->addBody($mainColumn);
 
@@ -303,10 +241,10 @@ class Controller
 		{
 		if (! in_array($sectionName, Controller::SECTIONS))
 			{
-			throw new \Exception("{$sectionName} is not one of " . implode(', ', $sections));
+			throw new \Exception("{$sectionName} is not one of " . implode(', ', Controller::SECTIONS));
 			}
 
-		$class = 'PHPFUI\\InstaDoc\\Section\\' . ucfirst($sectionName);
+		$class = 'PHPFUI\\InstaDoc\\Section\\' . $sectionName;
 
 		return new $class($this);
 		}
