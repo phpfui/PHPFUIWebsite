@@ -11,6 +11,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$sha1 = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_SHA1);
+		$tabSize = str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
 		$container->add(new \PHPFUI\Header('Commit ' . $sha1, 4));
 
 		$commit = $repo->getCommit($sha1);
@@ -61,7 +62,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 					list($type, $code) = $line;
 					$span = new \PHPFUI\HTML5Element('span');
 					$span->addClass($classes[$type]);
-					$span->add(\PHPFUI\TextHelper::htmlentities($code));
+					$span->add(\PHPFUI\TextHelper::htmlentities(str_replace("\t", $tabSize, $code)));
 					$codeBlock->add($span . "\n");
 					}
 				}
