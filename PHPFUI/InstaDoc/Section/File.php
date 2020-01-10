@@ -17,7 +17,7 @@ class File extends \PHPFUI\InstaDoc\Section
 		$ts = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2);
 
 		$page->addCSS("code{tab-size:{$ts};-moz-tab-size:{$ts}}");
-		$php = file_get_contents($fullClassPath);
+		$php = @file_get_contents($fullClassPath);
 		$pre = new \PHPFUI\HTML5Element('pre');
 
 		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'qtcreator_dark');
