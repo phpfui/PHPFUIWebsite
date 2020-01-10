@@ -4,11 +4,11 @@ namespace PHPFUI\InstaDoc;
 
 class Page extends \PHPFUI\Page implements PageInterface
 	{
+	private $controller;
+	private $generating = '';
 
 	private $mainColumn;
 	private $menu;
-	private $controller;
-	private $generating = '';
 
 	public function __construct(Controller $controller)
 		{
@@ -40,6 +40,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$searchIcon = new \PHPFUI\FAIcon('fas', 'search');
 		$this->addSearchModal($searchIcon);
 		$titleBar->addRight($searchIcon);
+
 		if (! $this->generating)
 			{
 			$configIcon = new \PHPFUI\FAIcon('fas', 'cog');
@@ -105,6 +106,7 @@ class Page extends \PHPFUI\Page implements PageInterface
 		$fieldSet = new \PHPFUI\FieldSet('Configuration');
 
 		$parameters = $this->controller->getParameters();
+
 		foreach ([Controller::CSS_FILE, Controller::TAB_SIZE] as $value)
 			{
 			unset($parameters[$value]);

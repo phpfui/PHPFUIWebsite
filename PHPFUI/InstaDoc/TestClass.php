@@ -11,18 +11,18 @@ namespace PHPFUI\InstaDoc;
  */
 class TestClass
 	{
-	private const CONST_PRIVATE_ARRAY = ['.Git', 0, true, 0.2, ];
-	protected const CONST_PROTECTED_INT = 42;
 	public const CONST_PUBLIC_STRING = 'Default';
+	protected const CONST_PROTECTED_INT = 42;
+	private const CONST_PRIVATE_ARRAY = ['.Git', 0, true, 0.2, ];
+	public $public_float = 3.14;
+	protected $protected_string = 'whatever';
 
 	private $private_array = ['fred', 1, false, 9.9, ['nested', self::CONST_PRIVATE_ARRAY]];
-	protected $protected_string = 'whatever';
-	public $public_float = 3.14;
 
-	/**
-	 * This function does nothing.
-	 */
-	private function private_function_no_return(string $fred = 'Eythel') {}
+	public function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => 'reasoner']) : array
+		{
+		return [];
+		}
 
 	/**
 	 * This function does nothing. But it has a very long
@@ -39,9 +39,9 @@ class TestClass
 	 */
 	protected function protected_function_no_return(string $fred, $unknown = 3.14) : void {}
 
-	public function public_function_returning_and_taking_array(array $array = ['tom', 2 => 'Dick', 'harry' => "reasoner"]) : array
-		{
-		return [];
-		}
+	/**
+	 * This function does nothing.
+	 */
+	private function private_function_no_return(string $fred = 'Eythel') : void {}
 
 	}

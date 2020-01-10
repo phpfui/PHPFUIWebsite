@@ -4,16 +4,16 @@ namespace PHPFUI\InstaDoc;
 
 class Controller
 	{
-	// pages
-	public const DOC_PAGE = 'd';
-	public const FILE_PAGE = 'f';
-	public const GIT_PAGE = 'g';
 
 	// parameters
 	public const CLASS_NAME = 'c';
 	public const CSS_FILE = 'CSS';
+	// pages
+	public const DOC_PAGE = 'd';
+	public const FILE_PAGE = 'f';
 	public const GIT_LIMIT = 'gl';
 	public const GIT_ONPAGE = 'gp';
+	public const GIT_PAGE = 'g';
 	public const GIT_SHA1 = 'gs';
 	public const NAMESPACE = 'n';
 	public const PAGE = 'p';
@@ -38,12 +38,12 @@ class Controller
 	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
 	private $fileManager;
+	private $generating = '';
 	private $homePageMarkdown = [];
 
 	private $page;
-	private $siteTitle = 'PHPFUI/InstaDoc';
-	private $generating = '';
 	private $parameters = [];
+	private $siteTitle = 'PHPFUI/InstaDoc';
 
 	public function __construct(FileManager $fileManager)
 		{
@@ -65,6 +65,7 @@ class Controller
 		$page->setGenerating($this->generating);
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
+
 		if (! $this->getParameter(Controller::CLASS_NAME) && $this->getParameter(Controller::NAMESPACE))
 			{
 			$mainColumn->add($this->getSection('Landing')->generate($page, $this->getParameter(Controller::NAMESPACE)));
@@ -75,6 +76,7 @@ class Controller
 			$tree = NamespaceTree::findNamespace($this->getParameter(Controller::NAMESPACE));
 			$files = $tree->getClassFilenames();
 			$fullClassPath = $files[$fullClassName] ?? '';
+
 			if ($this->getParameter(Controller::GIT_SHA1))
 				{
 				return $this->getSection('GitDiff')->generate($page, $fullClassName);
@@ -133,6 +135,7 @@ class Controller
 			{
 			$parameters = $this->getClassParts($class);
 			$namespaces[$parameters[Controller::NAMESPACE]] = true;
+
 			foreach ($pagesToInclude as $page)
 				{
 				$parameters[Controller::PAGE] = $page;
@@ -142,10 +145,11 @@ class Controller
 			}
 
 		$parameters = [];
+
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
-			file_put_contents($directoryPath .  $this->getUrl($parameters), $this->display());
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
 		}
 
 		$this->generating = '';
@@ -158,6 +162,7 @@ class Controller
 		$parts = explode('\\', $namespacedClass);
 		$namespace = '';
 		$backSlash = '';
+
 		while (count($parts) > 1)
 			{
 			$namespace .= $backSlash . array_shift($parts);
@@ -237,6 +242,21 @@ class Controller
 		return $url;
 		}
 
+	public function getParameter(string $parameter, ?string $default = null) : string
+		{
+		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
+			{
+			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
+			}
+
+		return $this->parameters[$parameter] ?? $default ?? '';
+		}
+
+	public function getParameters() : array
+		{
+		return $this->parameters;
+		}
+
 	public function getSection(string $sectionName) : Section
 		{
 		if (! in_array($sectionName, Controller::SECTIONS))
@@ -268,6 +288,7 @@ class Controller
 			}
 
 		$parts = [];
+
 		foreach (Controller::VALID_STATIC_PARTS as $part)
 			{
 			if (isset($parameters[$part]))
@@ -288,35 +309,6 @@ class Controller
 		return $this;
 		}
 
-	public function getParameters() : array
-		{
-		return $this->parameters;
-		}
-
-	public function getParameter(string $parameter, ?string $default = null) : string
-		{
-		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
-			{
-			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
-			}
-
-		return $this->parameters[$parameter] ?? $default ?? '';
-		}
-
-	public function setParameters(array $parameters) : Controller
-		{
-		$this->parameters = [];
-		foreach (Controller::VALID_PARAMETERS as $key => $value)
-			{
-			if (isset($parameters[$key]) && strlen($parameters[$key]))
-				{
-				$this->parameters[$key] = $parameters[$key];
-				}
-			}
-
-		return $this;
-		}
-
 	public function setParameter(string $parameter, string $value) : Controller
 		{
 		if (! isset(Controller::VALID_PARAMETERS[$parameter]))
@@ -324,6 +316,21 @@ class Controller
 			throw new \Exception($parameter . ' is an invalid parameter. Valid values: ' . implode(',', Controller::VALID_PARAMETERS));
 			}
 		$this->parameters[$parameter] = $value;
+
+		return $this;
+		}
+
+	public function setParameters(array $parameters) : Controller
+		{
+		$this->parameters = [];
+
+		foreach (Controller::VALID_PARAMETERS as $key => $value)
+			{
+			if (isset($parameters[$key]) && strlen($parameters[$key]))
+				{
+				$this->parameters[$key] = $parameters[$key];
+				}
+			}
 
 		return $this;
 		}

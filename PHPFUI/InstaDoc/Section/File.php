@@ -10,6 +10,7 @@ class File extends \PHPFUI\InstaDoc\Section
 		$container = new \PHPFUI\Container();
 
 		$fullClassPath = str_replace('\\', '/', $fullClassPath);
+
 		if (! file_exists($fullClassPath))
 			{
 			$fullClassPath = $this->controller->getFileManager()->getComposerPath() . $fullClassPath;
@@ -21,7 +22,8 @@ class File extends \PHPFUI\InstaDoc\Section
 		$pre = new \PHPFUI\HTML5Element('pre');
 
 		$css = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::CSS_FILE, 'qtcreator_dark');
-		if ($css != 'PHP')
+
+		if ('PHP' != $css)
 			{
 			$page->addStyleSheet("highlighter/styles/{$css}.css");
 			$hl = new \Highlight\Highlighter();

@@ -8,7 +8,11 @@ namespace PHPFUI;
  */
 class HTML5Element extends Base
 	{
+	private $attributes = [];
+	private $classes = [];
 	private $element;
+	private $id = null;
+	private static $masterId = 0;
 	private $noEndTag = false;
 	private static $noEndTags = [
 		'area'    => true,
@@ -29,10 +33,6 @@ class HTML5Element extends Base
 		'wbr'     => true,
 	];
 	private $tooltip;
-	private $attributes = [];
-	private $classes = [];
-	private $id = null;
-	private static $masterId = 0;
 
 	/**
 	 * Construct an object with the tag name, ie. DIV, SPAN, TEXTAREA, etc
@@ -53,128 +53,6 @@ class HTML5Element extends Base
 			$this->newId();
 			}
 		parent::__clone();
-		}
-
-	public function disabled() : HTML5Element
-		{
-		$this->addClass('disabled');
-
-		return $this;
-		}
-
-	/**
-	 * Return the type of the element
-	 *
-	 * @return string
-	 */
-	public function getElement() : string
-		{
-		return $this->element;
-		}
-
-	/**
-	 * Get the tool tip as a string
-	 *
-	 * @return bool if there is a tool tip associated with this element
-	 */
-	public function hasToolTip() : bool
-		{
-		return $this->tooltip !== null;
-		}
-
-	/**
-	 * Get the tool tip as a string
-	 *
-	 * @return ToolTip|string
-	 */
-	public function getToolTip(string $label)
-		{
-		$toolTip = $label;
-
-		if ($this->tooltip)
-			{
-			if ('string' == gettype($this->tooltip))
-				{
-				$toolTip = new ToolTip($label, $this->tooltip);
-				}
-			else
-				{
-				$toolTip = $this->tooltip;
-				$toolTip->add($label);
-				}
-			}
-
-		return $toolTip;
-		}
-
-	/**
-	 * A simple way to set a confirm on click
-	 *
-	 * @param string $text confirm text
-	 */
-	public function setConfirm($text) : HTML5Element
-		{
-		$this->addAttribute('onclick', "return window.confirm(\"{$text}\");");
-
-		return $this;
-		}
-
-	/**
-	 * You can set the element type if you need to morph it for some reason
-	 *
-	 * @param string $element
-	 */
-	public function setElement($element) : HTML5Element
-		{
-		$this->element = $element;
-		$this->noEndTag = isset(self::$noEndTags[strtolower($element)]);
-
-		return $this;
-		}
-
-	/**
-	 * Set the tool tip.  Can either be a ToolTip or a string.  If it is a string, it will be converted to a ToolTip
-	 *
-	 * @param string|ToolTip $tip
-	 */
-	public function setToolTip($tip) : HTML5Element
-		{
-		if ($tip)
-			{
-			$type = gettype($tip);
-
-			if ('string' == $type || ('object' == $type && get_class($tip) == __NAMESPACE__ . '\ToolTip'))
-				{
-				$this->tooltip = $tip;
-				}
-			else
-				{
-				$this->tooltip = 'not a string or ToolTip object';
-				}
-			}
-
-		return $this;
-		}
-
-	public function toggleAnimate(HTML5Element $element, string $animation) : HTML5Element
-		{
-		$this->addAttribute('data-toggle', $element->getId());
-		$this->addAttribute('aria-controls', $element->getId());
-		$this->setAttribute('aria-expanded', 'true');
-		$element->addAttribute('data-toggler');
-		$element->addAttribute('data-animate', $animation);
-
-		return $this;
-		}
-
-	public function toggleClass(HTML5Element $element, string $class) : HTML5Element
-		{
-		$this->addAttribute('data-toggle', $element->getId());
-		$this->addAttribute('aria-controls', $element->getId());
-		$this->setAttribute('aria-expanded', 'true');
-		$element->addAttribute('data-toggler', $class);
-
-		return $this;
 		}
 
 	/**
@@ -248,6 +126,13 @@ class HTML5Element extends Base
 		return $this;
 		}
 
+	public function disabled() : HTML5Element
+		{
+		$this->addClass('disabled');
+
+		return $this;
+		}
+
 	/**
 	 * Get an attribute
 	 *
@@ -306,6 +191,16 @@ class HTML5Element extends Base
 		}
 
 	/**
+	 * Return the type of the element
+	 *
+	 * @return string
+	 */
+	public function getElement() : string
+		{
+		return $this->element;
+		}
+
+	/**
 	 * Return the id of the object
 	 *
 	 * @return string
@@ -336,6 +231,31 @@ class HTML5Element extends Base
 		}
 
 	/**
+	 * Get the tool tip as a string
+	 *
+	 * @return ToolTip|string
+	 */
+	public function getToolTip(string $label)
+		{
+		$toolTip = $label;
+
+		if ($this->tooltip)
+			{
+			if ('string' == gettype($this->tooltip))
+				{
+				$toolTip = new ToolTip($label, $this->tooltip);
+				}
+			else
+				{
+				$toolTip = $this->tooltip;
+				$toolTip->add($label);
+				}
+			}
+
+		return $toolTip;
+		}
+
+	/**
 	 * Return true if the class is present on the object
 	 */
 	public function hasClass(string $class) : bool
@@ -350,6 +270,16 @@ class HTML5Element extends Base
 	public function hasId() : bool
 		{
 		return null !== $this->id;
+		}
+
+	/**
+	 * Get the tool tip as a string
+	 *
+	 * @return bool if there is a tool tip associated with this element
+	 */
+	public function hasToolTip() : bool
+		{
+		return null !== $this->tooltip;
 		}
 
 	/**
@@ -379,6 +309,31 @@ class HTML5Element extends Base
 		}
 
 	/**
+	 * A simple way to set a confirm on click
+	 *
+	 * @param string $text confirm text
+	 */
+	public function setConfirm($text) : HTML5Element
+		{
+		$this->addAttribute('onclick', "return window.confirm(\"{$text}\");");
+
+		return $this;
+		}
+
+	/**
+	 * You can set the element type if you need to morph it for some reason
+	 *
+	 * @param string $element
+	 */
+	public function setElement($element) : HTML5Element
+		{
+		$this->element = $element;
+		$this->noEndTag = isset(self::$noEndTags[strtolower($element)]);
+
+		return $this;
+		}
+
+	/**
 	 * Set the base id of the object
 	 *
 	 * @param string $id id will have 'id' prepended to it when retrieved
@@ -387,6 +342,51 @@ class HTML5Element extends Base
 	public function setId($id) : HTML5Element
 		{
 		$this->id = $id;
+
+		return $this;
+		}
+
+	/**
+	 * Set the tool tip.  Can either be a ToolTip or a string.  If it is a string, it will be converted to a ToolTip
+	 *
+	 * @param string|ToolTip $tip
+	 */
+	public function setToolTip($tip) : HTML5Element
+		{
+		if ($tip)
+			{
+			$type = gettype($tip);
+
+			if ('string' == $type || ('object' == $type && get_class($tip) == __NAMESPACE__ . '\ToolTip'))
+				{
+				$this->tooltip = $tip;
+				}
+			else
+				{
+				$this->tooltip = 'not a string or ToolTip object';
+				}
+			}
+
+		return $this;
+		}
+
+	public function toggleAnimate(HTML5Element $element, string $animation) : HTML5Element
+		{
+		$this->addAttribute('data-toggle', $element->getId());
+		$this->addAttribute('aria-controls', $element->getId());
+		$this->setAttribute('aria-expanded', 'true');
+		$element->addAttribute('data-toggler');
+		$element->addAttribute('data-animate', $animation);
+
+		return $this;
+		}
+
+	public function toggleClass(HTML5Element $element, string $class) : HTML5Element
+		{
+		$this->addAttribute('data-toggle', $element->getId());
+		$this->addAttribute('aria-controls', $element->getId());
+		$this->setAttribute('aria-expanded', 'true');
+		$element->addAttribute('data-toggler', $class);
 
 		return $this;
 		}
@@ -411,21 +411,6 @@ class HTML5Element extends Base
 		$from->classes = [];
 
 		return $this;
-		}
-
-	/**
-	 * Clones the first object and fills it with properties from the second object
-	 */
-	protected function upCastCopy(Base $to, Base $from) : Base
-		{
-		$returnValue = clone $to;
-
-		foreach ($to as $key => $value)
-			{
-			$returnValue->{$key} = $from->{$key};
-			}
-
-		return $returnValue;
 		}
 
 	protected function getBody() : string
@@ -457,5 +442,20 @@ class HTML5Element extends Base
 			}
 
 		return $output . '>';
+		}
+
+	/**
+	 * Clones the first object and fills it with properties from the second object
+	 */
+	protected function upCastCopy(Base $to, Base $from) : Base
+		{
+		$returnValue = clone $to;
+
+		foreach ($to as $key => $value)
+			{
+			$returnValue->{$key} = $from->{$key};
+			}
+
+		return $returnValue;
 		}
 	}

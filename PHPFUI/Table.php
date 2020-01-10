@@ -23,6 +23,7 @@ class Table extends HTML5Element
 	protected $footers = [];
 
 	protected $headers = [];
+	protected $nextRowAttributes = [];
 	protected $page = null;
 	protected $recordId = '';
 	protected $rows = [];
@@ -30,7 +31,6 @@ class Table extends HTML5Element
 	protected $sortableTrClass = '';
 	protected $strict = false;
 	protected $widths = [];
-	protected $nextRowAttributes = [];
 
 	public function __construct()
 		{
@@ -98,6 +98,16 @@ class Table extends HTML5Element
 	public function addHeader(string $field, string $header) : Table
 		{
 		$this->headers[$field] = $header;
+
+		return $this;
+		}
+
+	/**
+	 * You can add any attribute to the next row (tr) that you want.  This only applies to the next row to be output and is reset for the next row.
+	 */
+	public function addNextRowAttribute(string $attribute, string $value) : Table
+		{
+		$this->nextRowAttributes[$attribute][] = $value;
 
 		return $this;
 		}
@@ -235,16 +245,6 @@ class Table extends HTML5Element
 		return $this;
 		}
 
-	/**
-	 * You can add any attribute to the next row (tr) that you want.  This only applies to the next row to be output and is reset for the next row.
-	 */
-	public function addNextRowAttribute(string $attribute, string $value) : Table
-		{
-		$this->nextRowAttributes[$attribute][] = $value;
-
-		return $this;
-		}
-
 	protected function getBody() : string
 		{
 		$output = '';
@@ -330,6 +330,7 @@ class Table extends HTML5Element
 			}
 
 		$rowAttributeString = '';
+
 		foreach ($rowAttributes as $rowAttribute => $value)
 			{
 			$rowAttributeString .= " {$rowAttribute}='" . implode(' ', $value) . "' ";

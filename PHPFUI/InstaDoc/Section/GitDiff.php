@@ -15,9 +15,11 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 		$container->add(new \PHPFUI\Header('Commit ' . $sha1, 4));
 
 		$commit = $repo->getCommit($sha1);
+
 		if (! $commit)
 			{
 			$container->add('Commit not found');
+
 			return "{$container}";
 			}
 
@@ -32,7 +34,8 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 
 		if (empty($files))
 			{
-			$container->add(new \PHPFUI\Header("No diffs found for this commit.", 5));
+			$container->add(new \PHPFUI\Header('No diffs found for this commit.', 5));
+
 			return "{$container}";
 			}
 
@@ -49,17 +52,20 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			\Gitonomy\Git\Diff\FileChange::LINE_CONTEXT => 'git-unchanged',
 			\Gitonomy\Git\Diff\FileChange::LINE_REMOVE => 'git-added',
 			];
+
 		if ($file)
 			{
 			$hr = '';
 			$codeBlock = new \PHPFUI\HTML5Element('pre');
+
 			foreach ($file->getChanges() as $change)
 				{
 				$codeBlock->add($hr);
 				$hr = '<hr>';
+
 				foreach ($change->getLines() as $line)
 					{
-					list($type, $code) = $line;
+					[$type, $code] = $line;
 					$span = new \PHPFUI\HTML5Element('span');
 					$span->addClass($classes[$type]);
 					$span->add(\PHPFUI\TextHelper::htmlentities(str_replace("\t", $tabSize, $code)));

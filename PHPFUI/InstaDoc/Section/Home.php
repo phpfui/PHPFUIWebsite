@@ -32,7 +32,8 @@ class Home extends \PHPFUI\InstaDoc\Section
 				$md = file_get_contents($file);
 				$parts = explode('/', $file);
 				$package = $parts[count($parts) - 2];
-				if ($namespace == '\\')
+
+				if ('\\' == $namespace)
 					{
 					$namespace = '';
 					}

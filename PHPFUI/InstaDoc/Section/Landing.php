@@ -29,6 +29,7 @@ class Landing extends \PHPFUI\InstaDoc\Section
 			$accordion = new \PHPFUI\Accordion();
 			$accordion->addAttribute('data-allow-all-closed', 'true');
 			$container->add(new \PHPFUI\SubHeader('Package Documentation'));
+
 			foreach ($files as $file)
 				{
 				$parts = explode('/', str_replace('\\', '/', $file));

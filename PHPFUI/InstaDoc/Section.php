@@ -12,20 +12,6 @@ class Section
 		$this->controller = $controller;
 		}
 
-	public function getClassBase(string $fullClassName) : string
-		{
-		$parts = explode('\\', $fullClassName);
-
-		return array_pop($parts);
-		}
-
-	public function getNamespaceFromClass(string $class) : string
-		{
-		$parts = explode('\\', $class);
-		array_pop($parts);
-		return implode('\\', $parts);
-		}
-
 	public function generate(\PHPFUI\Page $page, string $object) : \PHPFUI\Container
 		{
 		return new \PHPFUI\Container();
@@ -46,12 +32,20 @@ class Section
 		return $breadCrumbs;
 		}
 
+	public function getClassBase(string $fullClassName) : string
+		{
+		$parts = explode('\\', $fullClassName);
+
+		return array_pop($parts);
+		}
+
 	public function getMenu(string $className) : \PHPFUI\Menu
 		{
 		$menu = new \PHPFUI\Menu();
 
 		$currentPage = $this->controller->getParameter(Controller::PAGE);
 		$parts = $this->controller->getClassParts($className);
+
 		foreach ($parts as $key => $value)
 			{
 			$this->controller->setParameter($key, $value);
@@ -63,6 +57,7 @@ class Section
 		$fileItem->setActive(Controller::FILE_PAGE == $currentPage);
 		$menu->addMenuItem($fileItem);
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($parts[Controller::NAMESPACE]);
+
 		if ($node->getGit())
 			{
 			$gitItem = new \PHPFUI\MenuItem('Git', $this->controller->getPageUrl(Controller::GIT_PAGE));
@@ -71,6 +66,14 @@ class Section
 			}
 
 		return $menu;
+		}
+
+	public function getNamespaceFromClass(string $class) : string
+		{
+		$parts = explode('\\', $class);
+		array_pop($parts);
+
+		return implode('\\', $parts);
 		}
 
 
