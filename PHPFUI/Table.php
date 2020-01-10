@@ -30,6 +30,7 @@ class Table extends HTML5Element
 	protected $sortableTrClass = '';
 	protected $strict = false;
 	protected $widths = [];
+	protected $nextRowAttribute = [];
 
 	public function __construct()
 		{
@@ -232,6 +233,16 @@ class Table extends HTML5Element
 		return $this;
 		}
 
+	/**
+	 * You can add any attribute to the next row (tr) that you want.  This only applies to the next row to be output and is reset for the next row.$this->nextRowAttribute
+	 */
+	public function addNextRowAttribute(string $attribute, string $value) : Table
+		{
+		$this->nextRowAttribute[$attribute][] = $value;
+
+		return $this;
+		}
+
 	protected function getBody() : string
 		{
 		$output = '';
@@ -314,7 +325,14 @@ class Table extends HTML5Element
 			$id = " id='{$this->recordId}-{$recordId}'";
 			}
 
-		$output .= "<tr{$id}{$this->sortableTrClass}>";
+		$attributes = '';
+		foreach ($this->nextRowAttribute as $attribute => $value)
+			{
+			$attributes .= " {$attribute}='" . implode(' ', $value) . "' ";
+			}
+		$this->nextRowAttribute = [];
+
+		$output .= "<tr{$id}{$attributes}{$this->sortableTrClass}>";
 
 		if (count($this->headers))
 			{

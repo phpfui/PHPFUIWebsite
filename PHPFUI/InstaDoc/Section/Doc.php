@@ -80,6 +80,24 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		$container->add($table);
 
+
+		$parent = $this->reflection->getParentClass();
+		if ($parent)
+			{
+			$parts = ['All', 'self'];
+			while ($parent)
+				{
+				$parts[] = $parent->getName();
+				$parent = $parent->getParentClass();
+				}
+			$filterMenu = new \PHPFUI\Menu();
+			foreach ($parts as $name)
+				{
+				$filterMenu->addMenuItem(new \PHPFUI\MenuItem($name));
+				}
+			$container->add($filterMenu);
+			}
+
 		$tabs = new \PHPFUI\Tabs();
 		$tabs->addTab('Public', $this->getContent('isPublic'), true);
 		$tabs->addTab('Protected', $this->getContent('isProtected'));
@@ -157,6 +175,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			{
 			$this->objectSort($methods);
 			$section = 'Methods';
+			$table->addRow([$this->section($section), '']);
 			foreach ($methods as $method)
 				{
 				if ($method->$accessType())
@@ -258,14 +277,25 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	private function getName($method, string $name) : string
 		{
-		$parent = $method->getDeclaringClass();
-		if ($parent->getName() != $this->reflection->getName())
+		$parent = $this->getNameScope($method);
+		if ($parent)
 			{
-			$link = $this->getClassName($parent->getName());
+			$link = $this->getClassName($parent);
 			$name = $link . '::' . $name;
 			}
 
 		return $name;
+		}
+
+	private function getNameScope($method) : string
+		{
+		$parent = $method->getDeclaringClass();
+		if ($parent->getName() != $this->reflection->getName())
+			{
+			return $parent->getName();
+			}
+
+		return '';
 		}
 
 	private function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
