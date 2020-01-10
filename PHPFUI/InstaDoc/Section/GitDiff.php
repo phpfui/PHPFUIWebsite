@@ -20,7 +20,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			{
 			$container->add('Commit not found');
 
-			return "{$container}";
+			return $container;
 			}
 
 		$localTZ = new \DateTimeZone(date_default_timezone_get());
@@ -36,7 +36,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			{
 			$container->add(new \PHPFUI\Header('No diffs found for this commit.', 5));
 
-			return "{$container}";
+			return $container;
 			}
 
 		foreach ($commit->getDiff()->getFiles() as $file)
