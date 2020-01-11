@@ -7,14 +7,21 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 
 	public function generate(\PHPFUI\Page $page, string $fullClassName) : \PHPFUI\Container
 		{
-		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
+		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 		$container = new \PHPFUI\Container();
 
 		$sha1 = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_SHA1);
 		$tabSize = str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
-		$container->add(new \PHPFUI\Header('Commit ' . $sha1, 4));
 
 		$commit = $repo->getCommit($sha1);
+		$container->add(new \PHPFUI\Header($commit->getSubjectMessage(), 4));
+		$message = $commit->getBodyMessage();
+		if ($message)
+			{
+			$callout = new \PHPFUI\Callout('secondary');
+			$callout->add($message);
+			$container->add($callout);
+			}
 
 		if (! $commit)
 			{
@@ -39,7 +46,7 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			return $container;
 			}
 
-		foreach ($commit->getDiff()->getFiles() as $file)
+		foreach ($files as $file)
 			{
 			if ($file->getName() == $targetFile)
 				{

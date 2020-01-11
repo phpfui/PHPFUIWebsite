@@ -40,7 +40,7 @@ class Controller
 	private $fileManager;
 	private $generating = '';
 	private $homePageMarkdown = [];
-
+	private $gitRoot;
 	private $page;
 	private $parameters = [];
 	private $siteTitle = 'PHPFUI/InstaDoc';
@@ -48,8 +48,21 @@ class Controller
 	public function __construct(FileManager $fileManager)
 		{
 		$this->fileManager = $fileManager;
+		$this->gitRoot = $fileManager->getComposerPath();
 		$this->page = $this->getPage();
 		$this->setParameters($this->page->getQueryParameters());
+		}
+
+	public function getGitRoot() : string
+		{
+		return $this->gitRoot;
+		}
+
+	public function setGitRoot(string $directory) : Controller
+		{
+		$this->gitRoot = $directory;
+
+		return $this;
 		}
 
 	public function addHomePageMarkdown(string $path) : Controller

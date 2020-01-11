@@ -290,7 +290,6 @@ class NamespaceTree
 		return $files;
 		}
 
-
 	private static function getRoot() : NamespaceTree
 		{
 		if (! self::$root)

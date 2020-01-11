@@ -12,7 +12,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
 
-		$repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
+		$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
 		$result = $repo->run('show-branch');
 		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
 		$log = $repo->getLog($branch, $fullClassPath, 0, 10);
@@ -32,7 +32,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 			$row['Title'] = $commit->getShortMessage();
 			$row['Name'] = \PHPFUI\Link::email($commit->getCommitterEmail(), $commit->getCommitterName(), 'Your commit ' . $commit->getHash());
 			$row['Date'] = $commit->getCommitterDate()->setTimezone($localTZ)->format('Y-m-d g:i a');
-			$revealLink = new \PHPFUI\FAIcon('fas', 'search');
+			$revealLink = new \PHPFUI\Link('#', $commit->getShortHash(), false);
 			$parameters[\PHPFUI\InstaDoc\Controller::GIT_SHA1] = $commit->getHash();
 			$this->getReveal($page, $revealLink, $this->controller->getUrl($parameters));
 			$row['Diff'] = $revealLink;
