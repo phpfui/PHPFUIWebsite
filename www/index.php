@@ -7,6 +7,7 @@ if (true)
 	{
 	$fileManager = new \PHPFUI\InstaDoc\FileManager();
 	$fileManager->addNamespace('PHPFUI', '../PHPFUI', true);
+	$fileManager->addNamespace('PHPUnit', '../PHPUnit', true);
 	$fileManager->addNamespace('Gitonomy', '../Gitonomy', true);
 	$fileManager->addNamespace('Highlight', '../Highlight', true);
 	$fileManager->addNamespace('Symfony', '../Symfony', true);
@@ -22,8 +23,17 @@ else
 $fileManager->load();
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 $controller->setGitRoot('../');
+$controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
-echo $controller->display();
-//$controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]);
+
+if (true)
+	{
+	echo $controller->display();
+	}
+else
+	{
+	echo '<pre>';
+	print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]));
+	}
 
 
