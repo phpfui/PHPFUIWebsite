@@ -8,8 +8,6 @@ class FileManager
 	private $excludedNamespaces = [];
 	private $includedNamespaces = [];
 
-	private $version = 1;
-
 	/**
 	 * Make a FileManager.  Pass a composer JSON path to use
 	 * Composer dependancies.  This is the path to your

@@ -16,6 +16,14 @@ class Menu extends HTML5Element
 		$this->addClass('menu');
 		}
 
+	/**
+	 * Number of object in this menu.
+	 */
+	public function count() : int
+		{
+		return count($this->menuItems);
+		}
+
 	public function addMenuItem(MenuItem $item) : Menu
 		{
 		$this->menuItems[$item->getName()] = $item;

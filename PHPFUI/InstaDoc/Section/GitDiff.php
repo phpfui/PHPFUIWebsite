@@ -13,7 +13,17 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 		$sha1 = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_SHA1);
 		$tabSize = str_pad('', (int)$this->controller->getParameter(\PHPFUI\InstaDoc\Controller::TAB_SIZE, 2));
 
-		$commit = $repo->getCommit($sha1);
+		try
+			{
+			$commit = $repo->getCommit($sha1);
+			}
+		catch (\Exception $e)
+			{
+			$container->add('Commit not found');
+
+			return $container;
+			}
+
 		$container->add(new \PHPFUI\Header($commit->getSubjectMessage(), 4));
 		$message = $commit->getBodyMessage();
 		if ($message)
@@ -21,13 +31,6 @@ class GitDiff extends \PHPFUI\InstaDoc\Section
 			$callout = new \PHPFUI\Callout('secondary');
 			$callout->add($message);
 			$container->add($callout);
-			}
-
-		if (! $commit)
-			{
-			$container->add('Commit not found');
-
-			return $container;
 			}
 
 		$localTZ = new \DateTimeZone(date_default_timezone_get());

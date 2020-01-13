@@ -21,6 +21,7 @@ else
 
 $fileManager->load();
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
+$controller->setGitRoot('../');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
 echo $controller->display();
 //$controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]);

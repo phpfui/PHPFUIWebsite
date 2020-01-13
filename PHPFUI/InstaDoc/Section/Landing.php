@@ -17,10 +17,6 @@ class Landing extends \PHPFUI\InstaDoc\Section
 
 		if (count($files))
 			{
-//			$container->add('<pre>');
-//			$container->add(print_r($files, 1));
-//			$container->add('</pre>');
-
 			$accordion = new \PHPFUI\Accordion();
 			$accordion->addAttribute('data-allow-all-closed', 'true');
 			$container->add(new \PHPFUI\SubHeader('Package Documentation'));
@@ -40,10 +36,27 @@ class Landing extends \PHPFUI\InstaDoc\Section
 		$node = \PHPFUI\InstaDoc\NamespaceTree::findNamespace($namespace);
 		$ul = new \PHPFUI\UnorderedList();
 
-		foreach ($node->getClassFilenames() as $class => $fullPath)
+		$children = $node->getChildren();
+		if ($children)
 			{
-			$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
+			$ul->addItem(new \PHPFUI\ListItem('<b>Namespaces</b>'));
+			foreach ($children as $child)
+				{
+				$namespace = $child->getNamespace();
+				$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getNamespaceURL($namespace), $namespace, false)));
+				}
 			}
+
+		$classNames = $node->getClassFilenames();
+		if ($classNames)
+			{
+			$ul->addItem(new \PHPFUI\ListItem('<b>Classes</b>'));
+			foreach ($node->getClassFilenames() as $class => $fullPath)
+				{
+				$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link($this->controller->getClassURL($class), $class, false)));
+				}
+			}
+
 		$container->add($ul);
 
 		return $container;

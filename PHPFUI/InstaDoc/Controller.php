@@ -8,7 +8,6 @@ class Controller
 	// parameters
 	public const CLASS_NAME = 'c';
 	public const CSS_FILE = 'CSS';
-	// pages
 	public const DOC_PAGE = 'd';
 	public const FILE_PAGE = 'f';
 	public const GIT_LIMIT = 'gl';
@@ -20,7 +19,21 @@ class Controller
 	public const TAB_SIZE = 't';
 
 	// allowed page sections
-	private const SECTIONS = ['Git', 'File', 'Doc', 'Landing', 'Home', 'GitDiff'];
+	private const SECTIONS = [
+		'Git',
+		'File',
+		'Doc',
+		'Landing',
+		'Home',
+		'GitDiff',
+		];
+
+	private const VALID_CLASS_PAGES = [
+		Controller::DOC_PAGE,
+		Controller::FILE_PAGE,
+		Controller::GIT_PAGE,
+		];
+
 	private const VALID_PARAMETERS = [
 		Controller::NAMESPACE => '',
 		Controller::CLASS_NAME => '',
@@ -33,7 +46,11 @@ class Controller
 		];
 
 	// valid static page parameters
-	private const VALID_STATIC_PARTS = [Controller::NAMESPACE, Controller::CLASS_NAME, Controller::PAGE, ];
+	private const VALID_STATIC_PARTS = [
+		Controller::NAMESPACE,
+		Controller::CLASS_NAME,
+		Controller::PAGE,
+		];
 
 	private $accordionMenu = null;
 	private $currentPage = Controller::DOC_PAGE;
@@ -72,7 +89,7 @@ class Controller
 		return $this;
 		}
 
-	public function display() : string
+	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES) : string
 		{
 		$page = $this->getPage();
 		$page->setGenerating($this->generating);
@@ -96,7 +113,7 @@ class Controller
 				}
 			$section = new Section($this);
 			$mainColumn->add($section->getBreadCrumbs($fullClassName));
-			$mainColumn->add($section->getMenu($fullClassName));
+			$mainColumn->add($section->getMenu($fullClassName, $classPagesToShow));
 
 			if (Controller::DOC_PAGE == $this->getParameter(Controller::PAGE))
 				{
@@ -139,7 +156,7 @@ class Controller
 		$directoryPath = str_replace('//', '/', $directoryPath);
 
 		// add in the index file
-		file_put_contents($directoryPath . 'index' . $extension, $this->display());
+		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude));
 
 		$namespaces = [];
 
@@ -153,7 +170,7 @@ class Controller
 				{
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
-				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 				}
 			}
 
@@ -162,7 +179,7 @@ class Controller
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display());
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 		}
 
 		$this->generating = '';
@@ -194,6 +211,18 @@ class Controller
 	public function getClassURL(string $namespacedClass) : string
 		{
 		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE] + $this->getClassParts($namespacedClass) + $this->getParameters());
+
+		return $url;
+		}
+
+	public function getNamespaceURL(string $namespace) : string
+		{
+		while (strlen($namespace) && $namespace[0] == '\\')
+			{
+			$namespace = substr($namespace, 1);
+			}
+
+		$url = $this->getUrl([Controller::PAGE => Controller::DOC_PAGE, Controller::NAMESPACE => $namespace] +$this->getParameters());
 
 		return $url;
 		}
@@ -297,7 +326,7 @@ class Controller
 			{
 			$url = $this->page->getBaseUrl() . '?' . http_build_query($parameters);
 
-			return $url;
+			return str_replace('\\', '%5C', $url);
 			}
 
 		$parts = [];
@@ -311,6 +340,10 @@ class Controller
 			}
 
 		$url = implode('_', $parts) . $this->generating;
+		while ($url[0] == '_')
+			{
+			$url = substr($url, 1);
+			}
 
 		return $url;
 		}
