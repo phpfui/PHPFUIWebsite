@@ -418,9 +418,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		foreach ($docBlock->getTags() as $tag)
 			{
 			$name = $tag->getName();
-			if ($name == 'param')
+			$description = trim($tag->getDescription());
+			if ($name == 'param' && $description)
 				{
-				$comments[$tag->getVariableName()] = $tag->getDescription();
+				$comments[$tag->getVariableName()] = $description;
 				}
 			}
 
