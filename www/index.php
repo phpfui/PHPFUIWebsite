@@ -23,7 +23,7 @@ else
 
 $fileManager->load();
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
-$controller->setGitRoot('../');
+$controller->setGitRoot(getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
 
