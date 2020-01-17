@@ -41,6 +41,12 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			$docblock = $this->factory->create($comments);
 			$callout = new \PHPFUI\Callout('secondary');
 			$callout->add($docblock->getSummary());
+			$desc = $docblock->getDescription();
+			if ($desc)
+				{
+				$callout->add('<br><br>');
+				$callout->add($this->parsedown->text($desc));
+				}
 			$container->add($callout);
 			}
 
