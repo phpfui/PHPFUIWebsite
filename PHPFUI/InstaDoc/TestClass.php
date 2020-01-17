@@ -35,14 +35,14 @@ class TestClass
 	 * that there is no point. Pointless really.....
 	 *
 	 * @param string $fred nothing to note here
-	 * @param unknown $unknown is pi
+	 * @param float $unknown is pi
 	 *
 	 * @api declares that elements are suitable for consumption by third parties.
 	 * @example shows the code of a specified example file or, optionally, just a portion of it.
 	 * @ignore tells phpDocumentor that the associated element is not to be included in the documentation.
 	 * @internal denotes that the associated elements is internal to this application or library and hides it by default.
 	 * @source shows the source code of the associated element.
-	 * @thows \Fred this is the text
+	 * @throws \Fred this is the text
 	 * @todo 	indicates whether any development activity should still be executed on the associated element.
 	 * @uses 	indicates a reference to (and from) a single associated element.
 	 * @var $Properties This the explaination of the var

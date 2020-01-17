@@ -5,9 +5,15 @@ namespace PHPFUI\InstaDoc\Section;
 class Doc extends \PHPFUI\InstaDoc\Section
 	{
 	private $class;
-
+	private $parsedown;
 	private $factory;
 	private $reflection;
+
+	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+		{
+		parent::__construct($controller);
+		$this->parsedown = new \Parsedown();
+		}
 
 	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
 		{
@@ -211,6 +217,12 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
 		$cell11->add($docBlock->getSummary());
+		$desc = $docBlock->getDescription();
+		if ($desc)
+			{
+			$cell11->add('<br><br>');
+			$cell11->add($this->parsedown->text($desc));
+			}
 
 		$tags = $docBlock->getTags();
 		if ($tags)
@@ -221,7 +233,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				$name = $tag->getName();
 				$description = trim($tag->getDescription());
 				$body = '';
-				if ($name == 'param' || ! $description)
+				if ($name == 'param')
 					{
 					continue;
 					}
@@ -248,6 +260,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				if (method_exists($tag, 'getLink'))
 					{
 					$body .= new \PHPFUI\Link($tag->getLink(), '', false);
+					}
+				if (method_exists($tag, 'getType'))
+					{
+					$body .= $this->getColor('type', $tag->getType()) . ' ';
 					}
 				if (method_exists($tag, 'getVariableName'))
 					{
@@ -421,7 +437,8 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			$description = trim($tag->getDescription());
 			if ($name == 'param' && $description)
 				{
-				$comments[$tag->getVariableName()] = $description;
+				$var = $tag->getVariableName();
+				$comments[$var] = "{$var} {$description}";
 				}
 			}
 

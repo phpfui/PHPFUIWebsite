@@ -12,6 +12,13 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$gitPage = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_ONPAGE, 0);
 		$limit = $this->controller->getParameter(\PHPFUI\InstaDoc\Controller::GIT_LIMIT, 20);
 
+		$offset = $this->controller->getGitFileOffset();
+
+		if ($offset && 0 === strpos($fullClassPath, $offset))
+			{
+			$fullClassPath = substr($fullClassPath, strlen($offset));
+			}
+
 		try
 			{
 			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
@@ -19,13 +26,14 @@ class Git extends \PHPFUI\InstaDoc\Section
 			}
 		catch (\Exception $e)
 			{
-			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . " is not a valid git repo in " . getcwd()));
+			$container->add(new \PHPFUI\SubHeader($this->controller->getGitRoot() . ' is not a valid git repo in ' . getcwd()));
 			$container->add($e->getMessage());
 
 			return $container;
 			}
 
 		$branch = substr($result, strpos($result, '[') + 1, strpos($result, ']') - 1);
+
 		if (! $branch)
 			{
 			$container->add(new \PHPFUI\SubHeader("Invalid branch name: {$branch}"));
@@ -57,6 +65,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		$parameters = $this->controller->getParameters();
 
 		$commits = $log->getCommits();
+
 		if (! count($commits))
 			{
 			$container->add(new \PHPFUI\SubHeader('No commits found'));
