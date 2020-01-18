@@ -3,8 +3,6 @@
 namespace PHPFUI;
 
 /**
- * UnorderedList <ul>
- *
  * Passing a Page to the constructor will allow the list item to be dragged and dropped
  */
 class UnorderedList extends HTMLList
@@ -12,8 +10,6 @@ class UnorderedList extends HTMLList
 	private $sortable;
 
 	/**
-	 * Construct a UnorderedList
-	 *
 	 * @param Page $page if supplied, then the unordered list will allow drag and drop
 	 */
 	public function __construct(Page $page = null)
@@ -29,9 +25,6 @@ class UnorderedList extends HTMLList
 			}
 		}
 
-	/**
-	 * Add a ListItem to the UnorderedList
-	 */
 	public function addItem(ListItem $item) : HTMLList
 		{
 		if ($this->sortable)

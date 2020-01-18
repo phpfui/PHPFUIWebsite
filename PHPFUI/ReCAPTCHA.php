@@ -25,8 +25,6 @@ class ReCAPTCHA extends HTML5Element
 	private $isValid = false;
 
 	/**
-	 * Constuct a ReCAPTCHA
-	 *
 	 * @param Page $page since we need to add JS
 	 * @param string $publicKey your public key
 	 * @param string $secretKey your private key

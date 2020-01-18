@@ -40,13 +40,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			{
 			$docblock = $this->factory->create($comments);
 			$callout = new \PHPFUI\Callout('secondary');
-			$callout->add($docblock->getSummary());
-			$desc = $docblock->getDescription();
-			if ($desc)
-				{
-				$callout->add('<br><br>');
-				$callout->add($this->parsedown->text($desc));
-				}
+			$callout->add($this->formatComments($docblock));
 			$container->add($callout);
 			}
 
@@ -222,12 +216,27 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$cell1->add('&nbsp;');
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
-		$cell11->add($docBlock->getSummary());
+		$cell11->add($this->formatComments($docBlock));
+		$gridX->add($cell11);
+
+		return $gridX;
+		}
+
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+		{
+		if (! $docBlock)
+			{
+			return '';
+			}
+
+		$container = new \PHPFUI\Container();
+
+		$container->add($docBlock->getSummary());
 		$desc = $docBlock->getDescription();
 		if ($desc)
 			{
-			$cell11->add('<br><br>');
-			$cell11->add($this->parsedown->text($desc));
+			$container->add('<br><br>');
+			$container->add($this->parsedown->text($desc));
 			}
 
 		$tags = $docBlock->getTags();
@@ -245,11 +254,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if ($name == 'var')
 					{
-					if ($description)
+					if (! $description)
 						{
-						$ul->addItem(new \PHPFUI\ListItem($tag->getDescription()));
+						continue;
 						}
-					continue;
 					}
 				if (method_exists($tag, 'getAuthorName'))
 					{
@@ -279,12 +287,10 @@ class Doc extends \PHPFUI\InstaDoc\Section
 				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> - {$body}"));
 				}
 
-			$cell11->add($ul);
+			$container->add($ul);
 			}
 
-		$gridX->add($cell11);
-
-		return $gridX;
+		return $container;
 		}
 
 	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
