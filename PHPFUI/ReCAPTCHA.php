@@ -5,19 +5,18 @@ namespace PHPFUI;
 /**
  * Implements Googles ReCaptcha
  *
- * This creates a UI element that displays the "I am not a
- * robot" checkbox.
+ * This creates a UI element that displays the "I am not a robot" checkbox.
  *
  * Suggested use on contact form
- *
- * $captcha = new \PHPFUI\ReCAPTCHA($this->page, 'public key',
- *   'private key');
+ * ```
+ * $captcha = new \PHPFUI\ReCAPTCHA($this->page, 'public key', 'private key');
  * $page->add($captcha);
- *
+ * ```
  * On post
- *
+ * ```
  * if ($captcha->isValid()) proceed();
  * else print_r($captcha->getErrors());
+ * ```
  */
 class ReCAPTCHA extends HTML5Element
 	{

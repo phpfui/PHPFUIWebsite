@@ -14,8 +14,7 @@ class UnorderedList extends HTMLList
 	/**
 	 * Construct a UnorderedList
 	 *
-	 * @param Page $page if supplied, then the unordered list will
-	 *             allow drag and drop
+	 * @param Page $page if supplied, then the unordered list will allow drag and drop
 	 */
 	public function __construct(Page $page = null)
 		{
@@ -31,9 +30,9 @@ class UnorderedList extends HTMLList
 		}
 
 	/**
-	 * Add a ListItem <li> to the UnorderedList <ul>
+	 * Add a ListItem to the UnorderedList
 	 */
-	public function addItem(ListItem $item) : UnorderedList
+	public function addItem(ListItem $item) : HTMLList
 		{
 		if ($this->sortable)
 			{

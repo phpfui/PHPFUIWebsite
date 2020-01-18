@@ -4,8 +4,9 @@ namespace PHPFUI\Input;
 
 /**
  * AutoComplete allows you to have an autocomplete field for any
- * arbitrary data source. Based on
- * https://github.com/devbridge/jQuery-Autocomplete
+ * arbitrary data source. Based on jQuery-Autocomplete
+ *
+ * @link https://github.com/devbridge/jQuery-Autocomplete
  */
 class AutoComplete extends Input
 	{
