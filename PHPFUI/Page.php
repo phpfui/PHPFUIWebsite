@@ -13,7 +13,6 @@ class Page extends Base
 	private $edgeVersion = 0;
 	private $favIcon;
 	private $fireFoxVersion = 0;
-	private $foundationStyleSheets = [];
 	private $headJavascript = [];
 	private $headScripts = [];
 	private $headTags = [
@@ -478,8 +477,6 @@ class Page extends Base
 			}
 
 		$output .= "<title>{$this->pageName}</title>{$nl}";
-		// always place foundation css first
-		$this->styleSheets = array_merge($this->foundationStyleSheets, $this->styleSheets);
 
 		foreach ($this->styleSheets as $sheet)
 			{

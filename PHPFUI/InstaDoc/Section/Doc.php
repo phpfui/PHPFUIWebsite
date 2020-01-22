@@ -255,7 +255,8 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if ($name == 'var')
 					{
-					if (! $description)
+					// useless if no description or type
+					if (! $description && ! $tag->getType())
 						{
 						continue;
 						}
@@ -287,10 +288,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					}
 				if (method_exists($tag, 'getVariableName'))
 					{
-					$body .= '<b>$'. $tag->getVariableName() . '</b> ';
+					$varname = $tag->getVariableName();
+					if ($varname)
+						{
+						$body .= '<b>$' . $varname . '</b> ';
+						}
 					}
 				$body .= $description;
-				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> - {$body}"));
+				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> {$body}"));
 				}
 
 			$container->add($ul);
