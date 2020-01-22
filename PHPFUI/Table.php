@@ -38,6 +38,14 @@ class Table extends HTML5Element
 		}
 
 	/**
+	 * Number of rows in the table.
+	 */
+	public function count() : int
+		{
+		return count($this->rows);
+		}
+
+	/**
 	 * Allow arrow keys to move up and down rows with edit controls in them.
 	 */
 	public function addArrowNavigation(Page $page) : Table
