@@ -30,7 +30,7 @@ class PropertyMatcher implements Matcher
     /**
      * Matches a specific property of a specific class.
      *
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function matches($object, $property)
     {

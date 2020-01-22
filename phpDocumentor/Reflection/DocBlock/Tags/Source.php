@@ -42,7 +42,7 @@ final class Source extends BaseTag implements Factory\StaticMethod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function create($body, DescriptionFactory $descriptionFactory = null, TypeContext $context = null)
     {

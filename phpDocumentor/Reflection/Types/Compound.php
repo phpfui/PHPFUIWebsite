@@ -79,7 +79,7 @@ final class Compound implements Type, IteratorAggregate
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getIterator()
     {

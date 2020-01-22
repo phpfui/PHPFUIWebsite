@@ -50,7 +50,7 @@ class PhpProcess extends Process
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function start(callable $callback = null, array $env = [])
     {

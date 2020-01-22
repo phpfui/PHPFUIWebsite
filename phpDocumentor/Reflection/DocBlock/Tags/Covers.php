@@ -42,7 +42,7 @@ final class Covers extends BaseTag implements Factory\StaticMethod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function create(
         $body,

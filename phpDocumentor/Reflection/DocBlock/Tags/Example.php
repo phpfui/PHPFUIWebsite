@@ -60,7 +60,7 @@ final class Example extends BaseTag implements Factory\StaticMethod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getContent()
     {
@@ -79,7 +79,7 @@ final class Example extends BaseTag implements Factory\StaticMethod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function create($body)
     {
