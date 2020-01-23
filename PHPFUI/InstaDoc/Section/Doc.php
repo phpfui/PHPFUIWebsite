@@ -153,30 +153,14 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tabs = new \PHPFUI\Tabs();
-		$table = $this->getContent('isPublic');
-		if (count($table))
+		foreach ($this->controller->getAccessTabs() as $section)
 			{
-			$tabs->addTab('Public', $table, true);
+			$table = $this->getContent('is' . $section);
+			if (count($table))
+				{
+				$tabs->addTab($section, $table, 'Public' == $section);
+				}
 			}
-
-		$table = $this->getContent('isProtected');
-		if (count($table))
-			{
-			$tabs->addTab('Protected', $table);
-			}
-
-		$table = $this->getContent('isPrivate');
-		if (count($table))
-			{
-			$tabs->addTab('Private', $table);
-			}
-
-		$table = $this->getContent('isStatic');
-		if (count($table))
-			{
-			$tabs->addTab('Static', $table);
-			}
-
 		$container->add($tabs);
 
 		return $container;
@@ -344,13 +328,13 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($constants)
 			{
 			ksort($constants);
-			$section = 'Contants';
+			$section = 'Constants';
 
 			foreach ($constants as $name => $value)
 				{
 				$constant = new \ReflectionClassConstant($this->class, $name);
 
-				if ('isStatic' != $accessType && $constant->{$accessType}())
+				if (method_exists($constant, $accessType) && $constant->{$accessType}())
 					{
 					if ($section)
 						{
@@ -373,7 +357,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			foreach ($properties as $property)
 				{
-				if ($property->{$accessType}())
+				if (method_exists($property, $accessType) && $property->{$accessType}())
 					{
 					if ($section)
 						{
@@ -396,7 +380,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 			foreach ($methods as $method)
 				{
-				if ($method->{$accessType}())
+				if (method_exists($method, $accessType) && $method->{$accessType}())
 					{
 					if ($section)
 						{
