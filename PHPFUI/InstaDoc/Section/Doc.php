@@ -166,6 +166,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $container;
 		}
 
+	/**
+	 * Return the color coded access level (public, private, protected)
+	 */
 	protected function getAccess($constant) : string
 		{
 		if ($constant->isPrivate())
@@ -190,14 +193,32 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	protected function getClassName(string $class, bool $asLink = true) : string
 		{
-		if ($asLink && (false !== strpos($class, '\\')))
+		if ($asLink && $class)
 			{
-			return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
+			if ($class[0] == '\\')
+				{
+				$class = substr($class, 1);
+				}
+			// if fully qualified, we are done
+			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($class))
+				{
+				return new \PHPFUI\Link($this->controller->getClassUrl($class), $class, false);
+				}
+
+			// try name in current namespace tree
+			$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
+			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
+				{
+				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $class, false);
+				}
 			}
 
 		return $this->getColor('type', $class);
 		}
 
+	/**
+	 * Add a color to a thing by class
+	 */
 	protected function getColor(string $class, string $name) : string
 		{
 		$span = new \PHPFUI\HTML5Element('span');
@@ -207,6 +228,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $span;
 		}
 
+	/**
+	 * Get comments indented
+	 */
 	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
 		{
 		if (! $docBlock)
@@ -225,6 +249,9 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		return $gridX;
 		}
 
+	/**
+	 * Format comments without indentation
+	 */
 	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
 		{
 		if (! $docBlock)
@@ -239,7 +266,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		if ($desc)
 			{
 			$container->add('<br><br>');
-			$container->add($this->parsedown->text($desc));
+			$container->add($this->getColor('description', $this->parsedown->text($desc)));
 			}
 
 		$tags = $docBlock->getTags();
@@ -286,7 +313,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$type = $tag->getType();
 					if ($type)
 						{
-						$body .= $this->getColor('type', $tag->getType()) . ' ';
+						$body .= $this->getClassName($type) . ' ';
 						}
 					}
 				if (method_exists($tag, 'getVariableName'))
@@ -294,11 +321,11 @@ class Doc extends \PHPFUI\InstaDoc\Section
 					$varname = $tag->getVariableName();
 					if ($varname)
 						{
-						$body .= '<b>$' . $varname . '</b> ';
+						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
 				$body .= $description;
-				$ul->addItem(new \PHPFUI\ListItem("<b>{$name}</b> {$body}"));
+				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
 			$container->add($ul);
