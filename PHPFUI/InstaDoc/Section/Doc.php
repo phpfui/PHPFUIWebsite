@@ -209,7 +209,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 			$namespacedClass = $this->reflection->getNamespaceName() . '\\' . $class;
 			if (\PHPFUI\InstaDoc\NamespaceTree::hasClass($namespacedClass))
 				{
-				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $class, false);
+				return new \PHPFUI\Link($this->controller->getClassUrl($namespacedClass), $namespacedClass, false);
 				}
 			}
 
