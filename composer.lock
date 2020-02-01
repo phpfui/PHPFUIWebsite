@@ -664,16 +664,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.8",
+            "version": "V1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "3b301f9701289ee52a74a76969a8d1ff40d1aadc"
+                "reference": "3a8aecca91aa96f0bf03159bbdd14d852b9601c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/3b301f9701289ee52a74a76969a8d1ff40d1aadc",
-                "reference": "3b301f9701289ee52a74a76969a8d1ff40d1aadc",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/3a8aecca91aa96f0bf03159bbdd14d852b9601c9",
+                "reference": "3a8aecca91aa96f0bf03159bbdd14d852b9601c9",
                 "shasum": ""
             },
             "require": {
@@ -713,20 +713,20 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-01-21T21:14:20+00:00"
+            "time": "2020-01-30T02:31:16+00:00"
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.26",
+            "version": "V6.0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "5459f254b558ffaa6db1337106f39c9897cd220c"
+                "reference": "90323d395e0955705aff8e2b42620e8740817dbb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/5459f254b558ffaa6db1337106f39c9897cd220c",
-                "reference": "5459f254b558ffaa6db1337106f39c9897cd220c",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/90323d395e0955705aff8e2b42620e8740817dbb",
+                "reference": "90323d395e0955705aff8e2b42620e8740817dbb",
                 "shasum": ""
             },
             "require": {
@@ -772,7 +772,7 @@
                 "zurb",
                 "zurb-foundation"
             ],
-            "time": "2020-01-14T21:16:15+00:00"
+            "time": "2020-01-23T02:31:26+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -1174,16 +1174,16 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.17.1.0",
+            "version": "v9.18.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "5451a9ad6d638559cf2a092880f935c39776134e"
+                "reference": "0e7860058231b5bc843d1f5ac5c091be6b15b2d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/5451a9ad6d638559cf2a092880f935c39776134e",
-                "reference": "5451a9ad6d638559cf2a092880f935c39776134e",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/0e7860058231b5bc843d1f5ac5c091be6b15b2d1",
+                "reference": "0e7860058231b5bc843d1f5ac5c091be6b15b2d1",
                 "shasum": ""
             },
             "require": {
@@ -1193,8 +1193,8 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8|^5.7",
-                "symfony/finder": "^3.4",
-                "symfony/var-dumper": "^3.4"
+                "symfony/finder": "^2.8|^3.4",
+                "symfony/var-dumper": "^2.8|^3.4"
             },
             "suggest": {
                 "ext-dom": "Needed to make use of the features in the utilities namespace"
@@ -1238,7 +1238,7 @@
                 "highlight.php",
                 "syntax"
             ],
-            "time": "2019-12-13T21:54:06+00:00"
+            "time": "2020-01-29T15:18:09+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1915,7 +1915,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
