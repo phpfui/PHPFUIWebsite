@@ -32,11 +32,14 @@ namespace Highlight;
 /**
  * @internal
  *
+ * @implements \ArrayAccess<int, string|null>
+ * @implements \IteratorAggregate<int, string|null>
+ *
  * @since 9.16.0.0
  */
 class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /** @var array<string | null> */
+    /** @var array<int, string|null> */
     private $data;
 
     /** @var int */
@@ -45,13 +48,16 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     /** @var string */
     public $input;
 
+    /**
+     * @param array<int, string|null> $results
+     */
     public function __construct(array $results)
     {
         $this->data = $results;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIterator()
     {
@@ -59,7 +65,7 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
@@ -67,7 +73,7 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetGet($offset)
     {
@@ -75,7 +81,7 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -83,7 +89,7 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
@@ -91,7 +97,9 @@ class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @return int
      */
     public function count()
     {
