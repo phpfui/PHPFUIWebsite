@@ -15,7 +15,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 		$this->parsedown = new \Parsedown();
 		}
 
-	public function generate(\PHPFUI\Page $page, string $fullClassPath) : \PHPFUI\Container
+	public function generate(\PHPFUI\Instadoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
 		{
 		$container = new \PHPFUI\Container();
 
@@ -656,7 +656,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 	protected function objectCompare($lhs, $rhs) : int
 		{
-		return $lhs->name <=> $rhs->name;
+		return strcasecmp($lhs->name, $rhs->name);
 		}
 
 	protected function objectSort(array &$objects) : void
