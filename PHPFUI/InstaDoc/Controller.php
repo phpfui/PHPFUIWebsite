@@ -6,7 +6,6 @@ class Controller
 	{
 
 	// parameters
-	public const AJAX_CALLBACK = 'a';
 	public const CLASS_NAME = 'c';
 	public const CSS_FILE = 'CSS';
 	public const DOC_PAGE = 'd';
@@ -36,7 +35,6 @@ class Controller
 		];
 
 	private const VALID_PARAMETERS = [
-		Controller::AJAX_CALLBACK => '',
 		Controller::NAMESPACE => '',
 		Controller::CLASS_NAME => '',
 		Controller::TAB_SIZE => '',
@@ -89,16 +87,6 @@ class Controller
 		$this->menu = null;
 
 		return $this;
-		}
-
-	public function getAccessTabs() : array
-		{
-		return $this->accessTabs;
-		}
-
-	public function setAccessTabs(array $tabs) : Controller
-		{
-		$this->accessTabs = $tabs;
 		}
 
 	/**
@@ -209,6 +197,11 @@ class Controller
 		$milliseconds = microtime(true) - $start;
 
 		return ['count' => $count, 'seconds' => $milliseconds];
+		}
+
+	public function getAccessTabs() : array
+		{
+		return $this->accessTabs;
 		}
 
 	/**
@@ -337,16 +330,9 @@ class Controller
 	 */
 	public function getPage() : PageInterface
 		{
-		if ($this->getParameter(Controller::AJAX_CALLBACK))
-			{
-			$page = new AjaxPage($this);
-			}
-		else
-			{
-			$page = new Page($this);
-			$page->setPageName($this->siteTitle);
-			$page->setHomeUrl($this->homeUrl);
-			}
+		$page = new Page($this);
+		$page->setPageName($this->siteTitle);
+		$page->setHomeUrl($this->homeUrl);
 
 		return $page;
 		}
@@ -444,6 +430,11 @@ class Controller
 			}
 
 		return $url;
+		}
+
+	public function setAccessTabs(array $tabs) : Controller
+		{
+		$this->accessTabs = $tabs;
 		}
 
 	/**

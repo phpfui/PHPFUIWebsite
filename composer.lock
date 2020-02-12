@@ -717,16 +717,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.28",
+            "version": "V6.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "4605826f73250ac6a71199f6be9090e54d6466f9"
+                "reference": "ddb2f9c0c3703d297224ac004c68f9a6166021d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/4605826f73250ac6a71199f6be9090e54d6466f9",
-                "reference": "4605826f73250ac6a71199f6be9090e54d6466f9",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/ddb2f9c0c3703d297224ac004c68f9a6166021d6",
+                "reference": "ddb2f9c0c3703d297224ac004c68f9a6166021d6",
                 "shasum": ""
             },
             "require": {
@@ -757,22 +757,21 @@
                     "email": "brucekwells@gmail.com"
                 }
             ],
-            "description": "PHP Object Oriented Wrapper for Zurb Foundation",
+            "description": "PHP Object Oriented Wrapper for the Foundation CSS Framework",
             "homepage": "http://www.phpfui.com",
             "keywords": [
                 "css",
                 "foundation",
+                "framework",
                 "html",
                 "object oriented",
                 "object-oriented",
                 "php",
                 "responsive",
                 "scss",
-                "ui",
-                "zurb",
-                "zurb-foundation"
+                "ui"
             ],
-            "time": "2020-02-06T23:51:57+00:00"
+            "time": "2020-02-12T01:39:54+00:00"
         },
         {
             "name": "phpspec/prophecy",
