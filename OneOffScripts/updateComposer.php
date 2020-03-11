@@ -42,7 +42,11 @@ function copyFiles(string $source, string $dest)
 			}
 		else
 			{
-			copy($item, $file);
+			$ext = strrchr($file, '.');
+			if (in_array($ext, ['.php', '.md']))
+				{
+				copy($item, $file);
+				}
 			}
 		}
 	}
@@ -91,6 +95,8 @@ foreach ($installed as $install)
 			{
 			foreach ($autoload['psr-4'] as $destDir => $sourceDir)
 				{
+				// just take first
+				break;
 				}
 			if (! $sourceDir)
 				{
@@ -102,13 +108,19 @@ foreach ($installed as $install)
 			{
 			foreach ($autoload['psr-0'] as $destDir => $sourceDir)
 				{
+				// just take first
+				break;
 				}
 			$deleteDestDir = $destDir . '\\';
-			$destDir = '.\\';
+			if ($sourceDir)
+				{
+				$destDir = '.\\';
+				}
 			}
 		else
 			{
-			echo "Did not load {$install['name']}\n";
+			echo "No autoload for {$install['name']}\n";
+			continue;
 			}
 
 		if (is_array($sourceDir))
@@ -116,14 +128,14 @@ foreach ($installed as $install)
 			$sourceDir = $sourceDir[0];
 			}
 
-		echo "destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
+		echo $install['name'] . ": destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
 
-		if ($destDir && $sourceDir)
+		if ($destDir)
 			{
 			$destDir = str_replace('\\', '/', $baseDir.$destDir);
 			$destDir = substr($destDir, 0, strlen($destDir) - 1);
 			$sourceDir = $vendorDir.$install['name'].'/'.$sourceDir;
-			echo "source $sourceDir to $destDir\n";
+			//echo "source $sourceDir to $destDir\n";
 			copyFiles($sourceDir, $destDir);
 			}
 		}

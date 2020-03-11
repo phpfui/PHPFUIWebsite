@@ -663,16 +663,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.13",
+            "version": "V1.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "a1449a26e70712110480e56b4acf3ec31fd0c55c"
+                "reference": "bd6fef98e44566593a67d1a8ba5573ef45a635ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/a1449a26e70712110480e56b4acf3ec31fd0c55c",
-                "reference": "a1449a26e70712110480e56b4acf3ec31fd0c55c",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/bd6fef98e44566593a67d1a8ba5573ef45a635ee",
+                "reference": "bd6fef98e44566593a67d1a8ba5573ef45a635ee",
                 "shasum": ""
             },
             "require": {
@@ -712,7 +712,7 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-02-14T23:13:52+00:00"
+            "time": "2020-03-07T03:34:18+00:00"
         },
         {
             "name": "phpfui/phpfui",
