@@ -87,6 +87,16 @@ foreach ($installed as $install)
 		continue;
 		}
 
+//	"autoload": {
+//			"psr-0": {
+//					"Highlight\\": "",
+//					"HighlightUtilities\\": ""
+//			},
+//			"files": [
+//					"HighlightUtilities/functions.php"
+//			]
+//	},
+
 	if (isset($install['autoload']))
 		{
 		$autoload = $install['autoload'];

@@ -61,7 +61,7 @@ final class Method extends BaseTag implements Factory\StaticMethod
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function create(
         $body,
@@ -91,12 +91,12 @@ final class Method extends BaseTag implements Factory\StaticMethod
                 )?
                 # Return type
                 (?:
-                    (
+                    (   
                         (?:[\w\|_\\\\]*\$this[\w\|_\\\\]*)
                         |
                         (?:
                             (?:[\w\|_\\\\]+)
-                            # array notation
+                            # array notation           
                             (?:\[\])*
                         )*
                     )

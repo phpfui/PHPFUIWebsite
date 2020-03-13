@@ -43,7 +43,7 @@ class PropertyRead extends TagWithType implements Factory\StaticMethod
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function create(
         $body,

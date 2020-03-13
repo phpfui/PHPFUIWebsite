@@ -5,15 +5,32 @@ set_time_limit(99999);
 
 if (true)
 	{
+	$libraries = [
+		'DeepCopy',
+		'Firebase',
+		'Gitonomy',
+		'Google',
+		'Grpc',
+		'GuzzleHttp',
+		'Highlight',
+		'Monolog',
+		'phpDocumentor',
+		'PHPFUI',
+		'PHPHtmlParser',
+		'PhpParser',
+		'PHPUnit',
+		'Psr',
+		'Rize',
+		'Symfony',
+		'Symfony',
+		'Webmozart',
+		];
+
 	$fileManager = new \PHPFUI\InstaDoc\FileManager();
-	$fileManager->addNamespace('PHPFUI', '../PHPFUI', true);
-	$fileManager->addNamespace('DeepCopy', '../DeepCopy', true);
-	$fileManager->addNamespace('PHPUnit', '../PHPUnit', true);
-	$fileManager->addNamespace('Gitonomy', '../Gitonomy', true);
-	$fileManager->addNamespace('Highlight', '../Highlight', true);
-	$fileManager->addNamespace('Symfony', '../Symfony', true);
-	$fileManager->addNamespace('phpDocumentor', '../phpDocumentor', true);
-	$fileManager->addNamespace('Webmozart', '../Webmozart', true);
+	foreach ($libraries as $library)
+		{
+		$fileManager->addNamespace($library, '../' . $library, true);
+		}
 	$fileManager->addNamespace('\\', '../NoNameSpace', true);
 	}
 else

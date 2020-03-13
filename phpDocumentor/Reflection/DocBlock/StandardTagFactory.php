@@ -103,7 +103,7 @@ final class StandardTagFactory implements TagFactory
     }
 
     /**
-     * @inheritdoc
+     * {@inheritDoc}
      */
     public function create($tagLine, TypeContext $context = null)
     {
@@ -123,7 +123,7 @@ final class StandardTagFactory implements TagFactory
     }
 
     /**
-     * @inheritdoc
+     * {@inheritDoc}
      */
     public function addParameter($name, $value)
     {
@@ -131,7 +131,7 @@ final class StandardTagFactory implements TagFactory
     }
 
     /**
-     * @inheritdoc
+     * {@inheritDoc}
      */
     public function addService($service, $alias = null)
     {
@@ -139,7 +139,7 @@ final class StandardTagFactory implements TagFactory
     }
 
     /**
-     * @inheritdoc
+     * {@inheritDoc}
      */
     public function registerTagHandler($tagName, $handler)
     {

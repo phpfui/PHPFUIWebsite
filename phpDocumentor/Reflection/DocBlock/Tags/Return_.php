@@ -32,7 +32,7 @@ final class Return_ extends TagWithType implements Factory\StaticMethod
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function create(
         $body,
