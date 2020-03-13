@@ -1504,16 +1504,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.14",
+            "version": "V1.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "bd6fef98e44566593a67d1a8ba5573ef45a635ee"
+                "reference": "1d0e0b9456205efb6ecf312a763872c0efc4dce2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/bd6fef98e44566593a67d1a8ba5573ef45a635ee",
-                "reference": "bd6fef98e44566593a67d1a8ba5573ef45a635ee",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/1d0e0b9456205efb6ecf312a763872c0efc4dce2",
+                "reference": "1d0e0b9456205efb6ecf312a763872c0efc4dce2",
                 "shasum": ""
             },
             "require": {
@@ -1553,20 +1553,20 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-03-07T03:34:18+00:00"
+            "time": "2020-03-13T02:27:03+00:00"
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.34",
+            "version": "V6.0.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a"
+                "reference": "c437e87391ca278e15864df3209f4f6a6c9e0ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/337d3f9ebb4b18b65a463d7f97cbb9013591637a",
-                "reference": "337d3f9ebb4b18b65a463d7f97cbb9013591637a",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/c437e87391ca278e15864df3209f4f6a6c9e0ce1",
+                "reference": "c437e87391ca278e15864df3209f4f6a6c9e0ce1",
                 "shasum": ""
             },
             "require": {
@@ -1611,7 +1611,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-03-07T03:16:22+00:00"
+            "time": "2020-03-13T02:24:49+00:00"
         },
         {
             "name": "phpspec/prophecy",
