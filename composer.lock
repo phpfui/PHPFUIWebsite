@@ -1508,12 +1508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "1d0e0b9456205efb6ecf312a763872c0efc4dce2"
+                "reference": "76f2bc2e95e76a31a5fcf0038c291f73466e9b87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/1d0e0b9456205efb6ecf312a763872c0efc4dce2",
-                "reference": "1d0e0b9456205efb6ecf312a763872c0efc4dce2",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/76f2bc2e95e76a31a5fcf0038c291f73466e9b87",
+                "reference": "76f2bc2e95e76a31a5fcf0038c291f73466e9b87",
                 "shasum": ""
             },
             "require": {
