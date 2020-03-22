@@ -2,8 +2,6 @@
 	"require": {
 		"php": ">=7.2",
 		"phpfui/instadoc": "^1.0",
-		"phpdocumentor/reflection-docblock": "^4.3",
-		"phpunit/phpunit": "^8.5",
 		"google/cloud-translate": "^1.7",
 		"nikic/php-parser": "^4.3",
 		"paquettg/php-html-parser": "^2.2"

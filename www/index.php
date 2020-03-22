@@ -8,6 +8,7 @@ if (true)
 	$libraries = [
 		'DeepCopy',
 		'Firebase',
+		'cebe',
 		'Gitonomy',
 		'Google',
 		'Grpc',

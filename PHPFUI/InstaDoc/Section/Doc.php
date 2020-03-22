@@ -12,7 +12,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct($controller);
-		$this->parsedown = new \Parsedown();
+		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		}
 
 	public function generate(\PHPFUI\Instadoc\PageInterface $page, string $fullClassPath) : \PHPFUI\Container
@@ -101,7 +101,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		if ($interfaces)
 			{
-			ksort($interfaces);
+			ksort($interfaces, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Implements';
 
 			foreach ($interfaces as $interface)
@@ -377,7 +377,7 @@ class Doc extends \PHPFUI\InstaDoc\Section
 
 		if ($constants)
 			{
-			ksort($constants);
+			ksort($constants, SORT_FLAG_CASE | SORT_STRING);
 			$section = 'Constants';
 
 			foreach ($constants as $name => $value)
