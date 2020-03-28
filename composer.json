@@ -4,6 +4,7 @@
 		"phpfui/instadoc": "^1.0",
 		"google/cloud-translate": "^1.7",
 		"nikic/php-parser": "^4.3",
-		"paquettg/php-html-parser": "^2.2"
+		"paquettg/php-html-parser": "^2.2",
+		"kukulich/fshl": "^2.1"
 	}
 }
