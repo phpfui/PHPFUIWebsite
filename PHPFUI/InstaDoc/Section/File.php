@@ -25,14 +25,15 @@ class File extends \PHPFUI\InstaDoc\Section
 
 		if ('PHP' != $css)
 			{
-//			$page->addStyleSheet("highlighter/styles/{$css}.css");
-
-			$highlighter = new \FSHL\Highlighter(new \FSHL\Output\Html());
-			$highlighter->setLexer(new \FSHL\Lexer\Php());
+			$page->addStyleSheet("highlighter/styles/{$css}.css");
+			$hl = new \Highlight\Highlighter();
 
 			// Highlight some code.
-			$code = new \PHPFUI\HTML5Element('div');
-			$code->add($highlighter->highlight($php));
+			$highlighted = $hl->highlight('php', $php);
+			$code = new \PHPFUI\HTML5Element('code');
+			$code->addClass('hljs');
+			$code->addClass($highlighted->language);
+			$code->add($highlighted->value);
 			$pre->add($code);
 			}
 		else

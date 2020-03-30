@@ -9,6 +9,7 @@ if (true)
 		'DeepCopy',
 		'Firebase',
 		'cebe',
+		'FSHL',
 		'Gitonomy',
 		'Google',
 		'Grpc',
