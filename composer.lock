@@ -383,16 +383,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.36.0",
+            "version": "v1.36.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "4764850f256a43b7513226a54a04b349f8f385d8"
+                "reference": "52254d4e59a0f0d29650d713c228ef74a088b86b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/4764850f256a43b7513226a54a04b349f8f385d8",
-                "reference": "4764850f256a43b7513226a54a04b349f8f385d8",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/52254d4e59a0f0d29650d713c228ef74a088b86b",
+                "reference": "52254d4e59a0f0d29650d713c228ef74a088b86b",
                 "shasum": ""
             },
             "require": {
@@ -440,20 +440,20 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2020-03-25T23:00:37+00:00"
+            "time": "2020-04-07T20:58:05+00:00"
         },
         {
             "name": "google/cloud-translate",
-            "version": "v1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "7bc7c536bbe73efbb28b887576da19d7834998fe"
+                "reference": "8487fe80d0757980318b12a10adbff2fbf50bad0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/7bc7c536bbe73efbb28b887576da19d7834998fe",
-                "reference": "7bc7c536bbe73efbb28b887576da19d7834998fe",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/8487fe80d0757980318b12a10adbff2fbf50bad0",
+                "reference": "8487fe80d0757980318b12a10adbff2fbf50bad0",
                 "shasum": ""
             },
             "require": {
@@ -490,7 +490,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Translation Client for PHP",
-            "time": "2020-03-13T00:24:10+00:00"
+            "time": "2020-04-07T20:58:05+00:00"
         },
         {
             "name": "google/common-protos",
@@ -1419,16 +1419,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.37",
+            "version": "V6.0.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "bf7670b05bb2939689763e4a9f4ef054e5d51099"
+                "reference": "060ef44bfdfd64e1d37aba7f90665faad518a313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/bf7670b05bb2939689763e4a9f4ef054e5d51099",
-                "reference": "bf7670b05bb2939689763e4a9f4ef054e5d51099",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/060ef44bfdfd64e1d37aba7f90665faad518a313",
+                "reference": "060ef44bfdfd64e1d37aba7f90665faad518a313",
                 "shasum": ""
             },
             "require": {
@@ -1473,7 +1473,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-03-30T22:15:49+00:00"
+            "time": "2020-04-03T17:44:39+00:00"
         },
         {
             "name": "psr/cache",
