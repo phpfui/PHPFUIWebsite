@@ -13,9 +13,14 @@ class TextHelper
 	 * directly as JavaScript (not JSON)
 	 *
 	 * @param array $array of php values
-	 * @param string $stringQuote optional quotes to use for string
+	 * @param string $stringQuote optional quotes to use for string.
+	 *  						 Include actual quotes in your string if you
+	 *  						 need specify different quotes in different
+	 *  						 places.
+	 * @param string $newLine Pass \n if you want human readable
+	 *  						 output, appends to , in output
 	 */
-	public static function arrayToJS(array $array, string $stringQuote = '') : string
+	public static function arrayToJS(array $array, string $stringQuote = '', string $newLine = '') : string
 		{
 		$normalArray = is_numeric(key($array));
 		$js = $normalArray ? '[' : '{';
@@ -27,10 +32,13 @@ class TextHelper
 
 			if (! $normalArray)
 				{ // use object notation
-
+				if (! ctype_alpha($key[0]))
+					{
+					$key = "{$stringQuote}{$key}{$stringQuote}";
+					}
 				$js .= $key . ':';
 				}
-			$comma = ',';
+			$comma = ',' . $newLine;
 
 			switch (gettype($value))
 				{
@@ -86,4 +94,15 @@ class TextHelper
 		{
 		return htmlspecialchars_decode($string, ENT_QUOTES | ENT_HTML5);
 		}
+
+	public static function replace_unicode_escape_sequence(array $match) : string
+		{
+		return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+		}
+
+	public static function unicode_decode(string $str) : string
+		{
+		return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'static::replace_unicode_escape_sequence', $str);
+		}
+
 	}
