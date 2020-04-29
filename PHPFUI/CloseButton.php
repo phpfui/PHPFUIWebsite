@@ -37,4 +37,3 @@ class CloseButton extends Button
 			}
 		}
 	}
-
