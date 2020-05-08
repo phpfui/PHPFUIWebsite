@@ -68,16 +68,16 @@
         },
         {
             "name": "components/jquery",
-            "version": "3.4.1",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "901828b7968b18319e377dc23d466f28426ee083"
+                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/901828b7968b18319e377dc23d466f28426ee083",
-                "reference": "901828b7968b18319e377dc23d466f28426ee083",
+                "url": "https://api.github.com/repos/components/jquery/zipball/b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
+                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
                 "shasum": ""
             },
             "type": "component",
@@ -106,7 +106,7 @@
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
-            "time": "2019-10-23T05:15:13+00:00"
+            "time": "2020-05-05T13:21:02+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1363,16 +1363,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.16",
+            "version": "V1.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "a2113604dae9168b5b1ae195d3d9c5ebb728c801"
+                "reference": "43f896e8c56169dd146199e60362653a8a0dabe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/a2113604dae9168b5b1ae195d3d9c5ebb728c801",
-                "reference": "a2113604dae9168b5b1ae195d3d9c5ebb728c801",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/43f896e8c56169dd146199e60362653a8a0dabe9",
+                "reference": "43f896e8c56169dd146199e60362653a8a0dabe9",
                 "shasum": ""
             },
             "require": {
@@ -1412,7 +1412,7 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-03-22T21:06:24+00:00"
+            "time": "2020-05-08T15:17:02+00:00"
         },
         {
             "name": "phpfui/phpfui",
