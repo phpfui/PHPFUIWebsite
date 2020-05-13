@@ -14,6 +14,7 @@ if (true)
 		'Grpc',
 		'GuzzleHttp',
 		'Highlight',
+		'HighlightUtilities',
 		'Monolog',
 		'NXP',
 		'phpDocumentor',
