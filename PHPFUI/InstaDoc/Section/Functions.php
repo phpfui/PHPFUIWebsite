@@ -37,6 +37,8 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 				}
 			}
 
+		sort($functions);
+
 		$namespace = '';
 		$needle = 'namespace ';
 		$index = strpos($file, $needle);

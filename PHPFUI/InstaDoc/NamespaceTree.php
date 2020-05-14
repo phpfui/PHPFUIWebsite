@@ -89,7 +89,6 @@ class NamespaceTree
 		{
 		$deleteThis = self::findNamespace($namespace);
 		unset($deleteThis->parent->children[$namespace], $deleteThis);
-
 		}
 
 	public static function findNamespace(string $namespace) : NamespaceTree

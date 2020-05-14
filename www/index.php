@@ -42,6 +42,7 @@ else
 	}
 
 $fileManager->load();
+\PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('Grpc\Gcp\generated');
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 $controller->setGitRoot(getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
