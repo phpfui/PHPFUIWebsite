@@ -43,6 +43,7 @@ else
 
 $fileManager->load();
 \PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('Grpc\Gcp\generated');
+\PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe\markdown\tests');
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 $controller->setGitRoot(getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
