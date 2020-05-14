@@ -46,6 +46,7 @@ $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 $controller->setGitRoot(getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
+$controller->setHomeUrl('/');
 
 if (true)
 	{
