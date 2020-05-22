@@ -622,16 +622,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v3.12.0",
+            "version": "v3.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "88f40ab54cea4764fbeeaf673217e113f99cf5f3"
+                "reference": "60f57530e64537a1fbec50e1ad47d87befd2d0fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/88f40ab54cea4764fbeeaf673217e113f99cf5f3",
-                "reference": "88f40ab54cea4764fbeeaf673217e113f99cf5f3",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/60f57530e64537a1fbec50e1ad47d87befd2d0fd",
+                "reference": "60f57530e64537a1fbec50e1ad47d87befd2d0fd",
                 "shasum": ""
             },
             "require": {
@@ -659,7 +659,7 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2020-05-15T23:56:30+00:00"
+            "time": "2020-05-21T01:33:38+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -935,20 +935,20 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.0.2",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c861fcba2ca29404dc9e617eedd9eff4616986b8"
+                "reference": "38914429aac460e8e4616c8cb486ecb40ec90bb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c861fcba2ca29404dc9e617eedd9eff4616986b8",
-                "reference": "c861fcba2ca29404dc9e617eedd9eff4616986b8",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/38914429aac460e8e4616c8cb486ecb40ec90bb1",
+                "reference": "38914429aac460e8e4616c8cb486ecb40ec90bb1",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2",
+                "php": ">=7.2",
                 "psr/log": "^1.0.1"
             },
             "provide": {
@@ -959,11 +959,11 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "elasticsearch/elasticsearch": "^6.0",
                 "graylog2/gelf-php": "^1.4.2",
-                "jakub-onderka/php-parallel-lint": "^0.9",
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
+                "php-parallel-lint/php-parallel-lint": "^1.0",
                 "phpspec/prophecy": "^1.6.1",
-                "phpunit/phpunit": "^8.3",
+                "phpunit/phpunit": "^8.5",
                 "predis/predis": "^1.1",
                 "rollbar/rollbar": "^1.3",
                 "ruflin/elastica": ">=0.90 <3.0",
@@ -1012,7 +1012,17 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2019-12-20T14:22:59+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/Seldaek",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-22T08:12:19+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -1068,16 +1078,16 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "v2.0.0",
+            "version": "V2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "913cf0a1e8920dbcc18649fa173a0c7e6ba5d5ef"
+                "reference": "7852fc7d04bcdb3aa60384a1f6dddfd637fedd70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/913cf0a1e8920dbcc18649fa173a0c7e6ba5d5ef",
-                "reference": "913cf0a1e8920dbcc18649fa173a0c7e6ba5d5ef",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/7852fc7d04bcdb3aa60384a1f6dddfd637fedd70",
+                "reference": "7852fc7d04bcdb3aa60384a1f6dddfd637fedd70",
                 "shasum": ""
             },
             "require": {
@@ -1116,7 +1126,7 @@
                 "mathmatics",
                 "parser"
             ],
-            "time": "2020-05-20T19:26:59+00:00"
+            "time": "2020-05-21T18:45:25+00:00"
         },
         {
             "name": "paquettg/php-html-parser",
@@ -1420,16 +1430,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.40",
+            "version": "V6.0.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "91e2cd7699a583fd163ec303b1f4424be2904163"
+                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/91e2cd7699a583fd163ec303b1f4424be2904163",
-                "reference": "91e2cd7699a583fd163ec303b1f4424be2904163",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
+                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
                 "shasum": ""
             },
             "require": {
@@ -1474,7 +1484,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-04-22T02:12:49+00:00"
+            "time": "2020-05-22T18:01:54+00:00"
         },
         {
             "name": "psr/cache",
