@@ -2,17 +2,16 @@
 
 namespace PHPFUI\PayPal;
 
-class PaymentMethod extends Base
+class Name extends Base
 	{
-
 	protected static $validFields = [
-		'payer_selected' => 'string',
-		'payee_preferred' => ['UNRESTRICTED', 'IMMEDIATE_PAYMENT_REQUIRED'],
+		'given_name' => 'string',
+		'surname' => 'string',
 		];
 
 	public function __construct()
 		{
 		parent::__construct();
 		}
-
 	}
+

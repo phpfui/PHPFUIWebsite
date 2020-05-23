@@ -2,17 +2,15 @@
 
 namespace PHPFUI\PayPal;
 
-class PaymentMethod extends Base
+class Frequency extends Base
 	{
-
 	protected static $validFields = [
-		'payer_selected' => 'string',
-		'payee_preferred' => ['UNRESTRICTED', 'IMMEDIATE_PAYMENT_REQUIRED'],
+		'interval_unit' => ['DAY', 'WEEK', 'MONTH', 'YEAR'],
+		'interval_count' => 'integer',
 		];
 
 	public function __construct()
 		{
 		parent::__construct();
 		}
-
 	}

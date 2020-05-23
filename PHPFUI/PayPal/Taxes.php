@@ -2,17 +2,16 @@
 
 namespace PHPFUI\PayPal;
 
-class PaymentMethod extends Base
+class Taxes extends Base
 	{
-
 	protected static $validFields = [
-		'payer_selected' => 'string',
-		'payee_preferred' => ['UNRESTRICTED', 'IMMEDIATE_PAYMENT_REQUIRED'],
+		'percentage' => 'string',
+		'inclusive' => 'boolean',
 		];
 
 	public function __construct()
 		{
 		parent::__construct();
 		}
-
 	}
+

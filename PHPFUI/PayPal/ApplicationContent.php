@@ -15,9 +15,15 @@ class ApplicationContent extends Base
 		'cancel_url' => 'string',
 		];
 
+	private static $initialized = false;
+
 	public function __construct()
 		{
+		if (! self::$initialized)
+			{
+			self::$validFields['payment_method'] = new PaymentMethod();
+			self::$initialized = true;
+			}
 		parent::__construct();
 		}
-
 	}
