@@ -9,17 +9,6 @@ class Card extends Base
 		'number' => 'string',
 		'expiry' => 'string',
 		'security_code' => 'integer',
-		'billing_address' => '',
+		'billing_address' => AddressPortable::class,
 		];
-
-	private static $initialized = false;
-
-	public function __construct()
-		{
-		if (! self::$initialized)
-			{
-			self::$validFields['billing_address'] = new AddressPortable();
-			self::$initialized = true;
-		parent::__construct();
-		}
 	}

@@ -8,9 +8,4 @@ class Frequency extends Base
 		'interval_unit' => ['DAY', 'WEEK', 'MONTH', 'YEAR'],
 		'interval_count' => 'integer',
 		];
-
-	public function __construct()
-		{
-		parent::__construct();
-		}
 	}

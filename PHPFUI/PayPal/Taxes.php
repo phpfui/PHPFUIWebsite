@@ -8,10 +8,4 @@ class Taxes extends Base
 		'percentage' => 'string',
 		'inclusive' => 'boolean',
 		];
-
-	public function __construct()
-		{
-		parent::__construct();
-		}
 	}
-

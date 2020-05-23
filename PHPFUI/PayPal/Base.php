@@ -7,10 +7,6 @@ abstract class Base
 	protected static $validFields = [];
 	private $data = [];
 
-	public function __construct()
-		{
-		}
-
 	/**
 	 * Unset fields will return null
 	 */
@@ -39,11 +35,6 @@ abstract class Base
 			$type = get_class($value);
 			}
 
-		if ('object' == gettype($expectedType))
-			{
-			$expectedType = get_class($expectedType);
-			}
-
 		if (is_array($expectedType))
 			{
 			if (! in_array($value, $expectedType))
@@ -61,10 +52,13 @@ abstract class Base
 			case 'string':
 				// limit strings to 127 characters
 				$value = substr($value, 0, 127);
+
 				break;
+
 			case 'double':
 				// 2 decimal paces
 				$value = number_format($value, 2);
+
 				break;
 			}
 
@@ -85,6 +79,11 @@ abstract class Base
 			}
 
 		return $result;
+		}
+
+	public function getJSON() : string
+		{
+		return json_encode($this->getData(), JSON_PRETTY_PRINT);
 		}
 
 	/**

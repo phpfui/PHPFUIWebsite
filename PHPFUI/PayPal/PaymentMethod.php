@@ -9,10 +9,4 @@ class PaymentMethod extends Base
 		'payer_selected' => 'string',
 		'payee_preferred' => ['UNRESTRICTED', 'IMMEDIATE_PAYMENT_REQUIRED'],
 		];
-
-	public function __construct()
-		{
-		parent::__construct();
-		}
-
 	}

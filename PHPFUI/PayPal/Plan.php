@@ -4,33 +4,29 @@ namespace PHPFUI\PayPal;
 
 class Plan extends Base
 	{
+
+	protected $billing_cycles = [];
 	protected static $validFields = [
 		'product_id' => 'string',
+		'description' => 'string',
 		'name' => 'string',
 		'status' => ['CREATED', 'INACTIVE', 'ACTIVE'],
-		'payment_preferences' => '',
-		'taxes' => '',
+		'payment_preferences' => PaymentPreferences::class,
+		'taxes' => Taxes::class,
 		'quantity_supported' => 'boolean',
 		];
 
-	private $billing_cycles = [];
-
-	private static $initialized = false;
-
-	public function __construct()
+	public function addBillingCycle(BillingCycle $billing_cycle) : self
 		{
-		if (! self::$initialized)
-			{
-			self::$validFields['payment_preferences'] = new PaymentPreferences();
-			self::$validFields['taxes'] = new Taxes();
-			self::$initialized = true;
-			}
-		parent::__construct();
+		$this->billing_cycles[] = $billing_cycle;
+
+		return $this;
 		}
 
 	public function getData() : array
 		{
 		$result = parent::getData();
+
 		if ($this->billing_cycles)
 			{
 			$result['billing_cycles'] = [];
@@ -42,12 +38,5 @@ class Plan extends Base
 			}
 
 		return $result;
-		}
-
-	public function addBillingCycle(BillingCycle $billing_cycle) : self
-		{
-		$this->billing_cycles[] = $billing_cycle;
-
-		return $this;
 		}
 	}
