@@ -1380,28 +1380,29 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.22",
+            "version": "V1.0.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "e2896374f7c8ec0d7dc1327470f3c31b290eefa0"
+                "reference": "7416e07c47159798e903ad7784a35d15d2cc32de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/e2896374f7c8ec0d7dc1327470f3c31b290eefa0",
-                "reference": "e2896374f7c8ec0d7dc1327470f3c31b290eefa0",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/7416e07c47159798e903ad7784a35d15d2cc32de",
+                "reference": "7416e07c47159798e903ad7784a35d15d2cc32de",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "^1.2",
                 "gitonomy/gitlib": "^1.2",
-                "php": ">=7.2",
+                "php": ">=7.1",
                 "phpdocumentor/reflection-docblock": "^5.0",
                 "phpfui/phpfui": "^6.0",
                 "scrivo/highlight.php": "^9.17"
             },
             "require-dev": {
-                "phpfui/html-unit-tester": "^1.0"
+                "phpfui/html-unit-tester": "^1.0",
+                "roave/security-advisories": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -1429,7 +1430,7 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-05-29T02:59:41+00:00"
+            "time": "2020-05-29T15:41:48+00:00"
         },
         {
             "name": "phpfui/phpfui",
