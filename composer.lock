@@ -223,16 +223,16 @@
         },
         {
             "name": "froala/wysiwyg-editor",
-            "version": "v2.9.5",
+            "version": "v2.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/froala/wysiwyg-editor.git",
-                "reference": "e9d09c486c927d2646064b82e26307e8fee75700"
+                "reference": "5759b5e76c350eed27d72859052ea43411049054"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/e9d09c486c927d2646064b82e26307e8fee75700",
-                "reference": "e9d09c486c927d2646064b82e26307e8fee75700",
+                "url": "https://api.github.com/repos/froala/wysiwyg-editor/zipball/5759b5e76c350eed27d72859052ea43411049054",
+                "reference": "5759b5e76c350eed27d72859052ea43411049054",
                 "shasum": ""
             },
             "type": "component",
@@ -263,7 +263,7 @@
                 "text",
                 "wysiwyg"
             ],
-            "time": "2019-04-12T09:45:52+00:00"
+            "time": "2020-04-30T06:54:52+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -383,16 +383,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.36.2",
+            "version": "v1.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "4ae49980a6c32758824838ca96205a1b22c8fc7a"
+                "reference": "f15c4466034ff4b5d75ff1903c9ca280be8fa3c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/4ae49980a6c32758824838ca96205a1b22c8fc7a",
-                "reference": "4ae49980a6c32758824838ca96205a1b22c8fc7a",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/f15c4466034ff4b5d75ff1903c9ca280be8fa3c5",
+                "reference": "f15c4466034ff4b5d75ff1903c9ca280be8fa3c5",
                 "shasum": ""
             },
             "require": {
@@ -440,20 +440,20 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2020-04-22T21:58:25+00:00"
+            "time": "2020-05-26T21:25:55+00:00"
         },
         {
             "name": "google/cloud-translate",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "8487fe80d0757980318b12a10adbff2fbf50bad0"
+                "reference": "d8b8df67d1816f85c8eeb6eafe9d725e6dcdb323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/8487fe80d0757980318b12a10adbff2fbf50bad0",
-                "reference": "8487fe80d0757980318b12a10adbff2fbf50bad0",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/d8b8df67d1816f85c8eeb6eafe9d725e6dcdb323",
+                "reference": "d8b8df67d1816f85c8eeb6eafe9d725e6dcdb323",
                 "shasum": ""
             },
             "require": {
@@ -490,7 +490,7 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Translation Client for PHP",
-            "time": "2020-04-07T20:58:05+00:00"
+            "time": "2020-05-26T21:25:55+00:00"
         },
         {
             "name": "google/common-protos",
@@ -583,16 +583,16 @@
         },
         {
             "name": "google/grpc-gcp",
-            "version": "0.1.4",
+            "version": "0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/grpc-gcp-php.git",
-                "reference": "e1ec44c0c39bd204868e2a2ed3cc87ed9006984e"
+                "reference": "bb9bdbf62f6ae4e73d5209d85b1d0a0b9855ff36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/e1ec44c0c39bd204868e2a2ed3cc87ed9006984e",
-                "reference": "e1ec44c0c39bd204868e2a2ed3cc87ed9006984e",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/bb9bdbf62f6ae4e73d5209d85b1d0a0b9855ff36",
+                "reference": "bb9bdbf62f6ae4e73d5209d85b1d0a0b9855ff36",
                 "shasum": ""
             },
             "require": {
@@ -609,29 +609,31 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Grpc\\Gcp\\": "src/",
-                    "": "src/generated/"
-                }
+                    "Grpc\\Gcp\\": "src/"
+                },
+                "classmap": [
+                    "src/generated/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "description": "gRPC GCP library for channel management",
-            "time": "2019-02-14T02:21:15+00:00"
+            "time": "2020-05-26T17:21:09+00:00"
         },
         {
             "name": "google/protobuf",
-            "version": "v3.12.1",
+            "version": "v3.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "60f57530e64537a1fbec50e1ad47d87befd2d0fd"
+                "reference": "571f9a4ba39826a18611ae568d97b6007954c070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/60f57530e64537a1fbec50e1ad47d87befd2d0fd",
-                "reference": "60f57530e64537a1fbec50e1ad47d87befd2d0fd",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/571f9a4ba39826a18611ae568d97b6007954c070",
+                "reference": "571f9a4ba39826a18611ae568d97b6007954c070",
                 "shasum": ""
             },
             "require": {
@@ -659,7 +661,7 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2020-05-21T01:33:38+00:00"
+            "time": "2020-05-27T17:57:58+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -704,16 +706,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.3",
+            "version": "6.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "aab4ebd862aa7d04f01a4b51849d657db56d882e"
+                "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/aab4ebd862aa7d04f01a4b51849d657db56d882e",
-                "reference": "aab4ebd862aa7d04f01a4b51849d657db56d882e",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
+                "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
                 "shasum": ""
             },
             "require": {
@@ -721,7 +723,7 @@
                 "guzzlehttp/promises": "^1.0",
                 "guzzlehttp/psr7": "^1.6.1",
                 "php": ">=5.5",
-                "symfony/polyfill-intl-idn": "^1.11"
+                "symfony/polyfill-intl-idn": "1.17.0"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -767,7 +769,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2020-04-18T10:38:46+00:00"
+            "time": "2020-05-25T19:35:05+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1279,41 +1281,38 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.4",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c"
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/da3fd972d6bafd628114f7e7e036f45944b62e9c",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "phpdocumentor/reflection-common": "^1.0.0 || ^2.0.0",
-                "phpdocumentor/type-resolver": "~0.4 || ^1.0.0",
-                "webmozart/assert": "^1.0"
+                "ext-filter": "^7.1",
+                "php": "^7.2",
+                "phpdocumentor/reflection-common": "^2.0",
+                "phpdocumentor/type-resolver": "^1.0",
+                "webmozart/assert": "^1"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.5",
-                "mockery/mockery": "^1.0",
-                "phpdocumentor/type-resolver": "0.4.*",
-                "phpunit/phpunit": "^6.4"
+                "doctrine/instantiator": "^1",
+                "mockery/mockery": "^1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.x-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "phpDocumentor\\Reflection\\": [
-                        "src/"
-                    ]
+                    "phpDocumentor\\Reflection\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1324,10 +1323,14 @@
                 {
                     "name": "Mike van Riel",
                     "email": "me@mikevanriel.com"
+                },
+                {
+                    "name": "Jaap van Otterdijk",
+                    "email": "account@ijaap.nl"
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2019-12-28T18:55:12+00:00"
+            "time": "2020-02-22T12:28:44+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1377,23 +1380,23 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.21",
+            "version": "V1.0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "5afa002baa5bdf5dbc085924daad1ea185e42ec5"
+                "reference": "e2896374f7c8ec0d7dc1327470f3c31b290eefa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/5afa002baa5bdf5dbc085924daad1ea185e42ec5",
-                "reference": "5afa002baa5bdf5dbc085924daad1ea185e42ec5",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/e2896374f7c8ec0d7dc1327470f3c31b290eefa0",
+                "reference": "e2896374f7c8ec0d7dc1327470f3c31b290eefa0",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "^1.2",
                 "gitonomy/gitlib": "^1.2",
                 "php": ">=7.2",
-                "phpdocumentor/reflection-docblock": "^4.3",
+                "phpdocumentor/reflection-docblock": "^5.0",
                 "phpfui/phpfui": "^6.0",
                 "scrivo/highlight.php": "^9.17"
             },
@@ -1426,26 +1429,26 @@
                 "foundation",
                 "phpdoc"
             ],
-            "time": "2020-05-23T04:31:15+00:00"
+            "time": "2020-05-29T02:59:41+00:00"
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.41",
+            "version": "V6.0.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf"
+                "reference": "d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
-                "reference": "0e238ac9cd90fec13341aa7ae86f365e5956cfcf",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b",
+                "reference": "d6a6e5564a508fd1815950f1eaa2f7862cf7fc4b",
                 "shasum": ""
             },
             "require": {
                 "components/jquery": "^3.3",
                 "fortawesome/font-awesome": "^5.2",
-                "froala/wysiwyg-editor": "2.9.5",
+                "froala/wysiwyg-editor": "^2.9",
                 "igorescobar/jquery-mask-plugin": "^1.14",
                 "php": ">=7.1",
                 "zurb/foundation": "^6.6"
@@ -1484,7 +1487,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-05-22T18:01:54+00:00"
+            "time": "2020-05-29T02:28:53+00:00"
         },
         {
             "name": "psr/cache",
