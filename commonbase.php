@@ -24,5 +24,7 @@ function autoload($className)
 	}
 
 spl_autoload_register('autoload');
+
 date_default_timezone_set('America/New_York');
 
+\SessionManager::start();

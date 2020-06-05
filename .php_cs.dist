@@ -1,6 +1,8 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
+  ->in(__DIR__.'\Example')
+  ->in(__DIR__.'\www\Examples')
   ->in(__DIR__.'\phpfui')
 ;
 

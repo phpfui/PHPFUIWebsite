@@ -3,12 +3,21 @@ include '../commonbase.php';
 
 set_time_limit(99999);
 
-if (true)
+$generateStaticFiles = false;
+$useComposer = false;
+$addExamples = true;
+
+if ($useComposer)
+	{
+	$fileManager = new \PHPFUI\InstaDoc\FileManager('../');
+	}
+else
 	{
 	$libraries = [
 		'DeepCopy',
 		'Firebase',
 		'cebe',
+		'Example',
 		'Gitonomy',
 		'Google',
 		'Grpc',
@@ -36,10 +45,6 @@ if (true)
 		}
 	$fileManager->addNamespace('\\', '../NoNameSpace', true);
 	}
-else
-	{
-	$fileManager = new \PHPFUI\InstaDoc\FileManager('../');
-	}
 
 $fileManager->load();
 \PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('Grpc\Gcp\generated');
@@ -50,14 +55,21 @@ $controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
 $controller->setHomeUrl('/');
 
-if (true)
-	{
-	echo $controller->display();
-	}
-else
+if ($generateStaticFiles)
 	{
 	echo '<pre>';
 	print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]));
+	}
+else
+	{
+	if ($addExamples)
+		{
+		$menu = $controller->getMenu();
+		$exampleMenu = \Example\Page::getMenu();
+		$menu->addSubMenu(new \PHPFUI\MenuItem('Examples'), $exampleMenu);
+		}
+
+	echo $controller->display();
 	}
 
 

@@ -22,6 +22,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		{
 		$url = $_ENV[__CLASS__ . '_url'] ?? 'http://127.0.0.1:8888';
 		$throttleMicroSeconds = $_ENV[__CLASS__ . '_delay'] ?? 0;
+
 		if (! filter_var($url, FILTER_VALIDATE_URL))
 			{
 			throw new \PHPUnit\Framework\Exception($url . ' is not a valid URL');
