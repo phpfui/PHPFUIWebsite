@@ -9,7 +9,7 @@ class SelectAutoComplete extends Page
 		{
 		parent::__construct();
 
-		$this->addBody(new \PHPFUI\Header('Select Auto Complete Country Example'));
+		$this->addBody(new \PHPFUI\Header('Select Auto Complete State Example'));
 
 		$this->addBody('If you have a lot of selections, then a <b>SelectAutoComplete</b> offers a drop in replacement for a <b>Select</b>, but a better user experience than selecting from a huge list. ');
 		$this->addBody(new \PHPFUI\Link('http://' . $_SERVER['SERVER_NAME'] . '/states.tsv', 'Data Source'));

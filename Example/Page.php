@@ -132,6 +132,7 @@ class Page extends \PHPFUI\Page
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('SelectAutoComplete', '/Examples/SelectAutoComplete.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('AutoComplete', '/Examples/AutoComplete.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Abide', '/Examples/Abide.php'));
+		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Orbit Carousel', '/Examples/Orbit.php'));
 		$exampleMenu->sort();
 
 		return $exampleMenu;
