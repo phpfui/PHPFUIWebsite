@@ -6,7 +6,7 @@ class Pagination
 	{
 	private int $center = 0;
 	private int $fastForward = 0;
-	private int $onPage = 1;
+	private int $onPage = 0;
 
 	private \PHPFUI\Page $page;
 	private int $totalPages = 10;

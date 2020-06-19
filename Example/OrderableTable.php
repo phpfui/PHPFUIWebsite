@@ -12,12 +12,12 @@ class OrderableTable extends \Example\Page
 		$this->addBody(new \PHPFUI\Header('Orderable Table'));
 		$this->addBody('<p>Drag the first column to change the order of the table.</p>');
 		$table = new \PHPFUI\OrderableTable($this);
-		$csvReader = new \Example\Model\CSVReader($_SERVER['DOCUMENT_ROOT'] . '/countries.csv');
+		$model = new \Example\Model\Country();
 		$first = true;
 		$table->setHeaders(['Country', 'Population', 'Land Area']);
 		$taken = [];
 
-		foreach ($csvReader as $row)
+		foreach ($model->getCountries() as $row)
 			{
 			$first = $row['Country'][0];
 

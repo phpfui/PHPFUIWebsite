@@ -5,9 +5,12 @@ namespace Example;
 class AutoComplete extends Page
 	{
 
+	private \Example\Model\Country $model;
+
 	public function __construct()
 		{
 		parent::__construct();
+		$this->model = new \Example\Model\Country();
 
 		$this->addBody(new \PHPFUI\Header('Auto Complete Country Example'));
 
@@ -28,10 +31,9 @@ class AutoComplete extends Page
 
 		if (empty($parameters['save']))
 			{
-			$csvReader = new \Example\Model\CSVReader($_SERVER['DOCUMENT_ROOT'] . '/countries.csv');
 			$names = explode(' ', trim($parameters['AutoComplete']));
 
-			foreach ($csvReader as $row)
+			foreach ($this->model->getCountries() as $row)
 				{
 				$pos = 0;
 				$country = $row['Country'];

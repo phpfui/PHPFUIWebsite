@@ -60,9 +60,11 @@ class Page extends \PHPFUI\Page
 
 		if (ctype_upper($class[0]))
 			{
+			$this->setDebug(1);
+
 			if (! empty($_POST['submit']) && \PHPFUI\Session::checkCSRF())
 				{
-				\PHPFUI\Session::setFlash('post', $_POST);
+				\PHPFUI\Session::setFlash('post', json_encode($_POST));
 				$this->redirect();
 
 				return;
@@ -82,12 +84,14 @@ class Page extends \PHPFUI\Page
 
 			if ($post)
 				{
+				$post = json_decode($post, true);
 				$callout = new \PHPFUI\Callout('success');
 				$callout->add('You posted the following:');
 				$ul = new \PHPFUI\UnorderedList();
 
 				foreach ($post as $key => $value)
 					{
+					$value = print_r($value, 1);
 					$ul->addItem(new \PHPFUI\ListItem("<b>{$key}</b> {$value}"));
 					}
 				$callout->add($ul);
@@ -133,6 +137,8 @@ class Page extends \PHPFUI\Page
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('AutoComplete', '/Examples/AutoComplete.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Abide', '/Examples/Abide.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Orbit Carousel', '/Examples/Orbit.php'));
+		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('To From List', '/Examples/ToFromList.php'));
+		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Accordion To From List', '/Examples/AccordionToFromList.php'));
 		$exampleMenu->sort();
 
 		return $exampleMenu;
