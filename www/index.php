@@ -1,5 +1,5 @@
 <?php
-include '../commonbase.php';
+include '../common.php';
 
 set_time_limit(99999);
 

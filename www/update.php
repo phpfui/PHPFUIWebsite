@@ -1,6 +1,6 @@
 <?php
 
-include '../commonbase.php';
+include '../common.php';
 
 $repo = new \Gitonomy\Git\Repository($_SERVER['DOCUMENT_ROOT'] . '/..');
 $wc = $repo->getWorkingCopy();

@@ -1,5 +1,5 @@
 <?php
 
-include '../../commonbase.php';
+include '../../common.php';
 
 echo new \Example\Pagination($_GET);

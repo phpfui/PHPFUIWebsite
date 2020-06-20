@@ -348,11 +348,9 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 			$info .= $this->getColor('type', $type->getName()) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
-
 		if ($property->isStatic())
 			{
 			$value = $property->getValue();
-
 			if ($value)
 				{
 				$info .= ' = ' . $this->getValueString($value);
