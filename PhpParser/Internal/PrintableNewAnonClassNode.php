@@ -19,7 +19,7 @@ class PrintableNewAnonClassNode extends Expr
 {
     /** @var Node\Arg[] Arguments */
     public $args;
-    /** @var null|Node\Name Name of extended class */
+    /** @var null|PhpParser\Node\Name Name of extended class */
     public $extends;
     /** @var Node\Name[] Names of implemented interfaces */
     public $implements;

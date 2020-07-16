@@ -18,7 +18,7 @@ class Class_ extends ClassLike
 
     /** @var int Type */
     public $flags;
-    /** @var null|Node\Name Name of extended class */
+    /** @var null|PhpParser\Node\Name Name of extended class */
     public $extends;
     /** @var Node\Name[] Names of implemented interfaces */
     public $implements;

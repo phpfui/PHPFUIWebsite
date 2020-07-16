@@ -2,156 +2,184 @@
 
 include 'commonbase.php';
 
-function deleteFiles(string $dir)
+class ComposerUpdater
 	{
-	try
+
+	private string $baseDir = '';
+
+	private string $vendorDir = 'vendor/';
+
+	private array $ignored = [];
+
+	public function setBaseDirectory(string $baseDir) : self
 		{
-			$iterator = new RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
-			foreach ($iterator as $filename => $fileInfo)
+		$this->baseDir = $baseDir;
+
+		return $this;
+		}
+
+	public function setVendorDirectory(string $vendorDir) : self
+		{
+		$this->vendorDir = $vendorDir;
+
+		return $this;
+		}
+
+	public function setIgnoredRepos(array $ignored) : self
+		{
+		$this->ignored = $ignored;
+
+		return $this;
+		}
+
+	public static function copyFiles(string $source, string $dest)
+		{
+		if (! file_exists($dest))
+			{
+			mkdir($dest, 0755, true);
+			}
+		$iterator = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+				\RecursiveIteratorIterator::SELF_FIRST);
+		foreach ($iterator as $item)
+			{
+			$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+			$file = str_replace('/', '\\', $file);
+			if ($item->isDir())
 				{
-				if (! $fileInfo->isDir())
+				if (! file_exists($file))
 					{
-					unlink($filename);
+					mkdir($file, 755, true);
 					}
 				}
-		}
-	catch (\Exception $e)
-		{
-		}
-	}
-
-function copyFiles(string $source, string $dest)
-	{
-	if (! file_exists($dest))
-		{
-		mkdir($dest, 0755, true);
-		}
-	$iterator = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST);
-	foreach ($iterator as $item)
-		{
-		$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-		$file = str_replace('/', '\\', $file);
-		if ($item->isDir())
-			{
-			if (! file_exists($file))
+			else
 				{
-				mkdir($file, 755, true);
-				}
-			}
-		else
-			{
-			$ext = strrchr($file, '.');
-			if (in_array($ext, ['.php', '.md']))
-				{
-				copy($item, $file);
+				$ext = strrchr($file, '.');
+				if (in_array($ext, ['.php', '.md']))
+					{
+					copy($item, $file);
+					}
 				}
 			}
 		}
+
+	public function copyPath(string $name, array $sources, string $destDir)
+		{
+		foreach ($sources as $sourceDir)
+			{
+			echo $name . ": destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
+
+			if ($destDir)
+				{
+				$destDir = str_replace('\\', '/', $this->baseDir.$destDir);
+				$destDir = substr($destDir, 0, strlen($destDir) - 1);
+				$sourceDir = $this->vendorDir.$name.'/'.$sourceDir;
+				//echo "source $sourceDir to $destDir\n";
+				$this->copyFiles($sourceDir, $destDir);
+				}
+			}
+		}
+
+	public function update() : void
+		{
+		$installed = json_decode(file_get_contents($this->vendorDir.'composer/installed.json'), true);
+		foreach ($installed as $install)
+			{
+			$use = true;
+			foreach ($this->ignored as $ignore)
+				{
+				if (stripos($install['name'], $ignore) !== false)
+					{
+					$use = false;
+					break;
+					}
+				}
+
+			if (! $use)
+				{
+				continue;
+				}
+
+		//	"autoload": {
+		//			"psr-0": {
+		//					"Highlight\\": "",
+		//					"HighlightUtilities\\": ""
+		//			},
+		//			"files": [
+		//					"HighlightUtilities/functions.php"
+		//			]
+		//	},
+
+			if (isset($install['autoload']))
+				{
+				$autoload = $install['autoload'];
+				$destDir = $sourceDir = '';
+				if (! empty($autoload['psr-4']))
+					{
+					foreach ($autoload['psr-4'] as $destDir => $sourceDir)
+						{
+						if (! $sourceDir)
+							{
+							$sourceDir = '.';
+							}
+						if (! is_array($sourceDir))
+							{
+							$sourceDir = [$sourceDir];
+							}
+						$this->copyPath($install['name'], $sourceDir, $destDir);
+						}
+					}
+				else if (! empty($autoload['psr-0']))
+					{
+					foreach ($autoload['psr-0'] as $destDir => $sourceDir)
+						{
+						if ($sourceDir)
+							{
+							$destDir = '.\\';
+							}
+						if (! is_array($sourceDir))
+							{
+							$sourceDir = [$sourceDir];
+							}
+						$this->copyPath($install['name'], $sourceDir, $destDir);
+						}
+					}
+				else
+					{
+					echo "No autoload for {$install['name']}\n";
+					continue;
+					}
+				}
+			else
+				{
+				echo "No autoloader for {$install['name']}\n";
+				}
+			}
+		}
 	}
 
-$baseDir = "";
-$vendorDir = $baseDir.'vendor/';
+$updater = new ComposerUpdater();
 
-$ignored = [
-	'twig',
-	'tinify',
-	'ralouphie',
-	'tecnickcom',
-	'phpunit',
-	'sebastian',
-	'phar-io',
-	'Prophecy',
-//	'Webmozart',
-//	'phpdocumentor',
+$updater->setIgnoredRepos([
+	'components',
+	'Composer',
 	'doctrine',
+	'GPBMetadata',
+	'Jean85',
+	'OndraM',
+	'PackageVersions',
+	'phar-io',
+	'PHPStan',
+	'phpunit',
+	'Prophecy',
+	'ralouphie',
+	'sebastian',
+	'Symplify',
+	'tecnickcom',
 	'theseer',
-	];
+	'tinify',
+	'twig',
+	]);
 
-$installed = json_decode(file_get_contents($vendorDir.'composer/installed.json'), true);
-foreach ($installed as $install)
-	{
-	$use = true;
-	foreach ($ignored as $ignore)
-		{
-		if (stripos($install['name'], $ignore) !== false)
-			{
-			$use = false;
-			break;
-			}
-		}
-
-	if (! $use)
-		{
-		continue;
-		}
-
-//	"autoload": {
-//			"psr-0": {
-//					"Highlight\\": "",
-//					"HighlightUtilities\\": ""
-//			},
-//			"files": [
-//					"HighlightUtilities/functions.php"
-//			]
-//	},
-
-	if (isset($install['autoload']))
-		{
-		$autoload = $install['autoload'];
-		$destDir = $sourceDir = '';
-		if (! empty($autoload['psr-4']))
-			{
-			foreach ($autoload['psr-4'] as $destDir => $sourceDir)
-				{
-				// just take first
-				break;
-				}
-			if (! $sourceDir)
-				{
-				$sourceDir = '.';
-				}
-			$deleteDestDir = $destDir;
-			}
-		else if (! empty($autoload['psr-0']))
-			{
-			foreach ($autoload['psr-0'] as $destDir => $sourceDir)
-				{
-				// just take first
-				break;
-				}
-			$deleteDestDir = $destDir . '\\';
-			if ($sourceDir)
-				{
-				$destDir = '.\\';
-				}
-			}
-		else
-			{
-			echo "No autoload for {$install['name']}\n";
-			continue;
-			}
-
-		if (is_array($sourceDir))
-			{
-			$sourceDir = $sourceDir[0];
-			}
-
-		echo $install['name'] . ": destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
-
-		if ($destDir)
-			{
-			$destDir = str_replace('\\', '/', $baseDir.$destDir);
-			$destDir = substr($destDir, 0, strlen($destDir) - 1);
-			$sourceDir = $vendorDir.$install['name'].'/'.$sourceDir;
-			//echo "source $sourceDir to $destDir\n";
-			copyFiles($sourceDir, $destDir);
-			}
-		}
-	else
-		{
-//		echo "No autoloader for {$install['name']}\n";
-		}
-	}
+$updater->update();
 
