@@ -144,6 +144,13 @@ class ComposerUpdater
 						$this->copyPath($install['name'], $sourceDir, $destDir);
 						}
 					}
+				else if (! empty($autoload['classmap']))
+					{
+					foreach ($autoload['classmap'] as $file)
+						{
+						copy('vendor/' . $install['name'] . '/' . $file, 'NoNameSpace/' . $file);
+						}
+					}
 				else
 					{
 					echo "No autoload for {$install['name']}\n";
