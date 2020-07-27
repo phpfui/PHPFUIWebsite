@@ -5,8 +5,5 @@
 		"google/cloud-translate": "^1.7",
 		"paquettg/php-html-parser": "^2.2",
 		"nxp/math-executor": "^2.0"
-	},
-	"require-dev": {
-		"rector/rector": "^0.7.48"
 	}
 }
