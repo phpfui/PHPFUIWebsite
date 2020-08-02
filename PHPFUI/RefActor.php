@@ -5,41 +5,325 @@ namespace PHPFUI;
 class RefActor implements \PHPParser\ErrorHandler
 	{
 
-	// Settings
-	private int $PHPVersion;
+	private array $actors = [];
+
+	private string $currentFile;
 
 	// user parameters
 	private array $directories = [];
 
 	private array $files = [];
 
-	private array $actors = [];
+	private \PhpParser\Lexer\Emulative $lexer;
+
+	private ?\Psr\Log\LoggerInterface $logger;
 
 	// internal properties
 	private $parser;
 
-	private ?\Psr\Log\LoggerInterface $logger;
+	// Settings
+	private int $PHPVersion;
+
+	private \PhpParser\PrettyPrinter\Standard $printer;
 
 	private array $reviews = [];
-
-	private string $currentFile;
 
 	public function __construct()
 		{
 		// initialize all the parameters to defaults
 		$reflection = new \ReflectionClass($this);
 		$methods = $reflection->getMethods();
+
 		foreach ($methods as $method)
 			{
 			$name = $method->name;
-			if (strpos($name, 'set') === 0)
+
+			if (0 === strpos($name, 'set'))
 				{
 				// call the set function with default parameters
-				$this->$name();
+				$this->{$name}();
 				}
 			}
 		$factory = new \PhpParser\ParserFactory();
-		$this->parser = $factory->create($this->PHPVersion);
+		$this->lexer = new \PhpParser\Lexer\Emulative([
+				'usedAttributes' => [
+						'comments',
+						'startLine', 'endLine',
+						'startTokenPos', 'endTokenPos',
+				],
+		]);
+		$this->parser = $factory->create($this->PHPVersion, $this->lexer);
+		$this->printer = new \PhpParser\PrettyPrinter\Standard();
+		}
+
+	/**
+	 * Actors are processed in order of addition for each file processed.
+	 */
+	public function addActor(\PHPFUI\RefActor\Actor\Base $actor) : self
+		{
+		$actor->setRefActor($this);
+		$this->actors[get_class($actor)] = $actor;
+
+		return $this;
+		}
+
+	/**
+	 * Directories are processed in order of adding, then files by OS order defined by DirectoryIterator
+	 */
+	public function addDirectory(string $directory, bool $recurseIntoDirectories = true, array $fileExtensions = ['.php']) : self
+		{
+		$this->directories[$directory] = ['recurse' => $recurseIntoDirectories, 'ext' => $fileExtensions];
+
+		return $this;
+		}
+
+	/**
+	 * Files are processed after directories in order added. You can add a file from an Actor if
+	 * desired.
+	 */
+	public function addFile(string $file) : self
+		{
+		$this->files[$file] = time();
+
+		return $this;
+		}
+
+	public function clearReviews() : self
+		{
+		$this->reviews = [];
+
+		return $this;
+		}
+
+	/**
+	 * Start RefActoring with the current settings
+	 */
+	public function execute() : self
+		{
+		$this->clearReviews();
+
+		foreach ($this->directories as $directory => $settings)
+			{
+			$extensions = array_flip($settings['ext']);
+
+			try
+				{
+				if ($settings['recurse'])
+					{
+					$iterator = new \RecursiveIteratorIterator(
+							new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
+							\RecursiveIteratorIterator::SELF_FIRST);
+					}
+				else
+					{
+					$iterator = new \DirectoryIterator($directory);
+					}
+				}
+			catch (\Throwable $e)
+				{
+				$this->log('error', __METHOD__ . ': ' . $e->getMessage());
+
+				continue;
+				}
+
+			foreach ($iterator as $item)
+				{
+				if ('file' == $item->getType())
+					{
+					$file = $item->getPathname();
+					$ext = strrchr($file, '.');
+
+					if ($ext && isset($extensions[$ext]))
+						{
+						$this->processFile($file);
+						}
+					}
+				}
+			}
+
+		foreach ($this->files as $file => $timeAdded)
+			{
+			$this->processFile($file);
+			}
+
+		return $this;
+		}
+
+	/**
+	 * Reveiws are critiques of Actors, generally errors, warnings, etc.
+	 *
+	 * @param string[] $types array of types to return (method names from \Psr\Log\LoggerInterface) or empty for all
+	 *
+	 * @return [$type][]
+	 */
+	public function getReviews(array $types = []) : array
+		{
+		if (empty($types))
+			{
+			return $this->reviews;
+			}
+
+		$retVals = [];
+
+		foreach ($types as $type)
+			{
+			$retVals[$type] = $this->reviews[$type] ?? [];
+			}
+
+		return $retVals;
+		}
+
+	/**
+	 * PHPParse error handler
+	 */
+	public function handleError(\PHPParser\Error $error) : void
+		{
+		$line = -1 != $error->getStartLine() ? 'Line: ' . $error->getStartLine() : '';
+		$this->log('error', "PHPParser error: {$error->getRawMessage()} in file {$this->currentFile} {$line}");
+		}
+
+	public function log(string $type, string $message, array $context = []) : self
+		{
+//		echo $message."\n";
+		$this->reviews[$type][] = $message;
+
+		if ($this->logger)
+			{
+			$this->logger->{$type}($message, $context);
+			}
+
+		return $this;
+		}
+
+	public function printToFile(string $newFile, array $statements) : self
+		{
+		$this->log('notice', __METHOD__ . ': Printing new file ' . $newFile);
+		$newCode = $this->printer->prettyPrintFile($statements);
+		$parts = explode('/', $newFile);
+		array_pop($parts);
+		$path = implode('/', $parts);
+
+		if (! file_exists($path))
+			{
+			mkdir($path, 0777, true);
+			}
+		file_put_contents($newFile, $newCode);
+
+		return $this;
+		}
+
+	/**
+	 * You can process one file at a time if you like
+	 */
+	public function processFile(string $file) : self
+		{
+	  if (! file_exists($file))
+		  {
+			$this->log('error', __METHOD__ . ": File {$file} not found");
+
+			return $this;
+		  }
+
+		$this->currentFile = $file;
+		$this->log('info', __METHOD__ . ': Start processing ' . $file);
+
+		$PHP = file_get_contents($file);
+		$newPHP = $this->processPHP($PHP, $file);
+
+		if (null === $newPHP)
+			{
+			$this->log('error', __METHOD__ . ': Error processing ' . $file);
+			}
+		else
+			{
+			$this->log('info', __METHOD__ . ': Done processing ' . $file);
+			}
+
+		if (strlen($newPHP))
+			{
+			file_put_contents($file, $newPHP);
+			}
+
+		return $this;
+		}
+
+	/**
+	 * Process a string as PHP code
+	 *
+	 * @return ?string null is an error, an empty string is no change, else changed PHP code
+	 */
+	public function processPHP(string $PHP, string $file = '') : ?string
+		{
+		$oldStmts = $this->parser->parse($PHP, $this);
+
+		if (! is_array($oldStmts))
+			{
+			return null;
+			}
+
+		$traverser = new \PhpParser\NodeTraverser();
+		$traverser->addVisitor(new \PhpParser\NodeVisitor\CloningVisitor());
+
+		foreach ($this->actors as $actor)
+			{
+			if ($actor->shouldProcessFile($file))
+				{
+				$actor->setCurrentFile($file);
+				$traverser->addVisitor($actor);
+				}
+			}
+		$oldTokens = $this->lexer->getTokens();
+		$newStmts = $traverser->traverse($oldStmts);
+		$applied = [];
+
+		foreach ($this->actors as $actor)
+			{
+			if ($actor->getPrint())
+				{
+				$applied[] = get_class($actor);
+				}
+			}
+		$newPhp = '';
+
+		if (count($applied))
+			{
+			$this->log('info', __METHOD__ . ': Printing ' . $file . ' Applied: ' . implode(', ', $applied));
+			$newPhp = $this->printer->printFormatPreserving($newStmts, $oldStmts, $oldTokens);
+			}
+
+		return $newPhp;
+	  }
+
+	public function removeActor(\PHPFUI\RefActor\Actor $actor) : self
+		{
+		unset($this->actors[get_class($actor)]);
+
+		return $this;
+		}
+
+	public function removeDirectory(string $directory) : self
+		{
+		unset($this->directories[$directory]);
+
+		return $this;
+		}
+
+	public function removeFile(string $file) : self
+		{
+		unset($this->files[$file]);
+
+		return $this;
+		}
+
+	/**
+	 * Register a logger to get immediate feedback, or call getReviews after calling execute for all
+	 * reviews so far.
+	 */
+	public function setLogger(?\Psr\Log\LoggerInterface $logger = null) : self
+		{
+		$this->logger = $logger;
+
+		return $this;
 		}
 
 	/**
@@ -60,202 +344,6 @@ class RefActor implements \PHPParser\ErrorHandler
 		$this->PHPVersion = $PHPVersion;
 
 		return $this;
-		}
-
-	/**
-	 * Directories are processed in order of adding, then files by OS order defined by DirectoryIterator
-	 */
-	public function addDirectory(string $directory, bool $recurseIntoDirectories = true, array $fileExtensions = ['.php']) : self
-		{
-		$this->directories[$directory] = ['recurse' => $recurseIntoDirectories, 'ext' => $fileExtensions];
-
-		return $this;
-		}
-
-	public function removeDirectory(string $directory) : self
-		{
-		unset($this->directories[$directory]);
-
-		return $this;
-		}
-
-	/**
-	 * Files are processed after directories in order added. You can add a file from an Actor if
-	 * desired.
-	 */
-	public function addFile(string $file) : self
-		{
-		$this->files[$file] = time();
-
-		return $this;
-		}
-
-	public function removeFile(string $file) : self
-		{
-		unset($this->files[$file]);
-
-		return $this;
-		}
-
-	/**
-	 * Actors are processed in order of addition for each file processed.
-	 */
-	public function addActor(\PHPFUI\RefActor\Actor $actor) : self
-		{
-		$this->actors[get_class($actor)] = $actor;
-
-		return $this;
-		}
-
-	public function removeActor(\PHPFUI\RefActor\Actor $actor) : self
-		{
-		unset($this->actors[get_class($actor)]);
-
-		return $this;
-		}
-
-	/**
-	 * Start RefActoring with the current settings
-	 */
-	public function execute() : self
-		{
-		$this->clearReviews();
-
-		foreach ($this->directories as $directory => $settings)
-			{
-			$extensions = array_flip($settings['ext']);
-			try
-				{
-				if ($settings['recurse'])
-					{
-					$iterator = new \RecursiveIteratorIterator(
-							new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-							\RecursiveIteratorIterator::SELF_FIRST);
-					}
-				else
-					{
-					$iterator = new \DirectoryIterator($directory);
-					}
-				}
-			catch (\Throwable $e)
-				{
-				$this->log('error', __METHOD__ . ': ' . $e->getMessage());
-				continue;
-				}
-
-			foreach ($iterator as $item)
-				{
-				if ($item->getType() == 'file')
-					{
-					$file = $item->getPathname();
-					$ext = strrchr($file, '.');
-					if (! $ext)
-						{
-						continue;
-						}
-					if (isset($extensions[$ext]))
-						{
-						$this->processFile($file);
-						}
-					}
-				}
-			}
-
-		foreach ($this->files as $file => $timeAdded)
-			{
-			$this->processFile($file);
-			}
-
-		return $this;
-		}
-
-	private function log(string $type, string $message, array $context = []) : self
-		{
-		$this->reviews[$type][] = $message;
-
-		if ($this->logger)
-			{
-			$this->logger->$type($message, $context);
-			}
-
-		return $this;
-		}
-
-	public function processFile(string $file) : self
-		{
-	  if (! file_exists($file))
-		  {
-			$this->log('error', __METHOD__ . ": File {$file} not found");
-
-			return $this;
-		  }
-
-		$this->currentFile = $file;
-		$this->log('info', __METHOD__ . ': Start processing ' . $file);
-
-		$php = file_get_contents($file);
-
-		$ast = $this->parser->parse($php, $this);
-
-		foreach ($this->actors as $name => $actor)
-			{
-			$this->log('debug', __METHOD__ . ': Running Actor ' . $name);
-			}
-
-		$this->log('info', __METHOD__ . ': Done processing ' . $file);
-
-		return $this;
-	  }
-
-	public function clearReviews() : self
-		{
-		$this->reviews = [];
-
-		return $this;
-		}
-
-	/**
-	 * Register a logger to get immediate feedback, or call getReviews after calling execute for all
-	 * reviews so far.
-	 */
-	public function setLogger(?\Psr\Log\LoggerInterface $logger = null) : self
-		{
-		$this->logger = $logger;
-
-		return $this;
-		}
-
-	/**
-	 * Reveiws are crituques of Actors, generally errors, warnings, etc.
-	 *
-	 * @param string $type literal of the method names from \Psr\Log\LoggerInterface or empty for all
-	 *
-	 * @return [$type][]
-	 */
-	public function getReviews(string $type = '') : array
-		{
-		if (empty($type))
-			{
-			return $this->reviews;
-			}
-
-		$reflection = new \ReflectionClass(\Psr\Log\LoggerInterface::class);
-		try
-			{
-			$reflection->getMethod($type);
-			}
-		catch (\Throwable $e)
-			{
-			return ['error' => [__METHOD__ . ": {$type} is not a valid review type"]];
-			}
-
-		return [$type => $this->reviews[$type] ?? []];
-		}
-
-	public function handleError(\PHPParser\Error $error)
-		{
-		$line = $error->getStartLine() != -1 ? 'Line: ' . $error->getStartLine() : '';
-		$this->log('error', "PHPParser error: {$error->getRawMessage()} in file {$this->currentFile} {$line}");
 		}
 
 	}
