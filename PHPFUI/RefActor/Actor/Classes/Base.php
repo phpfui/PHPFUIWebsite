@@ -28,9 +28,9 @@ abstract class Base extends \PHPFUI\RefActor\Actor\Base
 			}
 		}
 
-	public function getClassInfo(string $fqn) : array
+	public function getClassInfo(?string $fqn) : array
 		{
-		if (isset($this->classMap[$fqn]))
+		if ($fqn && isset($this->classMap[$fqn]))
 			{
 			return $this->classMap[$fqn];
 			}
@@ -98,9 +98,11 @@ abstract class Base extends \PHPFUI\RefActor\Actor\Base
 		return $this->currentNamespace;
 		}
 
-	public function setCurrentNameSpace(string $currentNamespace) : string
+	public function setCurrentNameSpace(string $currentNamespace) : self
 		{
 		$this->currentNamespace = $currentNamespace;
+
+		return $this;
 		}
 
 	public function setBaseDirectory(string $baseDirectory) : self

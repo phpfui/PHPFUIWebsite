@@ -197,7 +197,7 @@ class RefActor implements \PHPParser\ErrorHandler
 
 	public function printToFile(string $newFile, array $statements) : self
 		{
-		$this->log('notice', __METHOD__ . ': Printing new file ' . $newFile);
+		$this->log('notice', 'Printing new file ' . $newFile);
 		$newCode = $this->printer->prettyPrintFile($statements);
 		$parts = explode('/', $newFile);
 		array_pop($parts);
@@ -219,24 +219,24 @@ class RefActor implements \PHPParser\ErrorHandler
 		{
 	  if (! file_exists($file))
 		  {
-			$this->log('error', __METHOD__ . ": File {$file} not found");
+			$this->log('error', "File {$file} not found");
 
 			return $this;
 		  }
 
 		$this->currentFile = $file;
-		$this->log('info', __METHOD__ . ': Start processing ' . $file);
+		$this->log('info', 'Start processing ' . $file);
 
 		$PHP = file_get_contents($file);
 		$newPHP = $this->processPHP($PHP, $file);
 
 		if (null === $newPHP)
 			{
-			$this->log('error', __METHOD__ . ': Error processing ' . $file);
+			$this->log('error', 'Error processing ' . $file);
 			}
 		else
 			{
-			$this->log('info', __METHOD__ . ': Done processing ' . $file);
+			$this->log('info', 'Done processing ' . $file);
 			}
 
 		if (strlen($newPHP))
@@ -254,41 +254,52 @@ class RefActor implements \PHPParser\ErrorHandler
 	 */
 	public function processPHP(string $PHP, string $file = '') : ?string
 		{
-		$oldStmts = $this->parser->parse($PHP, $this);
+		$newPhp = null;
 
-		if (! is_array($oldStmts))
+		try
 			{
-			return null;
-			}
+			$oldStmts = $this->parser->parse($PHP, $this);
 
-		$traverser = new \PhpParser\NodeTraverser();
-		$traverser->addVisitor(new \PhpParser\NodeVisitor\CloningVisitor());
-
-		foreach ($this->actors as $actor)
-			{
-			if ($actor->shouldProcessFile($file))
+			if (! is_array($oldStmts))
 				{
-				$actor->setCurrentFile($file);
-				$traverser->addVisitor($actor);
+				return $newPhp;
 				}
-			}
-		$oldTokens = $this->lexer->getTokens();
-		$newStmts = $traverser->traverse($oldStmts);
-		$applied = [];
 
-		foreach ($this->actors as $actor)
-			{
-			if ($actor->getPrint())
+			$traverser = new \PhpParser\NodeTraverser();
+			$traverser->addVisitor(new \PhpParser\NodeVisitor\CloningVisitor());
+
+			foreach ($this->actors as $actor)
 				{
-				$applied[] = get_class($actor);
+				if ($actor->shouldProcessFile($file))
+					{
+					$actor->setCurrentFile($file);
+					$traverser->addVisitor($actor);
+					}
 				}
-			}
-		$newPhp = '';
+				$oldTokens = $this->lexer->getTokens();
+				$newStmts = $traverser->traverse($oldStmts);
 
-		if (count($applied))
+			$applied = [];
+
+			foreach ($this->actors as $actor)
+				{
+				if ($actor->getPrint())
+					{
+					$applied[] = get_class($actor);
+					}
+				}
+			$newPhp = '';
+
+			if (count($applied))
+				{
+				$this->log('info', 'Printing ' . $file . ' Applied: ' . implode(', ', $applied));
+				$newPhp = $this->printer->printFormatPreserving($newStmts, $oldStmts, $oldTokens);
+				}
+
+			}
+		catch (\Throwable $e)
 			{
-			$this->log('info', __METHOD__ . ': Printing ' . $file . ' Applied: ' . implode(', ', $applied));
-			$newPhp = $this->printer->printFormatPreserving($newStmts, $oldStmts, $oldTokens);
+			$this->log('error', 'Error ' . $e->getMessage() . ' processing file ' . $file);
 			}
 
 		return $newPhp;

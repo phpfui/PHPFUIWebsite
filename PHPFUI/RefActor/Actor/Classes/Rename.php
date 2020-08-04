@@ -41,7 +41,15 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 			}
 		else
 			{
-			$fqn = implode('\\', $node->class->parts);
+			// could be newing a variable, UGH!, need to punt
+			if ($node->class instanceof \PhpParser\Node\Expr\Variable || $node->class instanceof \PhpParser\Node\Expr\PropertyFetch)
+	      {
+				$fqn = '';
+	      }
+			else
+				{
+				$fqn = implode('\\', $node->class->parts);
+				}
 			}
 
 		$row = $this->getClassInfo($fqn);
