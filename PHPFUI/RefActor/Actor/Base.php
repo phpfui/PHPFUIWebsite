@@ -2,7 +2,7 @@
 
 namespace PHPFUI\RefActor\Actor;
 
-abstract class Base extends \PHPParser\NodeVisitorAbstract
+abstract class Base extends \PhpParser\NodeVisitorAbstract
 	{
 
 	protected \PHPFUI\RefActor $refActor;
@@ -45,6 +45,18 @@ abstract class Base extends \PHPParser\NodeVisitorAbstract
 		}
 
 	/**
+	 * Return test cases for unit tests and documentation
+	 *
+	 * One test case is required.  Additional test cases can be specified for more complete testing.
+	 *
+	 * Each test case should be an array of strings.
+	 * - The first string is the example code that will be Acted on.
+	 * - The second string is the expected result of the Actor
+	 * - Any additional strings will be additional output from RefActor::printToFile
+	 */
+	abstract public function getTestCases() : array;
+
+	/**
 	 * Sets the $this->currentFile variable once processing has begun.  This is called after shouldProcessFile returns true.
 	 */
 	public function setCurrentFile(string $currentFile) : self
@@ -55,7 +67,7 @@ abstract class Base extends \PHPParser\NodeVisitorAbstract
 		return $this;
 		}
 
-	public function setPrint(bool $print) : self
+	public function setPrint(bool $print = true) : self
 		{
 		$this->print = $print;
 

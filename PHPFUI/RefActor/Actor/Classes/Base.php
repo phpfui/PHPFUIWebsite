@@ -5,8 +5,8 @@ namespace PHPFUI\RefActor\Actor\Classes;
 abstract class Base extends \PHPFUI\RefActor\Actor\Base
 	{
 	private string $baseDirectory;
-	private string $currentNamespace;
 	private array $classMap = [];
+	private string $currentNamespace;
 
 	public function __construct(string $csvFileName = 'classNames.csv', string $delimiter = ',')
 		{
@@ -24,8 +24,13 @@ abstract class Base extends \PHPFUI\RefActor\Actor\Base
 			}
 		else
 			{
-			throw new \Exception(__CLASS__ . ": File {$csvFileName} as not found");
+			throw new \Exception(__CLASS__ . ": File {$csvFileName} as not found in " . getcwd());
 			}
+		}
+
+	public function getBaseDirectory() : string
+		{
+		return $this->baseDirectory;
 		}
 
 	public function getClassInfo(?string $fqn) : array
@@ -86,23 +91,9 @@ abstract class Base extends \PHPFUI\RefActor\Actor\Base
 		return implode('\\', $parts);
 		}
 
-	public function shouldProcessFile(string $file) : bool
-		{
-		$this->currentNamespace = '';
-
-		return parent::shouldProcessFile($file);
-		}
-
-	public function getCurrentNameSpace() : string
+	public function getCurrentNamespace() : string
 		{
 		return $this->currentNamespace;
-		}
-
-	public function setCurrentNameSpace(string $currentNamespace) : self
-		{
-		$this->currentNamespace = $currentNamespace;
-
-		return $this;
 		}
 
 	public function setBaseDirectory(string $baseDirectory) : self
@@ -112,9 +103,18 @@ abstract class Base extends \PHPFUI\RefActor\Actor\Base
 		return $this;
 		}
 
-	public function getBaseDirectory() : string
+	public function setCurrentNameSpace(string $currentNamespace) : self
 		{
-		return $this->baseDirectory;
+		$this->currentNamespace = $currentNamespace;
+
+		return $this;
+		}
+
+	public function shouldProcessFile(string $file) : bool
+		{
+		$this->currentNamespace = '';
+
+		return parent::shouldProcessFile($file);
 		}
 
 	}

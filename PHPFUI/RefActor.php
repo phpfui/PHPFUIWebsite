@@ -2,14 +2,13 @@
 
 namespace PHPFUI;
 
-class RefActor implements \PHPParser\ErrorHandler
+class RefActor implements \PhpParser\ErrorHandler
 	{
 
 	private array $actors = [];
 
 	private string $currentFile;
 
-	// user parameters
 	private array $directories = [];
 
 	private array $files = [];
@@ -18,15 +17,17 @@ class RefActor implements \PHPParser\ErrorHandler
 
 	private ?\Psr\Log\LoggerInterface $logger;
 
-	// internal properties
-	private $parser;
+	private \PhpParser\Parser $parser;
 
-	// Settings
 	private int $PHPVersion;
 
 	private \PhpParser\PrettyPrinter\Standard $printer;
 
 	private array $reviews = [];
+
+	private bool $testing;
+
+	private array $tests = [];
 
 	public function __construct()
 		{
@@ -96,9 +97,9 @@ class RefActor implements \PHPParser\ErrorHandler
 		}
 
 	/**
-	 * Start RefActoring with the current settings
+	 * Start Actors peforming refactoring with the current settings
 	 */
-	public function execute() : self
+	public function perform() : self
 		{
 		$this->clearReviews();
 
@@ -150,7 +151,7 @@ class RefActor implements \PHPParser\ErrorHandler
 		}
 
 	/**
-	 * Reveiws are critiques of Actors, generally errors, warnings, etc.
+	 * Reviews are critiques of Actors, generally errors, warnings, etc.
 	 *
 	 * @param string[] $types array of types to return (method names from \Psr\Log\LoggerInterface) or empty for all
 	 *
@@ -174,17 +175,24 @@ class RefActor implements \PHPParser\ErrorHandler
 		}
 
 	/**
-	 * PHPParse error handler
+	 * Return results if testing is turned on. Array keys are file names.
 	 */
-	public function handleError(\PHPParser\Error $error) : void
+	public function getTests() : array
+		{
+		return $this->tests;
+		}
+
+	/**
+	 * PHPParser error handler
+	 */
+	public function handleError(\PhpParser\Error $error) : void
 		{
 		$line = -1 != $error->getStartLine() ? 'Line: ' . $error->getStartLine() : '';
-		$this->log('error', "PHPParser error: {$error->getRawMessage()} in file {$this->currentFile} {$line}");
+		$this->log('error', "PhpParser error: {$error->getRawMessage()} in file {$this->currentFile} {$line}");
 		}
 
 	public function log(string $type, string $message, array $context = []) : self
 		{
-//		echo $message."\n";
 		$this->reviews[$type][] = $message;
 
 		if ($this->logger)
@@ -195,6 +203,9 @@ class RefActor implements \PHPParser\ErrorHandler
 		return $this;
 		}
 
+	/**
+	 * Output statements to a file.  Will include the beginning opening php tag.
+	 */
 	public function printToFile(string $newFile, array $statements) : self
 		{
 		$this->log('notice', 'Printing new file ' . $newFile);
@@ -207,7 +218,7 @@ class RefActor implements \PHPParser\ErrorHandler
 			{
 			mkdir($path, 0777, true);
 			}
-		file_put_contents($newFile, $newCode);
+		$this->output($newFile, $newCode);
 
 		return $this;
 		}
@@ -241,7 +252,7 @@ class RefActor implements \PHPParser\ErrorHandler
 
 		if (strlen($newPHP))
 			{
-			file_put_contents($file, $newPHP);
+			$this->output($file, $newPHP);
 			}
 
 		return $this;
@@ -258,26 +269,37 @@ class RefActor implements \PHPParser\ErrorHandler
 
 		try
 			{
-			$oldStmts = $this->parser->parse($PHP, $this);
-
-			if (! is_array($oldStmts))
-				{
-				return $newPhp;
-				}
-
 			$traverser = new \PhpParser\NodeTraverser();
 			$traverser->addVisitor(new \PhpParser\NodeVisitor\CloningVisitor());
 
+			$actorCount = 0;
 			foreach ($this->actors as $actor)
 				{
 				if ($actor->shouldProcessFile($file))
 					{
 					$actor->setCurrentFile($file);
 					$traverser->addVisitor($actor);
+					++$actorCount;
 					}
 				}
-				$oldTokens = $this->lexer->getTokens();
-				$newStmts = $traverser->traverse($oldStmts);
+
+			// did any actor want to process a file?
+			if (! $actorCount)
+				{
+				return '';
+				}
+
+			$oldStmts = $this->parser->parse($PHP, $this);
+
+			if (! is_array($oldStmts))
+				{
+				$this->log('error', 'Error parsing file ' . $file);
+
+				return $newPhp;
+				}
+
+			$oldTokens = $this->lexer->getTokens();
+			$newStmts = $traverser->traverse($oldStmts);
 
 			$applied = [];
 
@@ -299,6 +321,7 @@ class RefActor implements \PHPParser\ErrorHandler
 			}
 		catch (\Throwable $e)
 			{
+			$newPhp = $e->getMessage() . ' line '.$e->getLine();
 			$this->log('error', 'Error ' . $e->getMessage() . ' processing file ' . $file);
 			}
 
@@ -338,7 +361,7 @@ class RefActor implements \PHPParser\ErrorHandler
 		}
 
 	/**
-	 * What version of PHP should the parse expect. Default \PhpParser\ParserFactory::PREFER_PHP7
+	 * What version of PHP should the parser expect. Default \PhpParser\ParserFactory::PREFER_PHP7
 	 *
 	 * Possible values:
    * - \PhpParser\ParserFactory::PREFER_PHP7
@@ -353,6 +376,33 @@ class RefActor implements \PHPParser\ErrorHandler
 			throw new \InvalidArgumentException(__METHOD__ . ': PHPVersion must be a \PhpParser\ParserFactory constant');
 			}
 		$this->PHPVersion = $PHPVersion;
+
+		return $this;
+		}
+
+	/**
+	 * If testing is turned on, no files will be written
+	 */
+	public function setTesting(bool $testing = false) : self
+		{
+		$this->testing = $testing;
+
+		return $this;
+		}
+
+	/**
+	 * Output the generated PHP code
+	 */
+	private function output(string $file, string $PHP) : self
+		{
+		if (! $this->testing)
+			{
+			file_put_contents($file, $PHP);
+			}
+		else
+			{
+			$this->tests[$file] = $PHP;
+			}
 
 		return $this;
 		}

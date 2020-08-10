@@ -14,14 +14,14 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		parent::__construct($csvFileName, $delimiter);
 		}
 
-  public function enterNode(\PhpParser\Node $node)
+	public function enterNode(\PhpParser\Node $node)
 		{
 		if ($node instanceof \PhpParser\Node\Stmt\Namespace_)
 			{
 			// record the current namespace for later use
 			$this->setCurrentNamespace(implode('\\', $node->name->parts));
 
-			return null;
+			return;
 			}
 
 		if ($this->filterNode($node, $this->nodeFilter))
@@ -39,7 +39,7 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		// file has statements other than legit class statements (like use and namespace), so should be targeted as needing to delete class node
 		$this->hasStatements = true;
 
-		return null;
+
 		}
 
 	public function getDescription() : string
@@ -47,12 +47,12 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		return 'Extracts classes found in the file being processed and write them out to a new file';
 		}
 
-  public function leaveNode(\PhpParser\Node $node)
+	public function leaveNode(\PhpParser\Node $node)
 		{
 		// only interested in classes at this point
 		if (! ($node instanceof \PhpParser\Node\Stmt\Class_))
 			{
-			return null;
+			return;
 			}
 
 		// now we have a class and we know if there are non class statements in the file
@@ -60,11 +60,13 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		$fqn = $this->getCurrentNamespace() . '\\' . $node->name->name;
 
 		$row = $this->getClassInfo($fqn);
+
 		if (empty($row))
 			{
 			// unknown class, skip it
 			$this->refActor->log('notice', 'Unknown class ' . $fqn);
-			return null;
+
+			return;
 			}
 
 		// we need to rename and print it to new file path
@@ -75,7 +77,7 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		if ($newNamespace == $this->getCurrentNamespace() && $newClassName == $node->name->name && $newFile == $this->getCurrentFile() && ! $this->hasStatements)
 			{
 			// nothing to do, everything is the same
-			return null;
+			return;
 			}
 
 		// we need to update the file
@@ -92,7 +94,7 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		if ($newNamespace == $this->getCurrentNamespace() && $newClassName == $node->name->name && $newFile == $this->getCurrentFile())
 			{
 			// we are not going to automatically change the file, as we already overwrote it above, without the extra statements
-			return null;
+			return;
 			}
 
 		// remove the class from the file, since it moved and should has been renamed and should not be mixed with other statements
@@ -107,6 +109,48 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		$this->legalStatements = [];
 
 		return parent::shouldProcessFile($file);
+		}
+
+	public function getTestCases() : array
+		{
+		$testCases = [];
+
+		///////// Test Case 1 ///////////////////
+		$original = <<<'PHP'
+<?php
+class SomeClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someCode = getcwd();
+PHP;
+
+		$modified = <<<'PHP'
+<?php
+
+$someCode = getcwd();
+PHP;
+
+		$extra = <<<PHP
+<?php
+
+namespace NewNamespace;
+
+class SomeClass
+{
+    public function someMethod() : string
+    {
+        return 'something';
+    }
+}
+PHP;
+
+		$testCases[] = [$original, $modified, $extra];
+
+		return $testCases;
 		}
 
 	}

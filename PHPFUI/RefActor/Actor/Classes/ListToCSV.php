@@ -2,13 +2,13 @@
 
 namespace PHPFUI\RefActor\Actor\Classes;
 
-class ListToCSV extends \PHPFUI\RefActor\Actor\Base
+class ListToCSV extends \PHPFUI\RefActor\Actor\Classes\Base
 	{
 	private string $delimiter;
 
 	private $fileHandle;
 
-	public function __construct(string $csvFileName = 'classNames.csv', string $delimiter = ',')
+	public function __construct(string $csvFileName = 'classNameList.csv', string $delimiter = ',')
 		{
 		$this->delimiter = $delimiter;
 
@@ -24,8 +24,7 @@ class ListToCSV extends \PHPFUI\RefActor\Actor\Base
 			}
 		}
 
-//    public function beforeTraverse(array $nodes);
-  public function enterNode(\PhpParser\Node $node) : void
+	public function enterNode(\PhpParser\Node $node) : void
 		{
 		if ($node instanceof \PhpParser\Node\Stmt\Namespace_)
 			{
@@ -48,7 +47,33 @@ class ListToCSV extends \PHPFUI\RefActor\Actor\Base
 		return 'Finds all classes and outputs class name, namespace and file path to a csv file for analysis';
 		}
 
-//    public function leaveNode(Node $node);
-//    public function afterTraverse(array $nodes);
+	public function getTestCases() : array
+		{
+		$testCases = [];
+
+		///////// Test Case 1 ///////////////////
+		$original = <<<'PHP'
+<?php
+class SomeClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+
+class SomeOtherClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+PHP;
+
+		$testCases[] = [$original, ''];
+
+		return $testCases;
+		}
 
 	}

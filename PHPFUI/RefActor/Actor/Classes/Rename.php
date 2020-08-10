@@ -32,7 +32,7 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 		// only interested in new at this point
 		if (! $this->filterNode($node, $this->filterNodes))
 			{
-			return null;
+			return;
 			}
 
 		if ($node->class instanceof \PhpParser\Node\Name)
@@ -43,9 +43,9 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 			{
 			// could be newing a variable, UGH!, need to punt
 			if ($node->class instanceof \PhpParser\Node\Expr\Variable || $node->class instanceof \PhpParser\Node\Expr\PropertyFetch)
-	      {
+				{
 				$fqn = '';
-	      }
+				}
 			else
 				{
 				$fqn = implode('\\', $node->class->parts);
@@ -65,6 +65,40 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 		$this->setPrint(true);
 
 		return $node;
+		}
+
+	public function getTestCases() : array
+		{
+		$testCases = [];
+
+		///////// Test Case 1 ///////////////////
+		$original = <<<'PHP'
+<?php
+class SomeClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someClass = new SomeClass();
+PHP;
+
+		$modified = <<<'PHP'
+<?php
+class NewClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someClass = new \NewNamespace\NewClass();
+PHP;
+
+		$testCases[] = [$original, $modified];
+
+		return $testCases;
 		}
 
 	}

@@ -2,6 +2,16 @@
 
 namespace PHPFUI\RefActor;
 
+/**
+ * A simple CSV file reader.
+ *
+ * Emulates an array of records (arrays), implimented as an Iterator, so can be used in a foreach statements.
+ *
+ * - If your CSV file has headers (the default), then the keys of the returned array will be the header values.
+ * - You can also specify a different field delimiter, for example ("\t") for tabs.
+ * - Use rewind to reset to the top of the file.
+ * - The header record is NEVER returned as a record.  The first iteration will be the first record in the file, excluding the header record if specified.
+ */
 class CSVReader implements \Iterator
 	{
 
@@ -83,6 +93,11 @@ class CSVReader implements \Iterator
 		$this->next();
 		}
 
+	/**
+	 * You can specify headers if your file does not include them.  The headers will be used as the key in the returned associative array for each record.
+	 *
+	 * @param array $headers of strings
+	 */
 	public function setHeaders(array $headers) : self
 		{
 		$this->headers = $headers;
