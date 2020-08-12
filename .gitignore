@@ -6,6 +6,7 @@ vendor/
 error.log
 .php_cs.cache
 FileManager.serial
+ChildClasses.serial
 gosass.bat
 static/
 

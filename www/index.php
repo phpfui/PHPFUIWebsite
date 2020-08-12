@@ -44,12 +44,10 @@ else
 	}
 
 $fileManager->load();
-$childClasses = new \PHPFUI\InstaDoc\ChildClasses('../');
-$childClasses->load();
+\PHPFUI\InstaDoc\ChildClasses::load('../ChildClasses.serial');
 \PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('Grpc\Gcp\generated');
 \PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe\markdown\tests');
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
-//$controller->setChildClasses($childClasses);
 $controller->setGitRoot(getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');

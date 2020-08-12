@@ -7,15 +7,9 @@ class ChildClasses
 	/**
 	 * @var array indexed by fqn of class containing array of fqn of children
 	  */
-	private $children = [];
-	private $directory;
+	private static $children = [];
 
-	public function __construct(string $directory)
-		{
-		$this->directory = $directory;
-		}
-
-	public function generate() : self
+	public static function generate() : self
 		{
 		$classes = NamespaceTree::getAllClasses();
 
@@ -28,13 +22,13 @@ class ChildClasses
 				if ($parent)
 					{
 					$parentName = $parent->getName();
-					if (isset($this->children[$parentName]))
+					if (isset(self::$children[$parentName]))
 						{
-						$this->children[$parentName][] = $reflection->getName();
+						self::$children[$parentName][] = $reflection->getName();
 						}
 					else
 						{
-						$this->children[$parentName] = [$reflection->getName()];
+						self::$children[$parentName] = [$reflection->getName()];
 						}
 					}
 				}
@@ -43,21 +37,16 @@ class ChildClasses
 				}
 			}
 
-		return $this;
+		return self;
 		}
 
-	public function load(string $file = '') : bool
+	public static function load(string $file = '') : bool
 		{
-		if (empty($file))
-			{
-			$file = 'ChildClasses.serial';
-			}
-		$file = $this->directory . $file;
 		if (! file_exists($file))
 			{
-			$this->generate();
+			self::generate();
 
-			return true;
+			return $this->save($file);
 			}
 
 		$contents = file_get_contents($file);
@@ -68,30 +57,24 @@ class ChildClasses
 			return false;
 			}
 
-		$this->children = $temp;
+		self::$children = $temp;
 
 		return true;
 		}
 
-	public function save(string $file = '') : bool
+	public static function save(string $file = '') : bool
 		{
-		if (empty($file))
-			{
-			$file = 'ChildClasses.serial';
-			}
-		$file = $this->directory . $file;
-
-		foreach ($this->children as &$childClasses)
+		foreach (self::$children as &$childClasses)
 			{
 			sort($childClasses);
 			}
 
-		return file_put_contents($file, serialize($this->children)) > 0;
+		return file_put_contents($file, serialize(self::$children)) > 0;
 		}
 
-	public function getChildClasses(string $fqn) : array
+	public static function getChildClasses(string $fqn) : array
 		{
-		return $this->children[$fqn] ?? [];
+		return self::$children[$fqn] ?? [];
 		}
 
 	}
