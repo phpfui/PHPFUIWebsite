@@ -91,6 +91,8 @@ abstract class PrettyPrinterAbstract
         Expr\Include_::class           => [200, -1],
     ];
 
+    /** @var int User specified indent. */
+    protected $userIndent = 4;
     /** @var int Current indentation level. */
     protected $indentLevel;
     /** @var string Newline including current indentation. */
@@ -166,24 +168,24 @@ abstract class PrettyPrinterAbstract
      * @param int $level Level in number of spaces
      */
     protected function setIndentLevel(int $level) {
-        $this->indentLevel = $level;
-        $this->nl = "\n" . \str_repeat(' ', $level);
+        $this->indentLevel = max(0, $level);
+        $this->nl = "\n" . \str_repeat(' ', $this->indentLevel);
     }
 
     /**
      * Increase indentation level.
      */
     protected function indent() {
-        $this->indentLevel += 4;
-        $this->nl .= '    ';
+        $this->indentLevel += $this->userIndent;
+        $this->nl .= str_repeat(' ', $this->userIndent);
     }
 
     /**
      * Decrease indentation level.
      */
     protected function outdent() {
-        assert($this->indentLevel >= 4);
-        $this->indentLevel -= 4;
+        assert($this->indentLevel >= $this->userIndent);
+        $this->indentLevel -= $this->userIndent;
         $this->nl = "\n" . str_repeat(' ', $this->indentLevel);
     }
 

@@ -321,8 +321,7 @@ class RefActor implements \PhpParser\ErrorHandler
 			}
 		catch (\Throwable $e)
 			{
-			$newPhp = $e->getMessage() . ' line '.$e->getLine();
-			$this->log('error', 'Error ' . $e->getMessage() . ' processing file ' . $file);
+			$this->log('error', "Error {$e->getMessage()} processing file {$file}");
 			}
 
 		return $newPhp;

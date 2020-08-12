@@ -37,7 +37,7 @@ abstract class Base extends \PhpParser\NodeVisitorAbstract
 	 *
 	 * @return string of markdown
 	 */
-	abstract function getDescription() : string;
+	abstract public function getDescription() : string;
 
 	public function getPrint() : bool
 		{
