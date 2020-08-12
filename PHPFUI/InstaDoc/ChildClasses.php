@@ -8,32 +8,38 @@ class ChildClasses
 	 * @var array indexed by fqn of class containing array of fqn of children
 	  */
 	private $children = [];
-	private $fileName = '';
+	private $directory;
 
-	public function __construct(string $fileName = 'childClasses.serial')
+	public function __construct(string $directory)
 		{
-		$this->fileName = $fileName;
+		$this->directory = $directory;
 		}
 
-	public function generate(NamespaceTree $namespaceTree) : self
+	public function generate() : self
 		{
-		$classes = NamespaceTree::getAllClasses($namespaceTree);
+		$classes = NamespaceTree::getAllClasses();
 
 		foreach ($classes as $class)
 			{
-			$reflection = new \ReflectionClass($class);
-			$parent = $reflection->getParentClass();
-			if ($parent)
+			try
 				{
-				$parentName = $parent->getName();
-				if (isset($this->children[$parentName]))
+				$reflection = new \ReflectionClass($class);
+				$parent = $reflection->getParentClass();
+				if ($parent)
 					{
-					$this->children[$parentName][] = $reflection->getName();
+					$parentName = $parent->getName();
+					if (isset($this->children[$parentName]))
+						{
+						$this->children[$parentName][] = $reflection->getName();
+						}
+					else
+						{
+						$this->children[$parentName] = [$reflection->getName()];
+						}
 					}
-				else
-					{
-					$this->children[$parentName] = [$reflection->getName()];
-					}
+				}
+			catch (\throwable $e)
+				{
 				}
 			}
 
@@ -44,11 +50,14 @@ class ChildClasses
 		{
 		if (empty($file))
 			{
-			$file = $this->fileName;
+			$file = 'ChildClasses.serial';
 			}
-		if (!file_exists($file))
+		$file = $this->directory . $file;
+		if (! file_exists($file))
 			{
-			return false;
+			$this->generate();
+
+			return true;
 			}
 
 		$contents = file_get_contents($file);
@@ -68,8 +77,9 @@ class ChildClasses
 		{
 		if (empty($file))
 			{
-			$file = $this->fileName;
+			$file = 'ChildClasses.serial';
 			}
+		$file = $this->directory . $file;
 
 		foreach ($this->children as &$childClasses)
 			{
@@ -81,12 +91,7 @@ class ChildClasses
 
 	public function getChildClasses(string $fqn) : array
 		{
-		if (! empty($this->children[$fqn]))
-			{
-			return $this->children[$fqn];
-			}
-
-		return [];
+		return $this->children[$fqn] ?? [];
 		}
 
 	}
