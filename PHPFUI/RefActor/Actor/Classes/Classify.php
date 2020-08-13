@@ -8,16 +8,17 @@ class Classify extends \PHPFUI\RefActor\Actor\Base
 	private \PhpParser\Parser $parser;
 	private \PhpParser\PrettyPrinter\Standard $prettyPrinter;
 	private \PHPFUI\RefActor\ClassNameParserBase $classNames;
+	private string $classRoot = '';
 	private array $ast = [];
 	private string $className = '';
 	private string $namespace = '';
-	private string $projectRoot = '';
 	private array $functions = [];
+	private array $functionsCalled = [];
 
-	public function __construct(string $projectRoot, \PHPFUI\RefActor\ClassNameParserBase $classNames)
+	public function __construct(string $classRoot, \PHPFUI\RefActor\ClassNameParserBase $classNames)
 		{
 		$this->classNames = $classNames;
-		$this->projectRoot = $projectRoot;
+		$this->classRoot = $classRoot;
 		$factory = new \PhpParser\ParserFactory();
 		$this->parser = $factory->create(\PhpParser\ParserFactory::PREFER_PHP5);
 		$this->prettyPrinter = new \PhpParser\PrettyPrinter\Standard(['shortArraySyntax' => true]);
@@ -29,6 +30,8 @@ class Classify extends \PHPFUI\RefActor\Actor\Base
 
 		$this->className = $this->classNames->getClassName($file);
 		$this->namespace = $this->classNames->getNamespace($file);
+		$this->functions = [];
+		$this->functionsCalled = [];
 
 		$code = '<?php
 namespace TestNamespace;
@@ -53,78 +56,55 @@ class TestClass
 		{
 		if ($node instanceof \PhpParser\Node\Stmt\Function_)
 			{
-			if (isset($this->functions[$node->name->name]))
-				{
-				echo "We have a function {$node->name->name}\n";
-				}
+			$this->functions[$node->name->name] = $node;
+			}
+		elseif ($node instanceof \PhpParser\Node\Stmt\Expression && $node->expr instanceof \PhpParser\Node\Expr\FuncCall)
+			{
+			$functionName = implode('\\', $node->expr->name->parts);
+			$this->functionsCalled[$functionName][] = $node;
+			}
+    elseif (property_exists($node, 'stmts'))
+			{
+			$node->stmts = $this->processNodes($node->stmts);
 			}
 
 		return;
 		}
 
-	private function processNodes(array $nodes) : array
+	private function processNodes(array $nodes, array $existingNodes = []) : array
 		{
-		$newNodes = [];
-
 		foreach ($nodes as $node)
 			{
-			if ($node instanceof \PhpParser\Node\Stmt\Expression)
-				{
-				$newNodes[] = $node;
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
+			if ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
 				{
 				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
 						new \PhpParser\Node\Expr\Variable('retVal'),
 						new \PhpParser\Node\Scalar\String_($node->value,
 								['kind' => \PhpParser\Node\Scalar\String_::KIND_NOWDOC, 'docLabel' => 'HTML']));
-				$newNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
+				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
 				}
 			elseif ($node instanceof \PhpParser\Node\Stmt\Echo_)
 				{
 				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
 						new \PhpParser\Node\Expr\Variable('retVal'),
 						$node->exprs[0]);
-				$newNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
+				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
 				}
 			elseif ($node instanceof \PhpParser\Node\Stmt\Function_)
 				{
 				$functions[$node->name->name] = $node;
 				}
+			else
+				{
+				$existingNodes[] = $node;
+				}
 			}
 
-		return $newNodes;
+		return $existingNodes;
 		}
 
 	public function afterTraverse(array $nodes)
 		{
-		foreach ($nodes as $node)
-			{
-			if ($node instanceof \PhpParser\Node\Stmt\Expression)
-				{
-				$this->ast[0]->stmts[0]->stmts[0]->stmts[] = $node;
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
-				{
-				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
-						new \PhpParser\Node\Expr\Variable('retVal'),
-						new \PhpParser\Node\Scalar\String_($node->value,
-								['kind' => \PhpParser\Node\Scalar\String_::KIND_NOWDOC, 'docLabel' => 'HTML']));
-				$this->ast[0]->stmts[0]->stmts[0]->stmts[] = new \PhpParser\Node\Stmt\Expression($concat);
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\Echo_)
-				{
-				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
-						new \PhpParser\Node\Expr\Variable('retVal'),
-						$node->exprs[0]);
-				$this->ast[0]->stmts[0]->stmts[0]->stmts[] = new \PhpParser\Node\Stmt\Expression($concat);
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\Function_)
-				{
-				$this->functions[$node->name->name] = $node;
-				}
-			}
-
 		$newNodes = $this->processNodes($nodes);
 		$newNodes[] = new \PhpParser\Node\Stmt\Return_(new \PhpParser\Node\Expr\Variable('retVal'));
 
@@ -133,12 +113,38 @@ class TestClass
 		// add in functions we found
 		foreach($this->functions as $name => $functionNode)
 			{
-			echo "function found ($name}\n";
+			// if function was not actually used, then skip it, local unused function
+			if (! isset($this->functionsCalled[$name]))
+				{
+				continue;
+				}
+			$classMethod = new \PhpParser\Node\Stmt\ClassMethod($name);
+			$classMethod->flags = \PhpParser\Node\Stmt\Class_::MODIFIER_PRIVATE;
+			$classMethod->params = $functionNode->params;
+			$classMethod->byRef = $functionNode->byRef;
+			$classMethod->returnType = $functionNode->returnType;
+			$statements = [new \PhpParser\Node\Stmt\Expression(new \PhpParser\Node\Expr\Assign(new \PhpParser\Node\Expr\Variable('retVal'),
+					new \PhpParser\Node\Scalar\String_('', ['kind' => \PhpParser\Node\Scalar\String_::KIND_SINGLE_QUOTED])))];
+
+			$statements = $this->processNodes($functionNode->stmts, $statements);
+			$statements[] = new \PhpParser\Node\Stmt\Return_(new \PhpParser\Node\Expr\Variable('retVal'));
+			$classMethod->stmts = $statements;
+			$this->ast[0]->stmts[0]->stmts[] = $classMethod;
+
+			// Transform the $functionCallNode call into a $retVal .= $this->method() call node
+			foreach ($this->functionsCalled[$name] as $functionCallNode)
+				{
+				$retValVar = new \PhpParser\Node\Expr\Variable('retVal');
+				$thisVar = new \PhpParser\Node\Expr\Variable('this');
+				$methodCall = new \PhpParser\Node\Expr\MethodCall($thisVar, $name, $functionCallNode->expr->args);
+				$methodCallNode = new \PhpParser\Node\Expr\AssignOp\Concat($retValVar, $methodCall);
+				$functionCallNode->expr = $methodCallNode;
+				}
 			}
 
 		$code = $this->prettyPrinter->prettyPrint($this->ast);
 
-		$dir = $this->projectRoot . '/' . $this->namespace;
+		$dir = $this->classRoot . '/' . $this->namespace;
 		if (! file_exists($dir))
 			{
 			mkdir($dir, 0777, true);
@@ -170,130 +176,3 @@ PHP;
 		}
 
 	}
-
-/*
-(
-    [0] => PhpParser\Node\Stmt\Class_ Object
-        (
-            [name] => PhpParser\Node\Identifier Object
-                (
-                    [name] => Test
-                )
-            [stmts] => Array
-                (
-                    [0] => PhpParser\Node\Stmt\ClassMethod Object
-                        (
-                            [flags] => 1
-                            [name] => PhpParser\Node\Identifier Object
-                                (
-                                    [name] => method
-                                )
-                            [params] => Array
-                                (
-                                    [0] => PhpParser\Node\Param Object
-                                        (
-                                            [type] =>
-                                            [byRef] =>
-                                            [variadic] =>
-                                            [var] => PhpParser\Node\Expr\Variable Object
-                                                (
-                                                    [name] => arg
-                                                )
-                                            [default] =>
-                                            [flags] => 0
-                                        )
-                                    [1] => PhpParser\Node\Param Object
-                                        (
-                                            [type] =>
-                                            [byRef] =>
-                                            [variadic] =>
-                                            [var] => PhpParser\Node\Expr\Variable Object
-                                                (
-                                                    [name] => arg2
-                                                )
-                                            [default] =>
-                                            [flags] => 0
-                                        )
-                                )
-                            [returnType] =>
-                            [stmts] => Array
-                                (
-                                    [0] => PhpParser\Node\Stmt\Expression Object
-                                        (
-                                            [expr] => PhpParser\Node\Expr\Assign Object
-                                                (
-                                                    [var] => PhpParser\Node\Expr\Variable Object
-                                                        (
-                                                            [name] => retVal
-                                                        )
-                                                    [expr] => PhpParser\Node\Scalar\String_ Object
-                                                        (
-                                                            [value] =>
-                                                            [attributes:protected] => Array
-                                                                (
-                                                                    [startLine] => 6
-                                                                    [endLine] => 6
-                                                                    [kind] => 2
-                                                                )
-
-                                                        )
-
-                                                    [attributes:protected] => Array
-                                                        (
-                                                            [startLine] => 6
-                                                            [endLine] => 6
-                                                        )
-
-                                                )
-
-                                            [attributes:protected] => Array
-                                                (
-                                                    [startLine] => 6
-                                                    [endLine] => 6
-                                                )
-
-                                        )
-
-                                    [1] => PhpParser\Node\Stmt\Return_ Object
-                                        (
-                                            [expr] => PhpParser\Node\Expr\Variable Object
-                                                (
-                                                    [name] => retVal
-                                                    [attributes:protected] => Array
-                                                        (
-                                                            [startLine] => 8
-                                                            [endLine] => 8
-                                                        )
-
-                                                )
-
-                                            [attributes:protected] => Array
-                                                (
-                                                    [startLine] => 8
-                                                    [endLine] => 8
-                                                )
-
-                                        )
-
-                                )
-
-                            [attributes:protected] => Array
-                                (
-                                    [startLine] => 4
-                                    [endLine] => 9
-                                )
-
-                        )
-
-                )
-
-            [attributes:protected] => Array
-                (
-                    [startLine] => 2
-                    [endLine] => 10
-                )
-
-        )
-
-)
- */
