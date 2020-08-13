@@ -9,4 +9,6 @@ FileManager.serial
 ChildClasses.serial
 gosass.bat
 static/
+.phpunit.result.cache
+phpunit.xml
 

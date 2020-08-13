@@ -177,7 +177,6 @@ $updater->setIgnoredRepos([
 	'PackageVersions',
 	'phar-io',
 	'PHPStan',
-	'phpunit',
 	'Prophecy',
 	'ralouphie',
 	'sebastian',

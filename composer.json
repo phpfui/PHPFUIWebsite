@@ -4,6 +4,7 @@
 		"phpfui/instadoc": "^1.0",
 		"paquettg/php-html-parser": "^2.2",
 		"nxp/math-executor": "^2.0",
-		"nikic/php-parser": "^4.8"
+		"nikic/php-parser": "^4.8",
+		"phpunit/phpunit": "^9.3"
 	}
 }

@@ -39,7 +39,6 @@ class ListToCSV extends \PHPFUI\RefActor\Actor\Classes\Base
 			fputcsv($this->fileHandle, $row, $this->delimiter);
 			}
 
-
 		}
 
 	public function getDescription() : string

@@ -32,7 +32,7 @@ class ChildClasses
 						}
 					}
 				}
-			catch (\throwable $e)
+			catch (\Throwable $e)
 				{
 				}
 			}
