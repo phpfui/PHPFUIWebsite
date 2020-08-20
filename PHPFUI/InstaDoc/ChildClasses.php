@@ -37,10 +37,10 @@ class ChildClasses
 				}
 			}
 
-		return self;
+		return __CLASS__;
 		}
 
-	public static function load(string $file = '') : bool
+	public static function load(string $file = '../ChildClasses.serial') : bool
 		{
 		if (! file_exists($file))
 			{
@@ -62,7 +62,7 @@ class ChildClasses
 		return true;
 		}
 
-	public static function save(string $file = '') : bool
+	public static function save(string $file = '../ChildClasses.serial') : bool
 		{
 		foreach (self::$children as &$childClasses)
 			{

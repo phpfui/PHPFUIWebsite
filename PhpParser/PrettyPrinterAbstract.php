@@ -91,8 +91,6 @@ abstract class PrettyPrinterAbstract
         Expr\Include_::class           => [200, -1],
     ];
 
-    /** @var int User specified indent. */
-    protected $userIndent = 4;
     /** @var int Current indentation level. */
     protected $indentLevel;
     /** @var string Newline including current indentation. */
@@ -168,24 +166,24 @@ abstract class PrettyPrinterAbstract
      * @param int $level Level in number of spaces
      */
     protected function setIndentLevel(int $level) {
-        $this->indentLevel = max(0, $level);
-        $this->nl = "\n" . \str_repeat(' ', $this->indentLevel);
+        $this->indentLevel = $level;
+        $this->nl = "\n" . \str_repeat(' ', $level);
     }
 
     /**
      * Increase indentation level.
      */
     protected function indent() {
-        $this->indentLevel += $this->userIndent;
-        $this->nl .= str_repeat(' ', $this->userIndent);
+        $this->indentLevel += 4;
+        $this->nl .= '    ';
     }
 
     /**
      * Decrease indentation level.
      */
     protected function outdent() {
-        assert($this->indentLevel >= $this->userIndent);
-        $this->indentLevel -= $this->userIndent;
+        assert($this->indentLevel >= 4);
+        $this->indentLevel -= 4;
         $this->nl = "\n" . str_repeat(' ', $this->indentLevel);
     }
 
@@ -1129,7 +1127,7 @@ abstract class PrettyPrinterAbstract
             Expr\PostDec::class => ['var' => self::FIXUP_PREC_LEFT],
             Expr\Instanceof_::class => [
                 'expr' => self::FIXUP_PREC_LEFT,
-                'class' => self::FIXUP_PREC_RIGHT,
+                'class' => self::FIXUP_PREC_RIGHT, // TODO: FIXUP_NEW_VARIABLE
             ],
             Expr\Ternary::class => [
                 'cond' => self::FIXUP_PREC_LEFT,
@@ -1139,6 +1137,8 @@ abstract class PrettyPrinterAbstract
             Expr\FuncCall::class => ['name' => self::FIXUP_CALL_LHS],
             Expr\StaticCall::class => ['class' => self::FIXUP_DEREF_LHS],
             Expr\ArrayDimFetch::class => ['var' => self::FIXUP_DEREF_LHS],
+            Expr\ClassConstFetch::class => ['var' => self::FIXUP_DEREF_LHS],
+            Expr\New_::class => ['class' => self::FIXUP_DEREF_LHS], // TODO: FIXUP_NEW_VARIABLE
             Expr\MethodCall::class => [
                 'var' => self::FIXUP_DEREF_LHS,
                 'name' => self::FIXUP_BRACED_NAME,
