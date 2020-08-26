@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the PHPFUI/HTMLUnitTester package
+ * This file is part of the PHPFUI/PHPUnitSyntaxCoverage package
  *
  * (c) Bruce Wells
  *

@@ -48,12 +48,8 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		self::$parser = $factory->create($_ENV['parser_type'] ?? \PhpParser\ParserFactory::PREFER_PHP7);
 		}
 
-	public function assertValidPHP(string $code, string $message = '', string $fileName = '') : void
+	public function assertValidPHP(string $code, string $message = '') : void
 		{
-		if ($fileName)
-			{
-			$message = "File: {$fileName} " . $message;
-			}
 		$this->assertNotEmpty($code, 'Empty PHP file. ' . $message);
 
 		try
@@ -62,7 +58,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 			}
 		catch (\Throwable $e)
 			{
-			throw new Exception($e->getMessage() . ' ' . $message);
+			throw new Exception($message . "\n" . $e->getMessage());
 			}
 
 		$this->assertNotEmpty($ast, 'Empty Abstract Syntax tree. ' . $message);
@@ -75,8 +71,14 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 		foreach ($classFinder->getClasses() as $class)
 			{
-			$reflection = new \ReflectionClass($class);
-			$reflection->getParentClass();
+			try
+				{
+				$reflection = new \ReflectionClass($class);
+				}
+			catch (\Throwable $e)
+				{
+				throw new Exception($message . "\n" . $e->getMessage());
+				}
 			}
 		}
 
@@ -106,7 +108,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 				if ($ext && isset($exts[$ext]))
 					{
-					$this->assertValidPHPFile($file, $message . ' File: ' . $file);
+					$this->assertValidPHPFile($file, $message . "\nFile: " . $file);
 					}
 				}
 			}
@@ -118,7 +120,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 		$code = file_get_contents($fileName);
 
-		$this->assertValidPHP($code, $message, $fileName);
+		$this->assertValidPHP($code, $message);
 		}
 
 	}

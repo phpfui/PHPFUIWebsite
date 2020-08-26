@@ -19,7 +19,6 @@ else
 		'cebe',
 		'Example',
 		'Gitonomy',
-		'Grpc',
 		'GuzzleHttp',
 		'Highlight',
 		'Monolog',

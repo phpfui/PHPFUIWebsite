@@ -64,7 +64,7 @@ class NanoController
 			{
 			if (ctype_lower($method[0]))
 				{
-				$classObject = $this->invokeClass(array $class, $method);
+				$classObject = $this->invokeClass($class, $method);
 				if ($classObject)
 					{
 					return $classObject;
@@ -128,7 +128,7 @@ class NanoController
 				}
 			if (class_exists($className))
 				{
-				return = new $className($this);
+				return new $className($this);
 				}
 			array_pop($classParts);
 			}

@@ -25,8 +25,7 @@ function autoload($className) : void
     }
   }
 spl_autoload_register('autoload');
-
-$vendorDir = __DIR__ . '/../../..';
+$vendorDir = __DIR__ . '/../../vendor';
 
 if (file_exists($file = $vendorDir . '/autoload.php')) {
     require_once $file;
