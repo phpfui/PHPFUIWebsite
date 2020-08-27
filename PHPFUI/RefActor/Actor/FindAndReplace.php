@@ -17,8 +17,8 @@ class FindAndReplace extends \PHPFUI\RefActor\Actor\Base
 			$csvReader = new \PHPFUI\RefActor\CSVReader($csvFileName, true, $delimiter);
 			foreach ($csvReader as $row)
 				{
-				$this->find[] = str_replace('\n', "\n", $row['find']);
-				$this->replace[] = str_replace('\n', "\n", $row['replace']);
+				$this->find[] = $row['find'];
+				$this->replace[] = str_replace(['\r\n', '&nbsp;'], ["\n", ' '], $row['replace']);
 				}
 			}
 		else
@@ -30,6 +30,10 @@ class FindAndReplace extends \PHPFUI\RefActor\Actor\Base
 	public function shouldProcessFile(string $file) : bool
 		{
 		parent::shouldProcessFile($file);
+		if (! strpos($file, '.php'))
+			{
+			return false;
+			}
 
 		$PHP = file_get_contents($file);
 		$newPHP = str_replace($this->find, $this->replace, $PHP);

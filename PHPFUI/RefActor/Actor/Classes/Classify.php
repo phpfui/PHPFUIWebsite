@@ -113,13 +113,8 @@ class TestClass
 		// add in functions we found
 		foreach($this->functions as $name => $functionNode)
 			{
-			// if function was not actually used, then skip it, local unused function
-			if (! isset($this->functionsCalled[$name]))
-				{
-				continue;
-				}
 			$classMethod = new \PhpParser\Node\Stmt\ClassMethod($name);
-			$classMethod->flags = \PhpParser\Node\Stmt\Class_::MODIFIER_PRIVATE;
+			$classMethod->flags = \PhpParser\Node\Stmt\Class_::MODIFIER_PUBLIC;
 			$classMethod->params = $functionNode->params;
 			$classMethod->byRef = $functionNode->byRef;
 			$classMethod->returnType = $functionNode->returnType;
@@ -132,7 +127,7 @@ class TestClass
 			$this->ast[0]->stmts[0]->stmts[] = $classMethod;
 
 			// Transform the $functionCallNode call into a $retVal .= $this->method() call node
-			foreach ($this->functionsCalled[$name] as $functionCallNode)
+			foreach ($this->functionsCalled[$name] ?? [] as $functionCallNode)
 				{
 				$retValVar = new \PhpParser\Node\Expr\Variable('retVal');
 				$thisVar = new \PhpParser\Node\Expr\Variable('this');
