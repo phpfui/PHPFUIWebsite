@@ -338,6 +338,14 @@ class Controller
 		}
 
 	/**
+	 * Returns the current page for the controller that will be used to display the documentation.
+	 */
+	public function getControllerPage() : PageInterface
+		{
+		return $this->page;
+		}
+
+	/**
 	 * Get the url for the specified page
 	 */
 	public function getPageURL(string $page) : string

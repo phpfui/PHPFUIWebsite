@@ -27,6 +27,7 @@ class UnitTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 		$this->assertValidPHPDirectory(__DIR__ . '/../NXP', 'NXP directory has an error');
 		$this->assertValidPHPDirectory(__DIR__ . '/../phpDocumentor', 'phpDocumentor directory has an error');
 		$this->assertValidPHPDirectory(__DIR__ . '/../PHPFUI', 'PHPFUI directory has an error');
+		$this->assertValidPHPDirectory(__DIR__ . '/../PHPUnit', 'PHPUnit directory has an error');
 		$this->assertValidPHPDirectory(__DIR__ . '/../PHPHtmlParser', 'PHPHtmlParser directory has an error');
 		$this->assertValidPHPDirectory(__DIR__ . '/../PhpParser', 'PhpParser directory has an error');
 		$this->assertValidPHPDirectory(__DIR__ . '/../Psr', 'Psr directory has an error');

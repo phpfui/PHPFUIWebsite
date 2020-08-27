@@ -40,7 +40,7 @@ class ClassFinder extends \PhpParser\NodeVisitorAbstract
 class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\Hook
 	{
 
-	private static \PhpParser\Parser $parser;
+	private static ?\PhpParser\Parser $parser = null;
 
 	public static function setUpBeforeClass() : void
 		{
