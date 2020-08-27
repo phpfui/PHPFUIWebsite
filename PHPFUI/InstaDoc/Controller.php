@@ -96,7 +96,7 @@ class Controller
 	 */
 	public function display(array $classPagesToShow = Controller::VALID_CLASS_PAGES) : string
 		{
-		$page = $this->getPage();
+		$page = $this->getControllerPage();
 		$page->setGenerating($this->generating);
 		$page->create($this->getMenu());
 		$mainColumn = new \PHPFUI\Container();
@@ -165,6 +165,8 @@ class Controller
 		$directoryPath = str_replace('//', '/', $directoryPath);
 
 		// add in the index file
+		// always create a new page
+		$this->page = $this->getPage();
 		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude));
 
 		$namespaces = [];
@@ -179,6 +181,8 @@ class Controller
 				{
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
+				// always create a new page
+				$this->page = $this->getPage();
 				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 				++$count;
 				}
@@ -189,6 +193,8 @@ class Controller
 		foreach ($namespaces as $namespace => $value)
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
+			// always create a new page
+			$this->page = $this->getPage();
 			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude));
 			++$count;
 			}
