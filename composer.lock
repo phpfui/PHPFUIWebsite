@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "889936c58f53660da778d0a94b38a8ef",
+    "content-hash": "afe12226980c395b7bea1ce2580642f3",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -1013,6 +1013,58 @@
                 "ui"
             ],
             "time": "2020-06-20T01:46:55+00:00"
+        },
+        {
+            "name": "phpfui/phpunit-syntax-coverage",
+            "version": "V1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
+                "reference": "7dcbe38f3b8c04e7e426f5df6e157f79f5df93bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/7dcbe38f3b8c04e7e426f5df6e157f79f5df93bd",
+                "reference": "7dcbe38f3b8c04e7e426f5df6e157f79f5df93bd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^4.8",
+                "phpunit/phpunit": "^7.0|^8.0|>=9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPFUI": "src/",
+                    "badPHP": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruce Wells",
+                    "email": "brucekwells@gmail.com"
+                }
+            ],
+            "description": "PHPUnit Testing extensions for complete syntax checking of all files and classes in your project",
+            "homepage": "https://github.com/phpfui/PHPUnitSyntaxCoverage",
+            "keywords": [
+                "code",
+                "code coverage",
+                "coverage",
+                "phpunit",
+                "syntax",
+                "test",
+                "testing",
+                "validation"
+            ],
+            "time": "2020-08-27T01:46:29+00:00"
         },
         {
             "name": "phpspec/prophecy",
