@@ -380,6 +380,14 @@ class RefActor implements \PhpParser\ErrorHandler
 		}
 
 	/**
+	 * Return the current PHP version being parsed
+	 */
+	public function getPHPVersion() : int
+		{
+		return $this->PHPVersion;
+		}
+
+	/**
 	 * If testing is turned on, no files will be written
 	 */
 	public function setTesting(bool $testing = false) : self
