@@ -483,6 +483,7 @@ class Controller
 	public function setHomeUrl(string $url) : Controller
 		{
 		$this->homeUrl = $url;
+		$this->page->setHomeUrl($url);
 
 		return $this;
 		}

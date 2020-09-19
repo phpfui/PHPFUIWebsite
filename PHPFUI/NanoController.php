@@ -11,6 +11,7 @@ class NanoController
 	private array $files;
 	private string $missingClass;
 	private string $missingMethod;
+	private array $errors = [];
 
 	public function __construct()
 		{
@@ -59,12 +60,13 @@ class NanoController
 		 */
 		$url = $_SERVER['REQUEST_URI'];
 		$parts = explode('/', $url);
+		array_shift($parts);
 		$class = explode('\\', $this->rootNamespace);
 		foreach ($parts as $index => $method)
 			{
-			if (ctype_lower($method[0]))
+			if (strlen($method) && ctype_lower($method[0]))
 				{
-				$classObject = $this->invokeClass($class, $method);
+				$classObject = $this->invokeClassMethod($class, $method, $parts, $index);
 				if ($classObject)
 					{
 					return $classObject;
@@ -74,25 +76,33 @@ class NanoController
 					return $this->punt($class);
 					}
 				}
-			elseif (! ctype_alpha($part[0]))
+			elseif (! ctype_alpha($parts[0]))
 				{
 				// not alpha start, need to punt
 				return $this->punt($class);
 				}
 			// add the part the class
-			$class[] = $part;
+			$class[] = $method;
 			}
 
 		return $this->punt($class);
 		}
 
-	private function invokeClassMethod(array $class, string $method) : ?object
+	private function invokeClassMethod(array $class, string $method, array $parts = [], int $index = 0) : ?object
 		{
-
-		// should have method name and class, try to invoke
 		$className = implode('\\', $class);
-		if (! class_exists($className) || ! method_exists($className, $method))
+		// should have method name and class, try to invoke
+		if (! class_exists($className))
 			{
+			$this->errors['Class ' . $className . ' does not exist'] = true;
+
+			return null;
+			}
+
+		if (! method_exists($className, $method))
+			{
+			$this->errors['Class Method ' . $className . '::' . $method . ' does not exist'] = true;
+
 			return null;
 			}
 
@@ -112,6 +122,13 @@ class NanoController
 		{
 		while (count($classParts))
 			{
+			$className = implode('\\', $classParts);
+			// if we are at the rool namespace, we are done
+			if ($className == $this->rootNamespace)
+				{
+				break;
+				}
+
 			if ($this->missingMethod)
 				{
 				$classObject = $this->invokeClassMethod($classParts, $this->missingMethod);
@@ -119,16 +136,6 @@ class NanoController
 					{
 					return $classObject;
 					}
-				}
-			$className = implode('\\', $classParts);
-			// if we are at the rool namespace, we are done
-			if ($className == $this->rootNamespace)
-				{
-				break;
-				}
-			if (class_exists($className))
-				{
-				return new $className($this);
 				}
 			array_pop($classParts);
 			}
@@ -190,6 +197,11 @@ class NanoController
 		$this->files = $files;
 
 		return $this;
+		}
+
+	public function getErrors() : array
+		{
+		return array_keys($this->errors);
 		}
 
 	}
