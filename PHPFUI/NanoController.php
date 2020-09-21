@@ -110,6 +110,46 @@ class NanoController
 		$reflection = new \ReflectionClass($classObject);
 		$reflectionMethod = $reflection->getMethod($method);
 		$args = ($index + 1) < count($parts) ? array_slice($parts, $index + 1) : [];
+		$numberArgs = count($args);
+		$argNumber = 0;
+		foreach ($reflectionMethod->getParameters() as $parameter)
+			{
+			if ($argNumber >= $numberArgs)
+				{
+				break;
+				}
+			$arg = $args[$argNumber];
+			if ($parameter->hasType())
+				{
+				$type = $parameter->getType();
+				$parameterType = $type->getName();
+				if ($type->isBuiltIn())
+					{
+					switch ($type->getName())
+						{
+						case 'array': // remaining arguments are put into this parameter and processing stops
+							$arg = array_slice($args, $argNumber);
+							$args = array_slice($args, 0, $argNumber + 1);
+							$argNumber = $numberArgs;
+							break;
+						case 'bool':
+							$arg = (bool)$arg;
+							break;
+						case 'int':
+							$arg = (int)$arg;
+							break;
+						case 'float':
+							$arg = (float)$arg;
+							break;
+						}
+					}
+				else
+					{
+					$arg = new $parameterType($arg);
+					}
+				}
+			$args[$argNumber++] = $arg;
+			}
 		$reflectionMethod->invokeArgs($classObject, $args);
 
 		return $classObject;
