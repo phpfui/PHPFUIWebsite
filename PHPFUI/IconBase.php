@@ -61,7 +61,8 @@ class IconBase extends HTML5Element
 				$link = "href='{$this->link}' ";
 				}
 
-			$output = "<a id='{$id}a' {$link}>";
+			$attributes = $this->getAttributes();
+			$output = "<a {$attributes} id='{$id}a' {$link}>";
 			}
 
 		return $output . $this->getToolTip(parent::getStart() . parent::getBody() . parent::getEnd());

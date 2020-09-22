@@ -58,8 +58,8 @@ class NanoController
 		 * Lower case letter indicates a method name
 		 * look at previous
 		 */
-		$url = $_SERVER['REQUEST_URI'];
-		$parts = explode('/', $url);
+		$urlParts = parse_url($_SERVER['REQUEST_URI']);
+		$parts = explode('/', $urlParts['path']);
 		array_shift($parts);
 		$class = explode('\\', $this->rootNamespace);
 		foreach ($parts as $index => $method)
@@ -91,6 +91,12 @@ class NanoController
 	private function invokeClassMethod(array $class, string $method, array $parts = [], int $index = 0) : ?object
 		{
 		$className = implode('\\', $class);
+		// if we are at the rool namespace, we are done
+		if ($className == $this->rootNamespace)
+			{
+			return null;
+			}
+
 		// should have method name and class, try to invoke
 		if (! class_exists($className))
 			{
@@ -129,7 +135,7 @@ class NanoController
 						{
 						case 'array': // remaining arguments are put into this parameter and processing stops
 							$arg = array_slice($args, $argNumber);
-							$args = array_slice($args, 0, $argNumber + 1);
+							$args = array_slice($args, 0, $argNumber);
 							$argNumber = $numberArgs;
 							break;
 						case 'bool':
