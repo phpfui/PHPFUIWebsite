@@ -12,6 +12,7 @@ class NanoController
 	private string $missingClass;
 	private string $missingMethod;
 	private array $errors = [];
+	private string $invokedPath = '';
 
 	public function __construct()
 		{
@@ -42,6 +43,13 @@ class NanoController
 			{
 			$this->files = $_FILES;
 			}
+		}
+
+	public function getInvokedPath() : string
+		{
+		$invokedPath = str_replace($this->rootNamespace . '\\', '', $this->invokedPath);
+
+		return str_replace('\\', '/', $invokedPath);
 		}
 
 	public function setRootNamespace(string $namespace = 'App') : self
@@ -113,6 +121,7 @@ class NanoController
 			}
 
 		$classObject = new $className($this);
+		$this->invokedPath = $className . '\\' . $method;
 		$reflection = new \ReflectionClass($classObject);
 		$reflectionMethod = $reflection->getMethod($method);
 		$args = ($index + 1) < count($parts) ? array_slice($parts, $index + 1) : [];
