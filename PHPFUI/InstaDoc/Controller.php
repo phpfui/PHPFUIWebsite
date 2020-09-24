@@ -100,8 +100,6 @@ class Controller
 		if (! $page)
 			{
 			$page = $this->getControllerPage();
-			$page->setPageName($this->siteTitle);
-			$page->setHomeUrl($this->homeUrl);
 			}
 		$page->setGenerating($this->generating);
 		$page->create($this->getMenu());
@@ -172,11 +170,7 @@ class Controller
 
 		// add in the index file
 		// always create a new page
-		$page = $this->getPage();
-		$page->setPageName($this->siteTitle);
-		$page->setHomeUrl($this->homeUrl);
-
-		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude, $page));
+		file_put_contents($directoryPath . 'index' . $extension, $this->display($pagesToInclude, $this->getPage()));
 
 		$namespaces = [];
 
@@ -191,11 +185,7 @@ class Controller
 				$parameters[Controller::PAGE] = $page;
 				$this->setParameters($parameters);
 				// always create a new page
-				$page = $this->getPage();
-				$page->setPageName($this->siteTitle);
-				$page->setHomeUrl($this->homeUrl);
-
-				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
+				file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $this->getPage()));
 				++$count;
 				}
 			}
@@ -206,11 +196,7 @@ class Controller
 			{
 			$parameters[Controller::NAMESPACE] = $namespace;
 			// always create a new page
-			$page = $this->getPage();
-			$page->setPageName($this->siteTitle);
-			$page->setHomeUrl($this->homeUrl);
-
-			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $page));
+			file_put_contents($directoryPath . $this->getUrl($parameters), $this->display($pagesToInclude, $this->getPage()));
 			++$count;
 			}
 
@@ -352,6 +338,8 @@ class Controller
 	public function getPage() : PageInterface
 		{
 		$page = new Page($this);
+		$page->setPageName($this->siteTitle);
+		$page->setHomeUrl($this->homeUrl);
 
 		return $page;
 		}
@@ -495,7 +483,6 @@ class Controller
 	public function setHomeUrl(string $url) : Controller
 		{
 		$this->homeUrl = $url;
-		$this->page->setHomeUrl($url);
 
 		return $this;
 		}
