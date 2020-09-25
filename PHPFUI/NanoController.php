@@ -14,11 +14,11 @@ namespace PHPFUI;
  * ### Parameters
  * You can pass parameters with URI segments past the first lower case segment (which is the method name to call in the class) by simply specifying additional segments.  **NanoController** uses method parameter types to cast the  parameters to the right types.  You can specify any scalar (**bool, int, float, string**), and **NanoController** will cast it to the correct type.  If your parameter type is a class, **NanoController** will instantiate the class and pass the constuctor a string representation of the corresponding URI segment. If you specify **array** as the type, **NanoController** will pass all subsequent URI segments as an array of strings. No other parameters will be passed after an **array** parameter.
  * ### Method Call
- * **NanoController** will instantiate the class and call the specified method and pass any provided parameters.  The run method returns the instantiated class with the specified method run. It is your job to deal with the object after that. Generally you would just call its output function (__toString normally) and return a completed page, but it is up to you.
+ * **NanoController** will instantiate the class (which must impliment **NanoClassInterface**) and call the specified method and pass any provided parameters.  The run method returns the instantiated class with the specified method run. It is your job to deal with the object after that. Generally you would just call its output function (__toString normally) and return a completed page, but it is up to you.
  * ### Landing Pages
  * If a valid method is not found, but the class is, **NanoController** will attempt to call the default missing method if explicitly defined by calling **setMissingMethod**. This allows for a default landing page if a method is not called.  If a default method is not specified, **NanoController** continues up the URI tree looking for a default method.  If no class and default method are found, then the missing page is returned.
  * ### Missing Class
- * Users are prone to not typing in URIs exactly, so if **NanoController** can not find a class and method to instantiate, it will return a missing class of **App\Missing**, which can be overridden if needed by calling **setMissingClass**.
+ * Users are prone to not typing in URIs exactly, so if **NanoController** can not find a class, or a class and method to instantiate, it will return a missing class of **App\Missing**, which can be overridden if needed by calling **setMissingClass**. If the namespace and class do not exist, the missing class will be returned.  If the class exists, the missing method will be tried, and if not found, the missing method will be searched for back up the URI tree.
  * ### Examples (assuming default App namespace)
  * | URI | Namespace | Class | Method | Parameters |
  * |-----|-----------|-------|--------|------------|
@@ -26,6 +26,7 @@ namespace PHPFUI;
  * |/Account/Users/edit/4321|\App\Account|Users|edit(int $id)| (int)4321 |
  * |/Account/Users/update/4321|\App\Account|Users|update(\Model\User $user)| new \Model\User('4321') |
  * |/Account/Users/friends/4321/5810/23704/17639/699382|\App\Account|Users|friends(int $id, array $friends)| (int)4321, ['5810', '23704', '17639', '699382'] |
+ * |/Account/Users/Fiends|\App|Missing| __construct(NanoController) | none (class not defined) |
  *
  * You can change the root namespace from App to anything by calling setRootNamespace('App\Controller') for example.
  * ### What about GET, POST, PUT, and DELETE?
@@ -109,9 +110,9 @@ class NanoController
 	/**
 	 * Run the controller and execute the class and method indicated by the URI
 	 *
-	 * @return object instantiated class with the appropriate method called, except if the missing class is returned, then just the constructor has been called.
+	 * @return NanoClassInterface object instantiated class with the appropriate method called, except if the missing class is returned, then just the constructor has been called.
 	 */
-	public function run() : object
+	public function run() : NanoClassInterface
 		{
 		/**
 		 * Iterate through uri looking for a lowercase letter
@@ -151,9 +152,9 @@ class NanoController
 	/**
 	 * Test if the class and method exists, and if so, return the instantiated class with the method called
 	 *
-	 * @return null|object null value indicates class::method was not found
+	 * @return null|NanoClassInterface null value indicates class::method was not found
 	 */
-	private function invokeClassMethod(array $class, string $method, array $parts = [], int $index = 0) : ?object
+	private function invokeClassMethod(array $class, string $method, array $parts = [], int $index = 0) : ?NanoClassInterface
 		{
 		$className = implode('\\', $class);
 		// if we are at the rool namespace, we are done
@@ -165,9 +166,9 @@ class NanoController
 		// should have method name and class, try to invoke
 		if (! class_exists($className))
 			{
-			$this->errors['Class ' . $className . ' does not exist'] = true;
+			$this->errors['Class ' . $className . ' does not exist, returning Missing'] = true;
 
-			return null;
+			return new $this->missingClass($this);
 			}
 
 		if (! method_exists($className, $method))
@@ -230,9 +231,9 @@ class NanoController
 	/**
 	 * We can't find a Class\Method pair, so just find a class and check if it has a landing page if defined, else go up one level.
 	 *
-	 * @return object will return the missing class if the missing method can't be loaded
+	 * @return NanoClassInterface object will return the missing class if the missing method can't be loaded
 	 */
-	private function punt(array $classParts) : object
+	private function punt(array $classParts) : NanoClassInterface
 		{
 		while (count($classParts))
 			{
