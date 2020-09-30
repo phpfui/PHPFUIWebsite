@@ -34,15 +34,15 @@ namespace PHPFUI;
  */
 class NanoController
 	{
-
-	private $rootNamespace = '';
-	private $get = [];
-	private $post = [];
+	private $errors = [];
 	private $files = [];
+	private $get = [];
+	private $invokedPath = '';
 	private $missingClass = '';
 	private $missingMethod = '';
-	private $errors = [];
-	private $invokedPath = '';
+	private $post = [];
+
+	private $rootNamespace = '';
 	private $uri = '';
 
 	/**
@@ -70,10 +70,12 @@ class NanoController
 			{
 			$this->get = $_GET;
 			}
+
 		if (isset($_POST))
 			{
 			$this->post = $_POST;
 			}
+
 		if (isset($_FILES))
 			{
 			$this->files = $_FILES;
@@ -81,11 +83,21 @@ class NanoController
 		}
 
 	/**
-	 * Returns the URI provided in the constructor
+	 * @return array of errors found, for diagnostic information
 	 */
-	public function getUri() : string
+	public function getErrors() : array
 		{
-		return $this->uri;
+		return array_keys($this->errors);
+		}
+
+	public function getFiles() : array
+		{
+		return $this->files;
+		}
+
+	public function getGet() : array
+		{
+		return $this->get;
 		}
 	/**
 	 * Returns the URI path that was finally loaded
@@ -97,14 +109,17 @@ class NanoController
 		return str_replace('\\', '/', $invokedPath);
 		}
 
-	/**
-	 * Namespace prefix for your classes so they don't have to be in the root namespace
-	 */
-	public function setRootNamespace(string $namespace = 'App') : self
+	public function getPost() : array
 		{
-		$this->rootNamespace = $namespace;
+		return $this->post;
+		}
 
-		return $this;
+	/**
+	 * Returns the URI provided in the constructor
+	 */
+	public function getUri() : string
+		{
+		return $this->uri;
 		}
 
 	/**
@@ -123,11 +138,13 @@ class NanoController
 		$parts = explode('/', $urlParts['path']);
 		array_shift($parts);
 		$class = explode('\\', $this->rootNamespace);
+
 		foreach ($parts as $index => $method)
 			{
 			if (strlen($method) && ctype_lower($method[0]))
 				{
 				$classObject = $this->invokeClassMethod($class, $method, $parts, $index);
+
 				if ($classObject)
 					{
 					return $classObject;
@@ -147,6 +164,57 @@ class NanoController
 			}
 
 		return $this->punt($class);
+		}
+
+	public function setFiles(array $files = []) : self
+		{
+		$this->files = $files;
+
+		return $this;
+		}
+
+	public function setGet(array $get = []) : self
+		{
+		$this->get = $get;
+
+		return $this;
+		}
+
+	/**
+	 * If no class::method is found in the URI, return an instance of this class.
+	 */
+	public function setMissingClass(string $missingClass = 'App\\Missing') : self
+		{
+		$this->missingClass = $missingClass;
+
+		return $this;
+		}
+
+	/**
+	 * If a class is found, but a method is not, then try calling this missing method. If no missing method is defined, go back up the tree looking for this method.
+	 */
+	public function setMissingMethod(string $missingMethod = '') : self
+		{
+		$this->missingMethod = $missingMethod;
+
+		return $this;
+		}
+
+	public function setPost(array $post = []) : self
+		{
+		$this->post = $post;
+
+		return $this;
+		}
+
+	/**
+	 * Namespace prefix for your classes so they don't have to be in the root namespace
+	 */
+	public function setRootNamespace(string $namespace = 'App') : self
+		{
+		$this->rootNamespace = $namespace;
+
+		return $this;
 		}
 
 	/**
@@ -185,6 +253,7 @@ class NanoController
 		$args = ($index + 1) < count($parts) ? array_slice($parts, $index + 1) : [];
 		$numberArgs = count($args);
 		$argNumber = 0;
+
 		foreach ($reflectionMethod->getParameters() as $parameter)
 			{
 			if ($argNumber >= $numberArgs)
@@ -192,10 +261,12 @@ class NanoController
 				break;
 				}
 			$arg = $args[$argNumber];
+
 			if ($parameter->hasType())
 				{
 				$type = $parameter->getType();
 				$parameterType = $type->getName();
+
 				if ($type->isBuiltIn())
 					{
 					switch ($type->getName())
@@ -204,15 +275,22 @@ class NanoController
 							$arg = array_slice($args, $argNumber);
 							$args = array_slice($args, 0, $argNumber);
 							$argNumber = $numberArgs;
+
 							break;
+
 						case 'bool':
 							$arg = (bool)$arg;
+
 							break;
+
 						case 'int':
 							$arg = (int)$arg;
+
 							break;
+
 						case 'float':
 							$arg = (float)$arg;
+
 							break;
 						}
 					}
@@ -247,6 +325,7 @@ class NanoController
 			if ($this->missingMethod)
 				{
 				$classObject = $this->invokeClassMethod($classParts, $this->missingMethod);
+
 				if ($classObject)
 					{
 					return $classObject;
@@ -256,70 +335,6 @@ class NanoController
 			}
 
 		return new $this->missingClass($this);
-		}
-
-	/**
-	 * If no class::method is found in the URI, return an instance of this class.
-	 */
-	public function setMissingClass(string $missingClass = 'App\\Missing') : self
-		{
-		$this->missingClass = $missingClass;
-
-		return $this;
-		}
-
-	/**
-	 * If a class is found, but a method is not, then try calling this missing method. If no missing method is defined, go back up the tree looking for this method.
-	 */
-	public function setMissingMethod(string $missingMethod = '') : self
-		{
-		$this->missingMethod = $missingMethod;
-
-		return $this;
-		}
-
-	public function getGet() : array
-		{
-		return $this->get;
-		}
-
-	public function setGet(array $get = []) : self
-		{
-		$this->get = $get;
-
-		return $this;
-		}
-
-	public function getPost() : array
-		{
-		return $this->post;
-		}
-
-	public function setPost(array $post = []) : self
-		{
-		$this->post = $post;
-
-		return $this;
-		}
-
-	public function getFiles() : array
-		{
-		return $this->files;
-		}
-
-	public function setFiles(array $files = []) : self
-		{
-		$this->files = $files;
-
-		return $this;
-		}
-
-	/**
-	 * @return array of errors found, for diagnostic information
-	 */
-	public function getErrors() : array
-		{
-		return array_keys($this->errors);
 		}
 
 	}
