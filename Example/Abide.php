@@ -13,7 +13,11 @@ class Abide extends \Example\Page
 		$form = new \PHPFUI\Form($this);
 		$parameters = \PHPFUI\Session::getFlash('post');
 
-		if (! is_array($parameters))
+		if ($parameters)
+			{
+			$parameters = json_decode($parameters, true);
+			}
+		else
 			{
 			$parameters = [];
 			}

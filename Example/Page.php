@@ -64,7 +64,12 @@ class Page extends \PHPFUI\Page
 
 			if (! empty($_POST['submit']) && \PHPFUI\Session::checkCSRF())
 				{
-				\PHPFUI\Session::setFlash('post', json_encode($_POST));
+				$vars = [];
+				foreach ($_POST as $key => $value)
+					{
+					$vars[$key] = htmlspecialchars($value);
+					}
+				\PHPFUI\Session::setFlash('post', json_encode($vars));
 				$this->redirect();
 
 				return;
