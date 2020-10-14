@@ -1,15 +1,17 @@
 <?php
 // allow the autoloader and db to be included from any script that needs it.
+
 error_reporting(E_ALL);
 
-function classNameExists(string $className) : string
+define ('PROJECT_ROOT', __DIR__);
+
+// allow the autoloader and db to be included from any script that needs it.
+function classNameExists($className)
 	{
-	$dir = (strpos($className, "\\") === false) ? '..\\NoNameSpace' : '..';
-	$path = "{$_SERVER['DOCUMENT_ROOT']}\\{$dir}\\{$className}.php";
-	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
-		{
-		$path = str_replace("\\", '/', $path);
-		}
+	$dir = (strpos($className, '\\') === false) ? '\\NoNameSpace\\' : '\\';
+	$path = PROJECT_ROOT . $dir . "{$className}.php";
+	$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+
 	return file_exists($path) ? $path : '';
 	}
 

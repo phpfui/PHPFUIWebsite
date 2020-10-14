@@ -1,30 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
+require_once __DIR__ . '/../commonbase.php';
 
-function classNameExists(string $className) : string
-  {
-  $path = __DIR__ . "\\..\\{$className}.php";
-
-  if ('WIN' !== strtoupper(substr(PHP_OS, 0, 3)))
-    {
-    $path = str_replace('\\', '/', $path);
-    }
-
-  return file_exists($path) ? $path : '';
-  }
-
-function autoload($className) : void
-  {
-  $path = classNameExists($className);
-
-  if ($path)
-    {
-    /** @noinspection PhpIncludeInspection */
-    include $path;
-    }
-  }
-spl_autoload_register('autoload');
 $vendorDir = __DIR__ . '/../../vendor';
 
 if (file_exists($file = $vendorDir . '/autoload.php')) {

@@ -14,34 +14,33 @@ class UnitTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 
 	public function testDirectory() : void
 		{
-		$this->assertValidPHPDirectory(__DIR__ . '/../App', 'App directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../PHPFUI', 'PHPFUI directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../DeepCopy', 'DeepCopy directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Firebase', 'Firebase directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../cebe', 'cebe directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Example', 'Example directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Gitonomy', 'Gitonomy directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../GuzzleHttp', 'GuzzleHttp directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Highlight', 'Highlight directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Monolog', 'Monolog directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../NXP', 'NXP directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../phpDocumentor', 'phpDocumentor directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../PHPFUI', 'PHPFUI directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../PHPUnit', 'PHPUnit directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../PHPHtmlParser', 'PHPHtmlParser directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../PhpParser', 'PhpParser directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Psr', 'Psr directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Rize', 'Rize directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Symfony', 'Symfony directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Symfony', 'Symfony directory has an error');
-		$this->assertValidPHPDirectory(__DIR__ . '/../Webmozart', 'Webmozart directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/cebe', 'cebe directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/DeepCopy', 'DeepCopy directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Example', 'Example directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Firebase', 'Firebase directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Gitonomy', 'Gitonomy directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/GuzzleHttp', 'GuzzleHttp directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Highlight', 'Highlight directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Monolog', 'Monolog directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/NXP', 'NXP directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/phpDocumentor', 'phpDocumentor directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PHPFUI', 'PHPFUI directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PHPUnit', 'PHPUnit directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PHPHtmlParser', 'PHPHtmlParser directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PhpParser', 'PhpParser directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Psr', 'Psr directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Rize', 'Rize directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/stringEncode', 'stringEncode directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Symfony', 'Symfony directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Webmozart', 'Webmozart directory has an error');
+		$this->assertValidPHPDirectory(PROJECT_ROOT . '/www', 'www directory has an error');
 		}
 
 	public function testValidPHPFile() : void
 		{
-		$this->assertValidPHPFile(__DIR__ . '/../www/index.php', 'Index file is bad');
-		$this->assertValidPHPFile(__DIR__ . '/../common.php', 'common file is bad');
-		$this->assertValidPHPFile(__DIR__ . '/../commonbase.php', 'commonbase file is bad');
+		$this->assertValidPHPFile(PROJECT_ROOT . '/www/index.php', 'Index file is bad');
+		$this->assertValidPHPFile(PROJECT_ROOT . '/common.php', 'common file is bad');
+		$this->assertValidPHPFile(PROJECT_ROOT . '/commonbase.php', 'commonbase file is bad');
 		}
 
 	}
