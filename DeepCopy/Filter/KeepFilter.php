@@ -7,7 +7,7 @@ class KeepFilter implements Filter
     /**
      * Keeps the value of the object property.
      *
-     * @inheritdoc
+     * @inheritDoc
      */
     public function apply($object, $property, $objectCopier)
     {

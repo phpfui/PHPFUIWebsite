@@ -20,7 +20,7 @@ class SplDoublyLinkedListFilter implements TypeFilter
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function apply($element)
     {

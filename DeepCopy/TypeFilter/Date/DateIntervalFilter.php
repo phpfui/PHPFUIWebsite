@@ -14,7 +14,7 @@ class DateIntervalFilter implements TypeFilter
 {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @param DateInterval $element
      *

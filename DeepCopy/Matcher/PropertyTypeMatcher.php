@@ -29,7 +29,7 @@ class PropertyTypeMatcher implements Matcher
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function matches($object, $property)
     {

@@ -12,7 +12,7 @@ class SetNullFilter implements Filter
     /**
      * Sets the object property to null.
      *
-     * @inheritdoc
+     * @inheritDoc
      */
     public function apply($object, $property, $objectCopier)
     {

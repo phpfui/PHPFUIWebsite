@@ -15,38 +15,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		}
 
-	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
-		{
-		foreach ($tags as $tag)
-			{
-			if (strcasecmp($tag->getName(), 'inheritDoc') == 0)
-				{
-				$reflectionClass = $reflectionMethod->getDeclaringClass();
-				$parent = $reflectionClass->getParentClass();
-				if (! $parent)
-					{
-					return [];	// no parent, at top of tree, and no tags, go figure
-					}
-				$method = $parent->getMethod($reflectionMethod->name);
-				if (! $method)
-					{
-					return [];	// no method here, kinda strange
-					}
-				$docBlock = $this->getDocBlock($method);
-				if ($docBlock)
-					{
-					// We have a doc block, see if it punts an inheritdoc, or actually has the goods
-					return $this->getInheritedDocBlock($docBlock->getTags(), $method);
-					}
-
-				// Nothing at this level, but go up one and try the parent method
-				return $this->getInheritedDocBlock($tags, $method);
-				}
-			}
-
-		return $tags;
-		}
-
 	/**
 	 * Format comments without indentation
 	 */
@@ -153,17 +121,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected function getClassName(string $class, bool $asLink = true) : string
 		{
 		$array = '';
+
 		if ($asLink && $class)
 			{
 			// could be mixed, break out by |
 			$parts = explode('|', $class);
+
 			if (count($parts) > 1)
 				{
 				$returnValue = [];
+
 				foreach ($parts as $part)
 					{
 					$returnValue[] = $this->getClassName($part, true);
 					}
+
 				return implode('|', $returnValue);
 				}
 			else
@@ -172,7 +144,8 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					$class = substr($class, 1);
 					}
-				if (strpos($class, '[]') !== false)
+
+				if (false !== strpos($class, '[]'))
 					{
 					$array = '[]';
 					$class = str_replace($array, '', $class);
@@ -256,6 +229,43 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected function getHtmlClass(string $class) : string
 		{
 		return str_replace('\\', '-', $class);
+		}
+
+	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
+		{
+		foreach ($tags as $index => $tag)
+			{
+			if (0 == strcasecmp($tag->getName(), 'inheritDoc'))
+				{
+				$reflectionClass = $reflectionMethod->getDeclaringClass();
+				$parent = $reflectionClass->getParentClass();
+
+				if (! $parent)
+					{
+					return [];	// no parent, at top of tree, and no tags, go figure
+					}
+				$method = $parent->getMethod($reflectionMethod->name);
+
+				if (! $method)
+					{
+					return [];	// no method here, kinda strange
+					}
+				$docBlock = $this->getDocBlock($method);
+
+				if ($docBlock)
+					{
+					// add in the new tags and check parent
+					array_splice ($tags, $index, 1, $docBlock->getTags());
+
+					return $this->getInheritedDocBlock($tags, $method);
+					}
+
+				// Nothing at this level, but go up one and try the parent method
+				return $this->getInheritedDocBlock($tags, $method);
+				}
+			}
+
+		return $tags;
 		}
 
 	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
