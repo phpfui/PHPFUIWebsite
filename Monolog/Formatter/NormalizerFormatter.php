@@ -42,7 +42,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function format(array $record)
     {
@@ -50,7 +50,7 @@ class NormalizerFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {

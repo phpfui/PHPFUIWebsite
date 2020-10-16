@@ -50,7 +50,7 @@ class InsightOpsHandler extends SocketHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function generateDataStream(array $record): string
     {

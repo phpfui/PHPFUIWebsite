@@ -409,6 +409,13 @@ class HTML5Element extends Base
 		return (! $this->element || $this->noEndTag) ? '' : "</{$this->element}>";
 		}
 
+	/**
+	 * Get the start of the element doing what ever needs to be done to render it. This can include finalizing the class or transmogifying it somehow for later output.
+	 *
+	 * @author bruce wells
+	 *
+	 * @return start start of the element, generally the open tag
+	 */
 	protected function getStart() : string
 		{
 		// We might not be a real HTML Element!

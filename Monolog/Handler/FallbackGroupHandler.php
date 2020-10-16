@@ -16,7 +16,7 @@ use Throwable;
 class FallbackGroupHandler extends GroupHandler
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handle(array $record): bool
     {
@@ -36,7 +36,7 @@ class FallbackGroupHandler extends GroupHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

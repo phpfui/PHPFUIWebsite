@@ -51,7 +51,7 @@ class PsrHandler extends AbstractHandler implements FormattableHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function handle(array $record): bool
     {

@@ -62,7 +62,7 @@ class LogmaticHandler extends SocketHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function generateDataStream(array $record): string
     {
@@ -70,7 +70,7 @@ class LogmaticHandler extends SocketHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

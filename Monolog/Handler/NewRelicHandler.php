@@ -50,7 +50,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     protected $explodeArrays;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * @param string|int  $level           The minimum logging level at which this handler will be triggered.
      * @param bool        $bubble          Whether the messages that are handled can bubble up the stack or not.
@@ -73,7 +73,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(array $record): void
     {
@@ -188,7 +188,7 @@ class NewRelicHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

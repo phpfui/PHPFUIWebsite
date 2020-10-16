@@ -93,7 +93,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHandling(array $record): bool
     {
@@ -101,7 +101,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handle(array $record): bool
     {
@@ -119,7 +119,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -155,7 +155,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -165,7 +165,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

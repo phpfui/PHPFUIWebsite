@@ -53,7 +53,7 @@ class RedisHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(array $record): void
     {
@@ -87,7 +87,7 @@ class RedisHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {

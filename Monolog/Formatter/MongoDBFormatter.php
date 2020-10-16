@@ -38,7 +38,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function format(array $record): array
     {
@@ -46,7 +46,7 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records): array
     {

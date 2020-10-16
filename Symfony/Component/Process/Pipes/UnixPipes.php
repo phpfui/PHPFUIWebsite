@@ -41,7 +41,7 @@ class UnixPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getDescriptors(): array
     {
@@ -79,7 +79,7 @@ class UnixPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getFiles(): array
     {
@@ -87,7 +87,7 @@ class UnixPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function readAndWrite(bool $blocking, bool $close = false): array
     {
@@ -136,7 +136,7 @@ class UnixPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function haveReadSupport(): bool
     {
@@ -144,7 +144,7 @@ class UnixPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function areOpen(): bool
     {

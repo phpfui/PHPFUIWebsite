@@ -37,7 +37,7 @@ class WildfireFormatter extends NormalizerFormatter
     ];
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function format(array $record): string
     {
@@ -96,7 +96,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records)
     {
@@ -104,7 +104,7 @@ class WildfireFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @suppress PhanTypeMismatchReturn
      */
     protected function normalize($data, int $depth = 0)

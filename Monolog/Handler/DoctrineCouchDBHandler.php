@@ -32,7 +32,7 @@ class DoctrineCouchDBHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(array $record): void
     {

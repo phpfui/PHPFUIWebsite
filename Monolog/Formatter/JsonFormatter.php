@@ -62,7 +62,7 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @suppress PhanTypeComparisonToArray
      */
@@ -89,7 +89,7 @@ class JsonFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records): string
     {

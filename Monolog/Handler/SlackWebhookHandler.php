@@ -86,7 +86,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @param array $record
      */

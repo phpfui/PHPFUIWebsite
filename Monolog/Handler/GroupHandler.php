@@ -43,7 +43,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHandling(array $record): bool
     {
@@ -57,7 +57,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handle(array $record): bool
     {
@@ -73,7 +73,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {
@@ -111,7 +111,7 @@ class GroupHandler extends Handler implements ProcessableHandlerInterface, Reset
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {

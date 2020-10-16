@@ -26,7 +26,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected static $records = [];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      *
      * Formatted output may contain some formatting markers to be transferred to `console.log` using the %c format.
      *
@@ -40,7 +40,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(array $record): void
     {

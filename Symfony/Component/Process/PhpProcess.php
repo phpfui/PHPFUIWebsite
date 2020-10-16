@@ -51,7 +51,7 @@ class PhpProcess extends Process
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function fromShellCommandline(string $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60)
     {
@@ -59,7 +59,7 @@ class PhpProcess extends Process
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function start(callable $callback = null, array $env = [])
     {

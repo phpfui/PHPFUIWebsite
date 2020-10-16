@@ -74,7 +74,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function write(array $record): void
     {
@@ -82,7 +82,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -104,7 +104,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     protected function getDefaultFormatter(): FormatterInterface
     {
@@ -112,7 +112,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

@@ -20,7 +20,7 @@ namespace Monolog\Formatter;
 class ScalarFormatter extends NormalizerFormatter
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function format(array $record): array
     {

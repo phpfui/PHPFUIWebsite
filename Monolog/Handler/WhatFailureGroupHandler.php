@@ -20,7 +20,7 @@ namespace Monolog\Handler;
 class WhatFailureGroupHandler extends GroupHandler
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handle(array $record): bool
     {
@@ -40,7 +40,7 @@ class WhatFailureGroupHandler extends GroupHandler
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function handleBatch(array $records): void
     {

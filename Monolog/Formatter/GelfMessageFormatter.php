@@ -71,7 +71,7 @@ class GelfMessageFormatter extends NormalizerFormatter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function format(array $record): Message
     {

@@ -35,7 +35,7 @@ abstract class AbstractHandler extends Handler implements ResettableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHandling(array $record): bool
     {

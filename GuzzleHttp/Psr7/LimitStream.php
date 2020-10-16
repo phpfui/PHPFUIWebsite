@@ -51,7 +51,7 @@ class LimitStream implements StreamInterface
 
     /**
      * Returns the size of the limited subset of data
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getSize()
     {
@@ -66,7 +66,7 @@ class LimitStream implements StreamInterface
 
     /**
      * Allow for a bounded seek on the read limited stream
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function seek($offset, $whence = SEEK_SET)
     {
@@ -91,7 +91,7 @@ class LimitStream implements StreamInterface
 
     /**
      * Give a relative tell()
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function tell()
     {

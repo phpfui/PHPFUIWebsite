@@ -171,6 +171,9 @@ class SelectAutoComplete extends Select
 		return '';
 		}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function getStart() : string
 		{
 		$dollar = '$';

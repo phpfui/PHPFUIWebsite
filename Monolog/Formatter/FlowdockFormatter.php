@@ -35,7 +35,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function format(array $record): array
     {
@@ -69,7 +69,7 @@ class FlowdockFormatter implements FormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function formatBatch(array $records): array
     {

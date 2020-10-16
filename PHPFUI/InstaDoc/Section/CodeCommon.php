@@ -15,10 +15,42 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$this->parsedown = new \PHPFUI\InstaDoc\MarkDownParser();
 		}
 
+	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
+		{
+		foreach ($tags as $tag)
+			{
+			if (strcasecmp($tag->getName(), 'inheritDoc') == 0)
+				{
+				$reflectionClass = $reflectionMethod->getDeclaringClass();
+				$parent = $reflectionClass->getParentClass();
+				if (! $parent)
+					{
+					return [];	// no parent, at top of tree, and no tags, go figure
+					}
+				$method = $parent->getMethod($reflectionMethod->name);
+				if (! $method)
+					{
+					return [];	// no method here, kinda strange
+					}
+				$docBlock = $this->getDocBlock($method);
+				if ($docBlock)
+					{
+					// We have a doc block, see if it punts an inheritdoc, or actually has the goods
+					return $this->getInheritedDocBlock($docBlock->getTags(), $method);
+					}
+
+				// Nothing at this level, but go up one and try the parent method
+				return $this->getInheritedDocBlock($tags, $method);
+				}
+			}
+
+		return $tags;
+		}
+
 	/**
 	 * Format comments without indentation
 	 */
-	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+	protected function formatComments(?\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
 		{
 		if (! $docBlock)
 			{
@@ -39,6 +71,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			}
 
 		$tags = $docBlock->getTags();
+		// if we are in a method, inheritdoc makes sense, and we should get the correct doc block comments
+		if ($reflectionMethod)
+			{
+			$tags = $this->getInheritedDocBlock($tags, $reflectionMethod);
+			}
 
 		if ($tags)
 			{
@@ -174,7 +211,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	/**
 	 * Get comments indented
 	 */
-	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : string
+	protected function getComments(?\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
 		{
 		if (! $docBlock)
 			{
@@ -186,7 +223,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$cell1->add('&nbsp;');
 		$gridX->add($cell1);
 		$cell11 = new \PHPFUI\Cell(11);
-		$cell11->add($this->formatComments($docBlock));
+		$cell11->add($this->formatComments($docBlock, $reflectionMethod));
 		$gridX->add($cell11);
 
 		return $gridX;
@@ -245,6 +282,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $comments;
 		}
 
+	/**
+	 * @param \ReflectionFunction | \ReflectionMethod $method
+	 */
 	protected function getParameters($method) : string
 		{
 		$info = '(';
@@ -286,7 +326,8 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$info .= ' : ' . $this->getClassName($method->getReturnType()->getName());
 			}
-		$info .= $this->getComments($docBlock);
+
+		$info .= $this->getComments($docBlock, $method instanceof \ReflectionMethod ? $method : null);
 
 		return $info;
 		}

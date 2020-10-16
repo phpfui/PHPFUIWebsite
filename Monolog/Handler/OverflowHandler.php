@@ -127,7 +127,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setFormatter(FormatterInterface $formatter): HandlerInterface
     {
@@ -137,7 +137,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getFormatter(): FormatterInterface
     {

@@ -94,7 +94,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getDescriptors(): array
     {
@@ -119,7 +119,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getFiles(): array
     {
@@ -127,7 +127,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function readAndWrite(bool $blocking, bool $close = false): array
     {
@@ -162,7 +162,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function haveReadSupport(): bool
     {
@@ -170,7 +170,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function areOpen(): bool
     {
@@ -178,7 +178,7 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function close()
     {

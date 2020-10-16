@@ -219,7 +219,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @throws RuntimeException if the upload was not successful.
      */
     public function getStream()
@@ -234,7 +234,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @see http://php.net/is_uploaded_file
      * @see http://php.net/move_uploaded_file
@@ -275,7 +275,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @return int|null The file size in bytes or null if unknown.
      */
@@ -285,7 +285,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @see http://php.net/manual/en/features.file-upload.errors.php
      * @return int One of PHP's UPLOAD_ERR_XXX constants.
@@ -296,7 +296,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      *
      * @return string|null The filename sent by the client or null if none
      *     was provided.
@@ -307,7 +307,7 @@ class UploadedFile implements UploadedFileInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getClientMediaType()
     {
