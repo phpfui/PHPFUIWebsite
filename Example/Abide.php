@@ -34,7 +34,7 @@ class Abide extends \Example\Page
 		$this->addBody($form);
 		}
 
-	private function getReveal(\PHPFUI\Button $button)
+	private function getReveal(\PHPFUI\Button $button) : void
 		{
 		$modal = new \PHPFUI\Reveal($this, $button);
 		$modal->addClass('small');

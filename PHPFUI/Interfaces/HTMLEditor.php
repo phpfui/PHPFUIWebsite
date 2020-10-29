@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPFUI;
+namespace PHPFUI\Interfaces;
 
 /**
  * Any JavaScript editor you want to integrate needs to
@@ -10,13 +10,13 @@ namespace PHPFUI;
  * will need to do what ever to the page to make the editor
  * work.
  */
-interface HTMLEditorInterface
+interface HTMLEditor
 	{
 
 	/**
-	 * @param \PHPFUI\Interface\Page $page current page
+	 * @param \PHPFUI\Interfaces\Page $page current page
 	 * @param string $id of the textarea that ends editing support
 	 */
-	public function updatePage(\PHPFUI\Interface\Page $page, string $id) : void;
+	public function updatePage(\PHPFUI\Page $page, string $id) : void;
 
 	}

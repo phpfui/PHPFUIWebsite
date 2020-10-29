@@ -29,6 +29,7 @@ class Throttle
 	public function __construct(?int $microseconds = 0)
 		{
 		$this->lastAccessed = microtime(true);
+
 		if ($microseconds)
 			{
 			$this->microseconds = 1.0 / 1000000.0 * $microseconds;

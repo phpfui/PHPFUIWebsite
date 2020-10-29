@@ -5,11 +5,11 @@ namespace PHPFUI\RefActor\Actor\Includes;
 class StrayRequireOnce extends \PHPFUI\RefActor\Actor\Base
 	{
 
-	public function enterNode(\PhpParser\Node $node)
+	public function enterNode(\PhpParser\Node $node) : void
 		{
 		if ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
 			{
-			if (strpos($node->value, 'require_once') !== false)
+			if (false !== strpos($node->value, 'require_once'))
 				{
 				$this->refActor->log('error', 'Stray require_once in ' . $this->getCurrentFile());
 				}
@@ -37,4 +37,3 @@ PHP;
 		}
 
 	}
-

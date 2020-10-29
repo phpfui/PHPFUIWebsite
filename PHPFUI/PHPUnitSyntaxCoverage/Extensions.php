@@ -50,6 +50,20 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		}
 
 	/**
+	 * Exclude any file with this $directory string in the path.
+	 *
+	 * Only a simple stripos is used to match anything in the file name.
+	 *
+	 * You can add multiple skips.
+	 */
+	public function addSkipDirectory(string $directory) : self
+		{
+		$this->skipDirectories[] = $directory;
+
+		return $this;
+		}
+
+	/**
 	 * Assert a string containing valid PHP will parse.
 	 *
 	 * Important: Any classes defined in this code will not be seen by the autoloader, as it only exists in this string.
@@ -89,20 +103,6 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		}
 
 	/**
-	 * Exclude any file with this $directory string in the path.
-	 *
-	 * Only a simple stripos is used to match anything in the file name.
-	 *
-	 * You can add multiple skips.
-	 */
-	public function addSkipDirectory(string $directory) : self
-		{
-		$this->skipDirectories[] = $directory;
-
-		return $this;
-		}
-
-	/**
 	 * Validate all files in a directory.  Recursive and only looks at .php files by default.
 	 */
 	public function assertValidPHPDirectory(string $directory, string $message = '', bool $recurseSubdirectories = true, array $extensions = ['.php']) : void
@@ -122,21 +122,26 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		foreach ($iterator as $item)
 			{
 			$type = $item->getType();
+
 			if ('file' == $type)
 				{
 				$file = $item->getPathname();
 				$ext = strrchr($file, '.');
+
 				if ($ext && isset($exts[$ext]))
 					{
 					$skip = false;
+
 					foreach ($this->skipDirectories as $directory)
 						{
-						if (stripos($file, $directory) !== false)
+						if (false !== stripos($file, $directory))
 							{
 							$skip = true;
+
 							break;
 							}
 						}
+
 					if (! $skip)
 						{
 						$this->assertValidPHPFile($file, $message . "\nFile: " . $file);

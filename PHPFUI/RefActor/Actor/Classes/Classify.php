@@ -4,16 +4,16 @@ namespace PHPFUI\RefActor\Actor\Classes;
 
 class Classify extends \PHPFUI\RefActor\Actor\Base
 	{
+	private array $ast = [];
+	private string $className = '';
+	private \PHPFUI\RefActor\ClassNameParserBase $classNames;
+	private string $classRoot = '';
+	private array $functions = [];
+	private array $functionsCalled = [];
+	private string $namespace = '';
 
 	private \PhpParser\Parser $parser;
 	private \PhpParser\PrettyPrinter\Standard $prettyPrinter;
-	private \PHPFUI\RefActor\ClassNameParserBase $classNames;
-	private string $classRoot = '';
-	private array $ast = [];
-	private string $className = '';
-	private string $namespace = '';
-	private array $functions = [];
-	private array $functionsCalled = [];
 
 	public function __construct(string $classRoot, \PHPFUI\RefActor\ClassNameParserBase $classNames)
 		{
@@ -24,86 +24,7 @@ class Classify extends \PHPFUI\RefActor\Actor\Base
 		$this->prettyPrinter = new \PhpParser\PrettyPrinter\Standard(['shortArraySyntax' => true]);
 		}
 
-	public function shouldProcessFile(string $file) : bool
-		{
-		parent::shouldProcessFile($file);
-
-		$this->className = $this->classNames->getClassName($file);
-		$this->namespace = $this->classNames->getNamespace($file);
-		$this->functions = [];
-		$this->functionsCalled = [];
-
-		$code = '<?php
-namespace TestNamespace;
-
-class TestClass
-	{
-
-	public function __toString()
-		{
-		$retVal = "";
-		}
-
-	}';
-
-		$code = str_replace(['TestNamespace', 'TestClass'], [$this->namespace, $this->className], $code);
-		$this->ast = $this->parser->parse($code);
-
-		return true;
-		}
-
-	public function leaveNode(\PhpParser\Node $node)
-		{
-		if ($node instanceof \PhpParser\Node\Stmt\Function_)
-			{
-			$this->functions[$node->name->name] = $node;
-			}
-		elseif ($node instanceof \PhpParser\Node\Stmt\Expression && $node->expr instanceof \PhpParser\Node\Expr\FuncCall)
-			{
-			$functionName = implode('\\', $node->expr->name->parts);
-			$this->functionsCalled[$functionName][] = $node;
-			}
-    elseif (property_exists($node, 'stmts'))
-			{
-			$node->stmts = $this->processNodes($node->stmts);
-			}
-
-		return;
-		}
-
-	private function processNodes(array $nodes, array $existingNodes = []) : array
-		{
-		foreach ($nodes as $node)
-			{
-			if ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
-				{
-				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
-						new \PhpParser\Node\Expr\Variable('retVal'),
-						new \PhpParser\Node\Scalar\String_($node->value,
-								['kind' => \PhpParser\Node\Scalar\String_::KIND_NOWDOC, 'docLabel' => 'HTML']));
-				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\Echo_)
-				{
-				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
-						new \PhpParser\Node\Expr\Variable('retVal'),
-						$node->exprs[0]);
-				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
-				}
-			elseif ($node instanceof \PhpParser\Node\Stmt\Function_)
-				{
-				$functions[$node->name->name] = $node;
-				}
-			else
-				{
-				$existingNodes[] = $node;
-				}
-			}
-
-		return $existingNodes;
-		}
-
-	public function afterTraverse(array $nodes)
+	public function afterTraverse(array $nodes) : void
 		{
 		$newNodes = $this->processNodes($nodes);
 		$newNodes[] = new \PhpParser\Node\Stmt\Return_(new \PhpParser\Node\Expr\Variable('retVal'));
@@ -140,6 +61,7 @@ class TestClass
 		$code = $this->prettyPrinter->prettyPrint($this->ast);
 
 		$dir = $this->classRoot . '/' . $this->namespace;
+
 		if (! file_exists($dir))
 			{
 			mkdir($dir, 0777, true);
@@ -148,7 +70,7 @@ class TestClass
 		$file = $dir . '/' . $this->className . '.php';
 		file_put_contents(str_replace('\\', '/', $file), "<?php\n\n" . $code);
 
-		return null;
+
 		}
 
 	public function getDescription() : string
@@ -168,6 +90,85 @@ PHP;
 		$testCases[] = [$original, $modified];
 
 		return $testCases;
+		}
+
+	public function leaveNode(\PhpParser\Node $node) : void
+		{
+		if ($node instanceof \PhpParser\Node\Stmt\Function_)
+			{
+			$this->functions[$node->name->name] = $node;
+			}
+		elseif ($node instanceof \PhpParser\Node\Stmt\Expression && $node->expr instanceof \PhpParser\Node\Expr\FuncCall)
+			{
+			$functionName = implode('\\', $node->expr->name->parts);
+			$this->functionsCalled[$functionName][] = $node;
+			}
+    elseif (property_exists($node, 'stmts'))
+			{
+			$node->stmts = $this->processNodes($node->stmts);
+			}
+
+
+		}
+
+	public function shouldProcessFile(string $file) : bool
+		{
+		parent::shouldProcessFile($file);
+
+		$this->className = $this->classNames->getClassName($file);
+		$this->namespace = $this->classNames->getNamespace($file);
+		$this->functions = [];
+		$this->functionsCalled = [];
+
+		$code = '<?php
+namespace TestNamespace;
+
+class TestClass
+	{
+
+	public function __toString()
+		{
+		$retVal = "";
+		}
+
+	}';
+
+		$code = str_replace(['TestNamespace', 'TestClass'], [$this->namespace, $this->className], $code);
+		$this->ast = $this->parser->parse($code);
+
+		return true;
+		}
+
+	private function processNodes(array $nodes, array $existingNodes = []) : array
+		{
+		foreach ($nodes as $node)
+			{
+			if ($node instanceof \PhpParser\Node\Stmt\InlineHTML)
+				{
+				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
+						new \PhpParser\Node\Expr\Variable('retVal'),
+						new \PhpParser\Node\Scalar\String_($node->value,
+								['kind' => \PhpParser\Node\Scalar\String_::KIND_NOWDOC, 'docLabel' => 'HTML']));
+				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
+				}
+			elseif ($node instanceof \PhpParser\Node\Stmt\Echo_)
+				{
+				$concat = new \PhpParser\Node\Expr\AssignOp\Concat(
+						new \PhpParser\Node\Expr\Variable('retVal'),
+						$node->exprs[0]);
+				$existingNodes[] = new \PhpParser\Node\Stmt\Expression($concat);
+				}
+			elseif ($node instanceof \PhpParser\Node\Stmt\Function_)
+				{
+				$functions[$node->name->name] = $node;
+				}
+			else
+				{
+				$existingNodes[] = $node;
+				}
+			}
+
+		return $existingNodes;
 		}
 
 	}

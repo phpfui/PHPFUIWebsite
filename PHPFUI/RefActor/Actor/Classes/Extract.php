@@ -47,6 +47,48 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		return 'Extracts classes found in the file being processed and write them out to a new file';
 		}
 
+	public function getTestCases() : array
+		{
+		$testCases = [];
+
+		///////// Test Case 1 ///////////////////
+		$original = <<<'PHP'
+<?php
+class SomeClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someCode = getcwd();
+PHP;
+
+		$modified = <<<'PHP'
+<?php
+
+$someCode = getcwd();
+PHP;
+
+		$extra = <<<PHP
+<?php
+
+namespace NewNamespace;
+
+class SomeClass
+{
+    public function someMethod() : string
+    {
+        return 'something';
+    }
+}
+PHP;
+
+		$testCases[] = [$original, $modified, $extra];
+
+		return $testCases;
+		}
+
 	public function leaveNode(\PhpParser\Node $node)
 		{
 		// only interested in classes at this point
@@ -109,48 +151,6 @@ class Extract extends \PHPFUI\RefActor\Actor\Classes\Base
 		$this->legalStatements = [];
 
 		return parent::shouldProcessFile($file);
-		}
-
-	public function getTestCases() : array
-		{
-		$testCases = [];
-
-		///////// Test Case 1 ///////////////////
-		$original = <<<'PHP'
-<?php
-class SomeClass
-	{
-	public function someMethod() : string
-		{
-		return 'something';
-		}
-	}
-$someCode = getcwd();
-PHP;
-
-		$modified = <<<'PHP'
-<?php
-
-$someCode = getcwd();
-PHP;
-
-		$extra = <<<PHP
-<?php
-
-namespace NewNamespace;
-
-class SomeClass
-{
-    public function someMethod() : string
-    {
-        return 'something';
-    }
-}
-PHP;
-
-		$testCases[] = [$original, $modified, $extra];
-
-		return $testCases;
 		}
 
 	}

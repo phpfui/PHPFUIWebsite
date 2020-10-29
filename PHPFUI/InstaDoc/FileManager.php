@@ -7,6 +7,8 @@ class FileManager
 	private $composerJsonPath = '';
 	private $configFile = '..';
 	private $excludedNamespaces = [];
+	private $extension = '.serial';
+	private $fileName = '';
 	private $includedNamespaces = [];
 
 	/**
@@ -19,6 +21,8 @@ class FileManager
 	public function __construct(string $composerJsonPath = '')
 		{
 		$this->setComposerPath($composerJsonPath);
+		$class = __CLASS__;
+		$this->fileName = substr($class, strrpos($class, '\\') + 1);
 		}
 
 	/**
@@ -45,9 +49,9 @@ class FileManager
 		{
 		$count = 0;
 
-		foreach (glob($this->getSerializedName('.*')) as $filename)
+		foreach (glob($this->getSerializedName('*')) as $file)
 			{
-			unlink($filename);
+			unlink($file);
 			++$count;
 			}
 
@@ -125,6 +129,16 @@ class FileManager
 		return \PHPFUI\InstaDoc\NamespaceTree::save($this->getSerializedName());
 		}
 
+	/**
+	 * Set base file name for saving index file
+	 */
+	public function setBaseFile(string $fileName) : self
+		{
+		$this->fileName = $fileName;
+
+		return $this;
+		}
+
 	public function setComposerPath(string $composerJsonPath) : FileManager
 		{
 		$this->composerJsonPath = str_replace('\\', '/', $composerJsonPath);
@@ -144,7 +158,17 @@ class FileManager
 		return $this;
 		}
 
-	private function getSerializedName(string $type = '.serial') : string
+	/**
+	 * Set file extension for saving index file
+	 */
+	public function setExtension(string $extension = '.serial') : self
+		{
+		$this->extension = $extension;
+
+		return $this;
+		}
+
+	private function getSerializedName(string $fileName = '') : string
 		{
 		$file = $this->configFile;
 
@@ -155,13 +179,20 @@ class FileManager
 
 		if (is_dir($file))
 			{
-			$class = __CLASS__;
-			$class = substr($class, strrpos($class, '\\') + 1);
+			if (empty($fileName))
+				{
+				$fileName = $this->fileName;
+				}
 
-			$file .= '/' . $class;
+			$file .= '/' . $fileName;
 			}
 
-		return $file . $type;
+		if (empty($extension))
+			{
+			$extension = $this->extension;
+			}
+
+		return $file . $extension;
 		}
 
 	/**

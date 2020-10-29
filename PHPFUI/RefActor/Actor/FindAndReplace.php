@@ -15,6 +15,7 @@ class FindAndReplace extends \PHPFUI\RefActor\Actor\Base
 		if (file_exists($csvFileName))
 			{
 			$csvReader = new \PHPFUI\RefActor\CSVReader($csvFileName, true, $delimiter);
+
 			foreach ($csvReader as $row)
 				{
 				$this->find[] = $row['find'];
@@ -25,25 +26,6 @@ class FindAndReplace extends \PHPFUI\RefActor\Actor\Base
 			{
 			throw new \Exception(__CLASS__ . ": File {$csvFileName} as not found in " . getcwd());
 			}
-		}
-
-	public function shouldProcessFile(string $file) : bool
-		{
-		parent::shouldProcessFile($file);
-		if (! strpos($file, '.php'))
-			{
-			return false;
-			}
-
-		$PHP = file_get_contents($file);
-		$newPHP = str_replace($this->find, $this->replace, $PHP);
-		if ($newPHP != $PHP)
-			{
-			$this->refActor->log('info', 'Found and replaced ' . $file);
-			file_put_contents($file, $newPHP);
-			}
-
-		return false;
 		}
 
 	public function getDescription() : string
@@ -66,5 +48,25 @@ PHP;
 		return $testCases;
 		}
 
-	}
+	public function shouldProcessFile(string $file) : bool
+		{
+		parent::shouldProcessFile($file);
 
+		if (! strpos($file, '.php'))
+			{
+			return false;
+			}
+
+		$PHP = file_get_contents($file);
+		$newPHP = str_replace($this->find, $this->replace, $PHP);
+
+		if ($newPHP != $PHP)
+			{
+			$this->refActor->log('info', 'Found and replaced ' . $file);
+			file_put_contents($file, $newPHP);
+			}
+
+		return false;
+		}
+
+	}

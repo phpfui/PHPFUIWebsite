@@ -97,57 +97,11 @@ class RefActor implements \PhpParser\ErrorHandler
 		}
 
 	/**
-	 * Start Actors peforming refactoring with the current settings
+	 * Return the current PHP version being parsed
 	 */
-	public function perform() : self
+	public function getPHPVersion() : int
 		{
-		$this->clearReviews();
-
-		foreach ($this->directories as $directory => $settings)
-			{
-			$extensions = array_flip($settings['ext']);
-
-			try
-				{
-				if ($settings['recurse'])
-					{
-					$iterator = new \RecursiveIteratorIterator(
-							new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
-							\RecursiveIteratorIterator::SELF_FIRST);
-					}
-				else
-					{
-					$iterator = new \DirectoryIterator($directory);
-					}
-				}
-			catch (\Throwable $e)
-				{
-				$this->log('error', __METHOD__ . ': ' . $e->getMessage());
-
-				continue;
-				}
-
-			foreach ($iterator as $item)
-				{
-				if ('file' == $item->getType())
-					{
-					$file = $item->getPathname();
-					$ext = strrchr($file, '.');
-
-					if ($ext && isset($extensions[$ext]))
-						{
-						$this->processFile($file);
-						}
-					}
-				}
-			}
-
-		foreach ($this->files as $file => $timeAdded)
-			{
-			$this->processFile($file);
-			}
-
-		return $this;
+		return $this->PHPVersion;
 		}
 
 	/**
@@ -198,6 +152,60 @@ class RefActor implements \PhpParser\ErrorHandler
 		if ($this->logger)
 			{
 			$this->logger->{$type}($message, $context);
+			}
+
+		return $this;
+		}
+
+	/**
+	 * Start Actors peforming refactoring with the current settings
+	 */
+	public function perform() : self
+		{
+		$this->clearReviews();
+
+		foreach ($this->directories as $directory => $settings)
+			{
+			$extensions = array_flip($settings['ext']);
+
+			try
+				{
+				if ($settings['recurse'])
+					{
+					$iterator = new \RecursiveIteratorIterator(
+							new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS),
+							\RecursiveIteratorIterator::SELF_FIRST);
+					}
+				else
+					{
+					$iterator = new \DirectoryIterator($directory);
+					}
+				}
+			catch (\Throwable $e)
+				{
+				$this->log('error', __METHOD__ . ': ' . $e->getMessage());
+
+				continue;
+				}
+
+			foreach ($iterator as $item)
+				{
+				if ('file' == $item->getType())
+					{
+					$file = $item->getPathname();
+					$ext = strrchr($file, '.');
+
+					if ($ext && isset($extensions[$ext]))
+						{
+						$this->processFile($file);
+						}
+					}
+				}
+			}
+
+		foreach ($this->files as $file => $timeAdded)
+			{
+			$this->processFile($file);
 			}
 
 		return $this;
@@ -273,6 +281,7 @@ class RefActor implements \PhpParser\ErrorHandler
 			$traverser->addVisitor(new \PhpParser\NodeVisitor\CloningVisitor());
 
 			$actorCount = 0;
+
 			foreach ($this->actors as $actor)
 				{
 				if ($actor->shouldProcessFile($file))
@@ -377,14 +386,6 @@ class RefActor implements \PhpParser\ErrorHandler
 		$this->PHPVersion = $PHPVersion;
 
 		return $this;
-		}
-
-	/**
-	 * Return the current PHP version being parsed
-	 */
-	public function getPHPVersion() : int
-		{
-		return $this->PHPVersion;
 		}
 
 	/**

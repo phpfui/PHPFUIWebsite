@@ -27,6 +27,40 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 		return 'Changes class references to new class name as defined in csv file';
 		}
 
+	public function getTestCases() : array
+		{
+		$testCases = [];
+
+		///////// Test Case 1 ///////////////////
+		$original = <<<'PHP'
+<?php
+class SomeClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someClass = new SomeClass();
+PHP;
+
+		$modified = <<<'PHP'
+<?php
+class NewClass
+	{
+	public function someMethod() : string
+		{
+		return 'something';
+		}
+	}
+$someClass = new \NewNamespace\NewClass();
+PHP;
+
+		$testCases[] = [$original, $modified];
+
+		return $testCases;
+		}
+
 	public function leaveNode(\PhpParser\Node $node)
 		{
 		// only interested in new at this point
@@ -65,40 +99,6 @@ class Rename extends \PHPFUI\RefActor\Actor\Classes\Base
 		$this->setPrint(true);
 
 		return $node;
-		}
-
-	public function getTestCases() : array
-		{
-		$testCases = [];
-
-		///////// Test Case 1 ///////////////////
-		$original = <<<'PHP'
-<?php
-class SomeClass
-	{
-	public function someMethod() : string
-		{
-		return 'something';
-		}
-	}
-$someClass = new SomeClass();
-PHP;
-
-		$modified = <<<'PHP'
-<?php
-class NewClass
-	{
-	public function someMethod() : string
-		{
-		return 'something';
-		}
-	}
-$someClass = new \NewNamespace\NewClass();
-PHP;
-
-		$testCases[] = [$original, $modified];
-
-		return $testCases;
 		}
 
 	}

@@ -65,6 +65,7 @@ class Page extends \PHPFUI\Page
 			if (! empty($_POST['submit']) && \PHPFUI\Session::checkCSRF())
 				{
 				$vars = [];
+
 				foreach ($_POST as $key => $value)
 					{
 					$vars[$key] = htmlspecialchars($value);
