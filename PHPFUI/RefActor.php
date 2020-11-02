@@ -29,6 +29,8 @@ class RefActor implements \PhpParser\ErrorHandler
 
 	private array $tests = [];
 
+	private float $startTime = 0.0;
+
 	public function __construct()
 		{
 		// initialize all the parameters to defaults
@@ -162,6 +164,7 @@ class RefActor implements \PhpParser\ErrorHandler
 	 */
 	public function perform() : self
 		{
+		$this->startTime = microtime(true);
 		$this->clearReviews();
 
 		foreach ($this->directories as $directory => $settings)
@@ -396,6 +399,14 @@ class RefActor implements \PhpParser\ErrorHandler
 		$this->testing = $testing;
 
 		return $this;
+		}
+
+	/**
+	 * @return float number of seconds since the last perform was run
+	 */
+	public function getTime() : float
+		{
+		return microtime(true) - $this->startTime;
 		}
 
 	/**

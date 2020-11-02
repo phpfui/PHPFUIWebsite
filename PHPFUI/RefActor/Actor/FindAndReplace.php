@@ -14,12 +14,14 @@ class FindAndReplace extends \PHPFUI\RefActor\Actor\Base
 
 		if (file_exists($csvFileName))
 			{
+			$sourceChars = ['\R', '\N', '\T'];
+			$phpChars = [chr(13), "\n", "\t"];
 			$csvReader = new \PHPFUI\RefActor\CSVReader($csvFileName, true, $delimiter);
 
 			foreach ($csvReader as $row)
 				{
-				$this->find[] = $row['find'];
-				$this->replace[] = str_replace(['\r\n', '&nbsp;'], ["\n", ' '], $row['replace']);
+				$this->find[] = str_replace($sourceChars, $phpChars, $row['find']);
+				$this->replace[] = str_replace($sourceChars, $phpChars, $row['replace']);
 				}
 			}
 		else
