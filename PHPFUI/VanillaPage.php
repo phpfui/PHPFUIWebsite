@@ -8,7 +8,6 @@ namespace PHPFUI;
 class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	{
 	private $android = false;
-	private $baseScripts = [];
 	private $chrome = false;
 	private $css = [];
 	private $edgeVersion = 0;
@@ -54,7 +53,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped inline css
 	 */
-	public function addCSS(string $css) : self
+	public function addCSS(string $css) : \PHPFUI\Interfaces\Page
 		{
 		$this->css[sha1($css)] = $css;
 
@@ -64,7 +63,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped JavaScript to the header
 	 */
-	public function addHeadJavaScript(string $js) : self
+	public function addHeadJavaScript(string $js) : \PHPFUI\Interfaces\Page
 		{
 		$this->headJavascript[sha1($js)] = $js;
 
@@ -76,7 +75,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 *
 	 * @param string $module path to script
 	 */
-	public function addHeadScript(string $module) : self
+	public function addHeadScript(string $module) : \PHPFUI\Interfaces\Page
 		{
 		$this->headScripts[$module] = $module;
 
@@ -86,7 +85,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add a meta tag to the head section of the page
 	 */
-	public function addHeadTag(string $tag) : self
+	public function addHeadTag(string $tag) : \PHPFUI\Interfaces\Page
 		{
 		$this->headTags[] = $tag;
 
@@ -100,7 +99,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 * $page->addIEComments('<!--[if lt IE9]><script>window.location="/old/index.html";</script><![endif]-->');
 	 * ```
 	 */
-	public function addIEComments(string $comment) : self
+	public function addIEComments(string $comment) : \PHPFUI\Interfaces\Page
 		{
 		$this->ieComments[] = $comment;
 
@@ -110,7 +109,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped JavaScript to the page
 	 */
-	public function addJavaScript(string $js) : self
+	public function addJavaScript(string $js) : \PHPFUI\Interfaces\Page
 		{
 		$this->javascript[sha1($js)] = $js;
 
@@ -120,7 +119,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped JavaScript as the first JavaScript before Foundation
 	 */
-	public function addJavaScriptFirst(string $js) : self
+	public function addJavaScriptFirst(string $js) : \PHPFUI\Interfaces\Page
 		{
 		$this->javascriptFirst[sha1($js)] = $js;
 
@@ -130,7 +129,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped JavaScript as the last JavaScript on the page
 	 */
-	public function addJavaScriptLast(string $js) : self
+	public function addJavaScriptLast(string $js) : \PHPFUI\Interfaces\Page
 		{
 		$this->javascriptLast[sha1($js)] = $js;
 
@@ -142,7 +141,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 *
 	 * @param string $module filename
 	 */
-	public function addStyleSheet(string $module) : self
+	public function addStyleSheet(string $module) : \PHPFUI\Interfaces\Page
 		{
 		$this->styleSheets[$module] = $module;
 
@@ -154,7 +153,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 *
 	 * @param string $module path to script
 	 */
-	public function addTailScript(string $module) : self
+	public function addTailScript(string $module) : \PHPFUI\Interfaces\Page
 		{
 		$this->tailScripts[$module] = $module;
 
@@ -251,7 +250,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 */
 	public function hasTimePicker() : bool
 		{
-		return $this->android || $this->IEMobile;
+		return $this->android || $this->IEMobile || $this->ios;
 		}
 
 	/**
@@ -295,7 +294,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 * @param string $parameters default ''
 	 * @param int $timeout default 0
 	 */
-	public function redirect(string $url = '', string $parameters = '', int $timeout = 0) : self
+	public function redirect(string $url = '', string $parameters = '', int $timeout = 0) : \PHPFUI\Interfaces\Page
 		{
 		if (empty($url))
 			{
@@ -339,12 +338,13 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 		}
 
 	/**
-	 * You can override the base scripts includes (and effectively remove Foundation and JQuery libraries).
-	 * This makes PHPFUI a more generic HTML Framework.
+	 * Remove a javascript file
+	 *
+	 * @param string $module path to script to remove
 	 */
-	public function setBaseScripts(array $scripts) : self
+	public function removeTailScript(string $module) : \PHPFUI\Interfaces\Page
 		{
-		$this->baseScripts = $scripts;
+		unset($this->tailScripts[$module]);
 
 		return $this;
 		}
@@ -355,7 +355,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 *
 	 * @param string $path to favicon
 	 */
-	public function setFavIcon(string $path) : self
+	public function setFavIcon(string $path) : \PHPFUI\Interfaces\Page
 		{
 		$this->favIcon = $path;
 
@@ -365,7 +365,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Set the page language
 	 */
-	public function setLanguage(string $lang) : self
+	public function setLanguage(string $lang) : \PHPFUI\Interfaces\Page
 		{
 		$this->language = $lang;
 
@@ -377,7 +377,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	 *
 	 * @param string $name of page
 	 */
-	public function setPageName(string $name) : self
+	public function setPageName(string $name) : \PHPFUI\Interfaces\Page
 		{
 		$this->pageName = $name;
 
@@ -387,7 +387,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * $resoursePath should start from the public root directory and include a trailing forward slash
 	 */
-	public function setResourcePath(string $resourcePath = '/') : self
+	public function setResourcePath(string $resourcePath = '/') : \PHPFUI\Interfaces\Page
 		{
 		$this->resourcePath = $resourcePath;
 
@@ -404,9 +404,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 		$nl = parent::getDebug() ? "\n" : '';
 		$output = '';
 
-		$scripts = array_merge($this->baseScripts, $this->tailScripts);
-
-		foreach ($scripts as $src)
+		foreach ($this->tailScripts as $src)
 			{
 			$src = $this->getResourcePath($src);
 			$output .= "<script src='{$src}'></script>{$nl}";
@@ -441,7 +439,7 @@ class VanillaPage extends Base implements \PHPFUI\Interfaces\Page
 			$output .= $comment;
 			}
 
-		$output .= "<html class='no-js' lang='{$this->language}'>{$nl}<head>";
+		$output .= "<html lang='{$this->language}'>{$nl}<head>";
 
 		foreach ($this->headTags as $tag)
 			{

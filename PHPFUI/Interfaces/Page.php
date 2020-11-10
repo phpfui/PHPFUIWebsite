@@ -142,12 +142,6 @@ interface Page
 	public function redirect(string $url = '', string $parameters = '', int $timeout = 0) : self;
 
 	/**
-	 * You can override the base scripts includes (and effectively remove Foundation and JQuery libraries).
-	 * This makes PHPFUI a more generic HTML Framework.
-	 */
-	public function setBaseScripts(array $scripts) : self;
-
-	/**
 	 * Sets the Fav Icon (shown in browser tabs and elsewhere in the
 	 * browser)
 	 *

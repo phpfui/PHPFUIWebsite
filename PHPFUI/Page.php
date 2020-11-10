@@ -16,11 +16,9 @@ class Page extends VanillaPage implements \PHPFUI\Interfaces\Page
 		$this->setResourcePath('/PHPFUI/');
 		$this->addStyleSheet('font-awesome/css/all.min.css');
 		$this->setPageName('Created with Foundation');
-		$this->setBaseScripts([
-      'jquery.min.js',
-      'what-input.min.js',
-      'foundation/js/foundation.min.js',
-			]);
+		$this->addTailScript('jquery.min.js');
+		$this->addTailScript('what-input.min.js');
+		$this->addTailScript('foundation/js/foundation.min.js');
 		$this->addHeadTag('<meta charset="utf-8">');
 		$this->addHeadTag('<meta name="viewport" content="width=device-width, initial-scale=1.0" />');
 		}
