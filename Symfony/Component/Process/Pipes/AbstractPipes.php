@@ -42,7 +42,7 @@ abstract class AbstractPipes implements PipesInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function close()
     {
