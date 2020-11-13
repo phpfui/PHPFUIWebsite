@@ -17,11 +17,8 @@ class UnitTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/cebe', 'cebe directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/DeepCopy', 'DeepCopy directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Example', 'Example directory has an error');
-		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Firebase', 'Firebase directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Gitonomy', 'Gitonomy directory has an error');
-		$this->assertValidPHPDirectory(PROJECT_ROOT . '/GuzzleHttp', 'GuzzleHttp directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Highlight', 'Highlight directory has an error');
-		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Monolog', 'Monolog directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/NXP', 'NXP directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/phpDocumentor', 'phpDocumentor directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PHPFUI', 'PHPFUI directory has an error');

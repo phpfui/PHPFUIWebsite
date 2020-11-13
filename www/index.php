@@ -15,13 +15,10 @@ else
 	{
 	$libraries = [
 		'DeepCopy',
-		'Firebase',
 		'cebe',
 		'Example',
 		'Gitonomy',
-		'GuzzleHttp',
 		'Highlight',
-		'Monolog',
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',

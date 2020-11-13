@@ -6,6 +6,7 @@
 		"nxp/math-executor": "^2.0",
 		"nikic/php-parser": "^4.8",
 		"phpunit/phpunit": "^9.3",
-		"phpfui/phpunit-syntax-coverage": "^1.0"
+		"phpfui/phpunit-syntax-coverage": "^1.0",
+		"psr/log": "^1.1"
 	}
 }
