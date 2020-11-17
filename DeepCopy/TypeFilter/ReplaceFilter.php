@@ -21,7 +21,7 @@ class ReplaceFilter implements TypeFilter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($element)
     {

@@ -13,7 +13,7 @@ class DoctrineCollectionFilter implements Filter
     /**
      * Copies the object property doctrine collection.
      *
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($object, $property, $objectCopier)
     {

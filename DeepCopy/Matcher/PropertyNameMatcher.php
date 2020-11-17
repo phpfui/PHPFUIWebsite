@@ -23,7 +23,7 @@ class PropertyNameMatcher implements Matcher
     /**
      * Matches a property by its name.
      *
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function matches($object, $property)
     {

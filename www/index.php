@@ -18,7 +18,9 @@ else
 		'cebe',
 		'Example',
 		'Gitonomy',
+		'GuzzleHttp',
 		'Highlight',
+		'HtmlValidator',
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',
@@ -36,7 +38,6 @@ else
 		{
 		$fileManager->addNamespace($library, '../' . $library, true);
 		}
-	$fileManager->addNamespace('\\', '../NoNameSpace', true);
 	}
 
 $fileManager->load();

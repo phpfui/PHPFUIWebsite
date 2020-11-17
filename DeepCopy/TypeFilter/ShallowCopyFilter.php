@@ -8,7 +8,7 @@ namespace DeepCopy\TypeFilter;
 class ShallowCopyFilter implements TypeFilter
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($element)
     {

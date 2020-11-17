@@ -13,7 +13,7 @@ class DoctrineProxyMatcher implements Matcher
     /**
      * Matches a Doctrine Proxy class.
      *
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function matches($object, $property)
     {

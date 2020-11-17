@@ -21,7 +21,7 @@ final class ArrayObjectFilter implements TypeFilter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function apply($arrayObject)
     {
