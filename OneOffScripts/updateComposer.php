@@ -88,6 +88,11 @@ class ComposerUpdater
 			$use = true;
 			foreach ($this->ignored as $ignore)
 				{
+				if (stripos($install['name'], 'phpfui') !== false)
+					{
+					continue;
+					}
+
 				if (stripos($install['name'], $ignore) !== false)
 					{
 					$use = false;

@@ -1180,16 +1180,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.49",
+            "version": "V6.0.50",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "304a1bb180536e894d8c753e12cdcf7d8d3f3301"
+                "reference": "88e8beed9167ed7ed570cb105fbea88e5f547dd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/304a1bb180536e894d8c753e12cdcf7d8d3f3301",
-                "reference": "304a1bb180536e894d8c753e12cdcf7d8d3f3301",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/88e8beed9167ed7ed570cb105fbea88e5f547dd2",
+                "reference": "88e8beed9167ed7ed570cb105fbea88e5f547dd2",
                 "shasum": ""
             },
             "require": {
@@ -1234,7 +1234,7 @@
                 "scss",
                 "ui"
             ],
-            "time": "2020-11-11T03:29:14+00:00"
+            "time": "2020-11-24T03:59:19+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
@@ -1976,16 +1976,16 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.18.1.4",
+            "version": "v9.18.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "ee8007a215a27cb9c078e0328fb5de901d74ef9b"
+                "reference": "fa75a865928a4a5d49e5e77faca6bd2f2410baaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/ee8007a215a27cb9c078e0328fb5de901d74ef9b",
-                "reference": "ee8007a215a27cb9c078e0328fb5de901d74ef9b",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/fa75a865928a4a5d49e5e77faca6bd2f2410baaf",
+                "reference": "fa75a865928a4a5d49e5e77faca6bd2f2410baaf",
                 "shasum": ""
             },
             "require": {
@@ -2047,7 +2047,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-01T04:06:53+00:00"
+            "time": "2020-11-22T06:07:40+00:00"
         },
         {
             "name": "sebastian/cli-parser",
