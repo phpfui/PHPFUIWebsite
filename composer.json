@@ -8,6 +8,7 @@
 		"phpunit/phpunit": "^9.3",
 		"phpfui/phpunit-syntax-coverage": "^1.0",
 		"psr/log": "^1.1",
-		"phpfui/html-unit-tester": "^1.0"
+		"phpfui/html-unit-tester": "^1.0",
+		"phpfui/mysql-slow-log-parser": "^1.0"
 	}
 }

@@ -59,7 +59,8 @@ $controller->getControllerPage()->addHeadTag('<link rel="apple-touch-icon" sizes
 if ($generateStaticFiles)
 	{
 	echo '<pre>';
-	print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, ]));
+	$controller->setGitFileOffset('..');
+	print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE, ]));
 	}
 else
 	{

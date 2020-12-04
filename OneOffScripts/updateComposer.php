@@ -83,16 +83,11 @@ class ComposerUpdater
 	public function update() : void
 		{
 		$installed = json_decode(file_get_contents($this->vendorDir.'composer/installed.json'), true);
-		foreach ($installed as $install)
+		foreach ($installed['packages'] as $install)
 			{
 			$use = true;
 			foreach ($this->ignored as $ignore)
 				{
-				if (stripos($install['name'], 'phpfui') !== false)
-					{
-					continue;
-					}
-
 				if (stripos($install['name'], $ignore) !== false)
 					{
 					$use = false;
@@ -104,16 +99,6 @@ class ComposerUpdater
 				{
 				continue;
 				}
-
-		//	"autoload": {
-		//			"psr-0": {
-		//					"Highlight\\": "",
-		//					"HighlightUtilities\\": ""
-		//			},
-		//			"files": [
-		//					"HighlightUtilities/functions.php"
-		//			]
-		//	},
 
 			if (isset($install['autoload']))
 				{
