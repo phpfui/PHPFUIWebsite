@@ -1269,16 +1269,16 @@
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
-            "version": "V1.0.2",
+            "version": "V1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/MySQLSlowQueryParser.git",
-                "reference": "1ec9ea43152ef4242c956cd3122356587744a302"
+                "reference": "373f83857f731e1f876588ffb3a295bdbafc632b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/1ec9ea43152ef4242c956cd3122356587744a302",
-                "reference": "1ec9ea43152ef4242c956cd3122356587744a302",
+                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/373f83857f731e1f876588ffb3a295bdbafc632b",
+                "reference": "373f83857f731e1f876588ffb3a295bdbafc632b",
                 "shasum": ""
             },
             "require": {
@@ -1290,8 +1290,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "PHPFUI\\": "src/"
+                "psr-4": {
+                    "PHPFUI\\": "src/PHPFUI"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1304,7 +1304,7 @@
                     "email": "brucekwells@gmail.com"
                 }
             ],
-            "description": "MySQL Slow Query Log Parser",
+            "description": "MySQL Slow Query Log Parser featuring sortable results",
             "homepage": "http://www.phpfui.com",
             "keywords": [
                 "log",
@@ -1315,9 +1315,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/MySQLSlowQueryParser/issues",
-                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.2"
+                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.3"
             },
-            "time": "2020-12-09T01:31:58+00:00"
+            "time": "2020-12-09T23:04:52+00:00"
         },
         {
             "name": "phpfui/phpfui",

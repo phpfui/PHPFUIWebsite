@@ -82,7 +82,7 @@ class ComposerUpdater
 
 	public function update() : void
 		{
-		$installed = json_decode(file_get_contents($this->vendorDir.'composer/installed.json'), true);
+		$installed = json_decode(file_get_contents($this->vendorDir . '../composer.lock'), true);
 		foreach ($installed['packages'] as $install)
 			{
 			$use = true;
