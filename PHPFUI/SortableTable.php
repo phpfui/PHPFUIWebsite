@@ -110,7 +110,7 @@ class SortableTable extends \PHPFUI\Table
 		}
 
 	/**
-	 * Get the correct current sort indicator based on the column passed.
+	 * Get the correct header with sort indicator based on the column and title passed.
 	 */
 	protected function getSortHeader(string $column, string $title) : string
 		{

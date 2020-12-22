@@ -10,7 +10,6 @@ class Page extends \PHPFUI\Page
 	public function __construct()
 		{
 		parent::__construct();
-		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
 
 		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
@@ -30,17 +29,48 @@ class Page extends \PHPFUI\Page
 
 		$body = new \PHPFUI\HTML5Element('div');
 		$body->addClass('body-info');
+		$magellan = $this->getMagellanMenu();
 		$grid = new \PHPFUI\GridX();
-		$menuColumn = new \PHPFUI\Cell(4, 4, 3);
+		if ($magellan)
+			{
+			$menuColumn = new \PHPFUI\Cell(4, 3, 2);
+			}
+		else
+			{
+			$menuColumn = new \PHPFUI\Cell(4, 4, 3);
+			}
 		$menuColumn->addClass('show-for-medium');
 		$menu = $this->getMenu();
 		$menu->addClass('vertical');
 		$menuId = $menu->getId();
-		$menuColumn->add($menu);
+		$stickyMenu = new \PHPFUI\Sticky($menuColumn);
+		$stickyMenu->add($menu);
+		$menuColumn->add($stickyMenu);
 		$grid->add($menuColumn);
-
+		if ($magellan)
+			{
+			$this->mainColumn = new \PHPFUI\Cell(12, 6, 8);
+			}
+		else
+			{
+			$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
+			}
 		$this->mainColumn->addClass('main-column');
 		$grid->add($this->mainColumn);
+		if ($magellan)
+			{
+			$magellanColumn = new \PHPFUI\Cell(2);
+			$magellanColumn->addClass('show-for-medium');
+			$sticky = new \PHPFUI\Sticky($magellanColumn);
+			$sticky->add($magellan);
+			$magellanColumn->add($sticky);
+			$sticky->add('<br>');
+			$sticky->add('<br>');
+			$sticky->add('<br>');
+			$sticky->add('<br>');
+			$sticky->add('<br>');
+			$grid->add($magellanColumn);
+			}
 		$body->add($grid);
 
 		$offCanvas = new \PHPFUI\OffCanvas($body);
@@ -121,6 +151,11 @@ class Page extends \PHPFUI\Page
 		$this->add($footer);
 		}
 
+	protected function getMagellanMenu() : \PHPFUI\Menu | null
+		{
+		return null;
+		}
+
 	public function addBody($item) : self
 		{
 		$this->mainColumn->add($item);
@@ -145,6 +180,7 @@ class Page extends \PHPFUI\Page
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Orbit Carousel', '/Examples/Orbit.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('To From List', '/Examples/ToFromList.php'));
 		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Accordion To From List', '/Examples/AccordionToFromList.php'));
+		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Kitchen Sink', '/Examples/KitchenSink.php'));
 		$exampleMenu->sort();
 
 		return $exampleMenu;
