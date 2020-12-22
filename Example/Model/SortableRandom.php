@@ -33,21 +33,27 @@ class SortableRandom implements \countable
 
 	public function sort(string $column, string $sort) : void
 		{
-		// do the sort, data in Sequence ascending already, so only do if not that
-		if ('s' != $column || 'a' != $sort)
+		// very much hard coded and not generic, but this is just a demo
+		if ('s' == $column)
 			{
-			// very much hard coded and not generic, but this is just a demo
-			if ('s' == $column)
+			if ('a' == $sort)
 				{
-				usort($this->data, function($a, $b) { return $b['s'] > $a['s']; });
-				}
-			elseif ('a' == $sort)
-				{
-				usort($this->data, function($a, $b) { return $b['r'] < $a['r']; });
+				usort($this->data, function($a, $b) { return $a['s'] <=> $b['s']; });
 				}
 			else
 				{
-				usort($this->data, function($a, $b) { return $b['r'] > $a['r']; });
+				usort($this->data, function($a, $b) { return $b['s'] <=> $a['s']; });
+				}
+			}
+		else
+			{
+			if ('a' == $sort)
+				{
+				usort($this->data, function($a, $b) { return $a['r'] <=> $b['r']; });
+				}
+			else
+				{
+				usort($this->data, function($a, $b) { return $b['r'] <=> $a['r']; });
 				}
 			}
 		}
