@@ -4,7 +4,6 @@ namespace Example;
 
 class ToFromList extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -27,8 +26,8 @@ class ToFromList extends \Example\Page
 
 		if (0 == count($inGroup) + count($notInGroup))
 			{
-			$inGroup = $model->getFiltered(function($stateName) {return strpos(' AEIOU', $stateName[0]);});
-			$notInGroup = $model->getFiltered(function($stateName) {return ! strpos(' AEIOU', $stateName[0]);});
+			$inGroup = $model->getFiltered(static function($stateName) {return strpos(' AEIOU', $stateName[0]);});
+			$notInGroup = $model->getFiltered(static function($stateName) {return ! strpos(' AEIOU', $stateName[0]);});
 			}
 
 		$toFromList = new \Example\View\StateToFromList($this, $name, $model, $inGroup, $notInGroup);
@@ -38,5 +37,4 @@ class ToFromList extends \Example\Page
 
 		$this->addBody($form);
 		}
-
 	}

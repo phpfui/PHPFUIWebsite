@@ -4,7 +4,6 @@ namespace Example;
 
 class AccordionToFromList extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -27,8 +26,8 @@ class AccordionToFromList extends \Example\Page
 
 		if (0 == count($inGroup) + count($notInGroup))
 			{
-			$inGroup = $model->getFiltered(function($countryName) {return strpos(' AEIOU', $countryName[0]);});
-			$notInGroup = $model->getFiltered(function($countryName) {return ! strpos(' AEIOU', $countryName[0]);});
+			$inGroup = $model->getFiltered(static function($countryName) {return strpos(' AEIOU', $countryName[0]);});
+			$notInGroup = $model->getFiltered(static function($countryName) {return ! strpos(' AEIOU', $countryName[0]);});
 			}
 
 		$toFromList = new \Example\View\CountryAccordionToFromList($this, $name, $model, $inGroup, $notInGroup);
@@ -38,5 +37,4 @@ class AccordionToFromList extends \Example\Page
 
 		$this->addBody($form);
 		}
-
 	}

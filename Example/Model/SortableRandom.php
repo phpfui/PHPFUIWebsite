@@ -4,7 +4,6 @@ namespace Example\Model;
 
 class SortableRandom implements \countable
 	{
-
 	private array $data = [];
 
 	public function __construct(int $count)
@@ -38,24 +37,23 @@ class SortableRandom implements \countable
 			{
 			if ('a' == $sort)
 				{
-				usort($this->data, function($a, $b) { return $a['s'] <=> $b['s']; });
+				usort($this->data, static function($a, $b) { return $a['s'] <=> $b['s']; });
 				}
 			else
 				{
-				usort($this->data, function($a, $b) { return $b['s'] <=> $a['s']; });
+				usort($this->data, static function($a, $b) { return $b['s'] <=> $a['s']; });
 				}
 			}
 		else
 			{
 			if ('a' == $sort)
 				{
-				usort($this->data, function($a, $b) { return $a['r'] <=> $b['r']; });
+				usort($this->data, static function($a, $b) { return $a['r'] <=> $b['r']; });
 				}
 			else
 				{
-				usort($this->data, function($a, $b) { return $b['r'] <=> $a['r']; });
+				usort($this->data, static function($a, $b) { return $b['r'] <=> $a['r']; });
 				}
 			}
 		}
-
 	}
