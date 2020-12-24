@@ -11,6 +11,7 @@ class Page extends \PHPFUI\Page
 		{
 		parent::__construct();
 		$this->addStyleSheet('css/styles.css');
+//		$this->addStyleSheet('https://get.foundation/sites/docs/assets/css/docs.css');
 
 		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
 		$exampleLink = new \PHPFUI\Link('/Examples/index.php', 'Examples', false);
@@ -108,7 +109,6 @@ class Page extends \PHPFUI\Page
 			$sourceMenu = new \PHPFUI\Menu();
 			$link = '/?n=Example&c=' . $class;
 			$link .= '&p=f';
-			$sourceMenu->addMenuItem(new \PHPFUI\MenuItem('All Examples', '/Examples/index.php'));
 			$sourceMenu->addMenuItem(new \PHPFUI\MenuItem('Example Source', $link));
 			$this->addBody($sourceMenu);
 			// add markdown if there
@@ -170,17 +170,29 @@ class Page extends \PHPFUI\Page
 
 	public static function getMenu() : \PHPFUI\Menu
 		{
+		$options = [
+			'Pagination' => '/Examples/Pagination.php',
+			'Sortable Table' => '/Examples/SortableTable.php',
+			'Orderable Table' => '/Examples/OrderableTable.php',
+			'SelectAutoComplete' => '/Examples/SelectAutoComplete.php',
+			'AutoComplete' => '/Examples/AutoComplete.php',
+			'Abide' => '/Examples/Abide.php',
+			'Orbit Carousel' => '/Examples/Orbit.php',
+			'To From List' => '/Examples/ToFromList.php',
+			'Accordion To From List' => '/Examples/AccordionToFromList.php',
+			'Kitchen Sink' => '/Examples/KitchenSink.php',
+			];
+
 		$exampleMenu = new \PHPFUI\Menu();
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Pagination', '/Examples/Paginate.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Sortable Table', '/Examples/SortableTable.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Orderable Table', '/Examples/OrderableTable.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('SelectAutoComplete', '/Examples/SelectAutoComplete.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('AutoComplete', '/Examples/AutoComplete.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Abide', '/Examples/Abide.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Orbit Carousel', '/Examples/Orbit.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('To From List', '/Examples/ToFromList.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Accordion To From List', '/Examples/AccordionToFromList.php'));
-		$exampleMenu->addMenuItem(new \PHPFUI\MenuItem('Kitchen Sink', '/Examples/KitchenSink.php'));
+		foreach ($options as $name => $url)
+			{
+			$menuItem = new \PHPFUI\MenuItem($name, $url);
+			if (str_contains($_SERVER['REQUEST_URI'], $url))
+				{
+				$menuItem->setActive();
+				}
+			$exampleMenu->addMenuItem($menuItem);
+			}
 		$exampleMenu->sort();
 
 		return $exampleMenu;

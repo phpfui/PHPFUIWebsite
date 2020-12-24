@@ -19,7 +19,7 @@ class Pagination extends \Example\Page
 		$c = $form->getCenter();
 		$this->addBody(new \PHPFUI\Header('Pagination Example'));
 
-		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/paginate.php?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}");
+		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/Pagination.php?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}");
 
 		if ($c)
 			{

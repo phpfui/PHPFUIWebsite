@@ -1,23 +1,5 @@
 <?php
 
-//  <div class="sticky-container " data-sticky>
-//    <ul class="menu expanded text-center" data-magellan>
-//      <li><a href="#first">First Arrival</a></li>
-//      <li><a href="#second">Second Arrival</a></li>
-//      <li><a href="#third">Third Arrival</a></li>
-//    </ul>
-//  </div>
-//
-//
-//
-//<!-- Add content where magellan will be linked -->
-//<div class="sections">
-//  <section class="a" id="first" data-magellan-target="first">First Section 2</section>
-//  <section class="a" id="second" data-magellan-target="second">Second Section</section>
-//  <section class="a" id="third" data-magellan-target="third">Third Section</section>
-//</div>
-//
-
 namespace Example;
 
 class KitchenSink extends \Example\Page
@@ -37,9 +19,6 @@ class KitchenSink extends \Example\Page
 		$this->addBody(new \PHPFUI\Header('Everything but.', 5));
 		$foundation = new \PHPFUI\Link('https://get.foundation/sites/docs/kitchen-sink.html', 'Loosely based on Foundation\'s Kitchen Sink');
 		$this->addStyleSheet('https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css');
-//		$this->addTailScript('foundation/js/plugins/foundation.magellan.min.js');
-//		$this->addTailScript('foundation/js/plugins/foundation.smoothScroll.min.js');
-//		$this->addTailScript('foundation/js/plugins/foundation.util.triggers.min.js');
 		$this->addBody($foundation);
 
 		$this->addStyleSheet('highlighter/styles/Vs.css');
@@ -68,14 +47,16 @@ class KitchenSink extends \Example\Page
 		$this->getDropdownMenu();
 		$this->getDropdownPane();
 		$this->getEqualizer();
+		$this->getForms();
 		$this->getHeader();
 		$this->getIcon();
 		$this->getLabel();
+		$this->getMediaObject();
 		$this->getMenuExample();
 		$this->getOrbit();
-//		$this->getOffCanvas();
 		$this->getPagination();
 		$this->getProgressBar();
+		$this->getResponsiveMenu();
 		$this->getResponsiveEmbed();
 		$this->getReveal();
 		$this->getSlider();
@@ -95,9 +76,11 @@ class KitchenSink extends \Example\Page
 		{
 		$this->section('Accordion', <<<'PHP'
 $accordion = new \PHPFUI\Accordion();
-$accordion->addTab('Accordion 1', 'some text');
-$accordion->addTab('Accordion 2', 'more some text');
-$accordion->addTab('Accordion 3', 'even more text text');
+$accordion->addTab('Accordion 1', '<p>Panel 1. Lorem ipsum dolor</p><a href="#">Nowhere to Go</a>');
+$textArea = new \PHPFUI\Input\TextArea('', '');
+$button = new \PHPFUI\Button('I do nothing!');
+$accordion->addTab('Accordion 2', $textArea . $button);
+$accordion->addTab('Accordion 3', new \PHPFUI\Input\Text('name', 'Type your name!'));
 return $accordion;
 PHP);
 		}
@@ -332,15 +315,15 @@ $co2 = new \PHPFUI\Callout('warning');
 $co2->add('Warning Will Robinson');
 $co3 = new \PHPFUI\Callout('error');
 $co3->add('Stack Overflow with much more text and it just keeps going and going.  I wish there was some way to autogenerate text in PHP.');
-$innerEqualizer->addElement($co1);
-$innerEqualizer->addElement($co2);
-$innerEqualizer->addElement($co3);
+$innerEqualizer->addElement(new \PHPFUI\Image('/images/square-1.jpg'));
+//$innerEqualizer->addElement($co2);
+//$innerEqualizer->addElement($co3);
 
 $equalizer = new \PHPFUI\Equalizer();
 $co2 = new \PHPFUI\Callout();
-$co2->add('This is a callout with much more text and it just keeps going and going.  I wish there was some way to autogenerate text in PHP.');
+$co2->add('Pellentesque habitant morbi tristique senectus et netus et, ante.');
 $co3 = new \PHPFUI\Callout();
-$co3->add('This is a callout with medium size text, but not huge.');
+$co3->add(new \PHPFUI\Image('/images/rectangle-1.jpg'));
 $equalizer->addColumn($innerEqualizer);
 $equalizer->addColumn($co2);
 $equalizer->addColumn($co3);
@@ -357,6 +340,54 @@ for ($i = 1; $i <= 6; ++$i)
 	{
 	$container->add(new \PHPFUI\Header('Header ' . $i, $i));
 	}
+
+return $container;
+PHP);
+		}
+
+	private function getForms() : void
+		{
+		$this->section('Forms', <<<'PHP'
+$container = new \PHPFUI\Container();
+
+$input = new \PHPFUI\Input\Text('inputLabel', 'Input Label');
+$helpText = new \PHPFUI\HTML5Element('p');
+$helpText->add("Here's how you use this input field!");
+$helpText->addClass('help-text');
+$input->addAttribute('placeholder', '.small-12.columns');
+$input->addAttribute('aria-describedby', $helpText->getId());
+$container->add($input);
+$container->add($helpText);
+
+$container->add(new \PHPFUI\Input\Number('puppies', 'How many puppies?', 100));
+$books = new \PHPFUI\Input\TextArea('books', 'What books did you read over summer break?');
+$books->addAttribute('placeholder', 'None');
+$container->add($books);
+
+$selectMenu = new \PHPFUI\Input\Select('menu', 'Select Menu');
+$selectMenu->addOption('Husker', 'husker');
+$selectMenu->addOption('Starbuck', 'starbuck');
+$selectMenu->addOption('Hot Dog', 'hotdog');
+$selectMenu->addOption('Apollo', 'apollo');
+$container->add($selectMenu);
+
+$color = new \PHPFUI\Input\RadioGroup('color', 'Choose Your Favorite');
+$color->addButton('Red');
+$color->addButton('Blue');
+$color->addButton('Yellow');
+
+$checkBoxes = new \PHPFUI\CheckBoxGroup('Check these out');
+for ($i = 1; $i <= 3; ++$i)
+	{
+	$checkBoxes->addCheckBox(new \PHPFUI\Input\CheckBoxBoolean('cb' . $i, 'Checkbox ' . $i));
+	}
+$container->add(new \PHPFUI\MultiColumn($color, $checkBoxes));
+
+$inputGroup = new \PHPFUI\InputGroup();
+$inputGroup->addLabel('$');
+$inputGroup->addInput(new \PHPFUI\Input\Text('currency', ''));
+$inputGroup->addButton(new \PHPFUI\Submit('Submit'));
+$container->add($inputGroup);
 
 return $container;
 PHP);
@@ -408,6 +439,21 @@ $label->addClass('warning');
 $container->add($label);
 
 return $container;
+PHP);
+		}
+
+	private function getMediaObject() : void
+		{
+		$this->section('Menu', <<<'PHP'
+$mediaObject = new \PHPFUI\MediaObject();
+$image = new \PHPFUI\Image('/images/people.jpg');
+$mediaObject->addSection("{$image}");
+$header = new \PHPFUI\Header("Dreams feel real while we're in them.", 4);
+$p = new \PHPFUI\HTML5Element('p');
+$p->add("I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.");
+$mediaObject->addSection($header . $p);
+
+return $mediaObject;
 PHP);
 		}
 
@@ -479,7 +525,7 @@ PHP);
 	private function getPagination() : void
 		{
 		$this->section('Pagination', <<<'PHP'
-return new \PHPFUI\Pagination(50, 100, '#');
+return new \PHPFUI\Pagination(0, 13, '#');
 PHP);
 		}
 
@@ -519,6 +565,29 @@ $embed = new \PHPFUI\Embed();
 $embed->add(new \PHPFUI\YouTube('WUgvvPRH7Oc'));
 
 return $embed;
+PHP);
+		}
+
+	private function getResponsiveMenu() : void
+		{
+		$this->section('Responsive Menu', <<<'PHP'
+$menu = new \PHPFUI\Menu();
+$menu->setIconAlignment('left');
+$menu->addClass('vertical medium-horizontal');
+$item = new \PHPFUI\MenuItem('One', '#');
+$item->setIcon(new \PHPFUI\IconBase('fas fa-bars'));
+$menu->addMenuItem($item);
+$item = new \PHPFUI\MenuItem('Two', '#');
+$item->setIcon(new \PHPFUI\IconBase('fas fa-bars'));
+$menu->addMenuItem($item);
+$item = new \PHPFUI\MenuItem('Three', '#');
+$item->setIcon(new \PHPFUI\IconBase('fas fa-bars'));
+$menu->addMenuItem($item);
+$item = new \PHPFUI\MenuItem('Four', '#');
+$item->setIcon(new \PHPFUI\IconBase('fas fa-bars'));
+$menu->addMenuItem($item);
+
+return $menu;
 PHP);
 		}
 
@@ -570,8 +639,7 @@ $secondHandle = new \PHPFUI\Input('number', 'second');
 $slider = new \PHPFUI\Slider(25, new \PHPFUI\SliderHandle(25, $firstHandle));
 $slider->setRangeHandle(new \PHPFUI\SliderHandle(75, $secondHandle));
 $container->add($slider);
-$container->add($firstHandle);
-$container->add($secondHandle);
+$container->add(new \PHPFUI\MultiColumn($firstHandle, $secondHandle));
 
 return $container;
 PHP);
@@ -660,31 +728,17 @@ PHP);
 		{
 		$this->section('Tabs', <<<'PHP'
 $container = new \PHPFUI\Container();
-
 $tabs = new \PHPFUI\Tabs();
 $tabs->addTab('One', 'Check me out! I\'m a super cool Tab panel with text content!');
-$image = new \PHPFUI\Image('/images/rectangle-1.jpg');
-$tabs->addTab('Two', $image);
-$tabs->addTab('Three', 'Nothing to see here.', true);
+$image = new \PHPFUI\Thumbnail(new \PHPFUI\Image('/images/rectangle-7.jpg'));
+$tabs->addTab('Two', $image, true);
+$tabs->addTab('Three', 'Nothing to see here.');
+$image = new \PHPFUI\Thumbnail(new \PHPFUI\Image('/images/rectangle-2.jpg'));
 $tabs->addTab('Four', $image);
+$tabs->addTab('Five', 'Still nothing to see here.');
+$image = new \PHPFUI\Thumbnail(new \PHPFUI\Image('/images/rectangle-8.jpg'));
+$tabs->addTab('Six', $image);
 $container->add($tabs);
-
-$grid = new \PHPFUI\GridX();
-$grid->setMargin();
-$cell = new \PHPFUI\Cell(3, 2, 1);
-$vtabs = new \PHPFUI\Tabs(true);
-$vtabs->addTab('One', 'Check me out! I\'m VERTICAL!');
-$vtabs->addTab('Two', $image);
-$vtabs->addTab('Three', 'Still nothing.', true);
-$vtabs->addTab('Four', $image);
-$cell->add($vtabs->getTabs());
-$grid->add($cell);
-$content = new \PHPFUI\Cell();
-$content->add($vtabs->getContent());
-$grid->add($content);
-$gridContainer = new \PHPFUI\GridContainer();
-$gridContainer->add($grid);
-$container->add($gridContainer);
 
 return $container;
 PHP);
@@ -884,7 +938,6 @@ PHP);
 		{
 		$this->magellanMenu = new \PHPFUI\Menu();
 		$this->magellanMenu->addMenuItem(new \PHPFUI\MenuItem('Kitchen Sink'));
-		$this->magellanMenu->addClass('expanded');
 		$this->magellanMenu->addClass('vertical');
 		$this->magellanMenu->addAttribute('data-magellan');
 
