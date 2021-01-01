@@ -19,7 +19,10 @@ class Orbit extends \Example\Page
 		$slider->addImageSlide(new \PHPFUI\Image('/images/orbit/04.jpg', 'Outta This World'), 'Outta This World');
 		$slider->addHTMLSlide($this->getSlide('This is html'));
 		$slider->addHTMLSlide($this->getSlide('This is secondary', 'secondary'));
-		$slider->addHTMLSlide($this->getSlide('Warning Will Robinson', 'warning'));
+		$container = new \PHPFUI\Container();
+		$container->add(new \PHPFUI\Header('Danger Will Robinson'));
+		$container->add(new \PHPFUI\YouTube('OWwOJlOI1nU'));
+		$slider->addHTMLSlide($this->getSlide($container, 'alert'));
 		$this->addBody($slider);
 		}
 
