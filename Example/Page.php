@@ -21,6 +21,7 @@ class Page extends \PHPFUI\Page
 
 		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
 		$exampleLink = new \PHPFUI\Link('/Examples/index.php', 'Examples', false);
+		$this->addCSS("code{tab-size:2;-moz-tab-size:2;}");
 
 		$titleBar = new \PHPFUI\TitleBar($link . ' - ' . $exampleLink);
 		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
