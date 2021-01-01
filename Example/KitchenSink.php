@@ -77,6 +77,7 @@ class KitchenSink extends \Example\Page
 		{
 		$this->section('Abide', <<<'PHP'
 $form = new \PHPFUI\Form($this);
+$form->setAreYouSure(false);
 $post = \PHPFUI\Session::getFlash('post');
 if ($post)
 	{

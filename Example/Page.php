@@ -38,10 +38,10 @@ class Page extends \PHPFUI\Page
 		$body = new \PHPFUI\HTML5Element('div');
 		$body->addClass('body-info');
 		$magellan = $this->getMagellanMenu();
-		$magellan->addClass('ks-toc');
 		$grid = new \PHPFUI\GridX();
 		if ($magellan)
 			{
+			$magellan->addClass('ks-toc');
 			$menuColumn = new \PHPFUI\Cell(4, 3, 2);
 			}
 		else
