@@ -5642,7 +5642,12 @@ a.thumbnail image {
   text-align: center;
 }
 
-.menu .is-active {
+.menu .is-active > a {
+  background: #3dc2f7;
+  color: #000000;
+}
+
+.ks-toc .is-active {
   background: #3dc2f7;
   color: #000000;
 }

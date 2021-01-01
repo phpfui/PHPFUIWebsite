@@ -51,12 +51,19 @@ class CheckBoxGroup extends \PHPFUI\HTML5Element implements \Countable
 		return $this;
 		}
 
+	protected function getEnd() : string
+		{
+		$label = $this->label ? '</label>' : '';
+
+		return parent::getEnd() . $label;
+		}
+
 	protected function getStart() : string
 		{
 		if ($this->label)
 			{
-			$label = new \PHPFUI\HTML5Element('label');
-			$label->add($this->getToolTip($this->label));
+			$label = '<label>';
+			$label .= $this->getToolTip($this->label);
 			$this->add($label);
 			}
 
