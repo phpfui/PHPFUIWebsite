@@ -954,10 +954,7 @@ PHP);
 		$div->add($toggleLink);
 		$div->add($copyButton);
 		$container->add($div);
-		$container->add('<br>');
-
 		$container->add($codeBlock);
-
 		$this->magellanMenu->addMenuItem(new \PHPFUI\MenuItem($name, '#' . $container->getId()));
 
 		$container->add($this->runPHP($php));
