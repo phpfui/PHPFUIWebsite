@@ -8,7 +8,9 @@ namespace PHPFUI;
 class CheckBoxGroup extends \PHPFUI\HTML5Element implements \Countable
 	{
 	protected $checkboxes = [];
+
 	protected $separateRows = false;
+
 	protected $label;
 
 	/**
@@ -53,18 +55,17 @@ class CheckBoxGroup extends \PHPFUI\HTML5Element implements \Countable
 
 	protected function getEnd() : string
 		{
-		$label = $this->label ? '</label>' : '';
-
-		return parent::getEnd() . $label;
+		return ($this->label ? '</fieldset>' : '') . parent::getEnd();
 		}
 
 	protected function getStart() : string
 		{
 		if ($this->label)
 			{
-			$label = '<label>';
-			$label .= $this->getToolTip($this->label);
-			$this->add($label);
+			$this->add('<fieldset>');
+			$legend = new \PHPFUI\HTML5Element('legend');
+			$legend->add($this->getToolTip($this->label));
+			$this->add($legend);
 			}
 
 		$rows = new \PHPFUI\GridX();

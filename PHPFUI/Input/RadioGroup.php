@@ -8,6 +8,7 @@ namespace PHPFUI\Input;
 class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	{
 	protected $buttons = [];
+
 	protected $separateRows = false;
 
 	/**
@@ -36,9 +37,9 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 			$value = $label;
 			}
 
-		$this->buttons[] = ['label'    => $label,
-												'value'    => $value,
-												'disabled' => $disabled ? 'disabled' : '',];
+		$this->buttons[] = ['label' => $label,
+			'value' => $value,
+			'disabled' => $disabled ? 'disabled' : '', ];
 
 		return $this;
 		}
@@ -66,9 +67,9 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 
 	protected function getEnd() : string
 		{
-		$label = $this->label ? '</label>' : '';
+		$label = $this->label ? '</fieldset>' : '';
 
-		return parent::getEnd() . $label . $this->getHint();
+		return $label . $this->getHint();
 		}
 
 	protected function getStart() : string
@@ -77,9 +78,10 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 
 		if ($this->label)
 			{
-			$label = '<label>';
-			$label .= $this->getToolTip($this->label);
-			$output->add($label);
+			$output->add('<fieldset>');
+			$legend = new \PHPFUI\HTML5Element('legend');
+			$legend->add($this->getToolTip($this->label));
+			$output->add($legend);
 			}
 
 		$rows = new \PHPFUI\GridX();
@@ -87,6 +89,7 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 		foreach ($this->buttons as $button)
 			{
 			$radio = new Radio($this->name, $button['label'], $button['value']);
+
 			if ($this->required)
 				{
 				$radio->setRequired();

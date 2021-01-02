@@ -5,15 +5,23 @@ namespace PHPFUI\MySQLSlowQuery;
 class Parser
 	{
 	private const PORT = 'TCP Port: ';
+
 	private const TIME = '# Time: ';
+
 	private $entries = [];
+
 	private $extraLines = [];
 
 	private $fileName = '';
+
 	private $handle;
+
 	private $inSession = true;
+
 	private $sessions = [];
+
 	private $sortColumn = 'Query_time';
+
 	private $sortOrder = 'desc';
 
 	/**
@@ -196,5 +204,4 @@ class Parser
 
 		return $this;
 		}
-
 	}

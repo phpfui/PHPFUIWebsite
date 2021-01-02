@@ -8,7 +8,9 @@ namespace PHPFUI\Input;
 class MultiSelect extends \PHPFUI\Input\Select
 	{
 	private $gridSize = 12;
+
 	private $numberColumns = 1;
+
 	private $selectAll = '';
 
 	/**
@@ -134,6 +136,7 @@ class MultiSelect extends \PHPFUI\Input\Select
 			}
 
 		$fieldSet->add($gridx);
+		$this->label = false;
 
 		return "{$fieldSet}";
 		}

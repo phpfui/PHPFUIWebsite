@@ -14,8 +14,8 @@ namespace PHPFUI\PHPUnitSyntaxCoverage;
 
 class ClassFinder extends \PhpParser\NodeVisitorAbstract
 	{
-
 	private $classes = [];
+
 	private $currentNamespace = '';
 
 	public function enterNode(\PhpParser\Node $node) : void
@@ -34,13 +34,12 @@ class ClassFinder extends \PhpParser\NodeVisitorAbstract
 		{
 		return $this->classes;
 		}
-
 	}
 
 class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\Hook
 	{
-
 	private static $parser = null;
+
 	private $skipDirectories = [];
 
 	public static function setUpBeforeClass() : void
@@ -122,21 +121,26 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		foreach ($iterator as $item)
 			{
 			$type = $item->getType();
+
 			if ('file' == $type)
 				{
 				$file = $item->getPathname();
 				$ext = strrchr($file, '.');
+
 				if ($ext && isset($exts[$ext]))
 					{
 					$skip = false;
+
 					foreach ($this->skipDirectories as $directory)
 						{
-						if (stripos($file, $directory) !== false)
+						if (false !== stripos($file, $directory))
 							{
 							$skip = true;
+
 							break;
 							}
 						}
+
 					if (! $skip)
 						{
 						$this->assertValidPHPFile($file, $message . "\nFile: " . $file);
@@ -157,5 +161,4 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 		$this->assertValidPHP($code, $message);
 		}
-
 	}

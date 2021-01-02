@@ -4,7 +4,6 @@ namespace PHPFUI\MySQLSlowQuery;
 
 class Entry extends \PHPFUI\MySQLSlowQuery\BaseObject
 	{
-
 	public function __construct(array $parameters = [])
 		{
 		$this->fields = [
@@ -18,7 +17,7 @@ class Entry extends \PHPFUI\MySQLSlowQuery\BaseObject
 			'Rows_examined' => 0,
 			'Query' => [],
 			'Session' => 0,
-			];
+		];
 		}
 
 	/**
@@ -69,5 +68,4 @@ class Entry extends \PHPFUI\MySQLSlowQuery\BaseObject
 
 		return $this;
 		}
-
 	}

@@ -61,5 +61,4 @@ class WarningConstraint extends \PHPUnit\Framework\Constraint\Constraint
 		{
 		return ! $other->hasWarnings();
 		}
-
 	}

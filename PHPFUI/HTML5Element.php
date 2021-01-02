@@ -9,29 +9,36 @@ namespace PHPFUI;
 class HTML5Element extends \PHPFUI\Base
 	{
 	private $attributes = [];
+
 	private $classes = [];
+
 	private $element;
+
 	private $id = null;
+
 	private static $masterId = 0;
+
 	private $noEndTag = false;
+
 	private static $noEndTags = [
-		'area'    => true,
-		'base'    => true,
-		'br'      => true,
-		'col'     => true,
+		'area' => true,
+		'base' => true,
+		'br' => true,
+		'col' => true,
 		'command' => true,
-		'embed'   => true,
-		'hr'      => true,
-		'img'     => true,
-		'input'   => true,
-		'keygen'  => true,
-		'link'    => true,
-		'meta'    => true,
-		'param'   => true,
-		'source'  => true,
-		'track'   => true,
-		'wbr'     => true,
+		'embed' => true,
+		'hr' => true,
+		'img' => true,
+		'input' => true,
+		'keygen' => true,
+		'link' => true,
+		'meta' => true,
+		'param' => true,
+		'source' => true,
+		'track' => true,
+		'wbr' => true,
 	];
+
 	private $tooltip;
 
 	/**
@@ -147,7 +154,7 @@ class HTML5Element extends \PHPFUI\Base
 
 		foreach ($this->attributes as $type => $value)
 			{
-			if (! strlen($value))
+			if (! strlen(trim($value)))
 				{
 				$output .= ' ' . $type;
 				}
