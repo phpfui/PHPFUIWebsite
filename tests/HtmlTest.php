@@ -12,7 +12,7 @@
 class HTMLTest extends \PHPFUI\HTMLUnitTester\Extensions
   {
 
-	public function testExampleDirector()
+	public function testExampleDirectory()
     {
 		foreach (new \DirectoryIterator(PROJECT_ROOT . '/Example') as $fileInfo)
 			{
