@@ -134,7 +134,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	 * Output the object (convert to string)
 	 *
 	 */
-	public function output() : string
+	private function output() : string
 		{
 		if ($this->isDone())
 			{
@@ -214,13 +214,16 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	/**
 	 * Sets the page response directly
 	 */
-	public function setRawResponse(string $response) : Base
+	public function setRawResponse(string $response, bool $asJSON = true) : Base
 		{
 		if (! $this->isDone())
 			{
 			$this->response = $response;
 			$this->done();
-			header('Content-Type: application/json');
+			if ($asJSON)
+				{
+				header('Content-Type: application/json');
+				}
 			}
 
 		return $this;
