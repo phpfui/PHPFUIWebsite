@@ -14,6 +14,7 @@ class SelectAutoComplete extends Page
 		$this->addBody('If you have a lot of selections, then a <b>SelectAutoComplete</b> offers a drop in replacement for a <b>Select</b>, but a better user experience than selecting from a huge list. ');
 		$this->addBody(new \PHPFUI\Link('http://' . $_SERVER['SERVER_NAME'] . '/states.tsv', 'Data Source'));
 		$form = new \PHPFUI\Form($this);
+		$form->setAreYouSure(false);
 		$select = new \Example\View\State($this, 'state', 'Pick a USA State');
 		$select->setToolTip('Start typing to find a state by name or abbreviation');
 		$form->add($select);

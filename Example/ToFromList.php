@@ -32,6 +32,7 @@ class ToFromList extends \Example\Page
 
 		$toFromList = new \Example\View\StateToFromList($this, $name, $model, $inGroup, $notInGroup);
 		$form = new \PHPFUI\Form($this);
+		$form->setAreYouSure(false);
 		$form->add($toFromList);
 		$form->add(new \PHPFUI\Submit('Save'));
 

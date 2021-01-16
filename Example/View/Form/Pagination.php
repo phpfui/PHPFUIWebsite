@@ -20,6 +20,7 @@ class Pagination
 	public function __toString() : string
 		{
 		$form = new \PHPFUI\Form($this->page);
+		$form->setAreYouSure(false);
 		$fieldSet = new \PHPFUI\FieldSet('Change Parameters');
 		$of = new \PHPFUI\Input\Number('o', 'Total Pages', $this->totalPages);
 		$of->setToolTip('Total pages in view');

@@ -16,6 +16,7 @@ class AutoComplete extends Page
 		$this->addBody('<b>AutoComplete</b> offers a backend callback that can be leveraged for various user experiences. ');
 		$this->addBody(new \PHPFUI\Link('http://' . $_SERVER['SERVER_NAME'] . '/countries.csv', 'Data Source'));
 		$form = new \PHPFUI\Form($this);
+		$form->setAreYouSure(false);
 		$control = new \PHPFUI\Input\AutoComplete($this, [$this, 'callback', ], 'text', 'country', 'Pick a country, any country');
 		$control->setToolTip('Start typing to find a country');
 		$form->add($control);
