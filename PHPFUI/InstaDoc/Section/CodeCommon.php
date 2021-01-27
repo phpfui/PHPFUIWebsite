@@ -5,9 +5,7 @@ namespace PHPFUI\InstaDoc\Section;
 class CodeCommon extends \PHPFUI\InstaDoc\Section
 	{
 	protected $factory;
-
 	protected $parsedown;
-
 	protected $reflection;
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
@@ -386,7 +384,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					$types = $value->getTypes();
 					$value = $bar = '';
-
 					foreach ($types as $type)
 						{
 						$value .= $bar;
@@ -438,4 +435,5 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		return $section;
 		}
+
 	}

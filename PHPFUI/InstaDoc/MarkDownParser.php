@@ -4,6 +4,7 @@ namespace PHPFUI\InstaDoc;
 
 class MarkDownParser
 	{
+
 	private $parser;
 
 	public function __construct()
@@ -25,4 +26,5 @@ class MarkDownParser
 		{
 		return $this->parser->parse($markdown);
 		}
+
 	}

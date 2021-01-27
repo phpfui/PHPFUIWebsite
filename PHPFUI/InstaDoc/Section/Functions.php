@@ -4,6 +4,7 @@ namespace PHPFUI\InstaDoc\Section;
 
 class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 	{
+
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct($controller);
@@ -81,7 +82,7 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 			'Generator',
 			'Internal',
 			'Variadic',
-		];
+			];
 
 		$gridX = null;
 
@@ -120,4 +121,5 @@ class Functions extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		return $container;
 		}
+
 	}

@@ -4,6 +4,7 @@ namespace PHPFUI\InstaDoc;
 
 class CSSSelector extends \PHPFUI\Input\Select
 	{
+
 	public function __construct(\PHPFUI\Page $page, string $current = '')
 		{
 		parent::__construct('CSS');
@@ -17,4 +18,5 @@ class CSSSelector extends \PHPFUI\Input\Select
 			$this->addOption($name, $value, $current == $value);
 			}
 		}
+
 	}

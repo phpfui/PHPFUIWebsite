@@ -14,8 +14,8 @@ namespace PHPFUI\HTMLUnitTester;
 
 class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\Hook
 	{
-	private static $throttle;
 
+	private static $throttle;
 	private static $validator;
 
 	public static function setUpBeforeClass() : void
@@ -87,9 +87,8 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 	 */
 	public function assertDirectory(string $type, string $directory, string $message = '', bool $recurseSubdirectories = true, array $extensions = ['.css']) : void
 		{
-		$this->assertContains($type, ['Valid', 'NotWarning', 'ValidCSS', 'NotWarningCSS'], 'Invalid parameter for ' . __METHOD__);
+		$this->assertContains($type, ['Valid', 'NotWarning', 'ValidCSS', 'NotWarningCSS'], "Invalid parameter for " . __METHOD__);
 		$method = "assert{$type}File";
-
 		if ($recurseSubdirectories)
 			{
 			$iterator = new \RecursiveIteratorIterator(
@@ -101,7 +100,6 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 			$iterator = new \DirectoryIterator($directory);
 			}
 		$exts = array_flip($extensions);
-
 		foreach ($iterator as $item)
 			{
 			if ('file' == $item->getType())
@@ -111,7 +109,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 				if ($ext && isset($exts[$ext]))
 					{
-					$this->{$method}($file, $message . ' File: ' . $file);
+					$this->$method($file, $message . ' File: ' . $file);
 					}
 				}
 			}
@@ -177,7 +175,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 			throw new \PHPUnit\Framework\Exception("Url {$url} is not valid.\n");
 			}
 
-		$context = stream_context_create(['http' => ['user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0']]);
+		$context  = stream_context_create(['http' => ['user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0']]);
 		$html = file_get_contents($url, false, $context);
 
 		// Check that something was returned
@@ -216,4 +214,5 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 		return $response;
 		}
+
 	}

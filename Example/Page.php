@@ -107,7 +107,7 @@ class Page extends \PHPFUI\Page
 
 				foreach ($_POST as $key => $value)
 					{
-					$vars[$key] = htmlspecialchars($value);
+					$vars[$key] = $value;
 					}
 				\PHPFUI\Session::setFlash('post', json_encode($vars));
 				$this->redirect();

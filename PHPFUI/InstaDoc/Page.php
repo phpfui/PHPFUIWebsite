@@ -5,13 +5,10 @@ namespace PHPFUI\InstaDoc;
 class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 	{
 	private $controller;
-
 	private $generating = '';
-
 	private $homeUrl = '#';
 
 	private $mainColumn;
-
 	private $menu;
 
 	public function __construct(Controller $controller)
@@ -170,4 +167,5 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$form->add($fieldSet);
 		$modal->add($form);
 		}
+
 	}

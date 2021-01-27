@@ -61,4 +61,5 @@ class ErrorConstraint extends \PHPUnit\Framework\Constraint\Constraint
 		{
 		return ! $other->hasErrors();
 		}
+
 	}

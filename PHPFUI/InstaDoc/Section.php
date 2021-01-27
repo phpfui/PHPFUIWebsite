@@ -9,6 +9,7 @@ namespace PHPFUI\InstaDoc;
  */
 class Section
 	{
+
 	protected $controller;
 
 	public function __construct(Controller $controller)
@@ -97,4 +98,5 @@ class Section
 
 		return implode('\\', $parts);
 		}
+
 	}

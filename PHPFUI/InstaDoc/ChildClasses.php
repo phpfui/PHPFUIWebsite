@@ -91,4 +91,5 @@ class ChildClasses
 
 		return file_put_contents($file, serialize(self::$children)) > 0;
 		}
+
 	}

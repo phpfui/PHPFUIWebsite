@@ -4,6 +4,7 @@ namespace PHPFUI\MySQLSlowQuery;
 
 abstract class BaseObject
 	{
+
 	protected $fields = [];
 
 	abstract public function __construct(array $paramters = []);
@@ -42,4 +43,5 @@ abstract class BaseObject
 		{
 		return $this->fields;
 		}
+
 	}
