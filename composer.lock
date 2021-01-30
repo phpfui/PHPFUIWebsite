@@ -1209,22 +1209,22 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.36",
+            "version": "V1.0.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "44e2e0e712a0d5bbcfb8b43d78b2d8ef8c603e4f"
+                "reference": "79d2e34cee86269992e8876d9ec5c760c917b8c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/44e2e0e712a0d5bbcfb8b43d78b2d8ef8c603e4f",
-                "reference": "44e2e0e712a0d5bbcfb8b43d78b2d8ef8c603e4f",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/79d2e34cee86269992e8876d9ec5c760c917b8c1",
+                "reference": "79d2e34cee86269992e8876d9ec5c760c917b8c1",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "^1.2",
                 "gitonomy/gitlib": "^1.2",
-                "php": ">=7.1",
+                "php": ">=7.2",
                 "phpdocumentor/reflection-docblock": ">=3.0",
                 "phpfui/phpfui": "^6.0",
                 "scrivo/highlight.php": ">=9.17"
@@ -1263,9 +1263,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.36"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.37"
             },
-            "time": "2020-12-19T18:31:38+00:00"
+            "time": "2021-01-30T18:56:00+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -1321,16 +1321,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.54",
+            "version": "V6.0.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "52a525ce38df92e13e3f271815b49ed7bcc39f9f"
+                "reference": "4a4a5ad558b4d917d284a992c3e02e055926117d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/52a525ce38df92e13e3f271815b49ed7bcc39f9f",
-                "reference": "52a525ce38df92e13e3f271815b49ed7bcc39f9f",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/4a4a5ad558b4d917d284a992c3e02e055926117d",
+                "reference": "4a4a5ad558b4d917d284a992c3e02e055926117d",
                 "shasum": ""
             },
             "require": {
@@ -1377,9 +1377,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.0.54"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.0.55"
             },
-            "time": "2021-01-27T01:05:30+00:00"
+            "time": "2021-01-30T19:05:38+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
@@ -3452,16 +3452,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.2.1",
+            "version": "v5.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "bd8815b8b6705298beaa384f04fabd459c10bedd"
+                "reference": "313a38f09c77fbcdc1d223e57d368cea76a2fd2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/bd8815b8b6705298beaa384f04fabd459c10bedd",
-                "reference": "bd8815b8b6705298beaa384f04fabd459c10bedd",
+                "url": "https://api.github.com/repos/symfony/process/zipball/313a38f09c77fbcdc1d223e57d368cea76a2fd2f",
+                "reference": "313a38f09c77fbcdc1d223e57d368cea76a2fd2f",
                 "shasum": ""
             },
             "require": {
@@ -3491,10 +3491,10 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Process Component",
+            "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.2.1"
+                "source": "https://github.com/symfony/process/tree/v5.2.2"
             },
             "funding": [
                 {
@@ -3510,7 +3510,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-08T17:03:37+00:00"
+            "time": "2021-01-27T10:15:41+00:00"
         },
         {
             "name": "theseer/tokenizer",
