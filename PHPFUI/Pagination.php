@@ -123,9 +123,7 @@ class Pagination extends \PHPFUI\HTML5Element
 					$item->add("<a href='{$prevUrl}' aria-label='{$this->previous} {$this->pageText}'>{$text}</a>");
 					}
 				$this->ul->addItem($item);
-				$firstItem = $this->getPageItem(0);
-				$firstItem->addAttribute('style', 'display:inline-block');
-				$this->ul->addItem($firstItem);
+				$this->ul->addItem($this->getPageItem(0));
 
 				// four cases, all have first and last page shown already
 
@@ -167,9 +165,7 @@ class Pagination extends \PHPFUI\HTML5Element
 						}
 					}
 
-				$lastItem = $this->getPageItem($this->of - 1);
-				$lastItem->addAttribute('style', 'display:inline-block');
-				$this->ul->addItem($lastItem);
+				$this->ul->addItem($this->getPageItem($this->of - 1));
 				$item = new ListItem();
 				$item->addClass('pagination-next');
 				$text = "{$this->next} <span class='show-for-sr'>{$this->pageText}</span>";
