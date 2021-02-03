@@ -1,7 +1,7 @@
 Webmozart Assert
 ================
 
-[![Build Status](https://travis-ci.org/webmozart/assert.svg?branch=master)](https://travis-ci.org/webmozart/assert)
+[![Build Status](https://travis-ci.com/webmozart/assert.svg?branch=master)](https://travis-ci.com/webmozart/assert)
 [![Build status](https://ci.appveyor.com/api/projects/status/lyg83bcsisrr94se/branch/master?svg=true)](https://ci.appveyor.com/project/webmozart/assert/branch/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/webmozart/assert/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/webmozart/assert/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/webmozart/assert/v/stable.svg)](https://packagist.org/packages/webmozart/assert)
