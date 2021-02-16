@@ -6,6 +6,8 @@ class Menu extends \PHPFUI\HTML5Element
 	{
 	protected $menuItems = [];
 
+	protected $menuLabels = [];
+
 	protected $sorted = false;
 
 	private $started = false;
@@ -20,7 +22,7 @@ class Menu extends \PHPFUI\HTML5Element
 
 	public function addMenuItem(MenuItem $item) : Menu
 		{
-		$this->menuItems[$item->getName()] = $item;
+		$this->menuItems[$item->getName() . ':' . \count($this->menuItems)] = $item;
 
 		return $this;
 		}
@@ -28,7 +30,9 @@ class Menu extends \PHPFUI\HTML5Element
 	public function addSubMenu(MenuItem $item, Menu $subMenu) : Menu
 		{
 		$subMenu->addClass('nested');
-		$this->menuItems[$item->getName()] = $subMenu;
+		$name = $item->getName() . ':' . \count($this->menuItems);
+		$this->menuItems[$name] = $subMenu;
+		$this->menuLabels[$name] = $item;
 
 		return $this;
 		}
@@ -38,7 +42,7 @@ class Menu extends \PHPFUI\HTML5Element
 	 */
 	public function count() : int
 		{
-		return count($this->menuItems);
+		return \count($this->menuItems);
 		}
 
 	public function getActive() : bool
@@ -73,7 +77,7 @@ class Menu extends \PHPFUI\HTML5Element
 		{
 		foreach ($this->menuItems as &$menuItem)
 			{
-			if (false !== strpos($link, $menuItem->getLink()))
+			if (false !== \strpos($link, $menuItem->getLink()))
 				{
 				$menuItem->setActive();
 
@@ -114,9 +118,9 @@ class Menu extends \PHPFUI\HTML5Element
 			'bottom',
 			'left', ];
 
-		if (! in_array($type, $types))
+		if (! \in_array($type, $types))
 			{
-			throw new Exception(__METHOD__ . ' Error: Icon type {$type} should be one of ' . implode($types));
+			throw new Exception(__METHOD__ . ' Error: Icon type {$type} should be one of ' . \implode('', $types));
 			}
 
 		$this->addClass('icons');
@@ -132,7 +136,7 @@ class Menu extends \PHPFUI\HTML5Element
 	public function sort() : Menu
 		{
 		$this->sorted = true;
-		ksort($this->menuItems);
+		\ksort($this->menuItems);
 
 		return $this;
 		}
@@ -146,7 +150,7 @@ class Menu extends \PHPFUI\HTML5Element
 
 			if ($this->sorted)
 				{
-				ksort($this->menuItems);
+				\ksort($this->menuItems);
 				}
 
 			foreach ($this->menuItems as $label => $item)
@@ -164,11 +168,12 @@ class Menu extends \PHPFUI\HTML5Element
 					}
 				else
 					{
-					$menuItem = new MenuItem($label, '#');
+					$menuTitle = $this->menuLabels[$label];
+					$menuTitle->setLink('#');
 					$somethingActive |= $item->getActive();
-					$menuItem->setActive($item->getActive());
-					$menuItem->add($item);
-					$this->add($menuItem);
+					$menuTitle->setActive($item->getActive());
+					$menuTitle->add($item);
+					$this->add($menuTitle);
 					}
 				}
 

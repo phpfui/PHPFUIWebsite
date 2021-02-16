@@ -1321,29 +1321,30 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.55",
+            "version": "V6.0.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "4a4a5ad558b4d917d284a992c3e02e055926117d"
+                "reference": "dcdd31e5dd1e4d892f411e934f4b1e73458941c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/4a4a5ad558b4d917d284a992c3e02e055926117d",
-                "reference": "4a4a5ad558b4d917d284a992c3e02e055926117d",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/dcdd31e5dd1e4d892f411e934f4b1e73458941c9",
+                "reference": "dcdd31e5dd1e4d892f411e934f4b1e73458941c9",
                 "shasum": ""
             },
             "require": {
                 "components/jquery": "^3.3",
                 "fortawesome/font-awesome": "^5",
                 "igorescobar/jquery-mask-plugin": "^1.14",
-                "php": ">=7.1",
+                "php": ">=7.3",
                 "zurb/foundation": "^6.6"
             },
             "require-dev": {
                 "phpfui/html-unit-tester": "^1.0",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
-                "phpunit/phpunit": ">=7.0"
+                "phpunit/phpunit": ">=9.0",
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
@@ -1377,9 +1378,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.0.55"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.0.56"
             },
-            "time": "2021-01-30T19:05:38+00:00"
+            "time": "2021-02-04T01:57:18+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
@@ -1821,16 +1822,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.1",
+            "version": "9.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360"
+                "reference": "f661659747f2f87f9e72095bb207bceb0f151cb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e7bdf4085de85a825f4424eae52c99a1cec2f360",
-                "reference": "e7bdf4085de85a825f4424eae52c99a1cec2f360",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f661659747f2f87f9e72095bb207bceb0f151cb4",
+                "reference": "f661659747f2f87f9e72095bb207bceb0f151cb4",
                 "shasum": ""
             },
             "require": {
@@ -1908,7 +1909,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.1"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.2"
             },
             "funding": [
                 {
@@ -1920,7 +1921,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-17T07:42:25+00:00"
+            "time": "2021-02-02T14:45:58+00:00"
         },
         {
             "name": "psr/http-client",
@@ -3452,7 +3453,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.2.2",
+            "version": "v5.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -3494,7 +3495,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.2.2"
+                "source": "https://github.com/symfony/process/tree/v5.2.3"
             },
             "funding": [
                 {
