@@ -721,16 +721,16 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "V2.1.6",
+            "version": "V2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "936ee5caca3067de98a40d5a5788946b6f2b87dc"
+                "reference": "17cc5b9dc48b19e0dee1937080601a9fc2890af4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/936ee5caca3067de98a40d5a5788946b6f2b87dc",
-                "reference": "936ee5caca3067de98a40d5a5788946b6f2b87dc",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/17cc5b9dc48b19e0dee1937080601a9fc2890af4",
+                "reference": "17cc5b9dc48b19e0dee1937080601a9fc2890af4",
                 "shasum": ""
             },
             "require": {
@@ -771,9 +771,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.6"
+                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.7"
             },
-            "time": "2021-01-06T00:07:33+00:00"
+            "time": "2021-02-17T03:13:44+00:00"
         },
         {
             "name": "paquettg/php-html-parser",
@@ -1209,31 +1209,31 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.37",
+            "version": "V1.0.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "79d2e34cee86269992e8876d9ec5c760c917b8c1"
+                "reference": "0853cc20b9103b419e557ccfee707c8d2e216d7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/79d2e34cee86269992e8876d9ec5c760c917b8c1",
-                "reference": "79d2e34cee86269992e8876d9ec5c760c917b8c1",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/0853cc20b9103b419e557ccfee707c8d2e216d7c",
+                "reference": "0853cc20b9103b419e557ccfee707c8d2e216d7c",
                 "shasum": ""
             },
             "require": {
-                "cebe/markdown": "^1.2",
-                "gitonomy/gitlib": "^1.2",
-                "php": ">=7.2",
+                "cebe/markdown": ">=1.2",
+                "gitonomy/gitlib": ">=1.2",
+                "php": ">=7.3",
                 "phpdocumentor/reflection-docblock": ">=3.0",
-                "phpfui/phpfui": "^6.0",
+                "phpfui/phpfui": ">=6.0",
                 "scrivo/highlight.php": ">=9.17"
             },
             "require-dev": {
-                "phpfui/html-unit-tester": "^1.0",
-                "phpfui/phpunit-syntax-coverage": "^1.0",
-                "phpunit/phpunit": ">=7.0",
-                "roave/security-advisories": "dev-master"
+                "phpfui/html-unit-tester": ">=1.0",
+                "phpfui/phpunit-syntax-coverage": ">=1.0",
+                "phpunit/phpunit": ">=9.0",
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
@@ -1263,9 +1263,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.37"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.38"
             },
-            "time": "2021-01-30T18:56:00+00:00"
+            "time": "2021-02-17T00:39:14+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -3211,7 +3211,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -3270,7 +3270,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.22.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.22.1"
             },
             "funding": [
                 {
@@ -3290,16 +3290,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
-                "reference": "f377a3dd1fde44d37b9831d68dc8dea3ffd28e13",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
@@ -3350,7 +3350,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.22.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.22.1"
             },
             "funding": [
                 {
@@ -3366,11 +3366,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-07T16:49:33+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
@@ -3433,7 +3433,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.22.1"
             },
             "funding": [
                 {
