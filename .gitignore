@@ -11,4 +11,15 @@ gosass.bat
 static/
 .phpunit.result.cache
 phpunit.xml
+/cebe/markdown/tests
+/HighlightUtilities
+/Highlight/Highlight
+/Highlight/HighlightUtilities
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE.md
+/Sample
+/Slack/Tests
+/Symfony/Polyfill
+/JsonMapper.php
 

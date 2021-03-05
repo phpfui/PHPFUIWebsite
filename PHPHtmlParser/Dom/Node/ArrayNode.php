@@ -1,21 +1,29 @@
-<?php declare(strict_types=1);
-namespace PHPHtmlParser\Dom;
+<?php
 
-use Countable;
+declare(strict_types=1);
+
+namespace PHPHtmlParser\Dom\Node;
+
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
+use PHPHtmlParser\Dom\Tag;
 
 /**
  * Dom node object which will allow users to use it as
  * an array.
+ *
+ * @property-read string    $outerhtml
+ * @property-read string    $innerhtml
+ * @property-read string    $innerText
+ * @property-read string    $text
+ * @property-read Tag       $tag
+ * @property-read InnerNode $parent
  */
 abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Countable
 {
-
     /**
-     * Gets the iterator
-     *
-     * @return ArrayIterator
+     * Gets the iterator.
      */
     public function getIterator(): ArrayIterator
     {
@@ -24,18 +32,14 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
 
     /**
      * Returns the count of the iterator array.
-     *
-     * @return int
      */
     public function count(): int
     {
-        return count($this->getIteratorArray());
+        return \count($this->getIteratorArray());
     }
 
     /**
      * Returns the array to be used the the iterator.
-     *
-     * @return array
      */
     abstract protected function getIteratorArray(): array;
 }

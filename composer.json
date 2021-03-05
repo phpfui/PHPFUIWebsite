@@ -2,7 +2,7 @@
 	"require": {
 		"php": ">=7.2",
 		"phpfui/instadoc": "^1.0",
-		"paquettg/php-html-parser": "^2.2",
+		"paquettg/php-html-parser": "^3.0",
 		"nxp/math-executor": "^2.0",
 		"nikic/php-parser": "^4.8",
 		"phpunit/phpunit": "^9.3",
