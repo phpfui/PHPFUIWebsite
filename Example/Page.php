@@ -101,7 +101,7 @@ class Page extends \PHPFUI\Page
 			{
 			$this->setDebug(1);
 
-			if (! empty($_POST['submit']) && \PHPFUI\Session::checkCSRF())
+			if (\PHPFUI\Session::checkCSRF())
 				{
 				$vars = [];
 
@@ -179,16 +179,17 @@ class Page extends \PHPFUI\Page
 	public static function getMenu() : \PHPFUI\Menu
 		{
 		$options = [
-			'Pagination' => '/Examples/Pagination.php',
-			'Sortable Table' => '/Examples/SortableTable.php',
-			'Orderable Table' => '/Examples/OrderableTable.php',
-			'SelectAutoComplete' => '/Examples/SelectAutoComplete.php',
-			'AutoComplete' => '/Examples/AutoComplete.php',
 			'Abide' => '/Examples/Abide.php',
-			'Orbit Carousel' => '/Examples/Orbit.php',
-			'To From List' => '/Examples/ToFromList.php',
 			'Accordion To From List' => '/Examples/AccordionToFromList.php',
+			'AutoComplete' => '/Examples/AutoComplete.php',
+			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
 			'Kitchen Sink' => '/Examples/KitchenSink.php',
+			'Orbit Carousel' => '/Examples/Orbit.php',
+			'Orderable Table' => '/Examples/OrderableTable.php',
+			'Pagination' => '/Examples/Pagination.php',
+			'SelectAutoComplete' => '/Examples/SelectAutoComplete.php',
+			'Sortable Table' => '/Examples/SortableTable.php',
+			'To From List' => '/Examples/ToFromList.php',
 			];
 
 		$exampleMenu = new \PHPFUI\Menu();
