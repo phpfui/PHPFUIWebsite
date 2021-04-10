@@ -22,4 +22,6 @@ LICENSE.md
 /Slack/Tests
 /Symfony/Polyfill
 /JsonMapper.php
+/GuzzleHttp/Psr7/functions.php
+/GuzzleHttp/Psr7/functions_include.php
 
