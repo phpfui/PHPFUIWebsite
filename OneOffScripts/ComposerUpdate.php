@@ -2,68 +2,70 @@
 
 include 'commonbase.php';
 
-class ComposerUpdater
+class ComposerUpdate
 	{
-
 	private string $baseDir = '';
 
 	private string $vendorDir = 'vendor/';
 
 	private array $ignored = [];
 
-	public function setBaseDirectory(string $baseDir) : self
+	public function setBaseDirectory(string $baseDir) : static
 		{
 		$this->baseDir = $baseDir;
 
 		return $this;
 		}
 
-	public function setVendorDirectory(string $vendorDir) : self
+	public function setVendorDirectory(string $vendorDir) : static
 		{
 		$this->vendorDir = $vendorDir;
 
 		return $this;
 		}
 
-	public function setIgnoredRepos(array $ignored) : self
+	public function setIgnoredRepos(array $ignored) : static
 		{
 		$this->ignored = $ignored;
 
 		return $this;
 		}
 
-	public static function copyFiles(string $source, string $dest)
+	public static function copyFiles(string $source, string $dest) : void
 		{
-		if (! file_exists($dest))
+		if (! \file_exists($dest))
 			{
-			mkdir($dest, 0755, true);
+			\mkdir($dest, 0755, true);
 			}
 		$iterator = new \RecursiveIteratorIterator(
 				new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
 				\RecursiveIteratorIterator::SELF_FIRST);
+
 		foreach ($iterator as $item)
 			{
 			$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-			$file = str_replace('/', '\\', $file);
+			$file = \str_replace('/', '\\', $file);
+
 			if ($item->isDir())
 				{
-				if (! file_exists($file))
+				if (! \file_exists($file))
 					{
-					mkdir($file, 755, true);
+					\mkdir($file, 755, true);
 					}
 				}
 			else
 				{
-				$ext = strrchr($file, '.');
-				if (in_array($ext, ['.php', '.md']))
+				$ext = \strrchr($file, '.');
+
+				if (\in_array($ext, ['.php', '.md']))
 					{
-					copy($item, $file);
+					\copy($item, $file);
 					}
 				}
 			}
 		}
 
-	public function copyPath(string $name, array $sources, string $destDir)
+	public function copyPath(string $name, array $sources, string $destDir) : void
 		{
 		foreach ($sources as $sourceDir)
 			{
@@ -71,9 +73,9 @@ class ComposerUpdater
 
 			if ($destDir)
 				{
-				$destDir = str_replace('\\', '/', $this->baseDir.$destDir);
-				$destDir = substr($destDir, 0, strlen($destDir) - 1);
-				$sourceDir = $this->vendorDir.$name.'/'.$sourceDir;
+				$destDir = \str_replace('\\', '/', $this->baseDir . $destDir);
+				$destDir = \substr($destDir, 0, \strlen($destDir) - 1);
+				$sourceDir = $this->vendorDir . $name . '/' . $sourceDir;
 				//echo "source $sourceDir to $destDir\n";
 				$this->copyFiles($sourceDir, $destDir);
 				}
@@ -82,15 +84,18 @@ class ComposerUpdater
 
 	public function update() : void
 		{
-		$installed = json_decode(file_get_contents($this->vendorDir . '../composer.lock'), true);
+		$installed = \json_decode(\file_get_contents($this->vendorDir . '../composer.lock'), true);
+
 		foreach ($installed['packages'] as $install)
 			{
 			$use = true;
+
 			foreach ($this->ignored as $ignore)
 				{
-				if (stripos($install['name'], $ignore) !== false)
+				if (false !== \stripos($install['name'], $ignore))
 					{
 					$use = false;
+
 					break;
 					}
 				}
@@ -103,7 +108,8 @@ class ComposerUpdater
 			if (isset($install['autoload']))
 				{
 				$autoload = $install['autoload'];
-				$destDir = $sourceDir = '';
+				$sourceDir = '';
+
 				if (! empty($autoload['psr-4']))
 					{
 					foreach ($autoload['psr-4'] as $destDir => $sourceDir)
@@ -112,14 +118,15 @@ class ComposerUpdater
 							{
 							$sourceDir = '.';
 							}
-						if (! is_array($sourceDir))
+
+						if (! \is_array($sourceDir))
 							{
 							$sourceDir = [$sourceDir];
 							}
 						$this->copyPath($install['name'], $sourceDir, $destDir);
 						}
 					}
-				else if (! empty($autoload['psr-0']))
+				elseif (! empty($autoload['psr-0']))
 					{
 					foreach ($autoload['psr-0'] as $destDir => $sourceDir)
 						{
@@ -127,23 +134,25 @@ class ComposerUpdater
 							{
 							$destDir = '.\\';
 							}
-						if (! is_array($sourceDir))
+
+						if (! \is_array($sourceDir))
 							{
 							$sourceDir = [$sourceDir];
 							}
 						$this->copyPath($install['name'], $sourceDir, $destDir);
 						}
 					}
-				else if (! empty($autoload['classmap']))
+				elseif (! empty($autoload['classmap']))
 					{
 					foreach ($autoload['classmap'] as $file)
 						{
-						copy('vendor/' . $install['name'] . '/' . $file, 'NoNameSpace/' . $file);
+						\copy('vendor/' . $install['name'] . '/' . $file, 'NoNameSpace/' . $file);
 						}
 					}
 				else
 					{
 					echo "No autoload for {$install['name']}\n";
+
 					continue;
 					}
 				}
@@ -155,7 +164,7 @@ class ComposerUpdater
 		}
 	}
 
-$updater = new ComposerUpdater();
+$updater = new ComposerUpdate();
 
 $updater->setIgnoredRepos([
 	'components',
@@ -177,7 +186,6 @@ $updater->setIgnoredRepos([
 	'theseer',
 	'tinify',
 	'twig',
-	]);
+]);
 
 $updater->update();
-
