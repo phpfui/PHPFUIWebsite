@@ -92,7 +92,7 @@ class ComposerUpdate
 
 			foreach ($this->ignored as $ignore)
 				{
-				if (false !== \stripos($install['name'], $ignore))
+				if (false !== \str_starts_with($install['name'], $ignore))
 					{
 					$use = false;
 
@@ -177,8 +177,8 @@ $updater->setIgnoredRepos([
 	'phar-io',
 	'PHPStan',
 	'PhpParser',
+	'phpspec',
 	'phpunit',
-	'Prophecy',
 	'ralouphie',
 	'sebastian',
 	'Symplify',

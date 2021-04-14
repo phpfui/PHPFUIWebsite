@@ -1575,22 +1575,28 @@
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.1",
+            "version": "V1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "bec85c8f3f9e8fa0826a277f0ed4f44cff99231f"
+                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/bec85c8f3f9e8fa0826a277f0ed4f44cff99231f",
-                "reference": "bec85c8f3f9e8fa0826a277f0ed4f44cff99231f",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/3418ca7fb2275005c65e95e4622c67f7713d28eb",
+                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.8",
-                "php": ">=7.1",
-                "phpunit/phpunit": "^7.0|^8.0|>=9.0"
+                "nikic/php-parser": ">=4.10",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpunit/phpunit": ">=9.0",
+                "roave/security-advisories": "dev-latest",
+                "symfony/translation-contracts": "^2.3",
+                "vimeo/psalm": "^4.7"
             },
             "type": "library",
             "autoload": {
@@ -1622,9 +1628,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.1"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.2"
             },
-            "time": "2020-08-28T03:17:03+00:00"
+            "time": "2021-04-13T03:26:46+00:00"
         },
         {
             "name": "phpspec/prophecy",

@@ -22,12 +22,17 @@ class ClassFinder extends \PhpParser\NodeVisitorAbstract
 		{
 		if ($node instanceof \PhpParser\Node\Stmt\Namespace_)
 			{
-			$this->currentNamespace = implode('\\', $node->name->parts);
+			$this->currentNamespace = \implode('\\', $node->name->parts);
 			}
-		elseif ($node instanceof \PhpParser\Node\Stmt\Class_)
+		elseif ($node instanceof \PhpParser\Node\Stmt\Class_ && $node->name)
 			{
 			$this->classes[] = $this->currentNamespace ? $this->currentNamespace . '\\' . $node->name->name : $node->name->name;
 			}
+		}
+
+	public function getNamespace() : string
+		{
+		return $this->currentNamespace;
 		}
 
 	public function getClasses() : array
@@ -42,10 +47,30 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 	private $skipDirectories = [];
 
+	private $skipNamespaces = [];
+
+	private $skipNamespaceTest = false;
+
+	private $traverser;
+
+	private $classFinder;
+
 	public static function setUpBeforeClass() : void
 		{
 		$factory = new \PhpParser\ParserFactory();
 		self::$parser = $factory->create($_ENV[__CLASS__ . '_parser_type'] ?? \PhpParser\ParserFactory::PREFER_PHP7);
+		}
+
+  protected function setUp() : void
+		{
+		$this->traverser = new \PhpParser\NodeTraverser();
+		$this->classFinder = new ClassFinder();
+		}
+
+	protected function tearDown() : void
+		{
+		$this->traverser = null;
+		$this->classFinder = null;
 		}
 
 	/**
@@ -68,13 +93,11 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 		$this->assertNotEmpty($ast, 'Empty Abstract Syntax tree. ' . $message);
 
-		$traverser = new \PhpParser\NodeTraverser();
-		$classFinder = new ClassFinder();
-		$traverser->addVisitor($classFinder);
+		$this->traverser->addVisitor($this->classFinder);
 
-		$traverser->traverse($ast);
+		$this->traverser->traverse($ast);
 
-		foreach ($classFinder->getClasses() as $class)
+		foreach ($this->classFinder->getClasses() as $class)
 			{
 			try
 				{
@@ -102,6 +125,28 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		}
 
 	/**
+	 * Skip namespace testing
+	 */
+	public function skipNamespaceTesting() : self
+		{
+		$this->skipNamespaceTest = true;
+
+		return $this;
+		}
+
+	/**
+	 * Exclude namespace from namespace testing
+	 *
+	 * You can add multiple namespaces to skip.
+	 */
+	public function addSkipNamespace(string $namespace) : self
+		{
+		$this->skipNamespaces[] = $namespace;
+
+		return $this;
+		}
+
+	/**
 	 * Validate all files in a directory.  Recursive and only looks at .php files by default.
 	 */
 	public function assertValidPHPDirectory(string $directory, string $message = '', bool $recurseSubdirectories = true, array $extensions = ['.php']) : void
@@ -116,7 +161,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 			{
 			$iterator = new \DirectoryIterator($directory);
 			}
-		$exts = array_flip($extensions);
+		$exts = \array_flip($extensions);
 
 		foreach ($iterator as $item)
 			{
@@ -125,7 +170,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 			if ('file' == $type)
 				{
 				$file = $item->getPathname();
-				$ext = strrchr($file, '.');
+				$ext = \strrchr($file, '.');
 
 				if ($ext && isset($exts[$ext]))
 					{
@@ -133,7 +178,7 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 					foreach ($this->skipDirectories as $directory)
 						{
-						if (false !== stripos($file, $directory))
+						if (false !== \stripos($file, $directory))
 							{
 							$skip = true;
 
@@ -143,7 +188,9 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 
 					if (! $skip)
 						{
+						$this->setup();
 						$this->assertValidPHPFile($file, $message . "\nFile: " . $file);
+						$this->tearDown();
 						}
 					}
 				}
@@ -157,8 +204,19 @@ class Extensions extends \PHPUnit\Framework\TestCase implements \PHPUnit\Runner\
 		{
 		$this->assertFileExists($fileName, $message);
 
-		$code = file_get_contents($fileName);
+		$code = \file_get_contents($fileName);
 
 		$this->assertValidPHP($code, $message);
+
+		if (! $this->skipNamespaceTest)
+			{
+			$namespace = $this->classFinder->getNamespace();
+			if (! \in_array($namespace, $this->skipNamespaces))
+				{
+				// assert namespace is correct
+				$fileName = \str_replace('/', '\\', $fileName);
+				$this->assertStringContainsString($namespace . '\\', $fileName, "Namespace {$namespace} not found in file path {$fileName}");
+				}
+			}
 		}
 	}

@@ -15,9 +15,9 @@ class CheckBoxMenu extends \PHPFUI\Menu
 
 	private $className;
 
-	private ?\PHPFUI\MenuItem $allMenuItem = null;
+	private $allMenuItem = null;
 
-	private ?\PHPFUI\MenuItem $submitMenuItem = null;
+	private $submitMenuItem = null;
 
 	/**
 	 * @param string $name is the name of the fields that will be posted as an array
@@ -52,7 +52,6 @@ class CheckBoxMenu extends \PHPFUI\Menu
 	/**
 	 * Add a submit button in the menu style.  It is appended to the previously added checkboxes.
 	 *
-	 * @param string $value name displayed to user and value posted
 	 * @param string $name of the posted field
 	 */
 	public function addSubmit(\PHPFUI\Form $form, string $name = 'Submit') : \PHPFUI\MenuItem
@@ -77,7 +76,7 @@ class CheckBoxMenu extends \PHPFUI\Menu
 	 */
 	public function addCheckBox(string $name, bool $active, string $value, ?int $index = null) : \PHPFUI\MenuItem
 		{
-		if ($index == -1)
+		if (-1 == $index)
 			{
 			$hidden = new \PHPFUI\Input('checkbox', '', $value);
 			}
