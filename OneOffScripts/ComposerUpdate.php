@@ -211,12 +211,12 @@ $updater->setIgnoredRepos([
 	'twig',
 ]);
 
-$updater->setBaseDirectory(PROJECT_ROOT);
+$updater->setBaseDirectory(PROJECT_ROOT . '/');
 $updater->update();
-$updater->deleteNamespace('\Symfony\Polyfill');
-$updater->deleteNamespace('\HighlightUtilities');
-$updater->deleteNamespace('\Highlight\Highlight');
-$updater->deleteNamespace('\Highlight\HighlightUtilities');
-$updater->deleteFileInNamespace('\GuzzleHttp', 'functions.php');
-$updater->deleteFileInNamespace('\GuzzleHttp', 'functions_include.php');
+$updater->deleteNamespace('Symfony\Polyfill');
+$updater->deleteNamespace('HighlightUtilities');
+$updater->deleteNamespace('Highlight\Highlight');
+$updater->deleteNamespace('Highlight\HighlightUtilities');
+$updater->deleteFileInNamespace('GuzzleHttp', 'functions.php');
+$updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
 
