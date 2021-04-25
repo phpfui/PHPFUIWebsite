@@ -65,6 +65,29 @@ class ComposerUpdate
 			}
 		}
 
+	public function deleteFileInNamespace(string $nameSpace, string $file) : void
+		{
+		$path = str_replace('\\', '/', $this->baseDir . $nameSpace);
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($iterator as $path)
+			{
+			if ($path->isFile() && $path->getFilename() == $file)
+				{
+				unlink($path->getPathname());
+				}
+			}
+		}
+
+	public function deleteNamespace(string $nameSpace) : void
+		{
+		$path = str_replace('\\', '/', $this->baseDir . $nameSpace);
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($iterator as $path)
+			{
+			$path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
+			}
+		}
+
 	public function copyPath(string $name, array $sources, string $destDir) : void
 		{
 		foreach ($sources as $sourceDir)
@@ -188,4 +211,12 @@ $updater->setIgnoredRepos([
 	'twig',
 ]);
 
+$updater->setBaseDirectory(PROJECT_ROOT);
 $updater->update();
+$updater->deleteNamespace('\Symfony\Polyfill');
+$updater->deleteNamespace('\HighlightUtilities');
+$updater->deleteNamespace('\Highlight\Highlight');
+$updater->deleteNamespace('\Highlight\HighlightUtilities');
+$updater->deleteFileInNamespace('\GuzzleHttp', 'functions.php');
+$updater->deleteFileInNamespace('\GuzzleHttp', 'functions_include.php');
+

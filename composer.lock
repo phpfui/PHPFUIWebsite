@@ -1399,16 +1399,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.39",
+            "version": "V1.0.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "a62e38ee8b1c1518d1f51186924f2093123ac4a7"
+                "reference": "40839310722c1c40df9dcd005d72a5e7768ad59b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/a62e38ee8b1c1518d1f51186924f2093123ac4a7",
-                "reference": "a62e38ee8b1c1518d1f51186924f2093123ac4a7",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/40839310722c1c40df9dcd005d72a5e7768ad59b",
+                "reference": "40839310722c1c40df9dcd005d72a5e7768ad59b",
                 "shasum": ""
             },
             "require": {
@@ -1424,7 +1424,8 @@
                 "phpfui/html-unit-tester": ">=1.0",
                 "phpfui/phpunit-syntax-coverage": ">=1.0",
                 "phpunit/phpunit": ">=9.0",
-                "roave/security-advisories": "dev-latest"
+                "roave/security-advisories": "dev-latest",
+                "vimeo/psalm": "^4.7"
             },
             "type": "library",
             "autoload": {
@@ -1454,9 +1455,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.39"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.41"
             },
-            "time": "2021-04-10T02:26:09+00:00"
+            "time": "2021-04-24T03:34:51+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -1512,16 +1513,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.59",
+            "version": "V6.0.60",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "bfb34efcd215f2ec2cca43c1a3f3c31aebf0c5b4"
+                "reference": "f7fbbfdaff80deeba4a12e1a9d52d2becbdb5a06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/bfb34efcd215f2ec2cca43c1a3f3c31aebf0c5b4",
-                "reference": "bfb34efcd215f2ec2cca43c1a3f3c31aebf0c5b4",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/f7fbbfdaff80deeba4a12e1a9d52d2becbdb5a06",
+                "reference": "f7fbbfdaff80deeba4a12e1a9d52d2becbdb5a06",
                 "shasum": ""
             },
             "require": {
@@ -1532,10 +1533,12 @@
                 "zurb/foundation": "^6.6"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.18",
                 "phpfui/html-unit-tester": "^1.0",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
                 "phpunit/phpunit": ">=9.0",
-                "roave/security-advisories": "dev-latest"
+                "roave/security-advisories": "dev-latest",
+                "vimeo/psalm": "^4.7"
             },
             "type": "library",
             "autoload": {
@@ -1569,9 +1572,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.0.59"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.0.60"
             },
-            "time": "2021-03-24T21:03:11+00:00"
+            "time": "2021-04-25T02:01:12+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
