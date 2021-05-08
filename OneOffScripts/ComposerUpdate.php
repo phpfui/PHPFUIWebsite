@@ -38,8 +38,9 @@ class ComposerUpdate
 			\mkdir($dest, 0755, true);
 			}
 		$iterator = new \RecursiveIteratorIterator(
-				new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-				\RecursiveIteratorIterator::SELF_FIRST);
+			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST
+		);
 
 		foreach ($iterator as $item)
 			{
@@ -67,24 +68,26 @@ class ComposerUpdate
 
 	public function deleteFileInNamespace(string $nameSpace, string $file) : void
 		{
-		$path = str_replace('\\', '/', $this->baseDir . $nameSpace);
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-    foreach($iterator as $path)
+		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+
+	foreach($iterator as $path)
 			{
 			if ($path->isFile() && $path->getFilename() == $file)
 				{
-				unlink($path->getPathname());
+				\unlink($path->getPathname());
 				}
 			}
 		}
 
 	public function deleteNamespace(string $nameSpace) : void
 		{
-		$path = str_replace('\\', '/', $this->baseDir . $nameSpace);
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-    foreach($iterator as $path)
+		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+
+	foreach($iterator as $path)
 			{
-			$path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
+			$path->isFile() ? \unlink($path->getPathname()) : \rmdir($path->getPathname());
 			}
 		}
 
@@ -175,8 +178,6 @@ class ComposerUpdate
 				else
 					{
 					echo "No autoload for {$install['name']}\n";
-
-					continue;
 					}
 				}
 			else

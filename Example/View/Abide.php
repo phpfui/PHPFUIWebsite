@@ -32,6 +32,16 @@ class Abide
 		$zip = new \PHPFUI\Input\Zip($this->page, 'zip', 'Zip Code', $this->parameters['zip'] ?? '');
 		$zip->setRequired();
 		$requiredFields->add(new \PHPFUI\MultiColumn($phone, $zip));
+
+		$password = new \PHPFUI\Input\PasswordEye('password', 'Password', $this->parameters['password'] ?? '');
+		$password->setRequired();
+		$password->setToolTip('Enter your password');
+		$passwordConfirm = new \PHPFUI\Input\Password('passwordConfirm', 'Confirm Your Password', $this->parameters['passwordConfirm'] ?? '');
+		$passwordConfirm->setRequired();
+		$passwordConfirm->setToolTip('Enter your password from above again to confirm it is correct.');
+		$passwordConfirm->addAttribute('data-equalto', $password->getId());
+		$requiredFields->add(new \PHPFUI\MultiColumn($password, $passwordConfirm));
+
 		$container->add($requiredFields);
 
 		$optionalFields = new \PHPFUI\FieldSet('Suggested Fields');
