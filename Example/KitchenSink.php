@@ -69,7 +69,8 @@ class KitchenSink extends \Example\Page
 			else
 				{
 				$php = file_get_contents($file);
-				$php = str_replace("<?php\n", '', $php);
+				$php = str_replace("<?php", '', $php);
+				$php = trim($php, "\n\r\l\t");
 
 				$title = substr($title, 0, strlen($title) - 4);
 				$title = str_replace('_', ' ', $title);

@@ -168,7 +168,7 @@ class Menu extends \PHPFUI\HTML5Element
 					}
 				else
 					{
-					$menuItem = new MenuItem($this->menuLabels[$label], '#');
+					$menuItem = new MenuItem($this->menuLabels[$label] ?? $label, '#');
 					$somethingActive |= (int)$item->getActive();
 					$menuItem->setActive($item->getActive());
 					$menuItem->add($item);
