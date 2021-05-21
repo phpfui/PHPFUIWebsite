@@ -79,6 +79,7 @@ class KitchenSink extends \Example\Page
 			}
 		if (count($menu))
 			{
+			$menu->sort();
 			$this->sections->add($menu);
 			}
 		else
