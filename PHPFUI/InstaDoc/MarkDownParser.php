@@ -18,11 +18,14 @@ class MarkDownParser
 		{
 		$markdown = @\file_get_contents($filename);
 
-		return $this->parser->parse($markdown);
+		return $this->text($markdown);
 		}
 
 	public function text(string $markdown) : string
 		{
-		return $this->parser->parse($markdown);
+		$div = new \PHPFUI\HTML5Element('div');
+		$div->addClass('markdown-body');
+		$div->add($this->parser->parse($markdown));
+		return $div;
 		}
 	}

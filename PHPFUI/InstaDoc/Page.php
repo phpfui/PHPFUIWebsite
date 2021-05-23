@@ -20,6 +20,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$this->controller = $controller;
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
+		$this->addStyleSheet('css/markdown.css');
 		}
 
 	public function addBody($item) : PageInterface
