@@ -105,13 +105,13 @@ $executor->addOperator(new Operator(
 ## Logical operators:
 Logical operators (==, !=, <, <, >=, <=, &&, ||) are supported, but logically they can only return true (1) or false (0).  In order to leverage them, use the built in **if** function:
 
-```
+```php
 if($a > $b, $a - $b, $b - $a)
 ```
 
 You can think of the **if** function as prototyped like:
 
-```
+```php
 function if($condition, $returnIfTrue, $returnIfFalse)
 ```
 ## Variables:
@@ -119,7 +119,7 @@ Variables can be prefixed with the dollar sign ($) for PHP compatibility, but is
 
 Default variables:
 
-```
+```php
 $pi = 3.14159265359
 $e  = 2.71828182846
 ```

@@ -5641,17 +5641,14 @@ a.thumbnail image {
   margin-bottom: 0.25rem;
   text-align: center;
 }
-
 .menu .is-active > a {
   background: #3dc2f7;
   color: #000000;
 }
-
-.ks-toc .is-active {
+.menu .active > a {
   background: #3dc2f7;
   color: #000000;
 }
-
 .menu.align-left {
   justify-content: flex-start;
 }
