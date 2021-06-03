@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ae3d83ed43829c336a3c8c6fd43685c",
+    "content-hash": "5b918dd9f1580d44554262af354a3046",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -2372,22 +2372,22 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.18.1.6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "44a3d4136edb5ad8551590bf90f437db80b2d466"
+                "reference": "c66fe5cb6a70d14da39948ae57320eb08186891b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/44a3d4136edb5ad8551590bf90f437db80b2d466",
-                "reference": "44a3d4136edb5ad8551590bf90f437db80b2d466",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/c66fe5cb6a70d14da39948ae57320eb08186891b",
+                "reference": "c66fe5cb6a70d14da39948ae57320eb08186891b",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=5.4"
+                "php": ">=5.6"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8|^5.7",
@@ -2395,15 +2395,18 @@
                 "symfony/finder": "^2.8|^3.4",
                 "symfony/var-dumper": "^2.8|^3.4"
             },
+            "default-branch": true,
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "10.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Highlight\\": "",
-                    "HighlightUtilities\\": ""
-                },
-                "files": [
-                    "HighlightUtilities/functions.php"
-                ]
+                "psr-4": {
+                    "Highlight\\": "src/Highlight",
+                    "HighlightUtilities\\": "src/HighlightUtilities"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2444,7 +2447,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-22T19:20:29+00:00"
+            "time": "2021-03-24T07:58:52+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -3871,7 +3874,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "scrivo/highlight.php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
