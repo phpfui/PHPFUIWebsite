@@ -11,15 +11,13 @@ namespace PHPFUI\InstaDoc\Tests;
  */
 class Test80B extends Test80A
 	{
-
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	protected function protected_function_no_return(?string $fred, $unknown = 3.14) : void {}
 
 	/**
-	 * {@inheritdoc}
+	 * {@inheritDoc}
 	 */
 	private function private_function_no_return(string | Test80 | null $fred = 'Eythel') : void {}
-
 	}

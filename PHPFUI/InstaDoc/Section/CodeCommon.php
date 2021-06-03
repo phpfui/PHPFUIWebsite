@@ -216,7 +216,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
 		{
 		$comments = $method->getDocComment();
-		$comments = str_replace('{@inheritdoc}', '@inheritdoc', $comments);
+		$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if (! $comments)
 			{
@@ -273,6 +273,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						}
 					$parent = $parent->getParentClass();
 					}
+
 				break;
 				}
 			}
@@ -306,6 +307,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						}
 					$parent = $parent->getParentClass();
 					}
+
 				break;
 				}
 			}
