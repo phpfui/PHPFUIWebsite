@@ -101,7 +101,7 @@ class Page extends \PHPFUI\Page
 			{
 			$this->setDebug(1);
 
-			if (! empty($_POST['submit']) && \PHPFUI\Session::checkCSRF())
+			if (! empty($_POST['csrf']) && \PHPFUI\Session::checkCSRF())
 				{
 				$vars = [];
 

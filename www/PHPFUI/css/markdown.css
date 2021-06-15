@@ -107,7 +107,7 @@ hr {
 .markdown-body pre {
   font-family: monospace;
   font-size: 1em;
-	border-left: 2px solid Black;
+	border-left: 2px solid Orange;
 }
 
 .markdown-body hr {
@@ -728,10 +728,6 @@ hr {
   margin-bottom: 0;
 }
 
-.markdown-body li {
-  word-wrap: break-all;
-}
-
 .markdown-body li>p {
   margin-top: 16px;
 }
@@ -843,7 +839,6 @@ pre.hljs.php,
 
 .markdown-body pre code {
   display: inline;
-  max-width: auto;
   padding: 0;
   margin: 0;
   overflow: visible;

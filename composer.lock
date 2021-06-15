@@ -1399,16 +1399,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.43",
+            "version": "V1.0.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "78597e21e952defd79e9f639951f845d15621243"
+                "reference": "323f2250666e07a56fd2761b4d041f19a3d91774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/78597e21e952defd79e9f639951f845d15621243",
-                "reference": "78597e21e952defd79e9f639951f845d15621243",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/323f2250666e07a56fd2761b4d041f19a3d91774",
+                "reference": "323f2250666e07a56fd2761b4d041f19a3d91774",
                 "shasum": ""
             },
             "require": {
@@ -1456,9 +1456,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.43"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.44"
             },
-            "time": "2021-06-02T03:24:41+00:00"
+            "time": "2021-06-15T02:31:43+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -1514,16 +1514,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.66",
+            "version": "V6.0.68",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "b444afeddbf6b75b72275f7eb17e97e32b24cde5"
+                "reference": "90a6b257a9af25b42a12de57fd678a52914ad29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/b444afeddbf6b75b72275f7eb17e97e32b24cde5",
-                "reference": "b444afeddbf6b75b72275f7eb17e97e32b24cde5",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/90a6b257a9af25b42a12de57fd678a52914ad29e",
+                "reference": "90a6b257a9af25b42a12de57fd678a52914ad29e",
                 "shasum": ""
             },
             "require": {
@@ -1543,8 +1543,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "PHPFUI\\": "src/"
+                "psr-4": {
+                    "PHPFUI\\": "src/PHPFUI/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1573,9 +1573,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.0.66"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.0.68"
             },
-            "time": "2021-06-02T23:56:41+00:00"
+            "time": "2021-06-16T02:53:15+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
@@ -2023,16 +2023,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.4",
+            "version": "9.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741"
+                "reference": "89ff45ea9d70e35522fb6654a2ebc221158de276"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c73c6737305e779771147af66c96ca6a7ed8a741",
-                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/89ff45ea9d70e35522fb6654a2ebc221158de276",
+                "reference": "89ff45ea9d70e35522fb6654a2ebc221158de276",
                 "shasum": ""
             },
             "require": {
@@ -2062,7 +2062,7 @@
                 "sebastian/global-state": "^5.0.1",
                 "sebastian/object-enumerator": "^4.0.3",
                 "sebastian/resource-operations": "^3.0.3",
-                "sebastian/type": "^2.3",
+                "sebastian/type": "^2.3.2",
                 "sebastian/version": "^3.0.2"
             },
             "require-dev": {
@@ -2110,7 +2110,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.5"
             },
             "funding": [
                 {
@@ -2122,7 +2122,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-23T07:16:29+00:00"
+            "time": "2021-06-05T04:49:07+00:00"
         },
         {
             "name": "psr/http-client",
@@ -2955,16 +2955,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "5.0.2",
+            "version": "5.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455"
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/a90ccbddffa067b51f574dea6eb25d5680839455",
-                "reference": "a90ccbddffa067b51f574dea6eb25d5680839455",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23bd5951f7ff26f12d4e3242864df3e08dec4e49",
+                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49",
                 "shasum": ""
             },
             "require": {
@@ -3007,7 +3007,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.2"
+                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.3"
             },
             "funding": [
                 {
@@ -3015,7 +3015,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:55:19+00:00"
+            "time": "2021-06-11T13:31:12+00:00"
         },
         {
             "name": "sebastian/lines-of-code",
@@ -3306,16 +3306,16 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.3.1",
+            "version": "2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "81cd61ab7bbf2de744aba0ea61fae32f721df3d2"
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/81cd61ab7bbf2de744aba0ea61fae32f721df3d2",
-                "reference": "81cd61ab7bbf2de744aba0ea61fae32f721df3d2",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
                 "shasum": ""
             },
             "require": {
@@ -3350,7 +3350,7 @@
             "homepage": "https://github.com/sebastianbergmann/type",
             "support": {
                 "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/2.3.1"
+                "source": "https://github.com/sebastianbergmann/type/tree/2.3.4"
             },
             "funding": [
                 {
@@ -3358,7 +3358,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T13:18:59+00:00"
+            "time": "2021-06-15T12:49:02+00:00"
         },
         {
             "name": "sebastian/version",

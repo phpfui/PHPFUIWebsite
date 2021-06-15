@@ -9,7 +9,7 @@
  * the LICENSE.md file that was distributed with this source
  * code
  */
-class HTMLTest extends \PHPFUI\HTMLUnitTester\Extensions
+class HtmlTest extends \PHPFUI\HTMLUnitTester\Extensions
   {
 
 	public function testExampleDirectory()
@@ -27,7 +27,13 @@ class HTMLTest extends \PHPFUI\HTMLUnitTester\Extensions
 			$_SERVER['SERVER_NAME'] = 'localhost';
 
 			$object = new $class([]);
-			$this->assertValidHtml("{$object}");
+			$this->assertValidHtml("{$object}", 'Error in file ' . $file);
 			}
     }
+
+	public function testCSSDirectory()
+		{
+		$this->assertDirectory('ValidCSS', PROJECT_ROOT . '/www');
+		$this->assertDirectory('NotWarningCSS', PROJECT_ROOT . '/www');
+		}
   }
