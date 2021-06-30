@@ -3,7 +3,7 @@ A super fast, highly extensible markdown parser for PHP
 
 [![Latest Stable Version](https://poser.pugx.org/cebe/markdown/v/stable.png)](https://packagist.org/packages/cebe/markdown)
 [![Total Downloads](https://poser.pugx.org/cebe/markdown/downloads.png)](https://packagist.org/packages/cebe/markdown)
-[![Build Status](https://travis-ci.com/cebe/markdown.svg?branch=master)](http://travis-ci.com/cebe/markdown)
+[![Build Status](https://travis-ci.org/cebe/markdown.svg?branch=master)](http://travis-ci.org/cebe/markdown)
 [![Code Coverage](https://scrutinizer-ci.com/g/cebe/markdown/badges/coverage.png?s=db6af342d55bea649307ef311fbd536abb9bab76)](https://scrutinizer-ci.com/g/cebe/markdown/)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/cebe/markdown/badges/quality-score.png?s=17448ca4d140429fd687c58ff747baeb6568d528)](https://scrutinizer-ci.com/g/cebe/markdown/)
 
@@ -53,7 +53,7 @@ Installation <a name="installation"></a>
 It will also run on facebook's [hhvm](http://hhvm.com/).
 
 The library uses PHPDoc annotations to determine the markdown elements that should be parsed.
-So in case you are using PHP `opcache`, make sure
+So in case you are using PHP `opcache`, make sure 
 [it does not strip comments](http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments).
 
 Installation is recommended to be done via [composer][] by running:
@@ -118,7 +118,7 @@ For all Markdown Flavors:
 
 For GithubMarkdown:
 
-- `$parser->enableNewlines = true` to convert all newlines to `<br/>`-tags. By default only newlines with two preceding spaces are converted to `<br/>`-tags.
+- `$parser->enableNewlines = true` to convert all newlines to `<br/>`-tags. By default only newlines with two preceding spaces are converted to `<br/>`-tags. 
 
 It is recommended to use UTF-8 encoding for the input strings. Other encodings may work, but are currently untested.
 
@@ -140,15 +140,15 @@ Here is the full Help output you will see when running `bin/markdown --help`:
 
     PHP Markdown to HTML converter
     ------------------------------
-
+    
     by Carsten Brandt <mail@cebe.cc>
-
+    
     Usage:
         bin/markdown [--flavor=<flavor>] [--full] [file.md]
-
+    
         --flavor  specifies the markdown flavor to use. If omitted the original markdown by John Gruber [1] will be used.
                   Available flavors:
-
+    
                   gfm   - Github flavored markdown [2]
                   extra - Markdown Extra [3]
 
@@ -172,7 +172,7 @@ Here is the full Help output you will see when running `bin/markdown --help`:
 
             curl http://daringfireball.net/projects/markdown/syntax.text | bin/markdown > md.html
 
-
+    
     [1] http://daringfireball.net/projects/markdown/syntax
     [2] https://help.github.com/articles/github-flavored-markdown
     [3] http://michelf.ca/projects/php-markdown/extra/
