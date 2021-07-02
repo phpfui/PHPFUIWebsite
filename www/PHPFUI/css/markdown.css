@@ -4,7 +4,7 @@ hr {
 
 .markdown-body .octicon {
   display: inline-block;
-  fill: currentColor;
+  fill: color;
   vertical-align: text-bottom;
 }
 
