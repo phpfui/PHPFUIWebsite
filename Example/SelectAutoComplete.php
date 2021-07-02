@@ -18,7 +18,7 @@ class SelectAutoComplete extends Page
 		$select = new \Example\View\State($this, 'state', 'Pick a USA State');
 		$select->setToolTip('Start typing to find a state by name or abbreviation');
 		$form->add($select);
-		$form->add(new \PHPFUI\Submit('Save'));
+		$form->add(new \PHPFUI\Submit('Save', 'save'));
 		$this->setDebug(1);
 
 		$this->addBody($form);

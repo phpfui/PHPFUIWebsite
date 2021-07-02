@@ -35,7 +35,7 @@ class Pagination
 
 		$fieldSet->add($mc);
 		$form->add($fieldSet);
-		$form->add(new \PHPFUI\Submit('Change'));
+		$form->add(new \PHPFUI\Submit('Change', 'save'));
 		$form->setAttribute('method', 'GET');
 
 		return $form;

@@ -24,7 +24,7 @@ class Abide extends \Example\Page
 		$abide = new \Example\View\Abide($this, $parameters);
 		$form->add($abide->render());
 		$buttonGroup = new \PHPFUI\ButtonGroup();
-		$buttonGroup->addButton(new \PHPFUI\Submit('Save'));
+		$buttonGroup->addButton(new \PHPFUI\Submit('Save', 'save'));
 		$reveal = new \PHPFUI\Button('Reveal');
 		$reveal->addClass('success');
 		$this->getReveal($reveal);
@@ -47,7 +47,7 @@ class Abide extends \Example\Page
 		$fieldSet->add($monthYear);
 		$form->add($fieldSet);
 		$buttonGroup = new \PHPFUI\ButtonGroup();
-		$submit = new \PHPFUI\Submit('Save');
+		$submit = new \PHPFUI\Submit('Save', 'save');
 		$buttonGroup->addButton($submit);
 		$buttonGroup->addButton((new \PHPFUI\Reset('Clear'))->addClass('warning'));
 		$buttonGroup->addButton($modal->getCloseButton());

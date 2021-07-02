@@ -20,9 +20,9 @@ class AutoComplete extends Page
 		$control = new \PHPFUI\Input\AutoComplete($this, [$this, 'callback', ], 'text', 'country', 'Pick a country, any country');
 		$control->setToolTip('Start typing to find a country');
 		$form->add($control);
-		$form->add(new \PHPFUI\Submit('Save'));
+		$form->add(new \PHPFUI\Submit('Save', 'save'));
 
-		$this->addBody($form);
+		$this->addBody("{$form}");
 		}
 
 	public function callback(array $parameters) : array

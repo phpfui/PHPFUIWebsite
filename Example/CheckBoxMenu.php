@@ -22,6 +22,8 @@ class CheckBoxMenu extends \Example\Page
 		$form->add(new \PHPFUI\Header('Vertical', 4));
 		$vertical = $this->getCheckBoxMenu($form, 'options', ['Leather Seats', 'Sunroof', 'Trim', 'Alloy Wheels', 'AWD'], $posted['options'] ?? []);
 		$vertical->addClass('vertical');
+		// Example page needs a save field to show post information
+		$form->add(new \PHPFUI\Input\Hidden('save', 'save'));
 		$form->add($vertical);
 
 		$this->addBody($form);

@@ -6,6 +6,8 @@ class Page extends \PHPFUI\Page
 	{
 	private \PHPFUI\Menu $footerMenu;
 	private \PHPFUI\Cell $mainColumn;
+	private \PHPFUI\OffCanvas $offCanvas;
+	private string $menuId;
 
 	public function __construct()
 		{
@@ -19,21 +21,7 @@ class Page extends \PHPFUI\Page
 <meta name="msapplication-TileColor" content="#ffc40d">
 <meta name="theme-color" content="#ffffff">');
 
-		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
-		$exampleLink = new \PHPFUI\Link('/Examples/index.php', 'Examples', false);
 		$this->addCSS("code{tab-size:2;-moz-tab-size:2;}");
-
-		$titleBar = new \PHPFUI\TitleBar($link . ' - ' . $exampleLink);
-		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
-		$hamburger->addClass('show-for-small-only');
-		$titleBar->addLeft($hamburger);
-		$titleBar->addLeft('&nbsp;');
-
-		$div = new \PHPFUI\HTML5Element('div');
-		$stickyTitleBar = new \PHPFUI\Sticky($div);
-		$stickyTitleBar->add($titleBar);
-		$stickyTitleBar->addAttribute('data-options', 'marginTop:0;');
-		$this->add($stickyTitleBar);
 
 		$body = new \PHPFUI\HTML5Element('div');
 		$body->addClass('body-info');
@@ -51,7 +39,7 @@ class Page extends \PHPFUI\Page
 		$menuColumn->addClass('show-for-medium');
 		$menu = $this->getMenu();
 		$menu->addClass('vertical');
-		$menuId = $menu->getId();
+		$this->menuId = $menu->getId();
 		$stickyMenu = new \PHPFUI\Sticky($menuColumn);
 		$stickyMenu->add($menu);
 		$menuColumn->add($stickyMenu);
@@ -82,15 +70,7 @@ class Page extends \PHPFUI\Page
 			}
 		$body->add($grid);
 
-		$offCanvas = new \PHPFUI\OffCanvas($body);
-		$div = new \PHPFUI\HTML5Element('div');
-		$offCanvasId = $div->getId();
-		// copy over the menu with JQuery at run time
-		$this->addJavaScriptFirst('$("#' . $menuId . '").clone().prependTo("#' . $offCanvasId . '");');
-		$offId = $offCanvas->addOff($div, $hamburger);
-		$offCanvas->setPosition($offId, 'left')->setTransition($offId, 'over');
-
-		$this->add($offCanvas);
+		$this->offCanvas = new \PHPFUI\OffCanvas($body);
 
 		$parts = parse_url($_SERVER['REQUEST_URI']);
 		$parts = explode('/', $parts['path']);
@@ -101,7 +81,7 @@ class Page extends \PHPFUI\Page
 			{
 			$this->setDebug(1);
 
-			if (! empty($_POST['csrf']) && \PHPFUI\Session::checkCSRF())
+			if (! empty($_POST['save']) && \PHPFUI\Session::checkCSRF())
 				{
 				$vars = [];
 
@@ -141,22 +121,13 @@ class Page extends \PHPFUI\Page
 				$callout->add($ul);
 				$this->addBody($callout);
 				}
-
 			}
 
-		$footer = new \PHPFUI\TopBar();
 		$this->footerMenu = new \PHPFUI\Menu();
 		$this->footerMenu->addClass('simple');
 		$this->footerMenu->addMenuItem(new \PHPFUI\MenuItem('Powered By'));
 		$this->footerMenu->addMenuItem(new \PHPFUI\MenuItem('PHPFUI', 'http://phpfui.com/?n=PHPFUI'));
 		$this->footerMenu->addMenuItem(new \PHPFUI\MenuItem('github', 'https://github.com/phpfui/phpfui'));
-
-		$footer->addLeft($this->footerMenu);
-
-		$year = date('Y');
-		$footer->addRight("&copy; {$year} Bruce Wells");
-
-		$this->add($footer);
 		}
 
 	protected function getMagellanMenu() : \PHPFUI\Menu | null
@@ -164,7 +135,7 @@ class Page extends \PHPFUI\Page
 		return null;
 		}
 
-	public function addBody(string $item) : self
+	public function addBody($item) : self
 		{
 		$this->mainColumn->add($item);
 
@@ -205,6 +176,39 @@ class Page extends \PHPFUI\Page
 		$exampleMenu->sort();
 
 		return $exampleMenu;
+		}
+
+	protected function getStart() : string
+		{
+		$div = new \PHPFUI\HTML5Element('div');
+		$stickyTitleBar = new \PHPFUI\Sticky($div);
+		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
+		$exampleLink = new \PHPFUI\Link('/Examples/index.php', 'Examples', false);
+		$titleBar = new \PHPFUI\TitleBar($link . ' - ' . $exampleLink);
+		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
+		$hamburger->addClass('show-for-small-only');
+		$titleBar->addLeft($hamburger);
+		$titleBar->addLeft('&nbsp;');
+		$stickyTitleBar->add($titleBar);
+		$stickyTitleBar->addAttribute('data-options', 'marginTop:0;');
+		$this->add("{$stickyTitleBar}");
+
+		$offCanvasDiv = new \PHPFUI\HTML5Element('div');
+		$offCanvasId = $offCanvasDiv->getId();
+		// copy over the menu with JQuery at run time
+		$this->addJavaScriptFirst('$("#' . $this->menuId . '").clone().prependTo("#' . $offCanvasId . '");');
+		$offId = $this->offCanvas->addOff($offCanvasDiv, $hamburger);
+		$this->offCanvas->setPosition($offId, 'left')->setTransition($offId, 'over');
+
+		$this->add("{$this->offCanvas}");
+
+		$footer = new \PHPFUI\TopBar();
+		$footer->addLeft($this->footerMenu);
+		$year = date('Y');
+		$footer->addRight("&copy; {$year} Bruce Wells");
+		$this->add("{$footer}");
+
+		return parent::getStart();
 		}
 
 	}

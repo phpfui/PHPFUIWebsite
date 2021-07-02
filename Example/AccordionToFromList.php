@@ -34,7 +34,7 @@ class AccordionToFromList extends \Example\Page
 		$form = new \PHPFUI\Form($this);
 		$form->setAreYouSure(false);
 		$form->add($toFromList);
-		$form->add(new \PHPFUI\Submit('Save'));
+		$form->add(new \PHPFUI\Submit('Save', 'save'));
 
 		$this->addBody($form);
 		}
