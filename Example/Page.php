@@ -164,7 +164,7 @@ class Page extends \PHPFUI\Page
 		return null;
 		}
 
-	public function addBody($item) : self
+	public function addBody(string $item) : self
 		{
 		$this->mainColumn->add($item);
 
