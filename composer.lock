@@ -2377,12 +2377,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "c66fe5cb6a70d14da39948ae57320eb08186891b"
+                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/c66fe5cb6a70d14da39948ae57320eb08186891b",
-                "reference": "c66fe5cb6a70d14da39948ae57320eb08186891b",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
+                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
                 "shasum": ""
             },
             "require": {
@@ -2391,10 +2391,11 @@
                 "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8|^5.7",
+                "phpbench/phpbench": "^1.0",
+                "phpunit/phpunit": "^5.7",
                 "sabberworm/php-css-parser": "^8.3",
-                "symfony/finder": "^2.8|^3.4",
-                "symfony/var-dumper": "^2.8|^3.4"
+                "symfony/finder": "^4.4",
+                "symfony/var-dumper": "^4.4"
             },
             "default-branch": true,
             "type": "library",
@@ -2448,7 +2449,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-03-24T07:58:52+00:00"
+            "time": "2021-07-09T20:26:27+00:00"
         },
         {
             "name": "sebastian/cli-parser",
