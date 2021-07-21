@@ -56,7 +56,6 @@ class NamespaceTree
 			$file = \str_replace('/', '\\', \str_replace('.php', '', $filename));
 			$parts = \explode('\\', $file);
 			$class = \array_pop($parts);
-			$root->namespace = '\\';
 			$root->classes[$class] = $filename;
 			$root->localGit = $localGit;
 			}
@@ -265,9 +264,9 @@ class NamespaceTree
 		self::sort(self::getRoot());
 
 		// add no namespace stuff first
-		if (self::$root->namespace)
+		if (self::$root->classes)
 			{
-			$namespace = self::$root->namespace;
+			$namespace = '\\';
 			$rootMenu = new \PHPFUI\Menu();
 			foreach (self::$root->classes as $class => $path)
 				{
