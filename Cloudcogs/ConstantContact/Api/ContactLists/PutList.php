@@ -34,7 +34,7 @@ class PutList extends AbstractAPI
     }
 
     /**
-     * @inheritDoc
+	 * @inheritDoc
 	 *
 	 * @see \Cloudcogs\ConstantContact\Api\AbstractAPI::handleResponse()
      */

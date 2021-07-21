@@ -39,6 +39,7 @@ else
 		{
 		$fileManager->addNamespace($library, '../' . $library, true);
 		}
+	$fileManager->addGlobalNameSpaceClass(__DIR__ . '/../NoNameSpace/FPDF.php', true);
 	}
 
 $fileManager->load();

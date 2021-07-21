@@ -21,7 +21,7 @@ function autoload($className)
 	if ($path)
 		{
 		/** @noinspection PhpIncludeInspection */
-		include $path;
+		include_once $path;
 		}
 	}
 
