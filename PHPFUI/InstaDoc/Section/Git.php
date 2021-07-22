@@ -21,7 +21,7 @@ class Git extends \PHPFUI\InstaDoc\Section
 		try
 			{
 			$repo = new \Gitonomy\Git\Repository($this->controller->getGitRoot());
-			$branch = \trim($repo->run('branch', ['--show-current']));
+			$branch = \trim($repo->run('rev-parse', ['--abbrev-ref', 'HEAD']));
 			}
 		catch (\Exception $e)
 			{
