@@ -16,7 +16,6 @@ else
 	$libraries = [
 		'DeepCopy',
 		'cebe',
-		'Cloudcogs',
 		'Example',
 		'Gitonomy',
 		'GuzzleHttp',

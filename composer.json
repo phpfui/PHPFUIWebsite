@@ -11,6 +11,7 @@
 		"phpfui/html-unit-tester": "^1.0",
 		"scrivo/highlight.php": "dev-master",
 		"phpfui/mysql-slow-log-parser": "^1.0",
-		"setasign/fpdf": "^1.8"
+		"setasign/fpdf": "^1.8",
+		"guzzlehttp/guzzle": "^7.3"
 		}
 }

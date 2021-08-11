@@ -3,7 +3,7 @@ A super fast, highly extensible markdown parser for PHP
 
 [![Latest Stable Version](https://poser.pugx.org/cebe/markdown/v/stable.png)](https://packagist.org/packages/cebe/markdown)
 [![Total Downloads](https://poser.pugx.org/cebe/markdown/downloads.png)](https://packagist.org/packages/cebe/markdown)
-[![Build Status](https://travis-ci.org/cebe/markdown.svg?branch=master)](http://travis-ci.org/cebe/markdown)
+[![Build Status](https://travis-ci.com/cebe/markdown.svg?branch=master)](http://travis-ci.com/cebe/markdown)
 [![Code Coverage](https://scrutinizer-ci.com/g/cebe/markdown/badges/coverage.png?s=db6af342d55bea649307ef311fbd536abb9bab76)](https://scrutinizer-ci.com/g/cebe/markdown/)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/cebe/markdown/badges/quality-score.png?s=17448ca4d140429fd687c58ff747baeb6568d528)](https://scrutinizer-ci.com/g/cebe/markdown/)
 
