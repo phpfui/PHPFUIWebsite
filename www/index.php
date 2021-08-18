@@ -14,8 +14,9 @@ if ($useComposer)
 else
 	{
 	$libraries = [
-		'DeepCopy',
+		'Brick',
 		'cebe',
+		'DeepCopy',
 		'Example',
 		'Gitonomy',
 		'GuzzleHttp',
@@ -27,6 +28,7 @@ else
 		'PHPHtmlParser',
 		'PhpParser',
 		'Psr',
+		'Ramsey',
 		'Rize',
 		'Symfony',
 		'Symfony',

@@ -172,7 +172,9 @@ class ComposerUpdate
 					{
 					foreach ($autoload['classmap'] as $file)
 						{
-						\copy('vendor/' . $install['name'] . '/' . $file, 'NoNameSpace/' . $file);
+						$from = 'vendor/' . $install['name'] . '/' . $file;
+						$to = 'NoNameSpace/' . $file;
+						\copy($from, $to);
 						}
 					}
 				else
@@ -200,6 +202,8 @@ $updater->setIgnoredRepos([
 	'PackageVersions',
 	'phar-io',
 	'PHPStan',
+	'sebastian',
+	'phpunit',
 	'phpspec',
 	'ralouphie',
 	'Symplify',
@@ -214,6 +218,8 @@ $updater->update();
 $updater->deleteNamespace('Symfony\Polyfill');
 $updater->deleteNamespace('HighlightUtilities');
 $updater->deleteNamespace('cebe\markdown\tests');
+$updater->deleteFileInNamespace('NoNameSpace', 'fpdf.php');
+$updater->deleteFileInNamespace('DeepCopy', 'deep_copy.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
 
