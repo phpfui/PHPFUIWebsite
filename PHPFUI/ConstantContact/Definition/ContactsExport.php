@@ -17,7 +17,7 @@ class ContactsExport extends \PHPFUI\ConstantContact\Definition\Base
 		'list_ids' => 'array',
 		'segment_id' => 'int',
 		'fields' => 'array',
-		'status' => 'string',
+		'status' => ['active', 'unsubscribed', 'removed'],
 
 	];
 	}

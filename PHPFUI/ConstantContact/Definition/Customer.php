@@ -16,7 +16,7 @@ class Customer extends \PHPFUI\ConstantContact\Definition\Base
 	 * @var string $state_code The uppercase two letter <a href='https://en.wikipedia.org/wiki/ISO_3166-1' target='_blank'>ISO 3166-1 code</a> for the organization's state. This property is required if the <code>country_code</code> is US (United States).
 	 * @var string $time_zone_id The time zone that is automatically set based on the <code>state_code</code> setting; as defined in the IANA time-zone database (see http://www.iana.org/time-zones).
 	 * @var string $website The organization's website URL.
-	 * @var PHPFUI\ConstantContact\Definition\CompanyLogo::class $company_logo Used to include an existing company logo in the response body. If a company logo does not exist, nothing is returned in the response body. This property is optional.
+	 * @var PHPFUI\ConstantContact\Definition\CompanyLogo $company_logo Used to include an existing company logo in the response body. If a company logo does not exist, nothing is returned in the response body. This property is optional.
 	 */
 
 	protected static array $fields = [
@@ -31,8 +31,8 @@ class Customer extends \PHPFUI\ConstantContact\Definition\Base
 		'state_code' => 'string',
 		'time_zone_id' => 'string',
 		'website' => 'string',
-		'physical_address' => 'object',
-		'company_logo' => 'PHPFUI\ConstantContact\Definition\CompanyLogo::class',
+		'physical_address' => 'PHPFUI\\ConstantContact\\Definition\\PhysicalAddress',
+		'company_logo' => 'PHPFUI\\ConstantContact\\Definition\\CompanyLogo',
 
 	];
 

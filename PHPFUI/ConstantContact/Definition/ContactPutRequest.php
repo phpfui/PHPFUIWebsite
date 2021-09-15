@@ -22,7 +22,7 @@ class ContactPutRequest extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'email_address' => 'PHPFUI\ConstantContact\Definition\EmailAddressPut::class',
+		'email_address' => 'PHPFUI\\ConstantContact\\Definition\\EmailAddressPut',
 		'first_name' => 'string',
 		'last_name' => 'string',
 		'job_title' => 'string',
@@ -30,7 +30,7 @@ class ContactPutRequest extends \PHPFUI\ConstantContact\Definition\Base
 		'birthday_month' => 'int',
 		'birthday_day' => 'int',
 		'anniversary' => 'string',
-		'update_source' => 'string',
+		'update_source' => ['Account', 'Contact'],
 		'custom_fields' => 'array',
 		'phone_numbers' => 'array',
 		'street_addresses' => 'array',

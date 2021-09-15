@@ -30,7 +30,7 @@ class Idfed extends \PHPFUI\ConstantContact\Base
 			$validValues = ['code' , 'token'];
 			if (! in_array($response_type, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter response_type with value '{$response_type}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter response_type with value '{$response_type}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		return $this->doGet(['response_type' => $response_type, 'client_id' => $client_id, 'redirect_uri' => $redirect_uri, ]);

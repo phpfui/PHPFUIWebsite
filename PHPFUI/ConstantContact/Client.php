@@ -4,11 +4,11 @@ namespace PHPFUI\ConstantContact;
 
 class Client
   {
+	public string $accessToken = '';
+
+	public string $refreshToken = '';
+
   private string $oauth2URL = 'https://idfed.constantcontact.com/as/token.oauth2';
-
-  private string $accessToken = '';
-
-  private string $refreshToken = '';
 
   private string $lastError = '';
 
@@ -28,7 +28,7 @@ class Client
 	 * By default, all scopes are enabled.  You can remove any, or
 	 * set new ones.
 	 */
-  public function __construct(private string $clientAPIKey, private string $clientSecret, private string $redirectURI = 'localhost')
+  public function __construct(private string $clientAPIKey, private string $clientSecret, private string $redirectURI = 'https://localhost/')
 		{
 		// default to all scopes
 		$this->scopes = \array_flip($this->validScopes);
@@ -47,21 +47,11 @@ class Client
 		return $this;
 		}
 
-	/**
-	 * Try to authenticate against the server.
-	 *
-	 * @return true if successful, if not, query error codes
-	 */
-	public function connect() : bool
-		{
-		return false;
-		}
-
   public function addScope(string $scope) : self
 		{
 		if (! \in_array($scope, $this->validScopes))
 			{
-			throw new \Exception("Scope {$scope} is not valid, must be one of (" . \implode(',', $this->validScopes) . ')');
+			throw new \PHPFUI\ConstantContact\Exception\InvalidParameter("Scope {$scope} is not valid, must be one of (" . \implode(',', $this->validScopes) . ')');
 			}
 		$this->scopes[$scope] = true;
 
@@ -107,8 +97,7 @@ class Client
    */
   public function getAuthorizationURL() : string
 		{
-		$scopes = \implode('+', \array_keys($this->scopes));
-		$authURL = "https://api.cc.email/v3/idfed?client_id={$this->clientAPIKey}&scope={$scopes}&response_type=code&redirect_uri={$this->redirectURI}";
+		$authURL = "https://api.cc.email/v3/idfed?client_id={$this->clientAPIKey}&response_type=code&redirect_uri={$this->redirectURI}";
 
 		return $authURL;
 		}
@@ -119,9 +108,9 @@ class Client
    * Make this call by passing in the code present when the account owner is redirected back to you.
    * The response will contain an 'access_token' and 'refresh_token'
    *
-   * @param string $code - Authorization Code
+	 * @param string $code - Authorization Code
    */
-  public function getAccessToken(string $code) : bool
+  public function acquireAccessToken(string $code) : bool
 		{
 		// Use cURL to get access token and refresh token
 		$ch = \curl_init();
@@ -140,9 +129,11 @@ class Client
 		}
 
   /**
-   * Refresh the access token.  Should be called when needed.
+	 * Refresh the access token.
+	 *
+	 * @return string new access token or 'Error' for error
    */
-  public function refreshToken() : bool
+  public function refreshToken() : string
 		{
 		// Use cURL to get a new access token and refresh token
 		$ch = \curl_init();
@@ -155,6 +146,8 @@ class Client
 
 		// Set method and to expect response
 		\curl_setopt($ch, CURLOPT_POST, true);
+		\curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+		\curl_setopt($ch, CURLOPT_POSTFIELDS, '');
 
 		return $this->exec($ch);
 		}
@@ -219,12 +212,14 @@ class Client
 		if ($result)
 			{
 			$data = \json_decode($result, true);
-			$this->accessToken = $result['access_token'];
-			$this->refreshToken = $result['refresh_token'];
+			\App\Tools\Logger::get()->debug($data);
+			$retVal = isset($result['access_token'], $result['refresh_token']);
+			$this->accessToken = $result['access_token'] ?? 'Error';
+			$this->refreshToken = $result['refresh_token'] ?? 'Error';
 
 			\curl_close($ch);
 
-			return true;
+			return $retVal;
 			}
 
 		$this->statusCode = \curl_errno($ch);
@@ -242,8 +237,8 @@ class Client
 		// Base64 encode it
 		$credentials = \base64_encode($auth);
 		// Create and set the Authorization header to use the encoded credentials
-		$authorization = 'Authorization: Basic ' . $credentials;
-		\curl_setopt($ch, CURLOPT_HTTPHEADER, [$authorization]);
+		$headers = ['Authorization: Basic ' . $credentials, 'cache-control: no-cache', ];
+		\curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		}
 
 	private function getHeaders(array $additional = []) : array

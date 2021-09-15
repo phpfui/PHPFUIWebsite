@@ -6,12 +6,12 @@ class SegmentsDTO extends \PHPFUI\ConstantContact\Definition\Base
 	{
 	/**
 	 * @var array $segments Lists all segments for the account.
-	 * @var PHPFUI\ConstantContact\Definition\Links::class $_links HAL property that contains next link if applicable.
+	 * @var PHPFUI\ConstantContact\Definition\Links $_links HAL property that contains next link if applicable.
 	 */
 
 	protected static array $fields = [
 		'segments' => 'array',
-		'_links' => 'PHPFUI\ConstantContact\Definition\Links::class',
+		'_links' => 'PHPFUI\\ConstantContact\\Definition\\Links',
 
 	];
 	}

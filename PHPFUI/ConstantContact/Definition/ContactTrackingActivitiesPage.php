@@ -6,12 +6,12 @@ class ContactTrackingActivitiesPage extends \PHPFUI\ConstantContact\Definition\B
 	{
 	/**
 	 * @var array $tracking_activities The list of contact tracking activities in descending date order.
-	 * @var PHPFUI\ConstantContact\Definition\Links_2::class $_links The next link if more contact tracking activities are available.
+	 * @var PHPFUI\ConstantContact\Definition\Links2 $_links The next link if more contact tracking activities are available.
 	 */
 
 	protected static array $fields = [
 		'tracking_activities' => 'array',
-		'_links' => 'PHPFUI\ConstantContact\Definition\Links_2::class',
+		'_links' => 'PHPFUI\\ConstantContact\\Definition\\Links2',
 
 	];
 	}

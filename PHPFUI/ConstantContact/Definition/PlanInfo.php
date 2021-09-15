@@ -17,7 +17,7 @@ class PlanInfo extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'plan_type' => 'string',
+		'plan_type' => ['TRIAL', 'GOOD', 'BETTER', 'BEST', 'LITE'],
 		'billing_day_of_month' => 'int',
 
 	];

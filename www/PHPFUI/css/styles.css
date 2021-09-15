@@ -568,6 +568,7 @@ p {
   margin-bottom: 1rem;
   font-size: inherit;
   line-height: 1.6;
+  text-rendering: optimizeLegibility;
 }
 
 em,
@@ -597,6 +598,7 @@ h6, .h6 {
   font-style: normal;
   font-weight: normal;
   color: inherit;
+  text-rendering: optimizeLegibility;
 }
 h1 small, .h1 small,
 h2 small, .h2 small,

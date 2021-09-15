@@ -43,18 +43,26 @@ class Contacts extends \PHPFUI\ConstantContact\Base
 		{
 		if (null !== $status)
 			{
+			$parts = explode(',', $status);
 			$validValues = ['all' , 'active' , 'deleted' , 'not_set' , 'pending_confirmation' , 'temp_hold' , 'unsubscribed'];
-			if (! in_array($status, $validValues))
+			foreach ($parts as $part)
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter status with value '{$status}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				if (! in_array(trim($part), $validValues))
+					{
+					throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter status containing value '{$part}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+					}
 				}
 			}
 		if (null !== $include)
 			{
+			$parts = explode(',', $include);
 			$validValues = ['custom_fields' , 'list_memberships' , 'phone_numbers' , 'street_addresses' , 'taggings' , 'notes'];
-			if (! in_array($include, $validValues))
+			foreach ($parts as $part)
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter include with value '{$include}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				if (! in_array(trim($part), $validValues))
+					{
+					throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter include containing value '{$part}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+					}
 				}
 			}
 		return $this->doGet(['status' => $status, 'email' => $email, 'lists' => $lists, 'segment_id' => $segment_id, 'tags' => $tags, 'updated_after' => $updated_after, 'include' => $include, 'include_count' => $include_count, 'limit' => $limit, ]);
@@ -68,9 +76,9 @@ class Contacts extends \PHPFUI\ConstantContact\Base
 	 * a new contact: `first_name`, `last_name`, or `email_address` (`email_address`
 	 * must be unique for each contact).
 	 *
-	 * @param \PHPFUI\ConstantContact\Definition\ContactPostRequest $body The JSON payload defining the contact
+	 * @param PHPFUI\ConstantContact\Definition\ContactPostRequest $body The JSON payload defining the contact
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\ContactPostRequest $body) : array
+	public function post(PHPFUI\ConstantContact\Definition\ContactPostRequest $body) : array
 		{
 		return $this->doPost(['body' => $body, ]);
 		}

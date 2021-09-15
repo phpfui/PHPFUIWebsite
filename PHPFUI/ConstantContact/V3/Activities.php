@@ -32,7 +32,7 @@ class Activities extends \PHPFUI\ConstantContact\Base
 			$validValues = ['processing' , 'completed' , 'cancelled' , 'failed' , 'timed_out'];
 			if (! in_array($state, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter state with value '{$state}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter state with value '{$state}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		return $this->doGet(['limit' => $limit, 'state' => $state, ]);

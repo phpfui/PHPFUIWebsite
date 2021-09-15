@@ -14,7 +14,7 @@ class StreetAddressPut extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'kind' => 'string',
+		'kind' => ['home', 'work', 'other'],
 		'street' => 'string',
 		'city' => 'string',
 		'state' => 'string',

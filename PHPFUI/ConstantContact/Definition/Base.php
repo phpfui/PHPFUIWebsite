@@ -19,6 +19,7 @@ abstract class Base
 		'float' => true,
 		'int' => true,
 		'string' => true,
+		'array' => true,
 	];
 
 	public function __construct()
@@ -39,7 +40,7 @@ abstract class Base
 		{
 		if (! isset(static::$fields[$field]))
 			{
-			throw new \Exception("{$field} is not a valid field for " . static::class);
+			throw new \PHPFUI\ConstantContact\Exception\InvalidField("{$field} is not a valid field for " . static::class);
 			}
 
 		$this->setFields[$field] = true;
@@ -53,7 +54,7 @@ abstract class Base
 
 		if (null === $expectedType)
 			{
-			throw new \Exception(static::class . "::{$field} is not a valid field");
+			throw new \PHPFUI\ConstantContact\Exception\InvalidField(static::class . "::{$field} is not a valid field");
 			}
 		$type = \get_debug_type($value);
 
@@ -61,12 +62,12 @@ abstract class Base
 			{
 			if (! \in_array($value, $expectedType))
 				{
-				throw new \Exception(static::class . "::{$field} is {$value} but must be one of " . \implode(', ', $expectedType));
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue(static::class . "::{$field} is {$value} but must be one of " . \implode(', ', $expectedType));
 				}
 			}
 		elseif ($expectedType != $type)
 			{
-			throw new \Exception(static::class . "::{$field} is of type {$type} but should be type {$expectedType}");
+			throw new \PHPFUI\ConstantContact\Exception\InvalidType(static::class . "::{$field} is of type {$type} but should be type {$expectedType}");
 			}
 
 		if (isset(static::$minLength[$field]))
@@ -75,17 +76,17 @@ abstract class Base
 
 			if (\strlen($value) < $minLength)
 				{
-				throw new \Exception(static::class . "::{$field} must be at least {$minLength} characters long");
+				throw new \PHPFUI\ConstantContact\Exception\InvalidLength(static::class . "::{$field} must be at least {$minLength} characters long");
 				}
 			}
 
 		if (isset(static::$maxLength[$field]))
 			{
-			$minLength = static::$maxnLength[$field];
+			$maxLength = static::$maxLength[$field];
 
 			if (\strlen($value) > $maxLength)
 				{
-				throw new \Exception(static::class . "::{$field} must be at less than {$maxLength} characters long");
+				throw new \PHPFUI\ConstantContact\Exception\InvalidLength(static::class . "::{$field} must be at less than {$maxLength} characters long");
 				}
 			}
 		// Do additional formatting
@@ -111,7 +112,7 @@ abstract class Base
 			{
 			if (! empty($this->setFields[$field]))
 				{
-				if ('object' == \gettype($value))
+				if ($value instanceof self)
 					{
 					$value = $value->getData();
 					}

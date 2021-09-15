@@ -5,8 +5,8 @@ namespace PHPFUI\ConstantContact\Definition;
 class BouncesTrackingActivity extends \PHPFUI\ConstantContact\Definition\Base
 	{
 	/**
-	 * @var uuid $contact_id The ID that uniquely identifies a contact.
-	 * @var uuid $campaign_activity_id The ID that uniquely identifies the email campaign activity.
+	 * @var PHPFUI\ConstantContact\UUID $contact_id The ID that uniquely identifies a contact.
+	 * @var PHPFUI\ConstantContact\UUID $campaign_activity_id The ID that uniquely identifies the email campaign activity.
 	 * @var string $tracking_activity_type The type of email tracking activity, <code>em_bounces</code>, that this report includes.
 	 * @var string $email_address The contact's email address that was used when the email campaign activity bounced.
 	 * @var string $first_name The first name of the contact.
@@ -27,21 +27,21 @@ class BouncesTrackingActivity extends \PHPFUI\ConstantContact\Definition\Base
 
 <li><code>Z</code> - Blocked; the recipient's ISP chose not to deliver the email. For example, the ISP may have flagged the email as spam.</li></ul>
 	 * @var string $current_email_address The contact's most current email address. If <code>email_address</code> was updated after the email bounce activity occurred, <code>current_ email_address</code> displays the updated address. If updates were not made to <code>email_address</code>, the <code>email_address</code> and <code>current_email_address</code> are the same.
-	 * @var date-time $created_time The date and time that the email bounce tracking activity occurred.
-	 * @var date $deleted_at If applicable, the date when the contact was deleted.
+	 * @var DateTime $created_time The date and time that the email bounce tracking activity occurred.
+	 * @var PHPFUI\ConstantContact\Date $deleted_at If applicable, the date when the contact was deleted.
 	 */
 
 	protected static array $fields = [
-		'contact_id' => 'uuid',
-		'campaign_activity_id' => 'uuid',
+		'contact_id' => 'PHPFUI\ConstantContact\UUID',
+		'campaign_activity_id' => 'PHPFUI\ConstantContact\UUID',
 		'tracking_activity_type' => 'string',
 		'email_address' => 'string',
 		'first_name' => 'string',
 		'last_name' => 'string',
 		'bounce_code' => 'string',
 		'current_email_address' => 'string',
-		'created_time' => 'date-time',
-		'deleted_at' => 'date',
+		'created_time' => 'DateTime',
+		'deleted_at' => 'PHPFUI\ConstantContact\Date',
 
 	];
 	}

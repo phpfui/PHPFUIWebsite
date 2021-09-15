@@ -30,7 +30,7 @@ class ContactCreateOrUpdateInput extends \PHPFUI\ConstantContact\Definition\Base
 		'anniversary' => 'string',
 		'birthday_month' => 'int',
 		'birthday_day' => 'int',
-		'street_address' => 'object',
+		'street_address' => 'PHPFUI\\ConstantContact\\Definition\\StreetAddress',
 
 	];
 

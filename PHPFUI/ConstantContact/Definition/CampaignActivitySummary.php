@@ -5,8 +5,8 @@ namespace PHPFUI\ConstantContact\Definition;
 class CampaignActivitySummary extends \PHPFUI\ConstantContact\Definition\Base
 	{
 	/**
-	 * @var uuid $campaign_activity_id The unique id of the activity for an e-mail campaign.
-	 * @var date-time $start_on The last date at which the email was sent to this contact.
+	 * @var PHPFUI\ConstantContact\UUID $campaign_activity_id The unique id of the activity for an e-mail campaign.
+	 * @var DateTime $start_on The last date at which the email was sent to this contact.
 	 * @var int $em_bounces The number of times the email has bounced for this contact.
 	 * @var int $em_clicks The number of times this contact has clicked a link in this email.
 	 * @var int $em_forwards The number of times this contact has forwarded this email.
@@ -16,8 +16,8 @@ class CampaignActivitySummary extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'campaign_activity_id' => 'uuid',
-		'start_on' => 'date-time',
+		'campaign_activity_id' => 'PHPFUI\ConstantContact\UUID',
+		'start_on' => 'DateTime',
 		'em_bounces' => 'int',
 		'em_clicks' => 'int',
 		'em_forwards' => 'int',

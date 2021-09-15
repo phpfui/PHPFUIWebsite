@@ -2,7 +2,7 @@
 
 namespace PHPFUI\ConstantContact\Definition;
 
-class Link_2 extends \PHPFUI\ConstantContact\Definition\Base
+class Lin extends \PHPFUI\ConstantContact\Definition\Base
 	{
 	/**
 	 */

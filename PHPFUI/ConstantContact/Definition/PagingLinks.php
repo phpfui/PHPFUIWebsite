@@ -8,7 +8,7 @@ class PagingLinks extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'next' => 'PHPFUI\ConstantContact\Definition\Link::class',
+		'next' => 'PHPFUI\\ConstantContact\\Definition\\Link',
 
 	];
 	}

@@ -22,12 +22,12 @@ class ContactPostRequest extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'email_address' => 'PHPFUI\ConstantContact\Definition\EmailAddressPost::class',
+		'email_address' => 'PHPFUI\\ConstantContact\\Definition\\EmailAddressPost',
 		'first_name' => 'string',
 		'last_name' => 'string',
 		'job_title' => 'string',
 		'company_name' => 'string',
-		'create_source' => 'string',
+		'create_source' => ['Account', 'Contact'],
 		'birthday_month' => 'int',
 		'birthday_day' => 'int',
 		'anniversary' => 'string',

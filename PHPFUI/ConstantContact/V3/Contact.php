@@ -27,10 +27,14 @@ class Contact extends \PHPFUI\ConstantContact\Base
 		{
 		if (null !== $include)
 			{
+			$parts = explode(',', $include);
 			$validValues = ['custom_fields' , 'list_memberships' , 'phone_numbers' , 'street_addresses' , 'taggings' , 'notes'];
-			if (! in_array($include, $validValues))
+			foreach ($parts as $part)
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter include with value '{$include}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				if (! in_array(trim($part), $validValues))
+					{
+					throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter include containing value '{$part}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+					}
 				}
 			}
 		return $this->doGet(['contact_id' => $contact_id, 'include' => $include, ]);
@@ -50,9 +54,9 @@ class Contact extends \PHPFUI\ConstantContact\Base
 	 * contact being updated is deleted, the contact will be revived.
 	 *
 	 * @param string $contact_id Unique ID of contact to update
-	 * @param \PHPFUI\ConstantContact\Definition\ContactPutRequest $body JSON payload defining the contact object, with updates. Any properties left blank or not included in the PUT payload are overwritten with null value - does not apply to contact subresources.
+	 * @param PHPFUI\ConstantContact\Definition\ContactPutRequest $body JSON payload defining the contact object, with updates. Any properties left blank or not included in the PUT payload are overwritten with null value - does not apply to contact subresources.
 	 */
-	public function put(string $contact_id, \PHPFUI\ConstantContact\Definition\ContactPutRequest $body) : array
+	public function put(string $contact_id, PHPFUI\ConstantContact\Definition\ContactPutRequest $body) : array
 		{
 		return $this->doPut(['contact_id' => $contact_id, 'body' => $body, ]);
 		}

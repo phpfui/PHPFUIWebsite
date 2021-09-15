@@ -32,10 +32,14 @@ class Activities extends \PHPFUI\ConstantContact\Base
 		{
 		if (null !== $include)
 			{
+			$parts = explode(',', $include);
 			$validValues = ['physical_address_in_footer' , 'permalink_url' , 'html_content' , 'document_properties'];
-			if (! in_array($include, $validValues))
+			foreach ($parts as $part)
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter include with value '{$include}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				if (! in_array(trim($part), $validValues))
+					{
+					throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter include containing value '{$part}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+					}
 				}
 			}
 		return $this->doGet(['campaign_activity_id' => $campaign_activity_id, 'include' => $include, ]);
@@ -60,9 +64,9 @@ class Activities extends \PHPFUI\ConstantContact\Base
 	 * 
 	 *
 	 * @param string $campaign_activity_id The unique ID for the email campaign activity you are updating.
-	 * @param \PHPFUI\ConstantContact\Definition\EmailCampaignActivity $body A request body payload that contains the complete email campaign activity with your changes.
+	 * @param PHPFUI\ConstantContact\Definition\EmailCampaignActivity $body A request body payload that contains the complete email campaign activity with your changes.
 	 */
-	public function put(string $campaign_activity_id, \PHPFUI\ConstantContact\Definition\EmailCampaignActivity $body) : array
+	public function put(string $campaign_activity_id, PHPFUI\ConstantContact\Definition\EmailCampaignActivity $body) : array
 		{
 		return $this->doPut(['campaign_activity_id' => $campaign_activity_id, 'body' => $body, ]);
 		}

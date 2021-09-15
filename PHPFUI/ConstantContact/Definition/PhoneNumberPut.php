@@ -11,7 +11,7 @@ class PhoneNumberPut extends \PHPFUI\ConstantContact\Definition\Base
 
 	protected static array $fields = [
 		'phone_number' => 'string',
-		'kind' => 'string',
+		'kind' => ['home', 'work', 'mobile', 'other'],
 
 	];
 

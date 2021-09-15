@@ -11,7 +11,7 @@ class ContactListArray extends \PHPFUI\ConstantContact\Definition\Base
 	protected static array $fields = [
 		'lists' => 'array',
 		'lists_count' => 'int',
-		'_links' => 'PHPFUI\ConstantContact\Definition\PagingLinks::class',
+		'_links' => 'PHPFUI\\ConstantContact\\Definition\\PagingLinks',
 
 	];
 	}

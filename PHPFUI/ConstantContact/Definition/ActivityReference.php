@@ -15,7 +15,7 @@ class ActivityReference extends \PHPFUI\ConstantContact\Definition\Base
 
 	protected static array $fields = [
 		'campaign_activity_id' => 'string',
-		'role' => 'string',
+		'role' => ['primary_email', 'permalink', 'resend'],
 
 	];
 	}

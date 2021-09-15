@@ -34,7 +34,7 @@ class ContactLists extends \PHPFUI\ConstantContact\Base
 			$validValues = ['all' , 'active'];
 			if (! in_array($include_membership_count, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter include_membership_count with value '{$include_membership_count}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter include_membership_count with value '{$include_membership_count}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		return $this->doGet(['limit' => $limit, 'include_count' => $include_count, 'include_membership_count' => $include_membership_count, ]);
@@ -45,9 +45,9 @@ class ContactLists extends \PHPFUI\ConstantContact\Base
 	 *
 	 * Create a new contact list resource
 	 *
-	 * @param \PHPFUI\ConstantContact\Definition\ListInput $body JSON payload defining the new contact list
+	 * @param PHPFUI\ConstantContact\Definition\ListInput $body JSON payload defining the new contact list
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\ListInput $body) : array
+	public function post(PHPFUI\ConstantContact\Definition\ListInput $body) : array
 		{
 		return $this->doPost(['body' => $body, ]);
 		}

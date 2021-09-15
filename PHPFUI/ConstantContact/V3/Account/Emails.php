@@ -41,7 +41,7 @@ class Emails extends \PHPFUI\ConstantContact\Base
 			$validValues = ['CONFIRMED' , 'C' , 'UNCONFIRMED' , 'U'];
 			if (! in_array($confirm_status, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter confirm_status with value '{$confirm_status}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter confirm_status with value '{$confirm_status}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		if (null !== $role_code)
@@ -49,7 +49,7 @@ class Emails extends \PHPFUI\ConstantContact\Base
 			$validValues = ['CONTACT' , 'C' , 'BILLING' , 'B' , 'JOURNALING' , 'J' , 'REPLY_TO' , 'R' , 'OTHER' , 'O'];
 			if (! in_array($role_code, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter role_code with value '{$role_code}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter role_code with value '{$role_code}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		return $this->doGet(['confirm_status' => $confirm_status, 'role_code' => $role_code, 'email_address' => $email_address, ]);
@@ -71,9 +71,9 @@ class Emails extends \PHPFUI\ConstantContact\Base
 	 * in the API guide.
 	 * 
 	 *
-	 * @param \PHPFUI\ConstantContact\Definition\AccountEmailInput $body A JSON request payload containing the new email address you want to add to the Constant Contact account.
+	 * @param PHPFUI\ConstantContact\Definition\AccountEmailInput $body A JSON request payload containing the new email address you want to add to the Constant Contact account.
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\AccountEmailInput $body) : array
+	public function post(PHPFUI\ConstantContact\Definition\AccountEmailInput $body) : array
 		{
 		return $this->doPost(['body' => $body, ]);
 		}

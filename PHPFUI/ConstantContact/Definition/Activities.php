@@ -10,7 +10,7 @@ class Activities extends \PHPFUI\ConstantContact\Definition\Base
 
 	protected static array $fields = [
 		'activities' => 'array',
-		'_links' => 'PHPFUI\ConstantContact\Definition\PagingLinks::class',
+		'_links' => 'PHPFUI\\ConstantContact\\Definition\\PagingLinks',
 
 	];
 	}

@@ -7,7 +7,7 @@ class EmailCampaign extends \PHPFUI\ConstantContact\Definition\Base
 	/**
 	 * @var array $campaign_activities Lists the role and unique activity ID of each campaign activity that is associated with an Email Campaign.
 	 * @var string $campaign_id The unique ID used to identify the email campaign (UUID format).
-	 * @var date-time $created_at The system generated date and time that this email campaign was created. This string is readonly and is in ISO-8601 format.
+	 * @var DateTime $created_at The system generated date and time that this email campaign was created. This string is readonly and is in ISO-8601 format.
 	 * @var string $current_status The current status of the email campaign. Valid values are: <ul>
   <li>Draft — An email campaign that you have created but have not sent to contacts.</li>
   <li>Scheduled — An email campaign that you have scheduled for Constant Contact to send to contacts.</li>
@@ -39,18 +39,18 @@ class EmailCampaign extends \PHPFUI\ConstantContact\Definition\Base
   <li> 26 (Custom Code Email)</li>
   <li> 57 (A/B Test)</li>
 </ul>
-	 * @var date-time $updated_at The system generated date and time showing when the campaign was last updated. This string is read only and is in ISO-8601 format.
+	 * @var DateTime $updated_at The system generated date and time showing when the campaign was last updated. This string is read only and is in ISO-8601 format.
 	 */
 
 	protected static array $fields = [
 		'campaign_activities' => 'array',
 		'campaign_id' => 'string',
-		'created_at' => 'date-time',
-		'current_status' => 'string',
+		'created_at' => 'DateTime',
+		'current_status' => ['Draft', 'Scheduled', 'Executing', 'Done', 'Removed', 'Error'],
 		'name' => 'string',
-		'type' => 'string',
+		'type' => ['Newsletter', 'Custom Code Email', 'Announcement', 'Product/Service News', 'Business Letter', 'Card', 'Press release', 'Flyer', 'Feedback Request', 'Ratings and Reviews', 'Event Announcement', 'Simple Coupon', 'Sale Promotion', 'Product Promotion', 'Membership Drive', 'Fundraiser'],
 		'type_code' => 'int',
-		'updated_at' => 'date-time',
+		'updated_at' => 'DateTime',
 
 	];
 

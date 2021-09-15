@@ -19,9 +19,9 @@ class Provision extends \PHPFUI\ConstantContact\Definition\Base
 	 * @var string $last_name The client account owner's last name.
 	 * @var string $partner_account_id The unique client account identifier that partners define and use for billing and reporting purposes.
 	 * @var string $billing_locale The currency to use when billing the client account. Valid values are: <code>en_US</code> (default, US Dollars) or <code>en_GB</code> (British Pounds).
-	 * @var boolean $managed_site_owner By default, if the client account is setup as a managed account <code>managed_site_owner</code> is automatically set to <code>true</code> and attempting to override the setting with <code>false</code> is ignored. This helps to avoid getting an account into an unknown state.
-	 * @var boolean $enable_single_billing If a partner account is setup to allow for single billing and the <code>managed_site_owner</code> property is set to <code>true</code>, use this property to enable the single billing feature for the client account. See your account manager for more information.
-	 * @var boolean $gdpr_opt_out When creating accounts for users who have opted-out of any marketing communications, set  the <code> gdpr_opt_out</code>  to <code>true</code>  so that Constant Contact does not send any marketing communications to the account.
+	 * @var bool $managed_site_owner By default, if the client account is setup as a managed account <code>managed_site_owner</code> is automatically set to <code>true</code> and attempting to override the setting with <code>false</code> is ignored. This helps to avoid getting an account into an unknown state.
+	 * @var bool $enable_single_billing If a partner account is setup to allow for single billing and the <code>managed_site_owner</code> property is set to <code>true</code>, use this property to enable the single billing feature for the client account. See your account manager for more information.
+	 * @var bool $gdpr_opt_out When creating accounts for users who have opted-out of any marketing communications, set  the <code> gdpr_opt_out</code>  to <code>true</code>  so that Constant Contact does not send any marketing communications to the account.
 	 * @var string $external_id The ID used to uniquely identify the client account for the external authenticator. Do not use the <code>password</code> property when using an external authenticator.
 	 * @var string $external_provider The name of the provider who externally authenticates this customer. For example, PayPal or Yahoo. Do not use the <code>password</code> property when using an external authenticator.
 	 */
@@ -41,9 +41,9 @@ class Provision extends \PHPFUI\ConstantContact\Definition\Base
 		'last_name' => 'string',
 		'partner_account_id' => 'string',
 		'billing_locale' => 'string',
-		'managed_site_owner' => 'boolean',
-		'enable_single_billing' => 'boolean',
-		'gdpr_opt_out' => 'boolean',
+		'managed_site_owner' => 'bool',
+		'enable_single_billing' => 'bool',
+		'gdpr_opt_out' => 'bool',
 		'external_id' => 'string',
 		'external_provider' => 'string',
 

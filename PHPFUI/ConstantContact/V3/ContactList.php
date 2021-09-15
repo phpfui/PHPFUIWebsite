@@ -29,7 +29,7 @@ class ContactList extends \PHPFUI\ConstantContact\Base
 			$validValues = ['all' , 'active'];
 			if (! in_array($include_membership_count, $validValues))
 				{
-				throw new \PHPFUI\ConstantContact\Exception("Parameter include_membership_count with value '{$include_membership_count}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
+				throw new \PHPFUI\ConstantContact\Exception\InvalidValue("Parameter include_membership_count with value '{$include_membership_count}' is not one of (" . implode(', ', $validValues) . ') in ' . __METHOD__);
 				}
 			}
 		return $this->doGet(['list_id' => $list_id, 'include_membership_count' => $include_membership_count, ]);
@@ -41,9 +41,9 @@ class ContactList extends \PHPFUI\ConstantContact\Base
 	 * Updates an existing contact list resource, specified by `list_id`
 	 *
 	 * @param string $list_id Unique ID of the contact list to update
-	 * @param \PHPFUI\ConstantContact\Definition\ListInput $JSON_PUT_body JSON payload containing updates to the specified contact list
+	 * @param PHPFUI\ConstantContact\Definition\ListInput $JSON_PUT_body JSON payload containing updates to the specified contact list
 	 */
-	public function put(string $list_id, \PHPFUI\ConstantContact\Definition\ListInput $JSON_PUT_body) : array
+	public function put(string $list_id, PHPFUI\ConstantContact\Definition\ListInput $JSON_PUT_body) : array
 		{
 		return $this->doPut(['list_id' => $list_id, 'JSON_PUT_body' => $JSON_PUT_body, ]);
 		}

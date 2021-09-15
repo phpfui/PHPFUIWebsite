@@ -24,9 +24,9 @@ class PlanTiersObject extends \PHPFUI\ConstantContact\Definition\Base
 	 */
 
 	protected static array $fields = [
-		'plan_type' => 'string',
+		'plan_type' => ['TRIAL', 'GOOD', 'BETTER', 'BEST', 'LITE'],
 		'current_tiers' => 'array',
-		'billing_status' => 'string',
+		'billing_status' => ['Trial', 'Open', 'Canceled', 'Trial End'],
 		'billing_day_of_month' => 'int',
 
 	];
