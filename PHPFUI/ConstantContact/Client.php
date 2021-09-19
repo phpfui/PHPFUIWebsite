@@ -97,7 +97,8 @@ class Client
    */
   public function getAuthorizationURL() : string
 		{
-		$authURL = "https://api.cc.email/v3/idfed?client_id={$this->clientAPIKey}&response_type=code&redirect_uri={$this->redirectURI}";
+		$scopes = \implode('+', \array_keys($this->scopes));
+		$authURL = "https://api.cc.email/v3/idfed?client_id={$this->clientAPIKey}&response_type=code&redirect_uri={$this->redirectURI}&scope={$scopes}";
 
 		return $authURL;
 		}
@@ -116,8 +117,7 @@ class Client
 		$ch = \curl_init();
 
 		// Create full request URL
-		$scopes = \implode('+', \array_keys($this->scopes));
-		$url = "{$this->oauth2URL}?code={$code}&redirect_uri={$this->redirectURI}&grant_type=authorization_code&scope={$scopes}";
+		$url = "{$this->oauth2URL}?code={$code}&redirect_uri={$this->redirectURI}&grant_type=authorization_code";
 		\curl_setopt($ch, CURLOPT_URL, $url);
 
 		$this->setAuthorization($ch);
@@ -212,10 +212,9 @@ class Client
 		if ($result)
 			{
 			$data = \json_decode($result, true);
-			\App\Tools\Logger::get()->debug($data);
-			$retVal = isset($result['access_token'], $result['refresh_token']);
-			$this->accessToken = $result['access_token'] ?? 'Error';
-			$this->refreshToken = $result['refresh_token'] ?? 'Error';
+			$retVal = isset($data['access_token'], $data['refresh_token']);
+			$this->accessToken = $data['access_token'] ?? 'Error';
+			$this->refreshToken = $data['refresh_token'] ?? 'Error';
 
 			\curl_close($ch);
 

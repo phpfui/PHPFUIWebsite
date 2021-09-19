@@ -23,34 +23,44 @@ class Base
 		return $this->client->getBody();
 		}
 
-	protected function doDelete(array $parameters) : string
+	protected function doDelete(array $parameters) : array
 		{
 		$url = $this->getUrl($parameters);
+
+		return $this->client->delete($url, $parameters);
 		}
 
-	protected function doGet(array $parameters) : string
+	protected function doGet(array $parameters) : array
 		{
 		$url = $this->getUrl($parameters);
+
+		return $this->client->get($url, $parameters);
 		}
 
-	protected function doPut(array $parameters) : string
+	protected function doPut(array $parameters) : array
 		{
 		$url = $this->getUrl($parameters);
+
+		return $this->client->put($url, $parameters);
 		}
 
-	protected function doPost(array $parameters) : string
+	protected function doPost(array $parameters) : array
 		{
 		$url = $this->getUrl($parameters);
+
+		return $this->client->post($url, $parameters);
 		}
 
-	protected function doPatch(array $parameters) : string
+	protected function doPatch(array $parameters) : array
 		{
 		$url = $this->getUrl($parameters);
+
+		return $this->client->patch($url, $parameters);
 		}
 
 	private function getUrl(array &$parameters) : string
 		{
-		$url = $this->urlPath;
+		$url = 'https://api.cc.email' . $this->urlPath;
 
 		if (! \count($parameters))
 			{
