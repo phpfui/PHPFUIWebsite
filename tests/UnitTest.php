@@ -25,7 +25,6 @@ class UnitTest extends \PHPFUI\PHPUnitSyntaxCoverage\Extensions
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PHPHtmlParser', 'PHPHtmlParser directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/PhpParser', 'PhpParser directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Psr', 'Psr directory has an error');
-		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Rize', 'Rize directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/stringEncode', 'stringEncode directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Symfony', 'Symfony directory has an error');
 		$this->assertValidPHPDirectory(PROJECT_ROOT . '/Webmozart', 'Webmozart directory has an error');

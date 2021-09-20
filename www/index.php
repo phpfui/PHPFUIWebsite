@@ -27,7 +27,6 @@ else
 		'PHPHtmlParser',
 		'PhpParser',
 		'Psr',
-		'Rize',
 		'Symfony',
 		'Symfony',
 		'Webmozart',
