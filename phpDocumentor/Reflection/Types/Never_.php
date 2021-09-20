@@ -16,17 +16,20 @@ namespace phpDocumentor\Reflection\Types;
 use phpDocumentor\Reflection\Type;
 
 /**
- * Value object representing Integer type
+ * Value Object representing the return-type 'never'.
+ *
+ * Never is generally only used when working with return types as it signifies that the method that only
+ * ever throw or exit.
  *
  * @psalm-immutable
  */
-class Integer implements Type
+final class Never_ implements Type
 {
     /**
      * Returns a rendered output of the Type as it would be used in a DocBlock.
      */
     public function __toString(): string
     {
-        return 'int';
+        return 'never';
     }
 }

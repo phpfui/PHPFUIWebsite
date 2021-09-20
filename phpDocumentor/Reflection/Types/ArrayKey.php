@@ -13,20 +13,22 @@ declare(strict_types=1);
 
 namespace phpDocumentor\Reflection\Types;
 
-use phpDocumentor\Reflection\Type;
-
 /**
- * Value object representing Integer type
+ * Value Object representing a array-key Type.
+ *
+ * A array-key Type is the supertype (but not a union) of int and string.
  *
  * @psalm-immutable
  */
-class Integer implements Type
+final class ArrayKey extends AggregatedType
 {
-    /**
-     * Returns a rendered output of the Type as it would be used in a DocBlock.
-     */
+    public function __construct()
+    {
+        parent::__construct([new String_(), new Integer()], '|');
+    }
+
     public function __toString(): string
     {
-        return 'int';
+        return 'array-key';
     }
 }

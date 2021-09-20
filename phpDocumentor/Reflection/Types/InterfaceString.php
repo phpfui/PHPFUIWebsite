@@ -21,7 +21,7 @@ use phpDocumentor\Reflection\Type;
  *
  * @psalm-immutable
  */
-final class ClassString implements Type
+final class InterfaceString implements Type
 {
     /** @var Fqsen|null */
     private $fqsen;
@@ -48,9 +48,9 @@ final class ClassString implements Type
     public function __toString(): string
     {
         if ($this->fqsen === null) {
-            return 'class-string';
+            return 'interface-string';
         }
 
-        return 'class-string<' . (string) $this->fqsen . '>';
+        return 'interface-string<' . (string) $this->fqsen . '>';
     }
 }

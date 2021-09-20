@@ -24,4 +24,6 @@ LICENSE.md
 /JsonMapper.php
 /GuzzleHttp/Psr7/functions.php
 /GuzzleHttp/Psr7/functions_include.php
+composer.phar
+
 

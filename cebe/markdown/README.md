@@ -7,7 +7,7 @@ A super fast, highly extensible markdown parser for PHP
 [![Code Coverage](https://scrutinizer-ci.com/g/cebe/markdown/badges/coverage.png?s=db6af342d55bea649307ef311fbd536abb9bab76)](https://scrutinizer-ci.com/g/cebe/markdown/)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/cebe/markdown/badges/quality-score.png?s=17448ca4d140429fd687c58ff747baeb6568d528)](https://scrutinizer-ci.com/g/cebe/markdown/)
 
-What is this?
+What is this? <a name="what"></a>
 -------------
 
 A set of [PHP][] classes, each representing a [Markdown][] flavor, and a command line tool
@@ -46,7 +46,7 @@ Future plans are to support:
 [Yii Framework]: http://www.yiiframework.com/ "The Yii PHP Framework"
 
 
-Installation
+Installation <a name="installation"></a>
 ------------
 
 [PHP 5.4 or higher](http://www.php.net/downloads.php) is required to use it.
@@ -73,7 +73,7 @@ Run `composer update` afterwards.
 > Note: If you have configured PHP with opcache you need to enable the
 > [opcache.save_comments](http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments) option because inline element parsing relies on PHPdoc annotations to find declared elements.
 
-Usage
+Usage <a name="usage"></a>
 -----
 
 ### In your PHP project
@@ -191,7 +191,7 @@ Here are some extensions to this library:
 - ... [add yours!](https://github.com/cebe/markdown/edit/master/README.md#L186)
 
 
-Extending the language
+Extending the language <a name="extend"></a>
 ----------------------
 
 Markdown consists of two types of language elements, I'll call them block and inline elements simlar to what you have in
@@ -454,7 +454,7 @@ You may refer to the `consumeParagraph()` method of the `Markdown` and `GithubMa
 which define different rules for which elements are allowed to interrupt a paragraph.
 
 
-Acknowledgements
+Acknowledgements <a name="ack"></a>
 ----------------
 
 I'd like to thank [@erusev][] for creating [Parsedown][] which heavily influenced this work and provided
@@ -463,7 +463,7 @@ the idea of the line based parsing approach.
 [@erusev]: https://github.com/erusev "Emanuil Rusev"
 [Parsedown]: http://parsedown.org/ "The Parsedown PHP Markdown parser"
 
-FAQ
+FAQ <a name="faq"></a>
 ---
 
 ### Why another markdown parser?
