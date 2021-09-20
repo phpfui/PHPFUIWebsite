@@ -3,6 +3,7 @@
 .picasa.ini
 .viminfo
 vendor/
+session/
 error.log
 .php_cs.cache
 FileManager.serial
