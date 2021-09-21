@@ -6,8 +6,7 @@ include 'commonbase.php';
 
 // get the latest
 $repo = new \Gitonomy\Git\Repository(__DIR__);
-$wc = $repo->getWorkingCopy();
-$wc->checkout('master');
+$repo->run('checkout', ['master']);
 $repo->run('pull');
 
 exec('/usr/bin/php8.0 composer.phar update');
@@ -67,3 +66,4 @@ $repo->run('push');
 
 // refresh the web site
 file('http://www.phpfui.com/update.php');
+
