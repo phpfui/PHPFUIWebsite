@@ -43,7 +43,7 @@ class ComposerUpdate
 		foreach ($iterator as $item)
 			{
 			$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-			$file = \str_replace('/', '\\', $file);
+			$file = \str_replace('\\', '/', $file);
 
 			if ($item->isDir())
 				{
@@ -67,6 +67,10 @@ class ComposerUpdate
 	public function deleteFileInNamespace(string $nameSpace, string $file) : void
 		{
 		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
+		if (! is_dir($path))
+			{
+			return;
+			}
 		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
 
 		foreach($iterator as $path)
@@ -81,6 +85,10 @@ class ComposerUpdate
 	public function deleteNamespace(string $nameSpace) : void
 		{
 		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
+		if (! is_dir($path))
+			{
+			return;
+			}
 		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
 
 		foreach($iterator as $path)
