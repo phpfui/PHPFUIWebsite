@@ -1,6 +1,6 @@
 {
 	"require": {
-		"php": ">=7.2",
+		"php": ">=8.0",
 		"phpfui/instadoc": "^1.0",
 		"paquettg/php-html-parser": ">=3.0",
 		"nxp/math-executor": "^2.0",

@@ -49,7 +49,7 @@ class ComposerUpdate
 				{
 				if (! \file_exists($file))
 					{
-					\mkdir($file, 755, true);
+					\mkdir($file, 0755, true);
 					}
 				}
 			else
@@ -93,7 +93,10 @@ class ComposerUpdate
 
 		foreach($iterator as $path)
 			{
-			$path->isFile() ? \unlink($path->getPathname()) : \rmdir($path->getPathname());
+			if ($path->isFile())
+				{
+				\unlink($path->getPathname());
+				}
 			}
 		}
 

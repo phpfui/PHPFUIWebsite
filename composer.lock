@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71b823379bf40ca3d30e0977b508ce9f",
+    "content-hash": "0d063d238bb6ec6cec1ab764aad7bbd0",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -72,16 +72,16 @@
         },
         {
             "name": "components/jquery",
-            "version": "3.5.1",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b"
+                "reference": "6cf38ee1fd04b6adf8e7dda161283aa35be818c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
-                "reference": "b33e8f0f9a1cb2ae390cf05d766a900b53d2125b",
+                "url": "https://api.github.com/repos/components/jquery/zipball/6cf38ee1fd04b6adf8e7dda161283aa35be818c3",
+                "reference": "6cf38ee1fd04b6adf8e7dda161283aa35be818c3",
                 "shasum": ""
             },
             "type": "component",
@@ -117,7 +117,7 @@
                 "source": "https://github.com/jquery/jquery",
                 "wiki": "http://docs.jquery.com/"
             },
-            "time": "2020-05-05T13:21:02+00:00"
+            "time": "2021-03-20T19:13:42+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -1345,16 +1345,16 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V21.9.2",
+            "version": "V21.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "e6636f5af8bd9f7e239a2f41a75211870099dbfb"
+                "reference": "603fe285e7a8b3fa893cf12c7b8acd014594ca30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/e6636f5af8bd9f7e239a2f41a75211870099dbfb",
-                "reference": "e6636f5af8bd9f7e239a2f41a75211870099dbfb",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/603fe285e7a8b3fa893cf12c7b8acd014594ca30",
+                "reference": "603fe285e7a8b3fa893cf12c7b8acd014594ca30",
                 "shasum": ""
             },
             "require": {
@@ -1397,9 +1397,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V21.9.2"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V21.9.6"
             },
-            "time": "2021-09-20T16:25:04+00:00"
+            "time": "2021-09-23T05:22:11+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
@@ -3991,7 +3991,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
