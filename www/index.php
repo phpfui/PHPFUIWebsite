@@ -15,6 +15,7 @@ else
 	{
 	$libraries = [
 		'cebe',
+		'Composer',
 		'DeepCopy',
 		'Example',
 		'Gitonomy',

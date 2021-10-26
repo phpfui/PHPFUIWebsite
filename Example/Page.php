@@ -9,7 +9,7 @@ class Page extends \PHPFUI\Page
 	private \PHPFUI\OffCanvas $offCanvas;
 	private string $menuId;
 
-	public function __construct()
+	public function __construct(private $callback = null)
 		{
 		parent::__construct();
 		$this->addStyleSheet('css/styles.css');
@@ -83,13 +83,14 @@ class Page extends \PHPFUI\Page
 
 			if (! empty($_POST['save']) && \PHPFUI\Session::checkCSRF())
 				{
-				$vars = [];
-
-				foreach ($_POST as $key => $value)
+				if (is_callable($this->callback))
 					{
-					$vars[$key] = $value;
+					call_user_func($this->callback, $_POST);
 					}
-				\PHPFUI\Session::setFlash('post', json_encode($vars));
+				else
+					{
+					\PHPFUI\Session::setFlash('post', json_encode($_POST));
+					}
 				$this->redirect();
 
 				return;
@@ -106,7 +107,7 @@ class Page extends \PHPFUI\Page
 
 			$post = \PHPFUI\Session::getFlash('post');
 
-			if ($post)
+			if ($post && ! is_callable($this->callback))
 				{
 				$post = json_decode($post, true);
 				$callout = new \PHPFUI\Callout('success');
@@ -154,6 +155,7 @@ class Page extends \PHPFUI\Page
 			'Accordion To From List' => '/Examples/AccordionToFromList.php',
 			'AutoComplete' => '/Examples/AutoComplete.php',
 			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
+			'Composer Version Checker' => '/Examples/ComposerVersion.php',
 			'Kitchen Sink' => '/Examples/KitchenSink.php',
 			'Orbit Carousel' => '/Examples/Orbit.php',
 			'Orderable Table' => '/Examples/OrderableTable.php',

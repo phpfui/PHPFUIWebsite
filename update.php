@@ -16,7 +16,6 @@ $updater = new ComposerUpdate();
 
 $updater->setIgnoredRepos([
 	'components',
-	'Composer',
 	'doctrine',
 	'GPBMetadata',
 	'Jean85',
