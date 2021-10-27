@@ -6,6 +6,8 @@ class ComposerUpdate
 
 	private string $vendorDir = 'vendor/';
 
+	private array $skipFiles = ['changelog', 'changes', 'license', 'conduct', 'contribut', 'upgrad', 'security', 'license', 'bug',  ];
+
 	private array $ignored = [];
 
 	public function setBaseDirectory(string $baseDir) : static
@@ -29,7 +31,31 @@ class ComposerUpdate
 		return $this;
 		}
 
-	public static function copyFiles(string $source, string $dest) : void
+	public function copyFileFiltered(string $item, string $file, bool $phpFiles) : bool
+		{
+		$lcFile = strtolower($file);
+		if ($phpFiles && str_ends_with($lcFile, '.php'))
+			{
+			return \copy($item, $file);
+			}
+
+		if (! str_ends_with($lcFile, '.md'))
+			{
+			return false;
+			}
+
+		foreach ($this->skipFiles as $skip)
+			{
+			if (str_contains($lcFile, $skip))
+				{
+				return false;
+				}
+			}
+
+			return \copy($item, $file);
+		}
+
+	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
 		{
 		if (! \file_exists($dest))
 			{
@@ -54,12 +80,7 @@ class ComposerUpdate
 				}
 			else
 				{
-				$ext = \strrchr($file, '.');
-
-				if (\in_array($ext, ['.php', '.md']))
-					{
-					\copy($item, $file);
-					}
+				$this->copyFileFiltered($item, $file, $phpFiles);
 				}
 			}
 		}
@@ -114,6 +135,11 @@ class ComposerUpdate
 				//echo "source $sourceDir to $destDir\n";
 				$this->copyFiles($sourceDir, $destDir);
 				}
+			}
+		if ($destDir)
+			{
+			// copy project .md files
+			$this->copyFiles('vendor/' . $name, $destDir, false);
 			}
 		}
 
