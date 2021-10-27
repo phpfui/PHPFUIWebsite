@@ -119,6 +119,12 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
+			$attributes = $this->getAttributes($reflectionMethod);
+			foreach ($attributes as $attribute)
+				{
+				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', 'attribute') . ' ' . $this->formatAttribute($attribute)));
+				}
+
 			$container->add($ul);
 			}
 
@@ -211,8 +217,13 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
 		{
+		/**
+		 * @todo get attributes everywhere
+		 * $attributes = $this->getAttributes($method);
+		 */
+
 		$comments = $method->getDocComment();
-		$comments = \str_replace('{@inheritdoc}', '@inheritdoc', $comments);
+		$comments = \str_ireplace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if (! $comments)
 			{
@@ -250,14 +261,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		$tags = $docBlock->getTags();
 		foreach ($tags as $index => $tag)
 			{
-			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
+			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
 
 				while ($parent)
 					{
-					$method = $parent->getMethod($reflectionMethod->name);
+					try
+						{
+						$method = $parent->getMethod($reflectionMethod->name);
+						}
+					catch (\Throwable $e)
+						{
+						$method = null;
+						}
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
@@ -281,14 +299,21 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		{
 		foreach ($tags as $index => $tag)
 			{
-			if (0 == \strcasecmp($tag->getName(), 'inheritDoc'))
+			if (0 >= \stripos($tag->getName(), 'inheritdoc'))
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
 
 				while ($parent)
 					{
-					$method = $parent->getMethod($reflectionMethod->name);
+					try
+						{
+						$method = $parent->getMethod($reflectionMethod->name);
+						}
+					catch (\Throwable $e)
+						{
+						$method = null;
+						}
 					if ($method)
 						{
 						$docBlock = $this->getDocBlock($method);
@@ -342,6 +367,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		{
 		$info = '(';
 		$comma = '';
+
 		$docBlock = $this->getDocBlock($method);
 
 		$parameterComments = $this->getParameterComments($docBlock);
@@ -360,6 +386,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			$name = $parameter->getName();
 			$tip = '$' . $name;
+
+			/**
+			 * @todo add attributes for parameters
+			 * $attributes = $this->getAttributes($parameter);
+			 */
 
 			if (isset($parameterComments[$name]))
 				{
@@ -479,4 +510,91 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		return $section;
 		}
+
+	protected function getAttributes($reflection) : array
+		{
+		if ($reflection && method_exists($reflection, 'getAttributes'))
+			{
+			return $reflection->getAttributes();
+			}
+
+		return [];
+		}
+
+	private function getAttributeName(string $name, bool $asValue = false) : string
+		{
+		$link = $this->getClassName($name);
+		if (strpos($link, 'href='))
+			{
+			$name = $link;
+			}
+		elseif ($asValue)
+			{
+			$name = $this->getValueString($name);
+			}
+
+		return $name;
+		}
+
+	protected function formatAttribute(\ReflectionAttribute $attribute) : string
+		{
+		$parameters = '';
+		$arguments = $attribute->getArguments();
+		if ($arguments)
+			{
+			$parameters = ' (';
+			$comma = '';
+			foreach ($arguments as $name => $argument)
+				{
+				$name = is_int($name) ? '' : $this->getAttributeName($name) . ': ';
+				if (is_string($argument))
+					{
+					$link = $this->getAttributeName($argument, true);
+					}
+				else
+					{
+					$link = $this->getValueString($argument);
+					}
+				$parameters .= "{$comma} {$name}{$link}";
+
+				$comma = ', ';
+				}
+			$parameters .= ')';
+			}
+
+		$targeting = '';
+		/*
+
+		Not sure how useful this is, so commenting out for now.
+
+		$target = $attribute->getTarget();
+		$targets = [];
+		$definedTargets = [
+			"CLASS" => \Attribute::TARGET_CLASS,
+			"FUNCTION" => \Attribute::TARGET_FUNCTION,
+			"METHOD" => \Attribute::TARGET_METHOD,
+			"PROPERTY" => \Attribute::TARGET_PROPERTY,
+			"CLASS_CONSTANT" => \Attribute::TARGET_CLASS_CONSTANT,
+			"PARAMETER" => \Attribute::TARGET_PARAMETER,
+			];
+		foreach ($definedTargets as $name => $value)
+			{
+			if ($target & $value)
+				{
+				$targets[] = '\\Attribute::TARGET_' . $name;
+				}
+			}
+		if ($attribute->isRepeated())
+			{
+			$targets[] = '\\Attribute::IS_REPEATABLE';
+			}
+		if ($targets)
+			{
+			$targeting = ' ' . implode(' | ', $targets);
+			}
+		*/
+
+		return $this->getClassName($attribute->getName()) . $parameters . $targeting;
+		}
+
 	}
