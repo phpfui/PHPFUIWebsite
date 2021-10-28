@@ -1564,21 +1564,21 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V21.9.6",
+            "version": "V21.9.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "603fe285e7a8b3fa893cf12c7b8acd014594ca30"
+                "reference": "8f16b4b17289d464c6172fa2a33018c7402698b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/603fe285e7a8b3fa893cf12c7b8acd014594ca30",
-                "reference": "603fe285e7a8b3fa893cf12c7b8acd014594ca30",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/8f16b4b17289d464c6172fa2a33018c7402698b0",
+                "reference": "8f16b4b17289d464c6172fa2a33018c7402698b0",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.3",
-                "php": ">=8.0"
+                "php": "^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -1616,31 +1616,33 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V21.9.6"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V21.9.7"
             },
-            "time": "2021-09-23T05:22:11+00:00"
+            "time": "2021-10-27T00:07:13+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
-            "version": "V1.0.5",
+            "version": "V1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/HTMLUnitTester.git",
-                "reference": "0ecee6bcc359c53418ba651761268a32087e23c0"
+                "reference": "e930cd53e369f687af0c29195dc27f4f7d630721"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/0ecee6bcc359c53418ba651761268a32087e23c0",
-                "reference": "0ecee6bcc359c53418ba651761268a32087e23c0",
+                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/e930cd53e369f687af0c29195dc27f4f7d630721",
+                "reference": "e930cd53e369f687af0c29195dc27f4f7d630721",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1",
-                "phpfui/phpunit-syntax-coverage": "^1.0",
-                "rexxars/html-validator": "^2.2"
+                "php": "^7.3 | <8.1",
+                "rexxars/html-validator": ">=2.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0|>=8.0"
+                "friendsofphp/php-cs-fixer": "^3.2",
+                "phpfui/phpunit-syntax-coverage": ">=1.0",
+                "phpunit/phpunit": "^7.0 | <10.0",
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
@@ -1671,9 +1673,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/HTMLUnitTester/issues",
-                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.5"
+                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.6"
             },
-            "time": "2020-09-28T23:27:59+00:00"
+            "time": "2021-10-27T21:00:48+00:00"
         },
         {
             "name": "phpfui/instadoc",
@@ -1739,28 +1741,26 @@
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
-            "version": "V1.0.4",
+            "version": "V1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/MySQLSlowQueryParser.git",
-                "reference": "a4e2ca35b1c10048bb208259ea1f91278390ae8f"
+                "reference": "0c8aadb944c377dc1e4e00df289b7270cade9405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/a4e2ca35b1c10048bb208259ea1f91278390ae8f",
-                "reference": "a4e2ca35b1c10048bb208259ea1f91278390ae8f",
+                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/0c8aadb944c377dc1e4e00df289b7270cade9405",
+                "reference": "0c8aadb944c377dc1e4e00df289b7270cade9405",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.1 | <8.1"
             },
             "require-dev": {
-                "fabpot/php-cs-fixer": "dev-master",
-                "friendsofphp/php-cs-fixer": "^2.18",
+                "friendsofphp/php-cs-fixer": "^3.0",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
                 "phpunit/phpunit": ">=7.0",
-                "roave/security-advisories": "dev-latest",
-                "vimeo/psalm": "^4.7"
+                "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
@@ -1789,9 +1789,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/MySQLSlowQueryParser/issues",
-                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.4"
+                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.5"
             },
-            "time": "2021-08-09T14:34:08+00:00"
+            "time": "2021-10-26T23:27:41+00:00"
         },
         {
             "name": "phpfui/phpfui",
@@ -1861,28 +1861,27 @@
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.2",
+            "version": "V1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb"
+                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/3418ca7fb2275005c65e95e4622c67f7713d28eb",
-                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/224e080f709f63ef41079b066f12b6f4723c06a4",
+                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": ">=4.10",
-                "php": ">=7.3"
+                "nikic/php-parser": "^4.13",
+                "php": "^7.3 | <8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.18",
-                "phpunit/phpunit": ">=9.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpunit/phpunit": ">=8.0",
                 "roave/security-advisories": "dev-latest",
-                "symfony/translation-contracts": "^2.3",
-                "vimeo/psalm": "^4.7"
+                "symfony/translation-contracts": ">=2.3"
             },
             "type": "library",
             "autoload": {
@@ -1914,9 +1913,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.2"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.3"
             },
-            "time": "2021-04-13T03:26:46+00:00"
+            "time": "2021-10-27T02:28:13+00:00"
         },
         {
             "name": "phpspec/prophecy",

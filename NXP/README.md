@@ -13,7 +13,7 @@
 * Unlimited variable name lengths
 * String support, as function parameters or as evaluated as a number by PHP
 * Exceptions on divide by zero, or treat as zero
-* Unary Minus (e.g. -3)
+* Unary Plus and Minus (e.g. +3 or -sin(12))
 * Pi ($pi) and Euler's number ($e) support to 11 decimal places
 * Easily extensible
 
@@ -34,17 +34,22 @@ echo $executor->execute('1 + 2 * (2 - (4+10))^2 + sin(10)');
 ## Functions:
 Default functions:
 * abs
-* acos
+* acos (arccos)
 * acosh
-* asin
-* atan (atn)
+* arcctg (arccot, arccotan)
+* arcsec
+* arccsc (arccosec)
+* asin (arcsin)
+* atan (atn, arctan, arctg)
 * atan2
 * atanh
 * avg
 * bindec
 * ceil
 * cos
+* cosec (csc)
 * cosh
+* ctg (cot, cotan, cotg, ctn)
 * decbin
 * dechex
 * decoct
@@ -57,8 +62,8 @@ Default functions:
 * hypot
 * if
 * intdiv
-* log
-* log10
+* log (ln)
+* log10 (lg)
 * log1p
 * max
 * min
@@ -67,10 +72,11 @@ Default functions:
 * pow
 * rad2deg
 * round
+* sec
 * sin
 * sinh
 * sqrt
-* tan (tn)
+* tan (tn, tg)
 * tanh
 
 Add custom function to executor:
@@ -105,13 +111,13 @@ $executor->addOperator(new Operator(
 ## Logical operators:
 Logical operators (==, !=, <, <, >=, <=, &&, ||) are supported, but logically they can only return true (1) or false (0).  In order to leverage them, use the built in **if** function:
 
-```php
+```
 if($a > $b, $a - $b, $b - $a)
 ```
 
 You can think of the **if** function as prototyped like:
 
-```php
+```
 function if($condition, $returnIfTrue, $returnIfFalse)
 ```
 ## Variables:
@@ -119,7 +125,7 @@ Variables can be prefixed with the dollar sign ($) for PHP compatibility, but is
 
 Default variables:
 
-```php
+```
 $pi = 3.14159265359
 $e  = 2.71828182846
 ```
@@ -170,9 +176,6 @@ $executor->addOperator("/", false, 180, function($a, $b) {
 echo $executor->execute('1/0');
 ```
 
-## Unary Minus Operator:
-Negative numbers are supported via the unary minus operator. Positive numbers are not explicitly supported as unsigned numbers are assumed positive.
-
 ## String Support:
 Expressions can contain double or single quoted strings that are evaluated the same way as PHP evalutes strings as numbers. You can also pass strings to functions.
 
@@ -196,4 +199,4 @@ Full class documentation via [PHPFUI/InstaDoc](http://phpfui.com/?n=NXP&c=MathEx
 
 ## Future Enhancements
 
-This package will continue to track currently supported versions of PHP.  PHP 7.1 and earlier support will be dropped when PHP 8 is released.
+This package will continue to track currently supported versions of PHP.
