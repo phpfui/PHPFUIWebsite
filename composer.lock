@@ -4222,16 +4222,16 @@
         },
         {
             "name": "zurb/foundation",
-            "version": "v6.7.3",
+            "version": "v6.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/foundation/foundation-sites.git",
-                "reference": "b841c5d3c4a4a5cafee4ba31c005b089fd46af3d"
+                "reference": "705bc1b2f5a4fbe3b596f7e92999c456f4ab0e96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/foundation/foundation-sites/zipball/b841c5d3c4a4a5cafee4ba31c005b089fd46af3d",
-                "reference": "b841c5d3c4a4a5cafee4ba31c005b089fd46af3d",
+                "url": "https://api.github.com/repos/foundation/foundation-sites/zipball/705bc1b2f5a4fbe3b596f7e92999c456f4ab0e96",
+                "reference": "705bc1b2f5a4fbe3b596f7e92999c456f4ab0e96",
                 "shasum": ""
             },
             "type": "library",
@@ -4259,11 +4259,11 @@
             ],
             "support": {
                 "email": "contact@get.foundation",
-                "forum": "https://foundation.discourse.group",
+                "forum": "https://github.com/foundation/foundation-sites/discussions",
                 "issues": "https://github.com/foundation/foundation-sites/issues",
-                "source": "https://github.com/foundation/foundation-sites/tree/v6.7.3"
+                "source": "https://github.com/foundation/foundation-sites/tree/v6.7.4"
             },
-            "time": "2021-09-27T17:15:05+00:00"
+            "time": "2021-11-02T20:58:37+00:00"
         }
     ],
     "packages-dev": [],
