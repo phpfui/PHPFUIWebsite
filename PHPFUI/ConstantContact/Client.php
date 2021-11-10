@@ -97,7 +97,7 @@ class Client
 		return $this->lastError;
 		}
 
-  public function getStatusCode() : int
+	public function getStatusCode() : int
 		{
 		return $this->statusCode;
 		}
@@ -222,6 +222,12 @@ class Client
 		{
 		try
 			{
+			if ($parameters)
+				{
+				$paramString = urldecode(http_build_query($parameters));
+				$url .= $url . '&' . urlencode(preg_replace('/\[[0-9]\]/', '', $paramString));
+				}
+
 			$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders()]);
 			$response = $guzzle->request('GET', $url);
 
