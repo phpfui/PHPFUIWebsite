@@ -25,11 +25,11 @@ else
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',
-		'PHPHtmlParser',
 		'PhpParser',
 		'Psr',
 		'Symfony',
 		'Symfony',
+		'voku',
 		'Webmozart',
 		];
 
