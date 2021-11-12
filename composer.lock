@@ -1272,16 +1272,16 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V21.11.4",
+            "version": "V21.11.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "8255036b3083d79e3f0d06d16cf1068097d4ef1c"
+                "reference": "89e10467fa07ff470fd973e7952d56ca72d2c4b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/8255036b3083d79e3f0d06d16cf1068097d4ef1c",
-                "reference": "8255036b3083d79e3f0d06d16cf1068097d4ef1c",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/89e10467fa07ff470fd973e7952d56ca72d2c4b8",
+                "reference": "89e10467fa07ff470fd973e7952d56ca72d2c4b8",
                 "shasum": ""
             },
             "require": {
@@ -1324,9 +1324,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V21.11.4"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V21.11.5"
             },
-            "time": "2021-11-11T06:11:11+00:00"
+            "time": "2021-11-12T00:55:55+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
@@ -2923,16 +2923,16 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "d89cc98761b8cb5a1a235a6b703ae50d34080e65"
+                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/d89cc98761b8cb5a1a235a6b703ae50d34080e65",
-                "reference": "d89cc98761b8cb5a1a235a6b703ae50d34080e65",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/65e8b7db476c5dd267e65eea9cab77584d3cfff9",
+                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9",
                 "shasum": ""
             },
             "require": {
@@ -2981,14 +2981,14 @@
                 }
             ],
             "description": "Provides the functionality to export PHP variables for visualization",
-            "homepage": "http://www.github.com/sebastianbergmann/exporter",
+            "homepage": "https://www.github.com/sebastianbergmann/exporter",
             "keywords": [
                 "export",
                 "exporter"
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/exporter/issues",
-                "source": "https://github.com/sebastianbergmann/exporter/tree/4.0.3"
+                "source": "https://github.com/sebastianbergmann/exporter/tree/4.0.4"
             },
             "funding": [
                 {
@@ -2996,7 +2996,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T05:24:23+00:00"
+            "time": "2021-11-11T14:18:36+00:00"
         },
         {
             "name": "sebastian/global-state",
