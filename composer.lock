@@ -1272,21 +1272,22 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V21.11.6",
+            "version": "V21.11.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "cd5c3765ce40d1edf2c09ef29353eeb5084cb3c1"
+                "reference": "b17836204151e7d575b44bdcc24fa53b581a606d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/cd5c3765ce40d1edf2c09ef29353eeb5084cb3c1",
-                "reference": "cd5c3765ce40d1edf2c09ef29353eeb5084cb3c1",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/b17836204151e7d575b44bdcc24fa53b581a606d",
+                "reference": "b17836204151e7d575b44bdcc24fa53b581a606d",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.3",
-                "php": "^8.0"
+                "php": "^8.0",
+                "spatie/guzzle-rate-limiter-middleware": "^2.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -1324,9 +1325,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V21.11.6"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V21.11.7"
             },
-            "time": "2021-11-13T03:06:18+00:00"
+            "time": "2021-11-16T06:11:16+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
@@ -3503,6 +3504,58 @@
                 "source": "https://github.com/Setasign/FPDF/tree/1.8.4"
             },
             "time": "2021-08-30T07:50:06+00:00"
+        },
+        {
+            "name": "spatie/guzzle-rate-limiter-middleware",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/guzzle-rate-limiter-middleware.git",
+                "reference": "8679f7a22e46edc182046f18b83bacbc627b0600"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/guzzle-rate-limiter-middleware/zipball/8679f7a22e46edc182046f18b83bacbc627b0600",
+                "reference": "8679f7a22e46edc182046f18b83bacbc627b0600",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.0",
+                "phpunit/phpunit": "^9.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\GuzzleRateLimiterMiddleware\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastiandedeyne@gmail.com",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A rate limiter for Guzzle",
+            "homepage": "https://github.com/spatie/guzzle-rate-limiter-middleware",
+            "keywords": [
+                "guzzle-rate-limiter-middleware",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/guzzle-rate-limiter-middleware/issues",
+                "source": "https://github.com/spatie/guzzle-rate-limiter-middleware/tree/2.0.1"
+            },
+            "time": "2020-12-19T18:47:06+00:00"
         },
         {
             "name": "symfony/css-selector",
