@@ -3348,7 +3348,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -3935,16 +3934,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v5.3.11",
+            "version": "v5.3.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "6c99204de85d04ca17f16c466fc61896960b0636"
+                "reference": "e498803a6e95ede78e9d5646ad32a2255c033a6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/6c99204de85d04ca17f16c466fc61896960b0636",
-                "reference": "6c99204de85d04ca17f16c466fc61896960b0636",
+                "url": "https://api.github.com/repos/symfony/process/zipball/e498803a6e95ede78e9d5646ad32a2255c033a6a",
+                "reference": "e498803a6e95ede78e9d5646ad32a2255c033a6a",
                 "shasum": ""
             },
             "require": {
@@ -3977,7 +3976,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v5.3.11"
+                "source": "https://github.com/symfony/process/tree/v5.3.12"
             },
             "funding": [
                 {
@@ -3993,7 +3992,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-17T12:16:12+00:00"
+            "time": "2021-11-22T22:39:13+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -4047,16 +4046,16 @@
         },
         {
             "name": "voku/simple_html_dom",
-            "version": "4.7.29",
+            "version": "4.7.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/simple_html_dom.git",
-                "reference": "079067c704b714b7c2813971297bb340307813e7"
+                "reference": "f2be14b8afa7d9a8e5fbc90d93541c23a2134876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/079067c704b714b7c2813971297bb340307813e7",
-                "reference": "079067c704b714b7c2813971297bb340307813e7",
+                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/f2be14b8afa7d9a8e5fbc90d93541c23a2134876",
+                "reference": "f2be14b8afa7d9a8e5fbc90d93541c23a2134876",
                 "shasum": ""
             },
             "require": {
@@ -4104,7 +4103,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/simple_html_dom/issues",
-                "source": "https://github.com/voku/simple_html_dom/tree/4.7.29"
+                "source": "https://github.com/voku/simple_html_dom/tree/4.7.30"
             },
             "funding": [
                 {
@@ -4124,7 +4123,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-29T14:56:56+00:00"
+            "time": "2021-11-25T05:03:35+00:00"
         },
         {
             "name": "webmozart/assert",
