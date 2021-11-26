@@ -1331,20 +1331,20 @@
         },
         {
             "name": "phpfui/html-unit-tester",
-            "version": "V1.0.6",
+            "version": "V1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/HTMLUnitTester.git",
-                "reference": "e930cd53e369f687af0c29195dc27f4f7d630721"
+                "reference": "5ecef82d813ce79e97dcfba7ca0421c031ef7040"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/e930cd53e369f687af0c29195dc27f4f7d630721",
-                "reference": "e930cd53e369f687af0c29195dc27f4f7d630721",
+                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/5ecef82d813ce79e97dcfba7ca0421c031ef7040",
+                "reference": "5ecef82d813ce79e97dcfba7ca0421c031ef7040",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 | <8.1",
+                "php": ">=7.4 <8.2",
                 "rexxars/html-validator": ">=2.2"
             },
             "require-dev": {
@@ -1355,8 +1355,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "PHPFUI": "src/"
+                "psr-4": {
+                    "PHPFUI\\HTMLUnitTester\\": "src/PHPFUI/HTMLUnitTester/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1382,28 +1382,28 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/HTMLUnitTester/issues",
-                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.6"
+                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.7"
             },
-            "time": "2021-10-27T21:00:48+00:00"
+            "time": "2021-11-25T15:09:19+00:00"
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.0.52",
+            "version": "V1.0.53",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "87dcba3b3acf99cad20cf69067b9681e7de8989b"
+                "reference": "b3a4d175d3bd56ac6bce2692ef5c056b3df3f551"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/87dcba3b3acf99cad20cf69067b9681e7de8989b",
-                "reference": "87dcba3b3acf99cad20cf69067b9681e7de8989b",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/b3a4d175d3bd56ac6bce2692ef5c056b3df3f551",
+                "reference": "b3a4d175d3bd56ac6bce2692ef5c056b3df3f551",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "^1.2",
                 "gitonomy/gitlib": "^1.2",
-                "php": "^7.3 | <8.1",
+                "php": ">=7.4 <8.2",
                 "phpdocumentor/reflection-docblock": "^5.0",
                 "phpfui/phpfui": "^6.0",
                 "scrivo/highlight.php": ">=9.17",
@@ -1438,43 +1438,45 @@
                 "block",
                 "doc",
                 "docblock",
+                "document",
                 "documentation",
                 "foundation",
+                "generator",
                 "phpdoc"
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.52"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.0.53"
             },
-            "time": "2021-11-16T17:14:59+00:00"
+            "time": "2021-11-25T15:15:33+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
-            "version": "V1.0.5",
+            "version": "V1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/MySQLSlowQueryParser.git",
-                "reference": "0c8aadb944c377dc1e4e00df289b7270cade9405"
+                "reference": "9a7b26246fe4f2524e17fb1a254cc05e0789666e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/0c8aadb944c377dc1e4e00df289b7270cade9405",
-                "reference": "0c8aadb944c377dc1e4e00df289b7270cade9405",
+                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/9a7b26246fe4f2524e17fb1a254cc05e0789666e",
+                "reference": "9a7b26246fe4f2524e17fb1a254cc05e0789666e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1 | <8.1"
+                "php": ">=7.4 <8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
-                "phpunit/phpunit": ">=7.0",
+                "phpunit/phpunit": ">=9.0",
                 "roave/security-advisories": "dev-latest"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "PHPFUI\\": "src/PHPFUI"
+                    "PHPFUI\\MySQLSlowQuery\\": "src/PHPFUI/MySQLSlowQuery/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1498,9 +1500,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/MySQLSlowQueryParser/issues",
-                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.5"
+                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.6"
             },
-            "time": "2021-10-26T23:27:41+00:00"
+            "time": "2021-11-26T03:05:57+00:00"
         },
         {
             "name": "phpfui/phpfui",
