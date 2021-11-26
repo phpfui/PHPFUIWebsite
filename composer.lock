@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bb6db756d941e2489190816b2d0f4a9",
+    "content-hash": "3914d0777e73d306251875fc7826e241",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -1387,6 +1387,70 @@
             "time": "2021-11-25T15:09:19+00:00"
         },
         {
+            "name": "phpfui/icalendar",
+            "version": "V1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpfui/icalendar.git",
+                "reference": "a2a0ba04290ff3a038da0796bd699536fd3923f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/a2a0ba04290ff3a038da0796bd699536fd3923f6",
+                "reference": "a2a0ba04290ff3a038da0796bd699536fd3923f6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4 <8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.3",
+                "phpunit/phpunit": "^8.4 | ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ICalendarOrg": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Bruce Wells",
+                    "email": "brucekwells@gmail.com"
+                }
+            ],
+            "description": "A modern fork of the icalendar.org PHP implementation of rfc5545, management of iCal formatted files",
+            "homepage": "https://icalendar.org/php-library.html",
+            "keywords": [
+                "calendar",
+                "daylight",
+                "file",
+                "management",
+                "rfc2445",
+                "rfc5545",
+                "rfc6321",
+                "standard",
+                "vCalendar",
+                "valarm",
+                "vevent",
+                "vfreebusy",
+                "vjournal",
+                "vtimezone",
+                "vtodo"
+            ],
+            "support": {
+                "issues": "https://github.com/phpfui/icalendar/issues",
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.1"
+            },
+            "time": "2019-10-31T00:00:00+00:00"
+        },
+        {
             "name": "phpfui/instadoc",
             "version": "V1.0.53",
             "source": {
@@ -1506,16 +1570,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.0.74",
+            "version": "V6.0.75",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "5982127c6e3d3f7fd9baa73fcd00549f7a996d0d"
+                "reference": "faf5d28f85a1cecca92d3610fe622fa464fca66b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/5982127c6e3d3f7fd9baa73fcd00549f7a996d0d",
-                "reference": "5982127c6e3d3f7fd9baa73fcd00549f7a996d0d",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/faf5d28f85a1cecca92d3610fe622fa464fca66b",
+                "reference": "faf5d28f85a1cecca92d3610fe622fa464fca66b",
                 "shasum": ""
             },
             "require": {
@@ -1523,7 +1587,7 @@
                 "fortawesome/font-awesome": "^5",
                 "google/recaptcha": "^1.2",
                 "igorescobar/jquery-mask-plugin": "^1.14",
-                "php": ">=7.3",
+                "php": ">=7.4 <8.2",
                 "zurb/foundation": "^6.6"
             },
             "require-dev": {
@@ -1566,33 +1630,34 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.0.74"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.0.75"
             },
-            "time": "2021-11-10T16:12:47+00:00"
+            "time": "2021-11-26T18:55:41+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.3",
+            "version": "V1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4"
+                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/224e080f709f63ef41079b066f12b6f4723c06a4",
-                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/3418ca7fb2275005c65e95e4622c67f7713d28eb",
+                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.13",
-                "php": "^7.3 | <8.1"
+                "nikic/php-parser": ">=4.10",
+                "php": ">=7.3"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "phpunit/phpunit": ">=8.0",
+                "friendsofphp/php-cs-fixer": "^2.18",
+                "phpunit/phpunit": ">=9.0",
                 "roave/security-advisories": "dev-latest",
-                "symfony/translation-contracts": ">=2.3"
+                "symfony/translation-contracts": "^2.3",
+                "vimeo/psalm": "^4.7"
             },
             "type": "library",
             "autoload": {
@@ -1624,9 +1689,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.3"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.2"
             },
-            "time": "2021-10-27T02:28:13+00:00"
+            "time": "2021-04-13T03:26:46+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -2277,56 +2342,6 @@
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
-            "name": "psr/log",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Log\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
-            },
-            "time": "2021-07-14T16:46:02+00:00"
-        },
-        {
             "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
@@ -2419,42 +2434,40 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "dev-master",
+            "version": "v9.18.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37"
+                "reference": "6d5049cd2578e19a06adbb6ac77879089be1e3f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
-                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/6d5049cd2578e19a06adbb6ac77879089be1e3f9",
+                "reference": "6d5049cd2578e19a06adbb6ac77879089be1e3f9",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": ">=5.6"
+                "php": ">=5.4"
             },
             "require-dev": {
-                "phpbench/phpbench": "^1.0",
-                "phpunit/phpunit": "^5.7",
+                "phpunit/phpunit": "^4.8|^5.7",
                 "sabberworm/php-css-parser": "^8.3",
-                "symfony/finder": "^4.4",
-                "symfony/var-dumper": "^4.4"
+                "symfony/finder": "^2.8|^3.4",
+                "symfony/var-dumper": "^2.8|^3.4"
             },
-            "default-branch": true,
+            "suggest": {
+                "ext-mbstring": "Allows highlighting code with unicode characters and supports language with unicode keywords"
+            },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "10.0-dev"
-                }
-            },
             "autoload": {
-                "psr-4": {
-                    "Highlight\\": "src/Highlight",
-                    "HighlightUtilities\\": "src/HighlightUtilities"
-                }
+                "psr-0": {
+                    "Highlight\\": "",
+                    "HighlightUtilities\\": ""
+                },
+                "files": [
+                    "HighlightUtilities/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2495,7 +2508,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-09T20:26:27+00:00"
+            "time": "2021-10-24T00:28:14+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -4234,9 +4247,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "scrivo/highlight.php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

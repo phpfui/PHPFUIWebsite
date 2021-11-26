@@ -4,14 +4,14 @@ namespace PHPFUI\PayPal;
 
 class Item extends \PHPFUI\PayPal\Base
 	{
-	protected static $validFields = [
+	protected static array $validFields = [
 		'name' => 'string',
 		'quantity' => 'integer',
 		'description' => 'string',
 		'sku' => 'string',
-		'tax' => Currency::class,
+		'tax' => \PHPFUI\PayPal\Currency::class,
 		'category' => ['DIGITAL_GOODS', 'PHYSICAL_GOODS'],
-		'unit_amount' => Currency::class,
+		'unit_amount' => \PHPFUI\PayPal\Currency::class,
 	];
 
 	public function __construct(string $name, int $quantity, Currency $unit_amount)

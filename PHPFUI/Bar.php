@@ -4,13 +4,13 @@ namespace PHPFUI;
 
 abstract class Bar extends \PHPFUI\HTML5Element
 	{
-	protected $left = [];
+	protected array $left = [];
 
-	protected $right = [];
+	protected array $right = [];
 
-	private $className;
+	private string $className;
 
-	private $started = false;
+	private bool $started = false;
 
 	public function __construct(string $className)
 		{
@@ -77,7 +77,7 @@ abstract class Bar extends \PHPFUI\HTML5Element
 
 		if ($items)
 			{
-			$element = new HTML5Element('div');
+			$element = new \PHPFUI\HTML5Element('div');
 			$element->addClass($this->className . '-' . $class);
 
 			foreach ($items as $item)

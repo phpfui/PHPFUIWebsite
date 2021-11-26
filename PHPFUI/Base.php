@@ -13,13 +13,13 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 
 	public const DEBUG_SOURCE = 1;
 
-	private static $debug = 0;
+	private static int $debug = 0;
 
-	private static $done = false;
+	private static bool $done = false;
 
-	private $items = [];
+	private array $items = [];
 
-	private static $response = '';
+	private static string $response = '';
 
 	public function __construct()
 		{
@@ -217,7 +217,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 
 		$output = '';
 
-		$debug = self::getDebug(Session::DEBUG_HTML) ? "\n" : '';
+		$debug = self::getDebug(\PHPFUI\Session::DEBUG_HTML) ? "\n" : '';
 
 		try
 			{

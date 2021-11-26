@@ -7,15 +7,15 @@ namespace PHPFUI\Input;
  */
 class SwitchRadio extends \PHPFUI\HTML5Element
 	{
-	protected $input;
+	protected \PHPFUI\HTML5Element $input;
 
-	private $active = '';
+	private string $active = '';
 
-	private $inactive = '';
+	private string $inactive = '';
 
-	private $started = false;
+	private bool $started = false;
 
-	private $title = '';
+	private string $title = '';
 
 	public function __construct(string $name, $value = 0, string $title = '', string $type = 'radio')
 		{

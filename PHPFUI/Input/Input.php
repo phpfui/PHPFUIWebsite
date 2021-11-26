@@ -7,19 +7,19 @@ namespace PHPFUI\Input;
  */
 abstract class Input extends \PHPFUI\Input
 	{
-	protected $error = null;
+	protected ?\PHPFUI\HTML5Element $error = null;
 
-	protected $errorMessages = [];
+	protected array $errorMessages = [];
 
-	protected $hint = null;
+	protected ?string $hint = null;
 
-	protected $hintText = '';
+	protected string $hintText = '';
 
-	protected $label = '';
+	protected ?string $label = '';
 
-	protected $required = false;
+	protected bool $required = false;
 
-	private $started = false;
+	private bool $started = false;
 
 	/**
 	 * Construct an input field for Abide validation and label

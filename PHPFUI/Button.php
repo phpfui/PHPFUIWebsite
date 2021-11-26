@@ -8,11 +8,11 @@ namespace PHPFUI;
  */
 class Button extends \PHPFUI\HTML5Element
 	{
-	protected $link;
+	protected string $link = '';
 
-	protected $text;
+	protected string $text = '';
 
-	private $started = false;
+	private bool $started = false;
 
 	/**
 	 * Make a button

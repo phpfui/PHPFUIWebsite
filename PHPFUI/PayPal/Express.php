@@ -6,20 +6,26 @@ class Express extends \PHPFUI\HTML5Element
 	{
 	use \PHPFUI\Traits\Page;
 
-	private $executeUrl;
+	private ?string $errorUrl = null;
 
-	private $page;
+	private ?string $executeUrl = null;
 
-	private $paymentUrl;
+	private ?string $logUrl = null;
 
-	private $styles = [
+	private ?string $paymentUrl = null;
+
+	private \PHPFUI\Interfaces\Page $page;
+
+	private string $clientId;
+
+	private array $styles = [
 		'layout' => 'vertical',
 		'size' => 'medium',
 		'shape' => 'pill',
 		'color' => 'gold',
 	];
 
-	private $type = 'sandbox';
+	private string $type = 'sandbox';
 
 	public function __construct(\PHPFUI\Interfaces\Page $page, string $clientId)
 		{

@@ -22,6 +22,7 @@ else
 		'GuzzleHttp',
 		'Highlight',
 		'HtmlValidator',
+		'ICalendarOrg',
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',

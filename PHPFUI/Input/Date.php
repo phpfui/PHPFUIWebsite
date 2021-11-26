@@ -12,9 +12,9 @@ class Date extends \PHPFUI\Input\Input
 	{
 	use \PHPFUI\Traits\Page;
 
-	protected $options = ['closeButton' => true];
+	protected array $options = ['closeButton' => true];
 
-	protected $page;
+	protected \PHPFUI\Interfaces\Page $page;
 
 	/**
 	 * Construct a Date input. Native mobile date controls used

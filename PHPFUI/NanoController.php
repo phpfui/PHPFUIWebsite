@@ -10,13 +10,15 @@ namespace PHPFUI;
  * ### [KISS](https://www.kissonline.com) - [Keep It Simple Stupid](https://en.wikipedia.org/wiki/KISS_principle)
  * The **NanoController** maps namespaces, classes and methods directly to the URI and dispenses with a routing table.  The result is an easy to understand namespace and classs structure that exactly matches your URI. The URI tells you exactly where the class lives, and the class tells you the exact URI. No need to check a routing table to know what is invoked when.
  * ### Naming Conventions
- * **NanoController** follows standard naming conventions to figure out what namespace, class and method to call.  Namespaces and classes should use [Studly Case](https://mentoor.io/posts/studlycase-vs-camelcase-vs-snakecase/1), capitalized first letter and capitalized letter of every word. Methods should follow [camelCase](https://mentoor.io/posts/studlycase-vs-camelcase-vs-snakecase/1), where the first letter is lowercase, with subsequent word's first letter upper cased, although this is not required, as PHP method names are case insensitive (unfortunately). **NanoController** uses the first lower case segment as the method name. The preceding segments form the namespace and class. The method must be public.
+ * **NanoController** follows standard naming conventions to figure out what namespace, class and method to call.  Namespaces and classes should use [Studly Case](https://mentoor.io/posts/studlycase-vs-camelcase-vs-snakecase/1), capitalized first letter and capitalized letter of every word. Methods should follow [camelCase](https://mentoor.io/posts/studlycase-vs-camelcase-vs-snakecase/1), where the first letter is lowercase, with subsequent word's first letter upper cased, although this is not required, as PHP method names are case insensitive (unfortunately). **NanoController** uses the first lower case segment as the method name. The preceding segments form the namespace and class. **NanoController** will append the request method verb (in Studly Case) to the method name. If this method is not found, the base method name is tried. The method must be public.
  * ### Parameters
  * You can pass parameters with URI segments past the first lower case segment (which is the method name to call in the class) by simply specifying additional segments.  **NanoController** uses method parameter types to cast the  parameters to the right types.  You can specify any scalar (**bool, int, float, string**), and **NanoController** will cast it to the correct type.  If your parameter type is a class, **NanoController** will instantiate the class and pass the constuctor a string representation of the corresponding URI segment. If you specify **array** as the type, **NanoController** will pass all subsequent URI segments as an array of strings. No other parameters will be passed after an **array** parameter.
  * ### Method Call
  * **NanoController** will instantiate the class (which must impliment **\PHPFUI\Interfaces\NanoClass**) and call the specified method and pass any provided parameters.  The run method returns the instantiated class with the specified method run. It is your job to deal with the object after that. Generally you would just call its output function (__toString normally) and return a completed page, but it is up to you.
  * ### Landing Pages
  * If a valid method is not found, but the class is, **NanoController** will attempt to call the default missing method if explicitly defined by calling **setMissingMethod**. This allows for a default landing page if a method is not called.  If a default method is not specified, **NanoController** continues up the URI tree looking for a default method.  If no class and default method are found, then the missing page is returned.
+ * ### Home Page
+ * If an blank URI (or \) is provided, it will return a class of **App\Missing**, unless **setHomePageClass** has beem called. No method will be called on the HomePage class.
  * ### Missing Class
  * Users are prone to not typing in URIs exactly, so if **NanoController** can not find a class, or a class and method to instantiate, it will return a missing class of **App\Missing**, which can be overridden if needed by calling **setMissingClass**. If the namespace and class do not exist, the missing class will be returned.  If the class exists, the missing method will be tried, and if not found, the missing method will be searched for back up the URI tree.
  * ### Examples (assuming default App namespace)
@@ -29,28 +31,28 @@ namespace PHPFUI;
  * |/Account/Users/Fiends|\App|Missing| __construct(NanoController) | none (class not defined) |
  *
  * You can change the root namespace from App to anything by calling setRootNamespace('App\\Controller') for example.
- * ### What about GET, POST, PUT, and DELETE?
- * Unlike complicated routing tables, **NanoController** leaves the handling of HTTP methods to the class. Since browsers only support GET and POST, you have to hack PUT and DELETE methods anyway, so just deal with the HTTP method how ever you see fit.
  */
-class NanoController
+class NanoController implements \PHPFUI\Interfaces\NanoController
 	{
-	private $errors = [];
+	private array $errors = [];
 
-	private $files = [];
+	private array $files = [];
 
-	private $get = [];
+	private array $get = [];
 
-	private $invokedPath = '';
+	private string $invokedPath = '';
 
-	private $missingClass = '';
+	private string $homePageClass = '';
 
-	private $missingMethod = '';
+	private string $missingClass = '';
 
-	private $post = [];
+	private string $missingMethod = '';
 
-	private $rootNamespace = '';
+	private array $post = [];
 
-	private $uri = '';
+	private string $rootNamespace = '';
+
+	private string $uri = '';
 
 	/**
 	 * Construct the controller.  You generally pass $_SERVER['REQUEST_URI'], but it is up to you.
@@ -143,7 +145,19 @@ class NanoController
 		 * look at previous
 		 */
 		$urlParts = \parse_url($this->uri);
-		$parts = \explode('/', \trim($urlParts['path'], '/'));
+		$uri = \trim($urlParts['path'], '/');
+
+		if ('' == $uri)
+			{
+			if ($this->homePageClass)
+				{
+				return new $this->homePageClass($this);
+				}
+
+			return new $this->missingClass($this);
+			}
+
+		$parts = \explode('/', $uri);
 		$class = \explode('\\', $this->rootNamespace);
 
 		foreach ($parts as $index => $method)
@@ -196,6 +210,16 @@ class NanoController
 		}
 
 	/**
+	 * If no URI (or /) is provided, return an instance of this class.
+	 */
+	public function setHomePageClass(string $homePageClass = 'App\\HomePage') : self
+		{
+		$this->homePageClass = $homePageClass;
+
+		return $this;
+		}
+
+	/**
 	 * If a class is found, but a method is not, then try calling this missing method. If no missing method is defined, go back up the tree looking for this method.
 	 */
 	public function setMissingMethod(string $missingMethod = '') : self
@@ -223,6 +247,14 @@ class NanoController
 		}
 
 	/**
+	 * Return the StudlyCased request method name
+	 */
+	public function getRequestMethod() : string
+		{
+		return isset($_SERVER['REQUEST_METHOD']) ? \ucfirst(\strtolower($_SERVER['REQUEST_METHOD'])) : 'Get';
+		}
+
+	/**
 	 * Test if the class and method exists, and if so, return the instantiated class with the method called
 	 *
 	 * @return null|\PHPFUI\Interfaces\NanoClass null value indicates class::method was not found
@@ -245,16 +277,25 @@ class NanoController
 			}
 
 		$message = 'Class Method ' . $className . '::' . $method;
-		if (! \method_exists($className, $method))
-			{
-			$this->errors[$message . ' does not exist'] = true;
+		$finalMethod = $method . $this->getRequestMethod();
 
-			return null;
+		if (! \method_exists($className, $finalMethod))
+			{
+
+			if (! \method_exists($className, $method))
+				{
+				$this->errors[$message . ' does not exist'] = true;
+
+				return null;
+				}
+
+			$finalMethod = $method;
 			}
 
 		$classObject = new $className($this);
 		$reflection = new \ReflectionClass($classObject);
-		$reflectionMethod = $reflection->getMethod($method);
+		$reflectionMethod = $reflection->getMethod($finalMethod);
+
 		if (! $reflectionMethod->isPublic())
 			{
 			$this->errors[$message . ' is not public'] = true;
@@ -262,7 +303,7 @@ class NanoController
 			return null;
 			}
 
-		$this->invokedPath = $className . '\\' . $method;
+		$this->invokedPath = $className . '\\' . $finalMethod;
 		$args = ($index + 1) < \count($parts) ? \array_slice($parts, $index + 1) : [];
 		$numberArgs = \count($args);
 		$argNumber = 0;

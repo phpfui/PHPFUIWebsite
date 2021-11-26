@@ -4,8 +4,8 @@ namespace PHPFUI\PayPal;
 
 class Shipping extends \PHPFUI\PayPal\Base
 	{
-	protected static $validFields = [
+	protected static array $validFields = [
 		'method' => 'string',
-		'address' => Address::class,
+		'address' => \PHPFUI\PayPal\Address::class,
 	];
 	}

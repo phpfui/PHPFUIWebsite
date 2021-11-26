@@ -7,9 +7,9 @@ namespace PHPFUI\Input;
  */
 class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	{
-	protected $buttons = [];
+	protected array $buttons = [];
 
-	protected $separateRows = false;
+	protected bool $separateRows = false;
 
 	/**
 	 * Construct a Radio Button Group
@@ -88,7 +88,7 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 
 		foreach ($this->buttons as $button)
 			{
-			$radio = new Radio($this->name, $button['label'], $button['value']);
+			$radio = new \PHPFUI\Input\Radio($this->name, $button['label'], $button['value']);
 
 			if ($this->required)
 				{

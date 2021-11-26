@@ -33,7 +33,7 @@ class Session
 
 	public const DEBUG_JAVASCRIPT = 2;
 
-	private static $flash = [];
+	private static array $flash = [];
 
 	private static $handler = null;
 
@@ -109,7 +109,7 @@ class Session
 		{
 		if (! self::$handler)
 			{
-			self::$handler = new DefaultSessionHandler();
+			self::$handler = new \PHPFUI\DefaultSessionHandler();
 			}
 
 		return self::$handler;

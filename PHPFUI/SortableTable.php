@@ -7,19 +7,19 @@ namespace PHPFUI;
  */
 class SortableTable extends \PHPFUI\Table
 	{
-	private $columnParameter = 'c';
+	private string $columnParameter = 'c';
 
-	private $parameters = [];
+	private array $parameters = [];
 
-	private $sortableColumns = [];
+	private array $sortableColumns = [];
 
-	private $sortedColumn = '';
+	private string $sortedColumn = '';
 
-	private $sortedOrder = '';
+	private string $sortedOrder = '';
 
-	private $sortParameter = 's';
+	private string $sortParameter = 's';
 
-	private $url;
+	private string $url;
 
 	public function __construct()
 		{

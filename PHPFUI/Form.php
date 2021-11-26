@@ -9,16 +9,15 @@ namespace PHPFUI;
  */
 class Form extends \PHPFUI\HTML5Element
 	{
-
 	use \PHPFUI\Traits\Page;
 
-	private $areYouSure = true;
+	private bool $areYouSure = true;
 
-	private $page;
+	private \PHPFUI\Interfaces\Page $page;
 
-	private $started = false;
+	private bool $started = false;
 
-	private $submitValue = [];
+	private array $submitValue = [];
 
 	/**
 	 * Form needs a Page, as it adds things to the page to handle automatic abide validation
@@ -108,7 +107,7 @@ JAVASCRIPT;
 		{
 		[$name, $value] = $this->getSubmitValues($submit);
 
-		return Session::checkCSRF() && $name && ! empty($_POST[$name]) && $_POST[$name] == $value;
+		return \PHPFUI\Session::checkCSRF() && $name && ! empty($_POST[$name]) && $_POST[$name] == $value;
 		}
 
 	/**
@@ -161,7 +160,7 @@ JAVASCRIPT;
 
 			if ('get' != \strtolower($this->getAttribute('method')))
 				{
-				$this->add(new \PHPFUI\Input\Hidden(Session::csrfField(), Session::csrf()));
+				$this->add(new \PHPFUI\Input\Hidden(\PHPFUI\Session::csrfField(), \PHPFUI\Session::csrf()));
 				}
 			}
 

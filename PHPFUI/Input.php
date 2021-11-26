@@ -7,17 +7,17 @@ namespace PHPFUI;
  */
 class Input extends \PHPFUI\HTML5Element
 	{
-	protected $disabled;
+	protected bool $disabled = false;
 
-	protected $name = '';
+	protected string $name = '';
 
-	protected $placeholder = '';
+	protected string $placeholder = '';
 
-	protected $type = '';
+	protected string $type = '';
 
-	protected $value = '';
+	protected ?string $value = '';
 
-	private static $validInputs = [
+	private static array $validInputs = [
 		'button',
 		'checkbox',
 		'color',
