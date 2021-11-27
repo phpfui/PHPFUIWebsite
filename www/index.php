@@ -84,7 +84,10 @@ else
 			{
 			$parser = new \PHPFUI\InstaDoc\MarkDownParser();
 			$page = $controller->getPage();
-			$page->add($parser->fileText($file));
+			$cell = new \PHPFUI\Cell(12, 12, 12);
+			$cell->addClass('main-column');
+			$cell->add($parser->fileText($file));
+			$page->add($cell);
 			echo $page;
 			exit;
 			}
