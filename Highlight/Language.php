@@ -85,6 +85,22 @@ class Language extends Mode
      */
     public function __get($name)
     {
+        if ($name === 'mode') {
+            @trigger_error('The "mode" property will be removed in highlight.php 10.x', E_USER_DEPRECATED);
+
+            return $this->mode;
+        }
+
+        if ($name === 'caseInsensitive') {
+            @trigger_error('Due to compatibility requirements with highlight.js, use "case_insensitive" instead.', E_USER_DEPRECATED);
+
+            if (isset($this->mode->case_insensitive)) {
+                return $this->mode->case_insensitive;
+            }
+
+            return false;
+        }
+
         if (isset($this->mode->{$name})) {
             return $this->mode->{$name};
         }
@@ -276,6 +292,8 @@ class Language extends Mode
 
         $terminators = new Terminators($this->case_insensitive);
         $mode->terminators = $terminators->_buildModeRegex($mode);
+
+        Mode::_handleDeprecations($mode);
     }
 
     /**
@@ -377,5 +395,19 @@ class Language extends Mode
         }
 
         $this->compileMode($this->mode);
+    }
+
+    /**
+     * @todo Remove in highlight.php 10.x
+     *
+     * @deprecated 9.16.0 This method should never have been exposed publicly as part of the API.
+     *
+     * @param \stdClass|null $e
+     *
+     * @return void
+     */
+    public function complete(&$e)
+    {
+        Mode::_normalize($e);
     }
 }

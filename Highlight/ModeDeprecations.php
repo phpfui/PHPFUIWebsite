@@ -31,78 +31,20 @@ namespace Highlight;
 
 /**
  * @internal
- *
- * @implements \ArrayAccess<int, string|null>
- * @implements \IteratorAggregate<int, string|null>
- *
- * @since 9.16.0.0
  */
-class RegExMatch implements \ArrayAccess, \Countable, \IteratorAggregate
+trait ModeDeprecations
 {
-    /** @var array<int, string|null> */
-    private $data;
-
-    /** @var int */
-    public $index;
-
-    /** @var string */
-    public $input;
-
     /**
-     * @param array<int, string|null> $results
-     */
-    public function __construct(array $results)
-    {
-        $this->data = $results;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->data[$offset]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($offset)
-    {
-        return $this->data[$offset];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetSet($offset, $value)
-    {
-        throw new \LogicException(__CLASS__ . ' instances are read-only.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetUnset($offset)
-    {
-        throw new \LogicException(__CLASS__ . ' instances are read-only.');
-    }
-
-    /**
-     * {@inheritdoc}
+     * @deprecated 9.16.0.0 Use `case_insensitive` instead
      *
-     * @return int
+     * @var bool DEPRECATED
      */
-    public function count()
-    {
-        return count($this->data);
-    }
+    public $caseInsensitive;
+
+    /**
+     * @deprecated 9.16.0.0 Use `terminator_end` instead
+     *
+     * @var string
+     */
+    public $terminatorEnd;
 }

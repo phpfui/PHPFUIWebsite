@@ -45,6 +45,9 @@ class Highlighter
      */
     const SPAN_END_TAG = "</span>";
 
+    /** @var bool Disable warnings thrown on PHP installations without multibyte functions available. */
+    public static $DISABLE_MULTIBYTE_WARNING = false;
+
     /** @var bool */
     private $safeMode = true;
 
@@ -78,6 +81,15 @@ class Highlighter
 
     /** @var string The current code we are highlighting */
     private $codeToHighlight;
+
+    /** @var bool */
+    private $needsMultibyteSupport = false;
+
+    /** @var bool|null */
+    private static $hasMultiByteSupport = null;
+
+    /** @var bool */
+    private static $hasThrownMultiByteWarning = false;
 
     /** @var string[] A list of all the bundled languages */
     private static $bundledLanguages = array();
@@ -200,7 +212,7 @@ class Highlighter
     public static function registerAllLanguages()
     {
         // Languages that take precedence in the classMap array.
-        $languagePath = __DIR__ . "/languages/";
+        $languagePath = __DIR__ . DIRECTORY_SEPARATOR . "languages" . DIRECTORY_SEPARATOR;
         foreach (array("xml", "django", "javascript", "matlab", "cpp") as $languageId) {
             $filePath = $languagePath . $languageId . ".json";
             if (is_readable($filePath)) {
@@ -328,7 +340,7 @@ class Highlighter
      */
     private function keywordMatch($mode, $match)
     {
-        $kwd = $this->language->case_insensitive ? mb_strtolower($match[0]) : $match[0];
+        $kwd = $this->language->case_insensitive ? $this->strToLower($match[0]) : $match[0];
 
         return isset($mode->keywords[$kwd]) ? $mode->keywords[$kwd] : null;
     }
@@ -639,6 +651,45 @@ class Highlighter
         return $code;
     }
 
+    private function checkMultibyteNecessity()
+    {
+        $this->needsMultibyteSupport = preg_match('/[^\x00-\x7F]/', $this->codeToHighlight) === 1;
+
+        // If we aren't working with Unicode strings, then we default to `strtolower` since it's significantly faster
+        //   https://github.com/scrivo/highlight.php/pull/92#pullrequestreview-782213861
+        if (!$this->needsMultibyteSupport) {
+            return;
+        }
+
+        if (self::$hasMultiByteSupport === null) {
+            self::$hasMultiByteSupport = function_exists('mb_strtolower');
+        }
+
+        if (!self::$hasMultiByteSupport && !self::$hasThrownMultiByteWarning) {
+            if (!self::$DISABLE_MULTIBYTE_WARNING) {
+                trigger_error('Your code snippet has unicode characters but your PHP version does not have multibyte string support. You should install the `mbstring` PHP package or `symfony/polyfill-mbstring` composer package if you use unicode characters.', E_USER_WARNING);
+            }
+
+            self::$hasThrownMultiByteWarning = true;
+        }
+    }
+
+    /**
+     * Allow for graceful failure if the mb_strtolower function doesn't exist.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    private function strToLower($str)
+    {
+        if ($this->needsMultibyteSupport && self::$hasMultiByteSupport) {
+            return mb_strtolower($str);
+        }
+
+        return strtolower($str);
+    }
+
     /**
      * Set the languages that will used for auto-detection. When using auto-
      * detection the code to highlight will be probed for every language in this
@@ -780,6 +831,8 @@ class Highlighter
             throw new \DomainException("Unknown language: \"$languageName\"");
         }
 
+        $this->checkMultibyteNecessity();
+
         $this->language->compile($this->safeMode);
         $this->top = $continuation ? $continuation : $this->language;
         $this->continuations = array();
@@ -911,6 +964,40 @@ class Highlighter
         }
 
         return $result;
+    }
+
+    /**
+     * Return a list of all supported languages. Using this list in
+     * setAutodetectLanguages will turn on autodetection for all supported
+     * languages.
+     *
+     * @deprecated use `Highlighter::listRegisteredLanguages()` or `Highlighter::listBundledLanguages()` instead
+     *
+     * @param bool $include_aliases specify whether language aliases
+     *                              should be included as well
+     *
+     * @since 9.18.1.4 Deprecated in favor of `Highlighter::listRegisteredLanguages()`
+     *                 and `Highlighter::listBundledLanguages()`.
+     * @since 9.12.0.3 The `$include_aliases` parameter was added
+     * @since 8.3.0.0
+     *
+     * @return string[] An array of language names
+     */
+    public function listLanguages($include_aliases = false)
+    {
+        @trigger_error('This method is deprecated in favor `Highlighter::listRegisteredLanguages()` or `Highlighter::listBundledLanguages()`. This function will be removed in highlight.php 10.', E_USER_DEPRECATED);
+
+        if (empty(self::$languages)) {
+            trigger_error('No languages are registered, returning all bundled languages instead. You probably did not want this.', E_USER_WARNING);
+
+            return self::listBundledLanguages();
+        }
+
+        if ($include_aliases === true) {
+            return array_merge(self::$languages, array_keys(self::$aliases));
+        }
+
+        return self::$languages;
     }
 
     /**
