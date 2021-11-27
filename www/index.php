@@ -73,6 +73,23 @@ else
 		$menu->addSubMenu(new \PHPFUI\MenuItem('Examples'), $exampleMenu);
 		}
 
+	// handle direct .md or .markdown extensions
+	$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+	$extensionIndex = strrpos($requestUri, '.');
+	if ($extensionIndex)
+		{
+		$extension = strtolower(substr($requestUri, $extensionIndex + 1));
+		$file = PROJECT_ROOT . $requestUri;
+		if (in_array($extension, ['md', 'markdown']) && file_exists($file))
+			{
+			$parser = new \PHPFUI\InstaDoc\MarkDownParser();
+			$page = $controller->getPage();
+			$page->add($parser->fileText($file));
+			echo $page;
+			exit;
+			}
+		}
+
 	echo $controller->display();
 	}
 
