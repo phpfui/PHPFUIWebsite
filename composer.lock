@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3914d0777e73d306251875fc7826e241",
+    "content-hash": "5af3013b9b80079820a1902ed87a6ba8",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -2433,40 +2433,42 @@
         },
         {
             "name": "scrivo/highlight.php",
-            "version": "v9.18.1.8",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "6d5049cd2578e19a06adbb6ac77879089be1e3f9"
+                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/6d5049cd2578e19a06adbb6ac77879089be1e3f9",
-                "reference": "6d5049cd2578e19a06adbb6ac77879089be1e3f9",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
+                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=5.4"
+                "ext-mbstring": "*",
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8|^5.7",
+                "phpbench/phpbench": "^1.0",
+                "phpunit/phpunit": "^5.7",
                 "sabberworm/php-css-parser": "^8.3",
-                "symfony/finder": "^2.8|^3.4",
-                "symfony/var-dumper": "^2.8|^3.4"
+                "symfony/finder": "^4.4",
+                "symfony/var-dumper": "^4.4"
             },
-            "suggest": {
-                "ext-mbstring": "Allows highlighting code with unicode characters and supports language with unicode keywords"
-            },
+            "default-branch": true,
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "10.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Highlight\\": "",
-                    "HighlightUtilities\\": ""
-                },
-                "files": [
-                    "HighlightUtilities/functions.php"
-                ]
+                "psr-4": {
+                    "Highlight\\": "src/Highlight",
+                    "HighlightUtilities\\": "src/HighlightUtilities"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2507,7 +2509,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-24T00:28:14+00:00"
+            "time": "2021-07-09T20:26:27+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -4246,7 +4248,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "scrivo/highlight.php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -6,9 +6,12 @@ class MarkDownParser
 	{
 	private \cebe\markdown\GithubMarkdown $parser;
 
-	public function __construct()
+	private \PHPFUI\Interfaces\Page $page;
+
+	public function __construct(\PHPFUI\Interfaces\Page $page)
 		{
 		$this->parser = new \cebe\markdown\GithubMarkdown();
+		$this->page = $page;
 		$this->parser->html5 = true;
 		$this->parser->keepListStartNumber = true;
 		$this->parser->enableNewlines = true;
