@@ -1636,28 +1636,27 @@
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.2",
+            "version": "V1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb"
+                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/3418ca7fb2275005c65e95e4622c67f7713d28eb",
-                "reference": "3418ca7fb2275005c65e95e4622c67f7713d28eb",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/224e080f709f63ef41079b066f12b6f4723c06a4",
+                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": ">=4.10",
-                "php": ">=7.3"
+                "nikic/php-parser": "^4.13",
+                "php": "^7.3 | <8.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.18",
-                "phpunit/phpunit": ">=9.0",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpunit/phpunit": ">=8.0",
                 "roave/security-advisories": "dev-latest",
-                "symfony/translation-contracts": "^2.3",
-                "vimeo/psalm": "^4.7"
+                "symfony/translation-contracts": ">=2.3"
             },
             "type": "library",
             "autoload": {
@@ -1689,9 +1688,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.2"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.3"
             },
-            "time": "2021-04-13T03:26:46+00:00"
+            "time": "2021-10-27T02:28:13+00:00"
         },
         {
             "name": "phpspec/prophecy",
