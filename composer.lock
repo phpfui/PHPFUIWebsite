@@ -2479,12 +2479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/scrivo/highlight.php.git",
-                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37"
+                "reference": "1791d2d1a33d8b73d998770c4f1855a6f3f4a32b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
-                "reference": "f08b7326a45e1590eb7e739d4fa0ed5b031bab37",
+                "url": "https://api.github.com/repos/scrivo/highlight.php/zipball/1791d2d1a33d8b73d998770c4f1855a6f3f4a32b",
+                "reference": "1791d2d1a33d8b73d998770c4f1855a6f3f4a32b",
                 "shasum": ""
             },
             "require": {
@@ -2551,7 +2551,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-09T20:26:27+00:00"
+            "time": "2021-12-03T06:44:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
