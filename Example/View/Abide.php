@@ -5,13 +5,8 @@ namespace Example\View;
 class Abide
 	{
 
-	private \PHPFUI\Page $page;
-	private array $parameters;
-
-	public function __construct(\PHPFUI\Page $page, array $parameters)
+	public function __construct(private \PHPFUI\Page $page, private array $parameters)
 		{
-		$this->page = $page;
-		$this->parameters = $parameters;
 		}
 
 	public function render() : \PHPFUI\Container

@@ -6,18 +6,12 @@ class CSVReader implements \Iterator
 	{
 
 	private array $current = [];
-	private string $delimiter = ',';
 	private $fh = null;
-	private string $fileName;
-	private bool $headerRow = true;
 	private array $headers = [];
 	private int $index = 0;
 
-	public function __construct(string $fileName, bool $headerRow = true, string $delimiter = ',')
+	public function __construct(private string $fileName, private bool $headerRow = true, private string $delimiter = ',')
 		{
-		$this->fileName = $fileName;
-		$this->headerRow = $headerRow;
-		$this->delimiter = $delimiter;
 		$this->rewind();
 		}
 

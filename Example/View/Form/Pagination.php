@@ -7,14 +7,11 @@ class Pagination
 	private int $center = 0;
 	private int $fastForward = 0;
 	private int $onPage = 0;
-
-	private \PHPFUI\Page $page;
 	private int $totalPages = 10;
 	private int $window = 3;
 
-	public function __construct(\PHPFUI\Page $page)
+	public function __construct(private \PHPFUI\Page $page)
 		{
-		$this->page = $page;
 		}
 
 	public function __toString() : string

@@ -5,9 +5,7 @@ namespace Example\View;
 class StateToFromList extends \PHPFUI\ToFromList
 	{
 
-	private \Example\Model\State $model;
-
-	public function __construct(\PHPFUI\Page $page, string $name, \Example\Model\State $model, array $inGroup, array $notInGroup)
+	public function __construct(\PHPFUI\Page $page, string $name, private \Example\Model\State $model, array $inGroup, array $notInGroup)
 		{
 		$this->model = $model;
 		$callback = [$this, 'callback', ];
