@@ -1313,21 +1313,21 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V21.11.7",
+            "version": "V21.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "b17836204151e7d575b44bdcc24fa53b581a606d"
+                "reference": "f576bedc8766fcc76708949a78f23268ddd76d1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/b17836204151e7d575b44bdcc24fa53b581a606d",
-                "reference": "b17836204151e7d575b44bdcc24fa53b581a606d",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/f576bedc8766fcc76708949a78f23268ddd76d1c",
+                "reference": "f576bedc8766fcc76708949a78f23268ddd76d1c",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.3",
-                "php": "^8.0",
+                "php": ">=8.0 <8.2",
                 "spatie/guzzle-rate-limiter-middleware": "^2.0"
             },
             "require-dev": {
@@ -1366,9 +1366,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V21.11.7"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V21.12.1"
             },
-            "time": "2021-11-16T06:11:16+00:00"
+            "time": "2021-12-21T06:11:07+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
