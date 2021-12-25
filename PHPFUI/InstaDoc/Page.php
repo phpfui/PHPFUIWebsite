@@ -38,6 +38,7 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$link = new \PHPFUI\Link($this->homeUrl, $this->getPageName(), false);
 
 		$titleBar = new \PHPFUI\TitleBar($link);
+		$titleBar->addAttribute('data-off-canvas-sticky');
 		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
 		$hamburger->addClass('show-for-small-only');
 		$titleBar->addLeft($hamburger);
