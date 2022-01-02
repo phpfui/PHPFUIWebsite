@@ -1609,16 +1609,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.1.1",
+            "version": "V6.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "c7f8a9f8c094107857a58668202cec935363937a"
+                "reference": "df1ce3fd3871cd8bcd406a90ea000abdbada2f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/c7f8a9f8c094107857a58668202cec935363937a",
-                "reference": "c7f8a9f8c094107857a58668202cec935363937a",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/df1ce3fd3871cd8bcd406a90ea000abdbada2f0c",
+                "reference": "df1ce3fd3871cd8bcd406a90ea000abdbada2f0c",
                 "shasum": ""
             },
             "require": {
@@ -1669,9 +1669,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.1.1"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.1.2"
             },
-            "time": "2021-12-21T14:11:23+00:00"
+            "time": "2022-01-01T22:33:50+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
