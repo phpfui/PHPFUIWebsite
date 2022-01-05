@@ -28,7 +28,6 @@ else
 		'phpDocumentor',
 		'PHPFUI',
 		'PhpParser',
-		'Psr',
 		'Symfony',
 		'Symfony',
 		'voku',

@@ -124,10 +124,6 @@ class ComposerUpdate
 
 	public function copyPath(string $name, array $sources, string $destDir) : void
 		{
-		if (count($sources) > 1)
-			{
-			print_r($sources);
-			}
 		foreach ($sources as $sourceDir)
 			{
 			echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
