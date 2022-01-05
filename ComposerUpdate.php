@@ -57,7 +57,7 @@ class ComposerUpdate
 
 	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
 		{
-		if (! \file_exists($dest))
+		if (! \is_dir($dest))
 			{
 			\mkdir($dest, 0755, true);
 			}
@@ -70,10 +70,11 @@ class ComposerUpdate
 			{
 			$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
 			$file = \str_replace('\\', '/', $file);
+			$file = \str_replace('//', '/', $file);
 
 			if ($item->isDir())
 				{
-				if (! \file_exists($file))
+				if ($phpFiles && ! \is_dir($file))
 					{
 					\mkdir($file, 0755, true);
 					}
@@ -123,17 +124,20 @@ class ComposerUpdate
 
 	public function copyPath(string $name, array $sources, string $destDir) : void
 		{
+		if (count($sources) > 1)
+			{
+			print_r($sources);
+			}
 		foreach ($sources as $sourceDir)
 			{
-			echo $name . ": destDir ->{$destDir}<- sourceDir ->{$sourceDir}<-\n";
+			echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
 
 			if ($destDir)
 				{
-				$destDir = \str_replace('\\', '/', $this->baseDir . $destDir);
-				$destDir = \substr($destDir, 0, \strlen($destDir) - 1);
+				$localDestDir = \str_replace('\\', '/', $this->baseDir . $destDir);
+				$localDestDir = \substr($destDir, 0, \strlen($localDestDir) - 1);
 				$sourceDir = $this->vendorDir . $name . '/' . $sourceDir;
-				//echo "source $sourceDir to $destDir\n";
-				$this->copyFiles($sourceDir, $destDir);
+				$this->copyFiles($sourceDir, $localDestDir);
 				}
 			}
 		if ($destDir)

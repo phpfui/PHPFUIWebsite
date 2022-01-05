@@ -21,6 +21,7 @@ else
 		'Gitonomy',
 		'GuzzleHttp',
 		'Highlight',
+		'Html2Text',
 		'HtmlValidator',
 		'ICalendarOrg',
 		'NXP',
