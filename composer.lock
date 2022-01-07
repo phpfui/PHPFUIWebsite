@@ -983,16 +983,16 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "V2.1.8",
+            "version": "V2.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "aa37abbaeb73ac1cac5798608da51d813e976a25"
+                "reference": "9442a6f4712ec80df799522b8aec2635dc0254a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/aa37abbaeb73ac1cac5798608da51d813e976a25",
-                "reference": "aa37abbaeb73ac1cac5798608da51d813e976a25",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/9442a6f4712ec80df799522b8aec2635dc0254a3",
+                "reference": "9442a6f4712ec80df799522b8aec2635dc0254a3",
                 "shasum": ""
             },
             "require": {
@@ -1033,9 +1033,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.8"
+                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.9"
             },
-            "time": "2021-03-05T01:08:57+00:00"
+            "time": "2022-01-06T09:59:10+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1426,16 +1426,16 @@
         },
         {
             "name": "phpfui/icalendar",
-            "version": "V1.0.1",
+            "version": "V1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/icalendar.git",
-                "reference": "a2a0ba04290ff3a038da0796bd699536fd3923f6"
+                "reference": "256b350bf27bd3630f6c5be2cf38d1511f2cf8a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/a2a0ba04290ff3a038da0796bd699536fd3923f6",
-                "reference": "a2a0ba04290ff3a038da0796bd699536fd3923f6",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/256b350bf27bd3630f6c5be2cf38d1511f2cf8a0",
+                "reference": "256b350bf27bd3630f6c5be2cf38d1511f2cf8a0",
                 "shasum": ""
             },
             "require": {
@@ -1484,22 +1484,22 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/icalendar/issues",
-                "source": "https://github.com/phpfui/icalendar/tree/V1.0.1"
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.2"
             },
             "time": "2019-10-31T00:00:00+00:00"
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.1.0",
+            "version": "V1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "3c3acc16739cfe3afa7b5b132c29405b0f8f9447"
+                "reference": "90b298bc0df453a07c5a717c5d1795d3b646320f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/3c3acc16739cfe3afa7b5b132c29405b0f8f9447",
-                "reference": "3c3acc16739cfe3afa7b5b132c29405b0f8f9447",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/90b298bc0df453a07c5a717c5d1795d3b646320f",
+                "reference": "90b298bc0df453a07c5a717c5d1795d3b646320f",
                 "shasum": ""
             },
             "require": {
@@ -1549,9 +1549,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.0"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.1"
             },
-            "time": "2021-12-02T02:45:05+00:00"
+            "time": "2022-01-06T23:33:59+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
