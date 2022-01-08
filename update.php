@@ -1,8 +1,17 @@
 <?php
 
-$php = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'php' : '/usr/bin/php8.0';
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+	{
+	$php = 'php';
+	$composer = 'composer';
+	}
+else
+	{
+	$php = '/usr/bin/php8.0';
+	$composer = 'composer.phar';
+	}
 
-exec($php . ' composer.phar self-update');
+exec($php . ' ' . $composer . ' self-update');
 
 include 'commonbase.php';
 
@@ -11,7 +20,7 @@ $repo = new \Gitonomy\Git\Repository(__DIR__);
 $repo->run('checkout', ['master']);
 $repo->run('pull');
 
-exec($php . ' composer.phar update');
+exec($php . ' ' . $composer . ' update');
 
 // Localize files
 $updater = new ComposerUpdate();
