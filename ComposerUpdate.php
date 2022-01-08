@@ -126,6 +126,10 @@ class ComposerUpdate
 		{
 		foreach ($sources as $sourceDir)
 			{
+			if (str_starts_with($sourceDir, 'test'))
+				{
+				continue;
+				}
 			echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
 
 			if ($destDir)
