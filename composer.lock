@@ -1426,16 +1426,16 @@
         },
         {
             "name": "phpfui/icalendar",
-            "version": "V1.0.2",
+            "version": "V1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/icalendar.git",
-                "reference": "256b350bf27bd3630f6c5be2cf38d1511f2cf8a0"
+                "reference": "bceedfa04f17962cb062a74c740f89a841a166b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/256b350bf27bd3630f6c5be2cf38d1511f2cf8a0",
-                "reference": "256b350bf27bd3630f6c5be2cf38d1511f2cf8a0",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/bceedfa04f17962cb062a74c740f89a841a166b2",
+                "reference": "bceedfa04f17962cb062a74c740f89a841a166b2",
                 "shasum": ""
             },
             "require": {
@@ -1484,22 +1484,22 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/icalendar/issues",
-                "source": "https://github.com/phpfui/icalendar/tree/V1.0.2"
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.3"
             },
             "time": "2019-10-31T00:00:00+00:00"
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.1.1",
+            "version": "V1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "90b298bc0df453a07c5a717c5d1795d3b646320f"
+                "reference": "7c7538c29b1779eeaa42aab09ba42cd460c9c93f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/90b298bc0df453a07c5a717c5d1795d3b646320f",
-                "reference": "90b298bc0df453a07c5a717c5d1795d3b646320f",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/7c7538c29b1779eeaa42aab09ba42cd460c9c93f",
+                "reference": "7c7538c29b1779eeaa42aab09ba42cd460c9c93f",
                 "shasum": ""
             },
             "require": {
@@ -1549,9 +1549,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.1"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.2"
             },
-            "time": "2022-01-06T23:33:59+00:00"
+            "time": "2022-01-18T21:28:01+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
