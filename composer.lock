@@ -1675,21 +1675,21 @@
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.3",
+            "version": "V1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4"
+                "reference": "99e65e6f08d0c2b5e9a9f82298bf24fda84a2653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/224e080f709f63ef41079b066f12b6f4723c06a4",
-                "reference": "224e080f709f63ef41079b066f12b6f4723c06a4",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/99e65e6f08d0c2b5e9a9f82298bf24fda84a2653",
+                "reference": "99e65e6f08d0c2b5e9a9f82298bf24fda84a2653",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4.13",
-                "php": "^7.3 | <8.1"
+                "php": ">=7.3  <8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -1699,8 +1699,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "PHPFUI": "src/"
+                "psr-4": {
+                    "PHPFUI\\PHPUnitSyntaxCoverage\\": "src/PHPFUI/PHPUnitSyntaxCoverage/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1727,9 +1727,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.3"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.4"
             },
-            "time": "2021-10-27T02:28:13+00:00"
+            "time": "2022-01-12T03:21:12+00:00"
         },
         {
             "name": "phpspec/prophecy",

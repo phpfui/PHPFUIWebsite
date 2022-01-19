@@ -6,6 +6,7 @@ set_time_limit(99999);
 $generateStaticFiles = false;
 $useComposer = false;
 $addExamples = true;
+$addBlog = true;
 
 if ($useComposer)
 	{
@@ -71,6 +72,14 @@ else
 		$menu = $controller->getMenu();
 		$exampleMenu = \Example\Page::getMenu();
 		$menu->addSubMenu(new \PHPFUI\MenuItem('Examples'), $exampleMenu);
+		}
+	if ($addBlog)
+		{
+		$menu = $controller->getMenu();
+		$blogTitle = 'Thoughts on PHP blog';     ;
+		$menuItem = new \PHPFUI\MenuItem($blogTitle, '#');
+		$menuItem->setLinkObject(new \PHPFUI\Link('http://blog.phpfui.com', $blogTitle));
+		$menu->addMenuItem($menuItem);
 		}
 
 	// handle direct .md or .markdown extensions
