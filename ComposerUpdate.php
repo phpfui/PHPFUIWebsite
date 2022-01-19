@@ -36,7 +36,7 @@ class ComposerUpdate
 		$lcFile = strtolower($file);
 		if ($phpFiles && str_ends_with($lcFile, '.php'))
 			{
-			return \copy($item, $file);
+			return \copy( str_replace('\\', '/', $item),  str_replace('\\', '/', $file));
 			}
 
 		if (! str_ends_with($lcFile, '.md'))
@@ -52,7 +52,7 @@ class ComposerUpdate
 				}
 			}
 
-			return \copy($item, $file);
+			return \copy( str_replace('\\', '/', $item),  str_replace('\\', '/', $file));
 		}
 
 	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
@@ -213,7 +213,7 @@ class ComposerUpdate
 						{
 						$from = 'vendor/' . $install['name'] . '/' . $file;
 						$to = 'NoNameSpace/' . $file;
-						\copy($from, $to);
+						\copy( str_replace('\\', '/', $from),  str_replace('\\', '/', $to));
 						}
 					}
 				else

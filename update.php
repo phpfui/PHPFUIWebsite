@@ -64,6 +64,7 @@ exec($php . ' vendor/phpfui/instadoc/install.php www/PHPFUI');
 // don't update if running under windows
 if ($php == 'php')
 	{
+	echo "Running under Windows, exiting.\n";
 	exit;
 	}
 
@@ -74,6 +75,7 @@ $repo->run('add', ['.']);
 $output = $repo->run('status', ['--porcelain']);
 if (! strlen(trim($output)))
 	{
+	echo "No changes detected, exiting.\n";
 	exit;
 	}
 
@@ -85,4 +87,6 @@ $repo->run('push');
 
 // refresh the web site
 file('http://www.phpfui.com/update.php');
+
+echo "http://www.phpfui.com updated.\n";
 
