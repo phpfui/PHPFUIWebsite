@@ -74,7 +74,7 @@ interface SimpleXmlDomNodeInterface extends \IteratorAggregate
      *
      * @param string $selector
      *
-     * @return SimpleXmlDomNode|null
+     * @return SimpleXmlDomNode
      */
     public function findOne(string $selector);
 
