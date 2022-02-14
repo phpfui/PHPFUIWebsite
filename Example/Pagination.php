@@ -17,14 +17,16 @@ class Pagination extends \Example\Page
 		$o = $form->getTotalPages();
 		$ff = $form->getFastForward();
 		$c = $form->getCenter();
+		$a = $form->getAlwaysShow();
 		$this->addBody(new \PHPFUI\Header('Pagination Example'));
 
-		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/Pagination.php?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}");
+		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/Pagination.php?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}&a={$a}");
 
 		if ($c)
 			{
 			$paginate->center();
 			}
+		$paginate->alwaysShow($a);
 		$paginate->setFastForward($ff);
 		$paginate->setWindow($w);
 		$this->addBody($paginate);

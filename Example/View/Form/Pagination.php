@@ -4,6 +4,7 @@ namespace Example\View\Form;
 
 class Pagination
 	{
+	private bool $alwaysShow = false;
 	private int $center = 0;
 	private int $fastForward = 0;
 	private int $onPage = 0;
@@ -27,7 +28,9 @@ class Pagination
 		$fastForward->setToolTip('Pages to advance instead of elipse');
 		$center = new \PHPFUI\Input\CheckBoxBoolean('c', 'Center', $this->center);
 		$center->setToolTip('Check to center the paginator');
-		$mc = new \PHPFUI\MultiColumn($of, $window, $fastForward, $center);
+		$alwaysShow = new \PHPFUI\Input\CheckBoxBoolean('a', 'Always Show', $this->alwaysShow);
+		$alwaysShow->setToolTip('Always show paginator even for single page');
+		$mc = new \PHPFUI\MultiColumn($of, $window, $fastForward, $center, $alwaysShow);
 		$mc->addClass('align-center-middle');
 
 		$fieldSet->add($mc);
@@ -41,6 +44,11 @@ class Pagination
 	public function getCenter() : int
 		{
 		return $this->center;
+		}
+
+	public function getAlwaysShow() : bool
+		{
+		return $this->alwaysShow;
 		}
 
 	public function getFastForward() : int
@@ -70,6 +78,7 @@ class Pagination
 		$this->totalPages = $parameters['o'] ?? $this->totalPages;
 		$this->fastForward = $parameters['ff'] ?? $this->fastForward;
 		$this->center = $parameters['c'] ?? $this->center;
+		$this->alwaysShow = (bool)($parameters['a'] ?? $this->alwaysShow);
 
 		return $this;
 		}
