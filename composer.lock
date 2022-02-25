@@ -3758,12 +3758,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4002,16 +4002,16 @@
         },
         {
             "name": "voku/simple_html_dom",
-            "version": "4.8.2",
+            "version": "4.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/simple_html_dom.git",
-                "reference": "ad13ad8c0f9d333a5651726936c14cb7b1548844"
+                "reference": "3636fe85b0bdc96fc397a4718942455b86d8f986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/ad13ad8c0f9d333a5651726936c14cb7b1548844",
-                "reference": "ad13ad8c0f9d333a5651726936c14cb7b1548844",
+                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/3636fe85b0bdc96fc397a4718942455b86d8f986",
+                "reference": "3636fe85b0bdc96fc397a4718942455b86d8f986",
                 "shasum": ""
             },
             "require": {
@@ -4059,7 +4059,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/simple_html_dom/issues",
-                "source": "https://github.com/voku/simple_html_dom/tree/4.8.2"
+                "source": "https://github.com/voku/simple_html_dom/tree/4.8.3"
             },
             "funding": [
                 {
@@ -4079,7 +4079,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-15T12:05:09+00:00"
+            "time": "2022-02-25T04:01:27+00:00"
         },
         {
             "name": "webmozart/assert",
