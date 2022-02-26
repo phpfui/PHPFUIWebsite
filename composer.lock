@@ -316,16 +316,16 @@
         },
         {
             "name": "gitonomy/gitlib",
-            "version": "v1.3.3",
+            "version": "v1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gitonomy/gitlib.git",
-                "reference": "5035f69c06df74ab7ee8ec14da9016b71ff3ed50"
+                "reference": "3c2f67a2fa6e7b26dbc9b9d0ca272ed33ba5895e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gitonomy/gitlib/zipball/5035f69c06df74ab7ee8ec14da9016b71ff3ed50",
-                "reference": "5035f69c06df74ab7ee8ec14da9016b71ff3ed50",
+                "url": "https://api.github.com/repos/gitonomy/gitlib/zipball/3c2f67a2fa6e7b26dbc9b9d0ca272ed33ba5895e",
+                "reference": "3c2f67a2fa6e7b26dbc9b9d0ca272ed33ba5895e",
                 "shasum": ""
             },
             "require": {
@@ -378,7 +378,7 @@
             "description": "Library for accessing git",
             "support": {
                 "issues": "https://github.com/gitonomy/gitlib/issues",
-                "source": "https://github.com/gitonomy/gitlib/tree/v1.3.3"
+                "source": "https://github.com/gitonomy/gitlib/tree/v1.3.4"
             },
             "funding": [
                 {
@@ -386,7 +386,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-23T20:26:42+00:00"
+            "time": "2022-02-14T09:07:07+00:00"
         },
         {
             "name": "google/recaptcha",
@@ -1589,16 +1589,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.1.4",
+            "version": "V6.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "bac8fab73a0b5639d98bc2113c2ffc909d6aee36"
+                "reference": "3b111f512883d339e3e3f605a881e9c1c3c23ea3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/bac8fab73a0b5639d98bc2113c2ffc909d6aee36",
-                "reference": "bac8fab73a0b5639d98bc2113c2ffc909d6aee36",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/3b111f512883d339e3e3f605a881e9c1c3c23ea3",
+                "reference": "3b111f512883d339e3e3f605a881e9c1c3c23ea3",
                 "shasum": ""
             },
             "require": {
@@ -1649,9 +1649,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.1.4"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.1.5"
             },
-            "time": "2022-02-09T23:55:30+00:00"
+            "time": "2022-02-15T03:34:10+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
