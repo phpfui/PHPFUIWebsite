@@ -86,6 +86,13 @@ class ZCRecurringDate
 	public ?string $freq = null;
 
 	/**
+	 * start of week number (i.e. 0 for Sunday, 5 for Friday)
+	 *
+	 * @var ?integer
+	 */
+	public ?int $weekstart = null;
+
+	/**
 	 * inteval of repeating event (i.e. every 2 weeks, every 6 months)
 	 *
 	 */
@@ -208,6 +215,52 @@ class ZCRecurringDate
 
 							case 'SECONDLY':
 								$this->freq = 's';
+
+								break;
+							}
+
+						break;
+
+					case 'WKST':
+						switch($item[1])
+							{
+							case 'SU':
+								$this->weekstart = 0;
+
+								break;
+
+							case 'MO':
+								$this->weekstart = 1;
+
+								break;
+
+							case 'TU':
+								$this->weekstart = 2;
+
+								break;
+
+							case 'WE':
+								$this->weekstart = 3;
+
+								break;
+
+							case 'TH':
+								$this->weekstart = 4;
+
+								break;
+
+							case 'FR':
+								$this->weekstart = 5;
+
+								break;
+
+							case 'SA':
+								$this->weekstart = 6;
+
+								break;
+
+							default:
+								$this->weekstart = 0;
 
 								break;
 							}
@@ -440,8 +493,8 @@ class ZCRecurringDate
 						if (\count($this->byday) > 0)
 							{
 							$dow = \date('w', $nextdate);
-							// move to beginning of week (Sunday)
-							$bow = 0;
+							// move to beginning of week (WeekStart => default 0 (Sunday))
+							$bow = $this->weekstart;
 							$diff = $bow - $dow;
 
 							if ($diff > 0)
@@ -586,7 +639,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byDay(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byDay(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byDay(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -660,6 +713,19 @@ class ZCRecurringDate
 				else
 					{
 					// day of week version
+					$startdate_dow = \date('w', $startdate) - $this->weekstart;
+
+					if ($startdate_dow < 0)
+						{
+						$startdate_dow += 7;
+						}
+					$dayFromSt = $days[$day] - $this->weekstart;
+
+					if ($dayFromSt < 0)
+						{
+						$dayFromSt += 7;
+						}
+					$datedelta = $dayFromSt - $startdate_dow;
 					$startdate_dow = \date('w', $startdate);
 					$datedelta = $days[$day] - $startdate_dow;
 					self::debug(2, "start_dow: {$startdate_dow}, datedelta: {$datedelta}");
@@ -703,7 +769,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byHour(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byHour(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byHour(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -748,7 +814,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byMinute(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byMinute(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byMinute(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -792,7 +858,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byMonth(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byMonth(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byMonth(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -836,7 +902,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byMonthDay(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byMonthDay(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byMonthDay(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -885,7 +951,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function bySecond(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function bySecond(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'bySecond(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');
@@ -920,7 +986,7 @@ class ZCRecurringDate
 	 *
 	 * @return int count of dates
 	 */
-	private function byYear(int $startdate, int $enddate, array & $rdates, string $tzid = 'UTC') : int
+	private function byYear(int $startdate, int $enddate, array &$rdates, string $tzid = 'UTC') : int
 		{
 		self::debug(1, 'byYear(' . \ICalendarOrg\ZDateHelper::toSQLDateTime($startdate) . ','
 								. \ICalendarOrg\ZDateHelper::toSQLDateTime($enddate) . ',' . \count($rdates) . ' dates)');

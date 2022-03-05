@@ -1411,16 +1411,16 @@
         },
         {
             "name": "phpfui/icalendar",
-            "version": "V1.0.3",
+            "version": "V1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/icalendar.git",
-                "reference": "bceedfa04f17962cb062a74c740f89a841a166b2"
+                "reference": "e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/bceedfa04f17962cb062a74c740f89a841a166b2",
-                "reference": "bceedfa04f17962cb062a74c740f89a841a166b2",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a",
+                "reference": "e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a",
                 "shasum": ""
             },
             "require": {
@@ -1469,7 +1469,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/icalendar/issues",
-                "source": "https://github.com/phpfui/icalendar/tree/V1.0.3"
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.4"
             },
             "time": "2019-10-31T00:00:00+00:00"
         },
@@ -3731,7 +3731,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -3793,7 +3793,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.25.0"
             },
             "funding": [
                 {
@@ -3813,7 +3813,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -3876,7 +3876,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.24.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.25.0"
             },
             "funding": [
                 {
