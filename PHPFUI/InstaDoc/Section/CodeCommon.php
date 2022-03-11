@@ -66,6 +66,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if (isset($parameterComments[$name]))
 				{
 				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
+				$tip->addAttribute('data-allow-html', true);
 				}
 			$info .= $this->getColor('variable', $tip);
 
@@ -193,8 +194,8 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 		$container = new \PHPFUI\Container();
 
-		$container->add($this->parsedown->text($this->getInheritedSummary($docBlock, $reflectionMethod)));
-		$desc = $docBlock->getDescription();
+		$container->add($this->parsedown->text($this->getInheritedText($docBlock, $reflectionMethod, 'getSummary')));
+		$desc = $this->getInheritedText($docBlock, $reflectionMethod, 'getDescription');
 
 		if ($desc)
 			{
@@ -234,7 +235,6 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					$type = '';
 					}
-
 
 				if ('var' == $name || 'param' == $name)
 					{
@@ -279,7 +279,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						$body .= $this->getColor('variable', '$' . $varname) . ' ';
 						}
 					}
-				$body .= $description;
+				$body .= $this->parsedown->html($description);
 				$ul->addItem(new \PHPFUI\ListItem($this->getColor('name', $name) . ' ' . $this->getColor('description', $body)));
 				}
 
@@ -382,17 +382,15 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
 		{
-		/**
-		 * @todo get attributes everywhere
-		 * $attributes = $this->getAttributes($method);
-		 */
 		$comments = $method->getDocComment();
-		$comments = \str_ireplace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		if (! $comments)
 			{
 			return null;
 			}
+
+		$comments = \str_ireplace('inheritdocs', 'inheritdoc', $comments);
+		$comments = \str_ireplace('{@inheritdoc}', '@inheritdoc', $comments);
 
 		try
 			{
@@ -414,9 +412,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return \str_replace('\\', '-', $class);
 		}
 
-	protected function getInheritedSummary(\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null) : string
+	protected function getInheritedText(\phpDocumentor\Reflection\DocBlock $docBlock, ?\ReflectionMethod $reflectionMethod = null, string $textType = 'getDescription') : string
 		{
-		$summary = $docBlock->getSummary();
+		$summary = $docBlock->{$textType}();
 
 		if (! $reflectionMethod)
 			{
@@ -429,7 +427,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$pos = \stripos($tag->getName(), 'inheritdoc');
 
-			if (false !== $pos && 0 >= $pos)
+			if (false !== $pos && 0 <= $pos)
 				{
 				$reflectionClass = $reflectionMethod->getDeclaringClass();
 				$parent = $reflectionClass->getParentClass();
@@ -451,7 +449,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 						if ($docBlock)
 							{
-							return $summary . "\n" . $this->getInheritedSummary($docBlock, $method);
+							return $this->getInheritedText($docBlock, $method, $textType) . $summary;
 							}
 						}
 					$parent = $parent->getParentClass();
@@ -523,7 +521,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			if ('param' == $name && $description)
 				{
 				$var = $tag->getVariableName();
-				$comments[$var] = $description;
+				$comments[$var] = $this->parsedown->html($description);
 				}
 			}
 

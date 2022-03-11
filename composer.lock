@@ -1475,16 +1475,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.1.2",
+            "version": "V1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "7c7538c29b1779eeaa42aab09ba42cd460c9c93f"
+                "reference": "4a89addca464ab857dbba9bfeffbe3a3210c1a04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/7c7538c29b1779eeaa42aab09ba42cd460c9c93f",
-                "reference": "7c7538c29b1779eeaa42aab09ba42cd460c9c93f",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/4a89addca464ab857dbba9bfeffbe3a3210c1a04",
+                "reference": "4a89addca464ab857dbba9bfeffbe3a3210c1a04",
                 "shasum": ""
             },
             "require": {
@@ -1534,9 +1534,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.2"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.1.3"
             },
-            "time": "2022-01-18T21:28:01+00:00"
+            "time": "2022-03-10T15:19:55+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
