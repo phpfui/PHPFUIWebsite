@@ -4007,16 +4007,16 @@
         },
         {
             "name": "voku/simple_html_dom",
-            "version": "4.8.4",
+            "version": "4.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/simple_html_dom.git",
-                "reference": "9a54495dfa8cfa16266c606d30cb008395cf1498"
+                "reference": "77df6b0bd33845f61ec8b07328c463b725bdfced"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/9a54495dfa8cfa16266c606d30cb008395cf1498",
-                "reference": "9a54495dfa8cfa16266c606d30cb008395cf1498",
+                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/77df6b0bd33845f61ec8b07328c463b725bdfced",
+                "reference": "77df6b0bd33845f61ec8b07328c463b725bdfced",
                 "shasum": ""
             },
             "require": {
@@ -4064,7 +4064,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/simple_html_dom/issues",
-                "source": "https://github.com/voku/simple_html_dom/tree/4.8.4"
+                "source": "https://github.com/voku/simple_html_dom/tree/4.8.5"
             },
             "funding": [
                 {
@@ -4084,7 +4084,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-01T09:15:58+00:00"
+            "time": "2022-03-13T22:36:51+00:00"
         },
         {
             "name": "webmozart/assert",
