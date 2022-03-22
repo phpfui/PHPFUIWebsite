@@ -28,6 +28,7 @@ else
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',
+		'PHPMailer',
 		'PhpParser',
 		'Symfony',
 		'Symfony',
