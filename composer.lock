@@ -272,16 +272,16 @@
         },
         {
             "name": "fortawesome/font-awesome",
-            "version": "6.1.0",
+            "version": "6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                "reference": "307f2c15e2d3bdf465b43df0d1486dcd249df2a1"
+                "reference": "28e297f07af26f148c15e6cbbd12cea3027371d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/307f2c15e2d3bdf465b43df0d1486dcd249df2a1",
-                "reference": "307f2c15e2d3bdf465b43df0d1486dcd249df2a1",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/28e297f07af26f148c15e6cbbd12cea3027371d3",
+                "reference": "28e297f07af26f148c15e6cbbd12cea3027371d3",
                 "shasum": ""
             },
             "type": "library",
@@ -313,7 +313,7 @@
                 "issues": "https://github.com/FortAwesome/Font-Awesome/issues",
                 "source": "https://github.com/FortAwesome/Font-Awesome"
             },
-            "time": "2022-03-15T19:08:55+00:00"
+            "time": "2022-03-22T15:24:29+00:00"
         },
         {
             "name": "gitonomy/gitlib",
@@ -968,22 +968,23 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "V2.1.10",
+            "version": "V2.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "6ebe4849ff7448d5903914d2f8980af5c9fd8d34"
+                "reference": "a0ff7a79af8c3bc5e9c5decee24cbefb5d80e93b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/6ebe4849ff7448d5903914d2f8980af5c9fd8d34",
-                "reference": "6ebe4849ff7448d5903914d2f8980af5c9fd8d34",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/a0ff7a79af8c3bc5e9c5decee24cbefb5d80e93b",
+                "reference": "a0ff7a79af8c3bc5e9c5decee24cbefb5d80e93b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
                 "phpunit/phpunit": ">=9.0"
             },
             "type": "library",
@@ -1018,9 +1019,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.10"
+                "source": "https://github.com/neonxp/MathExecutor/tree/V2.1.11"
             },
-            "time": "2022-02-14T14:59:33+00:00"
+            "time": "2022-03-21T16:52:25+00:00"
         },
         {
             "name": "phar-io/manifest",
