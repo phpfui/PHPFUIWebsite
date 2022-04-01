@@ -118,6 +118,18 @@ class Table extends \PHPFUI\HTML5Element
 		}
 
 	/**
+	 * Delete header field. Deletes the column. Can be called at anytime after a header is set but before output.
+	 *
+	 * @param string $field column name
+	 */
+	public function deleteHeader(string $field) : Table
+		{
+		unset($this->headers[$field]);
+
+		return $this;
+		}
+
+	/**
 	 * You can add any attribute to the next row (tr) that you want.  This only applies to the next row to be output and is reset for the next row.
 	 */
 	public function addNextRowAttribute(string $attribute, string $value) : Table
@@ -356,7 +368,7 @@ class Table extends \PHPFUI\HTML5Element
 		$recordId = 0;
 		$id = '';
 
-		if (! empty($this->recordId) && isset($row[$this->recordId]))
+		if (isset($row[$this->recordId]) && \is_scalar($row[$this->recordId]))
 			{
 			$recordId = $row[$this->recordId];
 			$id = " id='{$this->recordId}-{$recordId}'";
