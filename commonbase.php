@@ -1,29 +1,21 @@
 <?php
 // allow the autoloader and db to be included from any script that needs it.
-
 error_reporting(E_ALL);
 
-define ('PROJECT_ROOT', __DIR__);
-
-// allow the autoloader and db to be included from any script that needs it.
-function classNameExists($className)
+if (! defined('PROJECT_ROOT'))
 	{
-	$path = PROJECT_ROOT . '\\' . "{$className}.php";
-	$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+	define ('PROJECT_ROOT', __DIR__);
+	define ('PUBLIC_ROOT', __DIR__ . '/www');
 
-	return file_exists($path) ? $path : '';
-	}
-
-function autoload($className)
-	{
-	$path = classNameExists($className);
-	if ($path)
+	// allow the autoloader to be included from any script that needs it.
+	function autoload(string $className) : void
 		{
-		/** @noinspection PhpIncludeInspection */
-		include_once $path;
-		}
-	}
+		$path = str_replace('\\', DIRECTORY_SEPARATOR, PROJECT_ROOT . "/{$className}.php");
 
-spl_autoload_register('autoload');
+		@include_once $path;
+		}
+
+	spl_autoload_register('autoload');
+	}
 
 date_default_timezone_set('America/New_York');

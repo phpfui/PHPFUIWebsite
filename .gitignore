@@ -27,6 +27,7 @@ LICENSE.md
 /GuzzleHttp/Psr7/functions_include.php
 composer.phar
 .php-cs-fixer.dist.php
-
-
+/App
+/www/photos
+/www/bfw.php
 
