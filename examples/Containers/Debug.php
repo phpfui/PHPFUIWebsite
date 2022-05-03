@@ -1,3 +1,4 @@
 <?php
 $container = new \PHPFUI\Container();
-return new \PHPFUI\Debug($container, 'Debug $this!');
+$container->add('Some random thing');
+return new \PHPFUI\Debug($container, 'Debug $container!');

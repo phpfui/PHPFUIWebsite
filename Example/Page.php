@@ -152,6 +152,7 @@ class Page extends \PHPFUI\Page
 		{
 		$options = [
 			'Abide' => '/Examples/Abide.php',
+			'Abide Validation' => '/Examples/AbideValidation.php',
 			'Accordion To From List' => '/Examples/AccordionToFromList.php',
 			'AutoComplete' => '/Examples/AutoComplete.php',
 			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',

@@ -7,11 +7,13 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	}
 else
 	{
-	$php = '/usr/bin/php8.0';
+	$php = '/usr/bin/php8.1';
 	$composer = 'composer.phar';
 	}
 
-exec($php . ' ' . $composer . ' self-update');
+$composer = $php . ' ' . $composer;
+
+exec($composer . ' self-update');
 
 include 'commonbase.php';
 
@@ -20,7 +22,7 @@ $repo = new \Gitonomy\Git\Repository(__DIR__);
 $repo->run('checkout', ['master']);
 $repo->run('pull');
 
-exec($php . ' ' . $composer . ' update');
+exec($composer . ' update');
 
 // Localize files
 $updater = new ComposerUpdate();
