@@ -92,6 +92,7 @@ abstract class Input extends \PHPFUI\Input
 	public function setValidator(\PHPFUI\Validator $validator, string $errorMessage = '', $data = null) : Input
 		{
 		$this->setAttribute('data-validator', $validator->getValidatorName());
+
 		if ($errorMessage)
 			{
 			$this->addErrorMessage($errorMessage);

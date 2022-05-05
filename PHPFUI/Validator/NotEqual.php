@@ -11,9 +11,3 @@ class NotEqual extends \PHPFUI\Validator
 		$this->setJavaScript($this->getJavaScriptTemplate('to!=from'));
 		}
 	}
-{
-	public function __construct()
-	{
-		$this->operator = '<>';
-	}
-}
