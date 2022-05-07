@@ -41,8 +41,9 @@ class Abide
 
 		$optionalFields = new \PHPFUI\FieldSet('Suggested Fields');
 		$date = new \PHPFUI\Input\Date($this->page, 'startDate', 'Start Date', $this->parameters['startDate'] ?? '');
+		$time = new \PHPFUI\Input\Time($this->page, 'startTime', 'Start Time', $this->parameters['startTime'] ?? '');
 		$state = new \Example\View\State($this->page, 'state', 'State of Residence', $this->parameters['state'] ?? '');
-		$optionalFields->add(new \PHPFUI\MultiColumn($date, $state));
+		$optionalFields->add(new \PHPFUI\MultiColumn($date, $time, $state));
 		$movie = new \PHPFUI\Input\RadioGroup('movie', 'Favorite Movie Franchise', $this->parameters['movie'] ?? '');
 		$movie->addButton('Star Wars', 1);
 		$movie->addButton('Star Trek', 2);

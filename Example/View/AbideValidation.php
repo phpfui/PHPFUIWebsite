@@ -22,7 +22,7 @@ class AbideValidation
 		{
 		$container = new \PHPFUI\Container();
 
-		$ltgtFields = new \PHPFUI\FieldSet('Less Than / Greater Than Example');
+		$ltgtFields = new \PHPFUI\FieldSet('Date Less Than / Greater Than Example');
 		$startDate = new \PHPFUI\Input\Date($this->page, 'startDate', 'Start Date', $this->parameters['startDate'] ?? '');
 		$startDate->setToolTip('Must be before End Date.');
 
@@ -33,6 +33,19 @@ class AbideValidation
 		$endDate->setValidator($this->gtValidator, 'End Date must be greater than Start Date', $startDate->getId());
 
 		$ltgtFields->add(new \PHPFUI\MultiColumn($startDate, $endDate));
+		$container->add($ltgtFields);
+
+		$ltgtFields = new \PHPFUI\FieldSet('Time Less Than / Greater Than Example');
+		$startTime = new \PHPFUI\Input\Time($this->page, 'startTime', 'Start Time', $this->parameters['startTime'] ?? '', 5);
+		$startTime->setToolTip('Must be before End Time.');
+
+		$endTime = new \PHPFUI\Input\Time($this->page, 'endTime', 'End Time', $this->parameters['endTime'] ?? '', 5);
+		$endTime->setToolTip('Must be after Start Time.');
+
+		$startTime->setValidator($this->ltValidator, 'Start Time must be less than End Time', $endTime->getId());
+		$endTime->setValidator($this->gtValidator, 'End Time must be greater than Start Time', $startTime->getId());
+
+		$ltgtFields->add(new \PHPFUI\MultiColumn($startTime, $endTime));
 		$container->add($ltgtFields);
 
 		return $container;

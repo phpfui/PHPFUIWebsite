@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>TimePicker Example</title>
+
+    <link rel="stylesheet" href="/PHPFUI/css/styles.css">
+		<link rel="stylesheet" href="/PHPFUI/css/timepicker.css">
+	<link rel="stylesheet" href="/PHPFUI/font-awesome/css/all.min.css">
+</head>
+
+
+<body style="margin: 25px;">
+
+	<input id="timeInput" type="time" step="900" min="06:00" max="18:00">
+	<br/><br/>
+	<p>The Selected Time Is: <strong><span id="time"></span></strong></p>
+
+	<!-- JQuery, Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+	<!-- TimePicker JS -->
+	<script type="text/javascript" src="/PHPFUI/timepicker.js"></script>
+	<script type="text/javascript">
+
+	// Initialize the TimePicker
+	var tp = TimePicker('blue');
+
+	// Set Button Click Listener
+	var time = $("#timeInput");
+	time.click(function(e) {
+			tp.show(e.target, {callback:function(selected){let timeString=selected instanceof Date ? selected.toTimeString().substring(0,8) : '';$(e.target).attr('value',timeString);$("#time").html(timeString);}});
+	});
+
+	</script>
+</body>
+</html>
