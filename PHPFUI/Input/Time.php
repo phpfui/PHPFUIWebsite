@@ -23,6 +23,7 @@ class Time extends \PHPFUI\Input\Input
 	public function __construct(\PHPFUI\Page $page, string $name, string $label = '', ?string $value = '', int $interval = 15)
 		{
 		$value = self::toMilitary($value);
+
 		if ($page->isAndroid() || $page->isIOS())
 			{
 			// use a native picker for Android in hh:mm:ss format
@@ -33,14 +34,14 @@ class Time extends \PHPFUI\Input\Input
 			}
 		elseif (! $page->hasTimePicker())
 			{  // if we can't use a native, then use JS version
-			parent::__construct('text', $name, $label, $value);
+			parent::__construct('time', $name, $label, $value);
 			$js = "var tp=TimePicker('blue');";
 			$page->addJavaScript($js);
 			$onclickJs = 'let input=$(this);tp.show(input,{callback:function(selected){let timeString=selected instanceof Date?selected.toTimeString().substring(0,8):"";input.attr("value",timeString)}})';
-			$this->addAttribute('pattern', 'time');
 			$this->addAttribute('onclick', $onclickJs);
 			$page->addStyleSheet('css/timepicker.css');
 			$page->addTailScript('timepicker.js');
+
 			if (! self::$page)
 				{
 				$page->add($this->getTemplate());
@@ -127,25 +128,24 @@ class Time extends \PHPFUI\Input\Input
 		return \sprintf('%02d:%02d:%02d', $hour, $minute, $second);
 		}
 
-
 	private function getTemplate()
 		{
 		$menu = new \PHPFUI\Menu();
 		$menu->addClass('align-center');
 		$menu->setId('timepicker-buttons');
-		$now = new \PHPFUI\MenuItem('NOW',  '#');
+		$now = new \PHPFUI\MenuItem('NOW', '#');
 		$now->setId('timepicker-now-button');
 		$menu->addMenuItem($now);
 
-		$clear = new \PHPFUI\MenuItem('CLEAR',  '#');
+		$clear = new \PHPFUI\MenuItem('CLEAR', '#');
 		$clear->setId('timepicker-clear-button');
 		$menu->addMenuItem($clear);
 
-		$cancel = new \PHPFUI\MenuItem('CANCEL',  '#');
+		$cancel = new \PHPFUI\MenuItem('CANCEL', '#');
 		$cancel->setId('timepicker-cancel-button');
 		$menu->addMenuItem($cancel);
 
-		$set = new \PHPFUI\MenuItem('SET',  '#');
+		$set = new \PHPFUI\MenuItem('SET', '#');
 		$set->setId('timepicker-set-button');
 		$menu->addMenuItem($set);
 
@@ -180,5 +180,4 @@ class Time extends \PHPFUI\Input\Input
 {$menu}
 </div>";
 		}
-
 	}
