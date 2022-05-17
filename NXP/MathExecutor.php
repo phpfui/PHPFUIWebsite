@@ -16,6 +16,7 @@ use NXP\Classes\Operator;
 use NXP\Classes\Token;
 use NXP\Classes\Tokenizer;
 use NXP\Exception\DivisionByZeroException;
+use NXP\Exception\IncorrectNumberOfFunctionParametersException;
 use NXP\Exception\MathExecutorException;
 use NXP\Exception\UnknownVariableException;
 use ReflectionException;
@@ -31,7 +32,7 @@ class MathExecutor
      *
      * @var array<string, float|string>
      */
-    protected $variables = [];
+    protected array $variables = [];
 
     /**
      * @var callable|null
@@ -46,17 +47,17 @@ class MathExecutor
     /**
      * @var Operator[]
      */
-    protected $operators = [];
+    protected array $operators = [];
 
     /**
      * @var array<string, CustomFunction>
      */
-    protected $functions = [];
+    protected array $functions = [];
 
     /**
      * @var array<string, Token[]>
      */
-    protected $cache = [];
+    protected array $cache = [];
 
     /**
      * Base math operators
@@ -66,386 +67,39 @@ class MathExecutor
         $this->addDefaults();
     }
 
-    /**
-     * Set default operands and functions
-     * @throws ReflectionException
-     */
-    protected function addDefaults(): void
+    public function __clone()
     {
-        foreach ($this->defaultOperators() as $name => $operator) {
-            [$callable, $priority, $isRightAssoc] = $operator;
-            $this->addOperator(new Operator($name, $isRightAssoc, $priority, $callable));
-        }
-        foreach ($this->defaultFunctions() as $name => $callable) {
-            $this->addFunction($name, $callable);
-        }
-
-        $this->onVarValidation = [$this, 'defaultVarValidation'];
-        $this->variables = $this->defaultVars();
-    }
-
-    /**
-     * Get the default operators
-     *
-     * @return array<string, array{callable, int, bool}>
-     */
-    protected function defaultOperators(): array
-    {
-        return [
-            '+'    => [
-                function ($a, $b) {
-                    return $a + $b;
-                },
-                170,
-                false
-            ],
-            '-'    => [
-                function ($a, $b) {
-                    return $a - $b;
-                },
-                170,
-                false
-            ],
-            'uPos' => [ // unary positive token
-                        function ($a) {
-                            return $a;
-                        },
-                        200,
-                        false
-            ],
-            'uNeg' => [ // unary minus token
-                        function ($a) {
-                            return 0 - $a;
-                        },
-                        200,
-                        false
-            ],
-            '*'    => [
-                function ($a, $b) {
-                    return $a * $b;
-                },
-                180,
-                false
-            ],
-            '/'    => [
-                function ($a, $b) {
-                    if ($b == 0) {
-                        throw new DivisionByZeroException();
-                    }
-                    return $a / $b;
-                },
-                180,
-                false
-            ],
-            '^'    => [
-                function ($a, $b) {
-                    return pow($a, $b);
-                },
-                220,
-                true
-            ],
-            '&&'   => [
-                function ($a, $b) {
-                    return $a && $b;
-                },
-                100,
-                false
-            ],
-            '||'   => [
-                function ($a, $b) {
-                    return $a || $b;
-                },
-                90,
-                false
-            ],
-            '=='   => [
-                function ($a, $b) {
-                    if (is_string($a) || is_string($b)) {
-                        return strcmp($a, $b) == 0;
-                    } else {
-                        return $a == $b;
-                    }
-                },
-                140,
-                false
-            ],
-            '!='   => [
-                function ($a, $b) {
-                    if (is_string($a) || is_string($b)) {
-                        return strcmp($a, $b) != 0;
-                    } else {
-                        return $a != $b;
-                    }
-                },
-                140,
-                false
-            ],
-            '>='   => [
-                function ($a, $b) {
-                    return $a >= $b;
-                },
-                150,
-                false
-            ],
-            '>'    => [
-                function ($a, $b) {
-                    return $a > $b;
-                },
-                150,
-                false
-            ],
-            '<='   => [
-                function ($a, $b) {
-                    return $a <= $b;
-                },
-                150,
-                false
-            ],
-            '<'    => [
-                function ($a, $b) {
-                    return $a < $b;
-                },
-                150,
-                false
-            ],
-        ];
+        $this->addDefaults();
     }
 
     /**
      * Add operator to executor
      *
-     * @param Operator $operator
      * @return MathExecutor
      */
-    public function addOperator(Operator $operator): self
+    public function addOperator(Operator $operator) : self
     {
         $this->operators[$operator->operator] = $operator;
-        return $this;
-    }
 
-    /**
-     * Gets the default functions as an array.  Key is function name
-     * and value is the function as a closure.
-     *
-     * @return array<callable>
-     */
-    protected function defaultFunctions(): array
-    {
-        return [
-            'abs' => function ($arg) {
-                return abs($arg);
-            },
-            'acos' => function ($arg) {
-                return acos($arg);
-            },
-            'acosh' => function ($arg) {
-                return acosh($arg);
-            },
-            'arcsin' => function ($arg) {
-                return asin($arg);
-            },
-            'arcctg' => function ($arg) {
-                return M_PI/2 - atan($arg);
-            },
-            'arccot' => function ($arg) {
-                return M_PI/2 - atan($arg);
-            },
-            'arccotan' => function ($arg) {
-                return M_PI/2 - atan($arg);
-            },
-            'arcsec' => function ($arg) {
-                return acos(1/$arg);
-            },
-            'arccosec' => function ($arg) {
-                return asin(1/$arg);
-            },
-            'arccsc' => function ($arg) {
-                return asin(1/$arg);
-            },
-            'arccos' => function ($arg) {
-                return acos($arg);
-            },
-            'arctan' => function ($arg) {
-                return atan($arg);
-            },
-            'arctg' => function ($arg) {
-                return atan($arg);
-            },
-            'asin' => function ($arg) {
-                return asin($arg);
-            },
-            'atan' => function ($arg) {
-                return atan($arg);
-            },
-            'atan2' => function ($arg1, $arg2) {
-                return atan2($arg1, $arg2);
-            },
-            'atanh' => function ($arg) {
-                return atanh($arg);
-            },
-            'atn' => function ($arg) {
-                return atan($arg);
-            },
-            'avg' => function ($arg1, $arg2) {
-                return ($arg1 + $arg2) / 2;
-            },
-            'bindec' => function ($arg) {
-                return bindec($arg);
-            },
-            'ceil' => function ($arg) {
-                return ceil($arg);
-            },
-            'cos' => function ($arg) {
-                return cos($arg);
-            },
-            'cosec' => function ($arg) {
-                return 1 / sin($arg);
-            },
-            'csc' => function ($arg) {
-                return 1 / sin($arg);
-            },
-            'cosh' => function ($arg) {
-                return cosh($arg);
-            },
-            'ctg' => function ($arg) {
-                return cos($arg) / sin($arg);
-            },
-            'cot' => function ($arg) {
-                return cos($arg) / sin($arg);
-            },
-            'cotan' => function ($arg) {
-                return cos($arg) / sin($arg);
-            },
-            'cotg' => function ($arg) {
-                return cos($arg) / sin($arg);
-            },
-            'ctn' => function ($arg) {
-                return cos($arg) / sin($arg);
-            },
-            'decbin' => function ($arg) {
-                return decbin($arg);
-            },
-            'dechex' => function ($arg) {
-                return dechex($arg);
-            },
-            'decoct' => function ($arg) {
-                return decoct($arg);
-            },
-            'deg2rad' => function ($arg) {
-                return deg2rad($arg);
-            },
-            'exp' => function ($arg) {
-                return exp($arg);
-            },
-            'expm1' => function ($arg) {
-                return expm1($arg);
-            },
-            'floor' => function ($arg) {
-                return floor($arg);
-            },
-            'fmod' => function ($arg1, $arg2) {
-                return fmod($arg1, $arg2);
-            },
-            'hexdec' => function ($arg) {
-                return hexdec($arg);
-            },
-            'hypot' => function ($arg1, $arg2) {
-                return hypot($arg1, $arg2);
-            },
-            'if' => function ($expr, $trueval, $falseval) {
-                if ($expr === true || $expr === false) {
-                    $exres = $expr;
-                } else {
-                    $exres = $this->execute($expr);
-                }
-                if ($exres) {
-                    return $this->execute($trueval);
-                } else {
-                    return $this->execute($falseval);
-                }
-            },
-            'intdiv' => function ($arg1, $arg2) {
-                return intdiv($arg1, $arg2);
-            },
-            'ln' => function ($arg) {
-                return log($arg);
-            },
-            'lg' => function ($arg) {
-                return log10($arg);
-            },
-            'log' => function ($arg) {
-                return log($arg);
-            },
-            'log10' => function ($arg) {
-                return log10($arg);
-            },
-            'log1p' => function ($arg) {
-                return log1p($arg);
-            },
-            'max' => function ($arg1, $arg2) {
-                return max($arg1, $arg2);
-            },
-            'min' => function ($arg1, $arg2) {
-                return min($arg1, $arg2);
-            },
-            'octdec' => function ($arg) {
-                return octdec($arg);
-            },
-            'pi' => function () {
-                return pi();
-            },
-            'pow' => function ($arg1, $arg2) {
-                return $arg1 ** $arg2;
-            },
-            'rad2deg' => function ($arg) {
-                return rad2deg($arg);
-            },
-            'round' => function ($arg) {
-                return round($arg);
-            },
-            'sin' => function ($arg) {
-                return sin($arg);
-            },
-            'sinh' => function ($arg) {
-                return sinh($arg);
-            },
-            'sec' => function ($arg) {
-                return 1 / cos($arg);
-            },
-            'sqrt' => function ($arg) {
-                return sqrt($arg);
-            },
-            'tan' => function ($arg) {
-                return tan($arg);
-            },
-            'tanh' => function ($arg) {
-                return tanh($arg);
-            },
-            'tn' => function ($arg) {
-                return tan($arg);
-            },
-            'tg' => function ($arg) {
-                return tan($arg);
-            }
-        ];
+        return $this;
     }
 
     /**
      * Execute expression
      *
-     * @param string $expression
-     * @param bool $cache
-     * @return number
      * @throws Exception\IncorrectBracketsException
      * @throws Exception\IncorrectExpressionException
      * @throws Exception\UnknownOperatorException
      * @throws UnknownVariableException
+     * @return int|float|string|null
      */
     public function execute(string $expression, bool $cache = true)
     {
         $cacheKey = $expression;
-        if (!array_key_exists($cacheKey, $this->cache)) {
+
+        if (! \array_key_exists($cacheKey, $this->cache)) {
             $tokens = (new Tokenizer($expression, $this->operators))->tokenize()->buildReversePolishNotation();
+
             if ($cache) {
                 $this->cache[$cacheKey] = $tokens;
             }
@@ -454,35 +108,25 @@ class MathExecutor
         }
 
         $calculator = new Calculator($this->functions, $this->operators);
+
         return $calculator->calculate($tokens, $this->variables, $this->onVarNotFound);
     }
 
     /**
      * Add function to executor
      *
-     * @param string $name Name of function
-     * @param callable $function Function
-     * @param int $places Count of arguments
-     * @return MathExecutor
-     * @throws ReflectionException
-     */
-    public function addFunction(string $name, ?callable $function = null, ?int $places = null): self
-    {
-        $this->functions[$name] = new CustomFunction($name, $function, $places);
-        return $this;
-    }
-
-    /**
-     * Returns the default variables names as key/value pairs
+     * @param string        $name     Name of function
+     * @param callable|null $function Function
      *
-     * @return array<string, float>
+     * @throws ReflectionException
+     * @throws Exception\IncorrectNumberOfFunctionParametersException
+     * @return MathExecutor
      */
-    protected function defaultVars(): array
+    public function addFunction(string $name, ?callable $function = null) : self
     {
-        return [
-            'pi' => 3.14159265359,
-            'e' => 2.71828182846
-        ];
+        $this->functions[$name] = new CustomFunction($name, $function);
+
+        return $this;
     }
 
     /**
@@ -490,7 +134,7 @@ class MathExecutor
      *
      * @return array<string, float|string>
      */
-    public function getVars(): array
+    public function getVars() : array
     {
         return $this->variables;
     }
@@ -498,61 +142,46 @@ class MathExecutor
     /**
      * Get a specific var
      *
-     * @param  string $variable
-     * @return integer|float
      * @throws UnknownVariableException if VarNotFoundHandler is not set
+     * @return int|float
      */
     public function getVar(string $variable)
     {
-        if (!array_key_exists($variable, $this->variables)) {
+        if (! \array_key_exists($variable, $this->variables)) {
             if ($this->onVarNotFound) {
-                return call_user_func($this->onVarNotFound, $variable);
+                return \call_user_func($this->onVarNotFound, $variable);
             }
+
             throw new UnknownVariableException("Variable ({$variable}) not set");
         }
+
         return $this->variables[$variable];
     }
 
     /**
      * Add variable to executor. To set a custom validator use setVarValidationHandler.
      *
-     * @param  string $variable
-     * @param  $value
-     * @return MathExecutor
      * @throws MathExecutorException if the value is invalid based on the default or custom validator
+     * @return MathExecutor
      */
-    public function setVar(string $variable, $value): self
+    public function setVar(string $variable, $value) : self
     {
         if ($this->onVarValidation) {
-            call_user_func($this->onVarValidation, $variable, $value);
+            \call_user_func($this->onVarValidation, $variable, $value);
         }
 
         $this->variables[$variable] = $value;
-        return $this;
-    }
 
-    /**
-     * Default variable validation, ensures that the value is a scalar.
-     * @param string $variable
-     * @param $value
-     * @throws MathExecutorException if the value is not a scalar
-     */
-    protected function defaultVarValidation(string $variable, $value): void
-    {
-        if (!is_scalar($value) && $value !== null) {
-            $type = gettype($value);
-            throw new MathExecutorException("Variable ({$variable}) type ({$type}) is not scalar");
-        }
+        return $this;
     }
 
     /**
      * Test to see if a variable exists
      *
-     * @param  string $variable
      */
-    public function varExists(string $variable): bool
+    public function varExists(string $variable) : bool
     {
-        return array_key_exists($variable, $this->variables);
+        return \array_key_exists($variable, $this->variables);
     }
 
     /**
@@ -560,17 +189,19 @@ class MathExecutor
      *
      * @param  array<string, float|int|string> $variables
      * @param  bool $clear Clear previous variables
-     * @return MathExecutor
      * @throws \Exception
+     * @return MathExecutor
      */
-    public function setVars(array $variables, bool $clear = true): self
+    public function setVars(array $variables, bool $clear = true) : self
     {
         if ($clear) {
             $this->removeVars();
         }
+
         foreach ($variables as $name => $value) {
             $this->setVar($name, $value);
         }
+
         return $this;
     }
 
@@ -578,13 +209,13 @@ class MathExecutor
      * Define a method that will be invoked when a variable is not found.
      * The first parameter will be the variable name, and the returned value will be used as the variable value.
      *
-     * @param callable $handler
      *
      * @return MathExecutor
      */
-    public function setVarNotFoundHandler(callable $handler): self
+    public function setVarNotFoundHandler(callable $handler) : self
     {
         $this->onVarNotFound = $handler;
+
         return $this;
     }
 
@@ -597,21 +228,22 @@ class MathExecutor
      *
      * @return MathExecutor
      */
-    public function setVarValidationHandler(?callable $handler): self
+    public function setVarValidationHandler(?callable $handler) : self
     {
         $this->onVarValidation = $handler;
+
         return $this;
     }
 
     /**
      * Remove variable from executor
      *
-     * @param  string $variable
      * @return MathExecutor
      */
-    public function removeVar(string $variable): self
+    public function removeVar(string $variable) : self
     {
         unset($this->variables[$variable]);
+
         return $this;
     }
 
@@ -619,10 +251,11 @@ class MathExecutor
      * Remove all variables and the variable not found handler
      * @return MathExecutor
      */
-    public function removeVars(): self
+    public function removeVars() : self
     {
         $this->variables = [];
         $this->onVarNotFound = null;
+
         return $this;
     }
 
@@ -642,24 +275,18 @@ class MathExecutor
      * @return array<string, CustomFunction> containing callback and places indexed by
      *         function name
      */
-    public function getFunctions(): array
+    public function getFunctions() : array
     {
         return $this->functions;
     }
 
     /**
      * Set division by zero returns zero instead of throwing DivisionByZeroException
-     *
-     * @return MathExecutor
      */
-    public function setDivisionByZeroIsZero(): self
+    public function setDivisionByZeroIsZero() : self
     {
-        $this->addOperator(new Operator("/", false, 180, function ($a, $b) {
-            if ($b == 0) {
-                return 0;
-            }
-            return $a / $b;
-        }));
+        $this->addOperator(new Operator('/', false, 180, static fn($a, $b) => 0 == $b ? 0 : $a / $b));
+
         return $this;
     }
 
@@ -667,7 +294,7 @@ class MathExecutor
      * Get cache array with tokens
      * @return array<string, Token[]>
      */
-    public function getCache(): array
+    public function getCache() : array
     {
         return $this->cache;
     }
@@ -675,13 +302,201 @@ class MathExecutor
     /**
      * Clear token's cache
      */
-    public function clearCache(): void
+    public function clearCache() : void
     {
         $this->cache = [];
     }
 
-    public function __clone()
+    /**
+     * Set default operands and functions
+     * @throws ReflectionException
+     */
+    protected function addDefaults() : void
     {
-        $this->addDefaults();
+        foreach ($this->defaultOperators() as $name => $operator) {
+            [$callable, $priority, $isRightAssoc] = $operator;
+            $this->addOperator(new Operator($name, $isRightAssoc, $priority, $callable));
+        }
+
+        foreach ($this->defaultFunctions() as $name => $callable) {
+            $this->addFunction($name, $callable);
+        }
+
+        $this->onVarValidation = [$this, 'defaultVarValidation'];
+        $this->variables = $this->defaultVars();
+    }
+
+    /**
+     * Get the default operators
+     *
+     * @return array<string, array{callable, int, bool}>
+     */
+    protected function defaultOperators() : array
+    {
+        return [
+          '+' => [static fn($a, $b) => $a + $b, 170, false],
+          '-' => [static fn($a, $b) => $a - $b, 170, false],
+          // unary positive token
+          'uPos' => [static fn($a) => $a, 200, false],
+          // unary minus token
+          'uNeg' => [static fn($a) => 0 - $a, 200, false],
+          '*' => [static fn($a, $b) => $a * $b, 180, false],
+          '/' => [
+            static function($a, $b) { /** @todo PHP8: Use throw as expression -> static fn($a, $b) => 0 == $b ? throw new DivisionByZeroException() : $a / $b */
+                if (0 == $b) {
+                    throw new DivisionByZeroException();
+                }
+
+                return $a / $b;
+            },
+            180,
+            false
+          ],
+          '^' => [static fn($a, $b) => \pow($a, $b), 220, true],
+          '&&' => [static fn($a, $b) => $a && $b, 100, false],
+          '||' => [static fn($a, $b) => $a || $b, 90, false],
+          '==' => [static fn($a, $b) => \is_string($a) || \is_string($b) ? 0 == \strcmp($a, $b) : $a == $b, 140, false],
+          '!=' => [static fn($a, $b) => \is_string($a) || \is_string($b) ? 0 != \strcmp($a, $b) : $a != $b, 140, false],
+          '>=' => [static fn($a, $b) => $a >= $b, 150, false],
+          '>' => [static fn($a, $b) => $a > $b, 150, false],
+          '<=' => [static fn($a, $b) => $a <= $b, 150, false],
+          '<' => [static fn($a, $b) => $a < $b, 150, false],
+        ];
+    }
+
+    /**
+     * Gets the default functions as an array.  Key is function name
+     * and value is the function as a closure.
+     *
+     * @return array<callable>
+     */
+    protected function defaultFunctions() : array
+    {
+        return [
+          'abs' => static fn($arg) => \abs($arg),
+          'acos' => static fn($arg) => \acos($arg),
+          'acosh' => static fn($arg) => \acosh($arg),
+          'arcsin' => static fn($arg) => \asin($arg),
+          'arcctg' => static fn($arg) => M_PI / 2 - \atan($arg),
+          'arccot' => static fn($arg) => M_PI / 2 - \atan($arg),
+          'arccotan' => static fn($arg) => M_PI / 2 - \atan($arg),
+          'arcsec' => static fn($arg) => \acos(1 / $arg),
+          'arccosec' => static fn($arg) => \asin(1 / $arg),
+          'arccsc' => static fn($arg) => \asin(1 / $arg),
+          'arccos' => static fn($arg) => \acos($arg),
+          'arctan' => static fn($arg) => \atan($arg),
+          'arctg' => static fn($arg) => \atan($arg),
+          'asin' => static fn($arg) => \asin($arg),
+          'atan' => static fn($arg) => \atan($arg),
+          'atan2' => static fn($arg1, $arg2) => \atan2($arg1, $arg2),
+          'atanh' => static fn($arg) => \atanh($arg),
+          'atn' => static fn($arg) => \atan($arg),
+          'avg' => static function($arg1, $args) {
+              if (\is_array($arg1)){
+                  return \array_sum($arg1) / \count($arg1);
+              }
+
+              if (0 === \count($args)){
+                  throw new IncorrectNumberOfFunctionParametersException();
+              }
+              $args = [$arg1, ...$args];
+
+              return \array_sum($args) / \count($args);
+          },
+          'bindec' => static fn($arg) => \bindec($arg),
+          'ceil' => static fn($arg) => \ceil($arg),
+          'cos' => static fn($arg) => \cos($arg),
+          'cosec' => static fn($arg) => 1 / \sin($arg),
+          'csc' => static fn($arg) => 1 / \sin($arg),
+          'cosh' => static fn($arg) => \cosh($arg),
+          'ctg' => static fn($arg) => \cos($arg) / \sin($arg),
+          'cot' => static fn($arg) => \cos($arg) / \sin($arg),
+          'cotan' => static fn($arg) => \cos($arg) / \sin($arg),
+          'cotg' => static fn($arg) => \cos($arg) / \sin($arg),
+          'ctn' => static fn($arg) => \cos($arg) / \sin($arg),
+          'decbin' => static fn($arg) => \decbin($arg),
+          'dechex' => static fn($arg) => \dechex($arg),
+          'decoct' => static fn($arg) => \decoct($arg),
+          'deg2rad' => static fn($arg) => \deg2rad($arg),
+          'exp' => static fn($arg) => \exp($arg),
+          'expm1' => static fn($arg) => \expm1($arg),
+          'floor' => static fn($arg) => \floor($arg),
+          'fmod' => static fn($arg1, $arg2) => \fmod($arg1, $arg2),
+          'hexdec' => static fn($arg) => \hexdec($arg),
+          'hypot' => static fn($arg1, $arg2) => \hypot($arg1, $arg2),
+          'if' => function($expr, $trueval, $falseval) {
+              if (true === $expr || false === $expr) {
+                  $exres = $expr;
+              } else {
+                  $exres = $this->execute($expr);
+              }
+
+              if ($exres) {
+                  return $this->execute($trueval);
+              }
+
+              return $this->execute($falseval);
+          },
+          'intdiv' => static fn($arg1, $arg2) => \intdiv($arg1, $arg2),
+          'ln' => static fn($arg) => \log($arg),
+          'lg' => static fn($arg) => \log10($arg),
+          'log' => static fn($arg) => \log($arg),
+          'log10' => static fn($arg) => \log10($arg),
+          'log1p' => static fn($arg) => \log1p($arg),
+          'max' => static function($arg1, ...$args) {
+              if (! \is_array($arg1) && 0 === \count($args)){
+                  throw new IncorrectNumberOfFunctionParametersException();
+              }
+
+              return \max($arg1, ...$args);
+          },
+          'min' => static function($arg1, ...$args) {
+              if (! \is_array($arg1) && 0 === \count($args)){
+                  throw new IncorrectNumberOfFunctionParametersException();
+              }
+
+              return \min($arg1, ...$args);
+          },
+          'octdec' => static fn($arg) => \octdec($arg),
+          'pi' => static fn() => M_PI,
+          'pow' => static fn($arg1, $arg2) => $arg1 ** $arg2,
+          'rad2deg' => static fn($arg) => \rad2deg($arg),
+          'round' => static fn($num, int $precision = 0) => \round($num, $precision),
+          'sin' => static fn($arg) => \sin($arg),
+          'sinh' => static fn($arg) => \sinh($arg),
+          'sec' => static fn($arg) => 1 / \cos($arg),
+          'sqrt' => static fn($arg) => \sqrt($arg),
+          'tan' => static fn($arg) => \tan($arg),
+          'tanh' => static fn($arg) => \tanh($arg),
+          'tn' => static fn($arg) => \tan($arg),
+          'tg' => static fn($arg) => \tan($arg),
+          'array' => static fn(...$args) => [...$args]
+        ];
+    }
+
+    /**
+     * Returns the default variables names as key/value pairs
+     *
+     * @return array<string, float>
+     */
+    protected function defaultVars() : array
+    {
+        return [
+          'pi' => 3.14159265359,
+          'e' => 2.71828182846
+        ];
+    }
+
+    /**
+     * Default variable validation, ensures that the value is a scalar.
+     * @throws MathExecutorException if the value is not a scalar
+     */
+    protected function defaultVarValidation(string $variable, $value) : void
+    {
+        if (! \is_scalar($value) && ! \is_array($value) && null !== $value) {
+            $type = \gettype($value);
+
+            throw new MathExecutorException("Variable ({$variable}) type ({$type}) is not scalar or array!");
+        }
     }
 }

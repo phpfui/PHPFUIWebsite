@@ -3,9 +3,11 @@
 # A simple and extensible math expressions calculator
 
 ## Features:
-* Built in support for +, -, *, / and power (^) operators plus ()
+* Built in support for +, -, *, / and power (^) operators
+* Paratheses () and arrays [] are fully supported
 * Logical operators (==, !=, <, <, >=, <=, &&, ||)
 * Built in support for most PHP math functions
+* Support for variable number of function parameters
 * Conditional If logic
 * Support for user defined operators
 * Support for user defined functions
@@ -40,6 +42,7 @@ Default functions:
 * arcctg (arccot, arccotan)
 * arcsec
 * arccsc (arccosec)
+* array
 * asin (arcsin)
 * atan (atn, arctan, arctg)
 * atan2
@@ -84,7 +87,10 @@ Add custom function to executor:
 ```php
 $executor->addFunction('abs', function($arg) {return abs($arg);});
 ```
-Function default parameters are not supported at this time.
+Function default parameters (optional parameters) are also supported.
+```php
+$executor->addFunction('round', function($num, int $precision = 0) {return round($num, $precision);});
+```
 
 ## Operators:
 Default operators: `+ - * / ^`
@@ -139,18 +145,25 @@ $executor->setVar('var1', 0.15)->setVar('var2', 0.22);
 echo $executor->execute("$var1 + var2");
 ```
 
-By default, variables must be scalar values (int, float, bool or string).  If you would like to support another type, use **setVarValidationHandler**
+Arrays are also supported (as variables, as func params or can be returned in user defined funcs):
+```php
+$executor->setVar('monthly_salaries', [1800, 1900, 1200, 1600]);
+
+echo $executor->execute("avg(monthly_salaries) * min([1.1, 1.3])");
+```
+
+By default, variables must be scalar values (int, float, bool or string) or array.  If you would like to support another type, use **setVarValidationHandler**
 
 ```php
 $executor->setVarValidationHandler(function (string $name, $variable) {
-		// allow all scalars and null
-		if (is_scalar($variable) || $variable === null) {
-				return;
-		}
-		// Allow variables of type DateTime, but not others
-		if (! $variable instanceof \DateTime) {
-				throw new MathExecutorException("Invalid variable type");
-		}
+    // allow all scalars, array and null
+    if (is_scalar($variable) || is_array($variable) || $variable === null) {
+        return;
+    }
+    // Allow variables of type DateTime, but not others
+    if (! $variable instanceof \DateTime) {
+        throw new MathExecutorException("Invalid variable type");
+    }
 });
 ```
 
@@ -193,14 +206,14 @@ echo $executor->execute('1/0');
 ```
 
 ## String Support:
-Expressions can contain double or single quoted strings that are evaluated the same way as PHP evalutes strings as numbers. You can also pass strings to functions.
+Expressions can contain double or single quoted strings that are evaluated the same way as PHP evaluates strings as numbers. You can also pass strings to functions.
 
 ```php
 echo $executor->execute("1 + '2.5' * '.5' + myFunction('category')");
 ```
 
 ## Extending MathExecutor
-You can add operators, functions and variables with the public methods in MathExecutor, but if you need to do more serious modifications to base behaviours, the easiest way to extend MathExecutor is to redefine the following methods in your derived class:
+You can add operators, functions and variables with the public methods in MathExecutor, but if you need to do more serious modifications to base behaviors, the easiest way to extend MathExecutor is to redefine the following methods in your derived class:
 * defaultOperators
 * defaultFunctions
 * defaultVars
