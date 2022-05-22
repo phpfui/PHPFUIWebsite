@@ -968,16 +968,16 @@
         },
         {
             "name": "nxp/math-executor",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "f71b77a62eb27184b5653d6293250e7fda2fdfef"
+                "reference": "d1b060749e58a09bc437f85152d54e40c163efb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/f71b77a62eb27184b5653d6293250e7fda2fdfef",
-                "reference": "f71b77a62eb27184b5653d6293250e7fda2fdfef",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/d1b060749e58a09bc437f85152d54e40c163efb0",
+                "reference": "d1b060749e58a09bc437f85152d54e40c163efb0",
                 "shasum": ""
             },
             "require": {
@@ -1019,9 +1019,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/v2.2.0"
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.2.1"
             },
-            "time": "2022-05-16T22:28:53+00:00"
+            "time": "2022-05-21T17:38:58+00:00"
         },
         {
             "name": "phar-io/manifest",
