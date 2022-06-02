@@ -14,11 +14,9 @@ class TokenInfo extends \PHPFUI\ConstantContact\Base
 	/**
 	 * Access Token Information
 	 *
-	 * Use this POST method to retrieve the list of authorization scopes associated
-	 * with an OAuth2.0 access token.
-	 *
-	 * You cannot retrieve authorization information using expired access tokens.
-	 *
+	 * IMPORTANT NOTE: As of March 31, 2022, this POST method is being depreciated.
+	 * To view the scopes associated with an access token, parse the access
+	 * token (JWT) claims.
 	 *
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\AuthToken $auth_token A JSON request payload containing a valid OAuth2.0 access token.
