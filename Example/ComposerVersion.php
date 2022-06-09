@@ -21,16 +21,6 @@ class ComposerVersion extends \Example\Page
 			{
 			$parameters = [];
 			}
-		foreach (['alert', 'warning', 'success', 'secondary', ] as $type)
-			{
-			$message = \PHPFUI\Session::getFlash($type);
-			if ($message)
-				{
-				$callout = new \PHPFUI\Callout($type);
-				$callout->add(json_decode($message, true));
-				$form->add($callout);
-				}
-			}
 
 		$view = new \Example\View\ComposerVersion($this, $parameters);
 		$form->add($view->render());

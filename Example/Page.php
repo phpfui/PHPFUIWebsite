@@ -107,6 +107,17 @@ class Page extends \PHPFUI\Page
 
 			$post = \PHPFUI\Session::getFlash('post');
 
+			foreach (['alert', 'warning', 'success', 'secondary', ] as $type)
+				{
+				$message = \PHPFUI\Session::getFlash($type);
+				if ($message)
+					{
+					$callout = new \PHPFUI\Callout($type);
+					$callout->add(json_decode($message, true));
+					$this->addBody($callout);
+					}
+				}
+
 			if ($post && ! is_callable($this->callback))
 				{
 				$post = json_decode($post, true);
@@ -157,6 +168,7 @@ class Page extends \PHPFUI\Page
 			'AutoComplete' => '/Examples/AutoComplete.php',
 			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
 			'Composer Version Checker' => '/Examples/ComposerVersion.php',
+			'GPX to CueSheet' => '/Examples/GPX2CueSheet.php',
 			'Kitchen Sink' => '/Examples/KitchenSink.php',
 			'Orbit Carousel' => '/Examples/Orbit.php',
 			'Orderable Table' => '/Examples/OrderableTable.php',

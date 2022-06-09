@@ -25,6 +25,7 @@ else
 		'Html2Text',
 		'HtmlValidator',
 		'ICalendarOrg',
+		'League',
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',
