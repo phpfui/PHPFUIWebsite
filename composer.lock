@@ -443,16 +443,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.4.3",
+            "version": "7.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "74a8602c6faec9ef74b7a9391ac82c5e65b1cdab"
+                "reference": "e3ff079b22820c2029d4c2a87796b6a0b8716ad8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/74a8602c6faec9ef74b7a9391ac82c5e65b1cdab",
-                "reference": "74a8602c6faec9ef74b7a9391ac82c5e65b1cdab",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e3ff079b22820c2029d4c2a87796b6a0b8716ad8",
+                "reference": "e3ff079b22820c2029d4c2a87796b6a0b8716ad8",
                 "shasum": ""
             },
             "require": {
@@ -547,7 +547,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.3"
+                "source": "https://github.com/guzzle/guzzle/tree/7.4.4"
             },
             "funding": [
                 {
@@ -563,7 +563,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-25T13:24:33+00:00"
+            "time": "2022-06-09T21:39:15+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -651,16 +651,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.2.2",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "a119247127ff95789a2d95c347cd74721fbedaa4"
+                "reference": "83260bb50b8fc753c72d14dc1621a2dac31877ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/a119247127ff95789a2d95c347cd74721fbedaa4",
-                "reference": "a119247127ff95789a2d95c347cd74721fbedaa4",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/83260bb50b8fc753c72d14dc1621a2dac31877ee",
+                "reference": "83260bb50b8fc753c72d14dc1621a2dac31877ee",
                 "shasum": ""
             },
             "require": {
@@ -684,7 +684,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -746,7 +746,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.2.2"
+                "source": "https://github.com/guzzle/psr7/tree/2.3.0"
             },
             "funding": [
                 {
@@ -762,7 +762,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-08T19:55:23+00:00"
+            "time": "2022-06-09T08:26:02+00:00"
         },
         {
             "name": "html2text/html2text",
@@ -1661,21 +1661,21 @@
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.4",
+            "version": "V1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "99e65e6f08d0c2b5e9a9f82298bf24fda84a2653"
+                "reference": "b82aa10c993398effef68f80c8cb39a8c28c856f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/99e65e6f08d0c2b5e9a9f82298bf24fda84a2653",
-                "reference": "99e65e6f08d0c2b5e9a9f82298bf24fda84a2653",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/b82aa10c993398effef68f80c8cb39a8c28c856f",
+                "reference": "b82aa10c993398effef68f80c8cb39a8c28c856f",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4.13",
-                "php": ">=7.3  <8.2"
+                "php": ">=8.0  <8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -1713,9 +1713,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.4"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.5"
             },
-            "time": "2022-01-12T03:21:12+00:00"
+            "time": "2022-06-09T14:40:54+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -4004,16 +4004,16 @@
         },
         {
             "name": "voku/simple_html_dom",
-            "version": "4.8.5",
+            "version": "4.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/simple_html_dom.git",
-                "reference": "77df6b0bd33845f61ec8b07328c463b725bdfced"
+                "reference": "1df7e9844eddbe190450c87f281e87bbd8d7f645"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/77df6b0bd33845f61ec8b07328c463b725bdfced",
-                "reference": "77df6b0bd33845f61ec8b07328c463b725bdfced",
+                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/1df7e9844eddbe190450c87f281e87bbd8d7f645",
+                "reference": "1df7e9844eddbe190450c87f281e87bbd8d7f645",
                 "shasum": ""
             },
             "require": {
@@ -4061,7 +4061,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/simple_html_dom/issues",
-                "source": "https://github.com/voku/simple_html_dom/tree/4.8.5"
+                "source": "https://github.com/voku/simple_html_dom/tree/4.8.6"
             },
             "funding": [
                 {
@@ -4081,7 +4081,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-13T22:36:51+00:00"
+            "time": "2022-06-09T05:48:45+00:00"
         },
         {
             "name": "webmozart/assert",
