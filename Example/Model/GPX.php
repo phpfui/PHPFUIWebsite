@@ -95,7 +95,7 @@ class GPX
 			if ($last)
 				{
 				$distance = $geotools->distance()->setFrom($last)->setTo($next);
-				$mileage = $distance->in($this->unit)->vincenty();
+				$mileage = $distance->in($this->unit)->greatCircle();
 				}
 			$this->totalDistance += $mileage;
 			$last = clone $next;

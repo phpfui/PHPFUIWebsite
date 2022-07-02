@@ -13,7 +13,6 @@ namespace Symfony\Component\PropertyInfo\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -23,8 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class PropertyInfoPass implements CompilerPassInterface
 {
-    use PriorityTaggedServiceTrait;
-
     /**
      * {@inheritdoc}
      */

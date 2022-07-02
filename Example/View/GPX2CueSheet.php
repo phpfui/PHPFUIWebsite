@@ -19,7 +19,7 @@ class GPX2CueSheet
 		$PDFLink = new \PHPFUI\Link('https://en.wikipedia.org/wiki/PDF', 'PDF');
 		$callout->add("Convert a {$gpxLink} file to a {$PDFLink} version of a CueSheet. Drag in a {$gpxLink} file and press Generate to download a {$PDFLink} version of a cue sheet.");
 		$container->add($callout);
-		$file = new \PHPFUI\Input\File($this->page, $this->fieldName, 'GPX File to conver to a cuesheet');
+		$file = new \PHPFUI\Input\File($this->page, $this->fieldName, 'GPX File to convert to a cuesheet. You must remove the existing file to drag in a different file.');
 		$file->setAllowedExtensions(['gpx']);
 		$file->setRequired();
 		$container->add($file);

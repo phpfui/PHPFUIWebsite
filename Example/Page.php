@@ -118,7 +118,7 @@ class Page extends \PHPFUI\Page
 					}
 				}
 
-			if ($post && ! is_callable($this->callback))
+			if (is_array($post) && ! is_callable($this->callback))
 				{
 				$post = json_decode($post, true);
 				$callout = new \PHPFUI\Callout('success');
