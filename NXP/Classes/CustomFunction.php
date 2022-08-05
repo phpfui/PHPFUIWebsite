@@ -15,6 +15,10 @@ class CustomFunction
      */
     public $function;
 
+    private bool $isVariadic;
+
+    private int $totalParamCount;
+
     private int $requiredParamCount;
 
     /**
@@ -26,7 +30,10 @@ class CustomFunction
     {
         $this->name = $name;
         $this->function = $function;
-        $this->requiredParamCount = (new ReflectionFunction($function))->getNumberOfRequiredParameters();
+        $reflection = (new ReflectionFunction($function));
+        $this->isVariadic = $reflection->isVariadic();
+        $this->totalParamCount = $reflection->getNumberOfParameters();
+        $this->requiredParamCount = $reflection->getNumberOfRequiredParameters();
 
     }
 
@@ -38,6 +45,10 @@ class CustomFunction
     public function execute(array &$stack, int $paramCountInStack) : Token
     {
         if ($paramCountInStack < $this->requiredParamCount) {
+            throw new IncorrectNumberOfFunctionParametersException($this->name);
+        }
+
+        if ($paramCountInStack > $this->totalParamCount && ! $this->isVariadic) {
             throw new IncorrectNumberOfFunctionParametersException($this->name);
         }
         $args = [];
