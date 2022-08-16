@@ -7,7 +7,7 @@ namespace PHPFUI;
  *
  * Works the same way as ReCAPTCHA, just a different contructor.  You really only need to pass the Page.
  */
-class MathCaptcha extends \PHPFUI\MultiColumn
+class MathCaptcha extends \PHPFUI\MultiColumn implements \PHPFUI\Interfaces\Captcha
 	{
 	private string $fieldName = 'mathAnswer';
 
@@ -24,6 +24,7 @@ class MathCaptcha extends \PHPFUI\MultiColumn
 			}
 		$container = new \PHPFUI\Container();
 		$answers = [];
+		$answer = -999;
 
 		for ($i = 0; $i < 10; ++$i)
 			{

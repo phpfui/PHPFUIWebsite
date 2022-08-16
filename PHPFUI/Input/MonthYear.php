@@ -55,10 +55,11 @@ class MonthYear extends \PHPFUI\Base
 		$array = \explode('/', \str_replace(['-',
 			'.',
 			'\\',
-			' ', ], '/', $value));
+			' ', ], '/', $value ?? ''));
 
 		if (3 == \count($array))
 			{
+			/** @phpstan-ignore-next-line */
 			[$this->year, $this->month, $this->day] = $array;
 			}
 		}
@@ -133,7 +134,7 @@ class MonthYear extends \PHPFUI\Base
 			$this->monthSelect->addOption($i . ' - ' . $jd->format('F'), $i, $this->month == $jd->format('n'));
 			}
 
-		$this->yearSelect = new \PHPFUI\Input\Select($this->name . 'Year', $this->label . ' Year', $this->year, 4);
+		$this->yearSelect = new \PHPFUI\Input\Select($this->name . 'Year', $this->label . ' Year');
 
 		if ($this->required)
 			{

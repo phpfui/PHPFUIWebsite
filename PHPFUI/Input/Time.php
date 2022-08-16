@@ -8,12 +8,12 @@ namespace PHPFUI\Input;
  */
 class Time extends \PHPFUI\Input\Input
 	{
-	private static ?\PHPFUI\Page $page = null;
+	private static ?\PHPFUI\Interfaces\Page $page = null;
 
 	/**
 	 * Constuct a Time input field supporting hours and minutes
 	 *
-	 * @param Page $page since we need to add JS
+	 * @param \PHPFUI\Page $page since we need to add JS
 	 * @param string $name of the field
 	 * @param string $label is optional
 	 * @param ?string $value for initial display, can be military or
@@ -128,7 +128,7 @@ class Time extends \PHPFUI\Input\Input
 		return \sprintf('%02d:%02d:%02d', $hour, $minute, $second);
 		}
 
-	private function getTemplate()
+	private function getTemplate() : string
 		{
 		$menu = new \PHPFUI\Menu();
 		$menu->addClass('align-center');
