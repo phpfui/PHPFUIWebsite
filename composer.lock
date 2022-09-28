@@ -2011,16 +2011,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.1.13",
+            "version": "V6.1.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "dd4a0565bb3551a02b62ef37ec644b5dbdb9fb56"
+                "reference": "aba5a11070ea0f69ef8df91d6e7b7f7df3f81b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/dd4a0565bb3551a02b62ef37ec644b5dbdb9fb56",
-                "reference": "dd4a0565bb3551a02b62ef37ec644b5dbdb9fb56",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/aba5a11070ea0f69ef8df91d6e7b7f7df3f81b5b",
+                "reference": "aba5a11070ea0f69ef8df91d6e7b7f7df3f81b5b",
                 "shasum": ""
             },
             "require": {
@@ -2072,9 +2072,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.1.13"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.1.14"
             },
-            "time": "2022-08-31T02:18:55+00:00"
+            "time": "2022-09-27T17:42:44+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
