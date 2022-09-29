@@ -15,6 +15,7 @@
 		"phpfui/icalendar": "^1.0",
 		"phpmailer/phpmailer": "^6.6",
 		"league/geotools": "^1.0",
-		"symfony/dependency-injection": "^6.1"
+		"symfony/dependency-injection": "^6.1",
+		"zbateson/mail-mime-parser": "^2.2"
 		}
 }

@@ -35,6 +35,7 @@ else
 		'Symfony',
 		'voku',
 		'Webmozart',
+		'ZBateson',
 		];
 
 	$fileManager = new \PHPFUI\InstaDoc\FileManager();
