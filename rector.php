@@ -8,7 +8,9 @@ use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
-        __DIR__ . '/../PHPFUI/src'
+//												 __DIR__ . '/../PHPFUI/src',
+												 __DIR__ . '/../InstaDoc/src',
+												 __DIR__ . '/../InstaDoc/tests',
     ]);
 
     // define sets of rules
