@@ -5,10 +5,15 @@ namespace Example\View\Form;
 class Pagination
 	{
 	private bool $alwaysShow = false;
-	private int $center = 0;
+
+	private bool $center = false;
+
 	private int $fastForward = 0;
+
 	private int $onPage = 0;
+
 	private int $totalPages = 10;
+
 	private int $window = 3;
 
 	public function __construct(private \PHPFUI\Page $page)
@@ -20,11 +25,11 @@ class Pagination
 		$form = new \PHPFUI\Form($this->page);
 		$form->setAreYouSure(false);
 		$fieldSet = new \PHPFUI\FieldSet('Change Parameters');
-		$of = new \PHPFUI\Input\Number('o', 'Total Pages', $this->totalPages);
+		$of = new \PHPFUI\Input\Number('o', 'Total Pages', (string)$this->totalPages);
 		$of->setToolTip('Total pages in view');
-		$window = new \PHPFUI\Input\Number('w', 'Page Window', $this->window);
+		$window = new \PHPFUI\Input\Number('w', 'Page Window', (string)$this->window);
 		$window->setToolTip('Number of pages to show on either side of current page');
-		$fastForward = new \PHPFUI\Input\Number('ff', 'Fast Forward', $this->fastForward);
+		$fastForward = new \PHPFUI\Input\Number('ff', 'Fast Forward', (string)$this->fastForward);
 		$fastForward->setToolTip('Pages to advance instead of elipse');
 		$center = new \PHPFUI\Input\CheckBoxBoolean('c', 'Center', $this->center);
 		$center->setToolTip('Check to center the paginator');
@@ -41,7 +46,7 @@ class Pagination
 		return $form;
 		}
 
-	public function getCenter() : int
+	public function getCenter() : bool
 		{
 		return $this->center;
 		}
@@ -71,16 +76,16 @@ class Pagination
 		return $this->window;
 		}
 
-	public function setParameters(array $parameters) : self
+	/** @param array<string, string> $parameters */
+	public function setParameters(array $parameters) : static
 		{
 		$this->onPage = $parameters['p'] ?? $this->onPage;
 		$this->window = $parameters['w'] ?? $this->window;
 		$this->totalPages = $parameters['o'] ?? $this->totalPages;
 		$this->fastForward = $parameters['ff'] ?? $this->fastForward;
-		$this->center = $parameters['c'] ?? $this->center;
+		$this->center = (bool)($parameters['c'] ?? $this->center);
 		$this->alwaysShow = (bool)($parameters['a'] ?? $this->alwaysShow);
 
 		return $this;
 		}
-
 	}

@@ -4,9 +4,10 @@ namespace Example;
 
 class KitchenSink extends \Example\Page
 	{
-
 	private \PHPFUI\Menu $magellanMenu;
+
 	private \Highlight\Highlighter $hl;
+
 	private \PHPFUI\HTML5Element $sections;
 
 	public function __construct()
@@ -16,6 +17,7 @@ class KitchenSink extends \Example\Page
 		$this->sections = new \PHPFUI\HTML5Element('div');
 
 		$title = $_GET['dir'] ?? '';
+
 		if ($title)
 			{
 			$title = ' - ' . $title;
@@ -40,6 +42,7 @@ class KitchenSink extends \Example\Page
 		$this->addBody($this->sections);
 
 		$dir = $_GET['dir'] ?? '';
+
 		if ($dir)
 			{
 			$dir = '/' . $dir;
@@ -56,7 +59,7 @@ class KitchenSink extends \Example\Page
 
 			if ($fileInfo->isDir())
 				{
-				if (! str_contains($file, '.'))
+				if (! \str_contains($file, '.'))
 					{
 					if ($first)
 						{
@@ -68,16 +71,17 @@ class KitchenSink extends \Example\Page
 				}
 			else
 				{
-				$php = file_get_contents($file);
-				$php = str_replace("<?php", '', $php);
-				$php = trim($php, "\n\r\l\t");
+				$php = \file_get_contents($file);
+				$php = \str_replace('<?php', '', $php);
+				$php = \trim($php, "\n\r\l\t");
 
-				$title = substr($title, 0, strlen($title) - 4);
-				$title = str_replace('_', ' ', $title);
+				$title = \substr($title, 0, \strlen($title) - 4);
+				$title = \str_replace('_', ' ', $title);
 				$this->section($title, $php);
 				}
 			}
-		if (count($menu))
+
+		if (\count($menu))
 			{
 			$menu->sort();
 			$this->sections->add($menu);
@@ -86,6 +90,22 @@ class KitchenSink extends \Example\Page
 			{
 			$this->sections->add(new \PHPFUI\Button('Back to the Future', '/Examples/KitchenSink.php'));
 			}
+		}
+
+	protected function getMagellanMenu() : \PHPFUI\Menu | null
+		{
+		$title = $_GET['dir'] ?? '';
+
+		if (! $title)
+			{
+			return null;
+			}
+		$this->magellanMenu = new \PHPFUI\Menu();
+		$this->magellanMenu->addMenuItem(new \PHPFUI\MenuItem($title));
+		$this->magellanMenu->addClass('vertical');
+		$this->magellanMenu->addAttribute('data-magellan');
+
+		return $this->magellanMenu;
 		}
 
 	private function runPHP(string $php) : string
@@ -104,7 +124,7 @@ class KitchenSink extends \Example\Page
 		$toggleLink = new \PHPFUI\HTML5Element('a');
 		$toggleLink->addAttribute('style', 'font-weight: 700');
 		$toggleLink->add('Toggle Code');
-		$php = trim($php, " \n");
+		$php = \trim($php, " \n");
 		// Highlight some code.
 		$highlighted = $this->hl->highlight('php', $php);
 		$codeBlock = new \PHPFUI\HTML5Element('pre');
@@ -131,76 +151,4 @@ class KitchenSink extends \Example\Page
 
 		$this->sections->add($container);
 		}
-
-	private function generateMenu(string $name, int $count, bool $active = false) : \PHPFUI\Menu
-		{
-		$names = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
-		$menu = new \PHPFUI\Menu();
-		$count = min($count, 10);
-
-		for ($i = 0; $i < $count; ++$i)
-			{
-			$item = new \PHPFUI\MenuItem($names[$i] . ' ' . $name, '#');
-			$item->setActive($active);
-			$active = false;
-			$menu->addMenuItem($item);
-			}
-
-		return $menu;
-		}
-
-	private function makeMenu(\PHPFUI\Menu $menu, string $name, ?string $class = '', ?\PHPFUI\Menu $subMenu = null) : \PHPFUI\Menu
-		{
-		$menu->addMenuItem(new \PHPFUI\MenuItem($name));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('One', '#'));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('Two', '#'));
-		$three = new \PHPFUI\MenuItem('Three', '#');
-
-		if ($subMenu)
-			{
-			$menu->addSubMenu($three, $subMenu);
-			}
-		else
-			{
-			$three->setActive(true);
-			$menu->addMenuItem($three);
-			}
-
-		$menu->addMenuItem(new \PHPFUI\MenuItem('Four', '#'));
-
-		if ($class)
-			{
-			$menu->addClass($class);
-			}
-
-		return $menu;
-		}
-
-	private function subMenu() : \PHPFUI\Menu
-		{
-		$menu = new \PHPFUI\Menu();
-		$menu->addMenuItem(new \PHPFUI\MenuItem('One A', '#'));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('Two A', '#'));
-		$menu->addMenuItem(new \PHPFUI\MenuItem('Three A', '#'));
-		$menu->addSubMenu(new \PHPFUI\MenuItem('Four A', '#'), $this->generateMenu('B', 3, true));
-		$menu->addSubMenu(new \PHPFUI\MenuItem('Five A', '#'), $this->generateMenu('C', 10));
-
-		return $menu;
-		}
-
-	protected function getMagellanMenu() : \PHPFUI\Menu | null
-		{
-		$title = $_GET['dir'] ?? '';
-		if (! $title)
-			{
-			return null;
-			}
-		$this->magellanMenu = new \PHPFUI\Menu();
-		$this->magellanMenu->addMenuItem(new \PHPFUI\MenuItem($title));
-		$this->magellanMenu->addClass('vertical');
-		$this->magellanMenu->addAttribute('data-magellan');
-
-		return $this->magellanMenu;
-		}
-
 	}

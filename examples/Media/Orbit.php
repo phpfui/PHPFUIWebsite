@@ -1,4 +1,5 @@
 <?php
+
 $orbit = new \PHPFUI\Orbit('Some out of the world images');
 $orbit->addImageSlide(new \PHPFUI\Image('https://foundation.zurb.com/sites/docs/assets/img/orbit/01.jpg'), 'Space, the final frontier.');
 $orbit->addImageSlide(new \PHPFUI\Image('https://foundation.zurb.com/sites/docs/assets/img/orbit/02.jpg'), 'Lets Rocket!', true);

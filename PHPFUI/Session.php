@@ -33,9 +33,10 @@ class Session
 
 	public const DEBUG_JAVASCRIPT = 2;
 
+	/** @var array<string, array<string>> */
 	private static array $flash = [];
 
-	private static $handler = null;
+	private static ?\PHPFUI\SessionHandler $handler = null;
 
 	public static function checkCSRF(string $request = '') : bool
 		{
@@ -67,11 +68,11 @@ class Session
 	/**
 	 * Return the flash for the key provided
 	 */
-	public static function getFlash(string $key = '')
+	public static function getFlash(string $key = '') : mixed
 		{
 		if ($key)
 			{
-			return \json_decode(self::$flash[$key] ?? '', true);
+			return \json_decode(self::$flash[$key] ?? '', true, 512);
 			}
 
 		return '';
@@ -82,7 +83,7 @@ class Session
 	 *
 	 * @param mixed $value can by any type that can be converted to json and stored in a session. Leave empty to delete.
 	 */
-	public static function setFlash(string $key, $value = '') : void
+	public static function setFlash(string $key, mixed $value = '') : void
 		{
 		if ($value)
 			{
@@ -97,7 +98,7 @@ class Session
 	/**
 	 * Set the session handler if you are not using the default
 	 */
-	public static function setHandler(SessionHandler $handler) : void
+	public static function setHandler(\PHPFUI\SessionHandler $handler) : void
 		{
 		self::$handler = $handler;
 		}
@@ -105,7 +106,7 @@ class Session
 	/**
 	 * Get the current handler
 	 */
-	private static function getHandler() : SessionHandler
+	private static function getHandler() : \PHPFUI\SessionHandler
 		{
 		if (! self::$handler)
 			{

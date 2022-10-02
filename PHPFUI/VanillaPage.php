@@ -11,6 +11,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 
 	private bool $chrome = false;
 
+	/** @var array<string, string> */
 	private array $css = [];
 
 	private int $edgeVersion = 0;
@@ -19,22 +20,29 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 
 	private int $fireFoxVersion = 0;
 
+	/** @var array<string, string> */
 	private array $headJavascript = [];
 
+	/** @var array<string, string> */
 	private array $headScripts = [];
 
+	/** @var array<string, string> */
 	private array $headTags = [];
 
+	/** @var array<string, string> */
 	private array $ieComments = [];
 
 	private bool $IEMobile = false;
 
 	private bool $ios = false;
 
+	/** @var array<string, string> */
 	private array $javascript = [];
 
+	/** @var array<string, string> */
 	private array $javascriptFirst = [];
 
+	/** @var array<string, string> */
 	private array $javascriptLast = [];
 
 	private string $language = 'en';
@@ -43,8 +51,10 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 
 	private string $resourcePath = '/';
 
+	/** @var array<string, string> */
 	private array $styleSheets = [];
 
+	/** @var array<string, string> */
 	private array $tailScripts = [];
 
 	private \PHPFUI\Container $body;
@@ -75,7 +85,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add to the body element directly
 	 */
-	public function add($item)
+	public function add($item) : static
 		{
 		$this->body->add($item);
 
@@ -85,7 +95,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped inline css
 	 */
-	public function addCSS(string $css) : \PHPFUI\Interfaces\Page
+	public function addCSS(string $css) : static
 		{
 		$this->css[\sha1($css)] = $css;
 
@@ -95,7 +105,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Remove inline css
 	 */
-	public function removeCSS(string $css) : \PHPFUI\Interfaces\Page
+	public function removeCSS(string $css) : static
 		{
 		unset($this->css[\sha1($css)]);
 
@@ -105,7 +115,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add dedupped JavaScript to the header
 	 */
-	public function addHeadJavaScript(string $js) : \PHPFUI\Interfaces\Page
+	public function addHeadJavaScript(string $js) : static
 		{
 		$this->headJavascript[\sha1($js)] = $js;
 
@@ -115,7 +125,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	/**
 	 * Remove JavaScript from the header
 	 */
-	public function removeHeadJavaScript(string $js) : \PHPFUI\Interfaces\Page
+	public function removeHeadJavaScript(string $js) : static
 		{
 		unset($this->headJavascript[\sha1($js)]);
 
@@ -395,7 +405,7 @@ class VanillaPage extends \PHPFUI\Base implements \PHPFUI\Interfaces\Page
 	 */
 	public function hasDatePicker() : bool
 		{
-		return $this->android || $this->ios || $this->IEMobile || $this->fireFoxVersion >= 57 || $this->chrome;
+		return $this->android || $this->ios || $this->IEMobile || $this->fireFoxVersion >= 57 || $this->chrome || $this->edgeVersion;
 		}
 
 	/**

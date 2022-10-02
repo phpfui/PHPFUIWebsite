@@ -4,7 +4,6 @@ namespace Example;
 
 class SelectAutoComplete extends Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -23,5 +22,4 @@ class SelectAutoComplete extends Page
 
 		$this->addBody($form);
 		}
-
 	}

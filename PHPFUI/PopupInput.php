@@ -10,7 +10,7 @@ class PopupInput
 
 	private string $updateFieldId;
 
-	public function __construct(\PHPFUI\Interfaces\Page $page, Input $input)
+	public function __construct(\PHPFUI\Page $page, Input $input)
 		{
 		$button = new \PHPFUI\Button('reveal');
 		$reveal = new \PHPFUI\Reveal($page, $button);
@@ -27,7 +27,7 @@ class PopupInput
 		$reveal->add($reveal->getButtonAndCancel($revealSubmit));
 		}
 
-	public function getLoadJS(\PHPFUI\HTML5Element $input)
+	public function getLoadJS(\PHPFUI\HTML5Element $input) : string
 		{
 		return '$("#' . $this->inputId . '").val($("#' . $input->getId() . '").val());' . '$("#' . $this->updateFieldId . '").val("' .
 			$input->getId() . '");' . '$("#' . $this->revealId . '").foundation("open");';

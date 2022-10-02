@@ -1,4 +1,5 @@
 <?php
+
 $dropDownButton = new \PHPFUI\DropDownButton('Drop Down Button');
 $dropDownButton->addMenuItem(new \PHPFUI\MenuItem('Option 4', '#'));
 $dropDownButton->addMenuItem(new \PHPFUI\MenuItem('Option 3', '#'));

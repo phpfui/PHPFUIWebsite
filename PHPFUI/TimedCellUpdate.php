@@ -7,17 +7,13 @@ namespace PHPFUI;
  */
 class TimedCellUpdate extends \PHPFUI\Base
 	{
-	protected $callback;
-
-	protected string $callbackId;
-
 	private static int $callbackNumber = 0;
 
 	/**
 	 * Construct a TimedCellUpdate.  The cell will be updated with
 	 * the supplied call back and the timeout interval specified
 	 *
-	 * @param Page $page as we need to add JS
+	 * @param \PHPFUI\Interfaces\Page $page as we need to add JS
 	 * @param string $callbackId the id of the element to update
 	 * @param callable $callback PHP callback that will be called
 	 *                             every timeout interval. Should return the new
@@ -26,12 +22,10 @@ class TimedCellUpdate extends \PHPFUI\Base
 	 * @param string $offString if the callback returns this string, the timer will be turned off.
 	 *  						 Default is blank, so if the callback returns blank, the timer is turned off.
 	 */
-	public function __construct(\PHPFUI\Interfaces\Page $page, string $callbackId, callable $callback, int $timeoutSeconds = 30, string $offString = '')
+	public function __construct(\PHPFUI\Interfaces\Page $page, protected string $callbackId, protected $callback, int $timeoutSeconds = 30, string $offString = '')
 		{
 		parent::__construct();
-		$this->callbackId = $callbackId;
-		$this->callback = $callback;
-		$cbn = \str_replace('\\', '', __CLASS__ . (++self::$callbackNumber));
+		$cbn = \str_replace('\\', '', self::class . (++self::$callbackNumber));
 		$timeoutSeconds *= 1000;
 		$csrf = \PHPFUI\Session::csrf();
 		$csrfField = \PHPFUI\Session::csrfField();
@@ -41,7 +35,7 @@ class TimedCellUpdate extends \PHPFUI\Base
 
 		if (isset($_POST['callback']) && $_POST['callback'] == $cbn && $_POST[$csrfField] == $csrf && $callbackId == $_POST['id'])
 			{
-			$page->setResponse("{$this}");
+			$page->setResponse((string)$this);
 			}
 		}
 

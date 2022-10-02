@@ -12,8 +12,6 @@ class File extends \PHPFUI\Input\Input
 	{
 	use \PHPFUI\Traits\Page;
 
-	protected \PHPFUI\Interfaces\Page $page;
-
 	/**
 	 * Construct an drag and drop file input field using Dropify
 	 *
@@ -21,10 +19,9 @@ class File extends \PHPFUI\Input\Input
 	 * @param string $name of input field
 	 * @param string $label optional label for use
 	 */
-	public function __construct(\PHPFUI\Interfaces\Page $page, string $name, string $label = '')
+	public function __construct(protected \PHPFUI\Interfaces\Page $page, string $name, string $label = '')
 		{
 		parent::__construct('file', $name, $label, null);
-		$this->page = $page;
 		$this->page->addTailScript('dropify/js/dropify.min.js');
 		$this->page->addStyleSheet('dropify/css/dropify.min.css');
 		$preventDropJs = <<<JS
@@ -44,7 +41,7 @@ JS;
 
 		$js = '$("#' . $this->getId() . '").dropify();dropZones.push("' . $this->getId() . '")';
 		$this->page->addJavaScript($js);
-		$this->addAttribute('data-height', 100);
+		$this->addAttribute('data-height', '100');
 		$this->addAttribute('style', 'z-index:0');
 		}
 
@@ -52,9 +49,9 @@ JS;
 	 * Set allowed extensions. Dropify will validate and open dialog
 	 * will be prepopulated with the restriction
 	 *
-	 * @param array $extensions leading . is optional
+	 * @param array<string> $extensions leading . is optional
 	 */
-	public function setAllowedExtensions(array $extensions) : File
+	public function setAllowedExtensions(array $extensions) : static
 		{
 		foreach ($extensions as &$value)
 			{

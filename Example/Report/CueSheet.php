@@ -45,10 +45,11 @@ class CueSheet extends \FPDF
 		$this->SetMargins($this->margin, $this->topMargin, $this->margin);
 		}
 
-	public function generate(array $data, string $title, float $distance, string $units, int $ascent, int $descent) : static
+	/** @param array<string, string> $data */
+	public function generate(array $data, string $title, float $distance, string $units, float $ascent, float $descent) : static
 		{
-		$this->ascent = $ascent;
-		$this->descent = $descent;
+		$this->ascent = (int)$ascent;
+		$this->descent = (int)$descent;
 		$this->distance = $distance;
 
 		$reader = new \ArrayIterator($data);
@@ -98,11 +99,12 @@ class CueSheet extends \FPDF
 		$street = \implode(' ', $parts);
 
 		$parts = \explode(', ', $street);
-		if (count($parts) == 2)
+
+		if (2 == \count($parts))
 			{
 			if ((int)$parts[1] == $parts[1])
 				{
-				if (! str_contains($parts[0], 'Rt ' . $parts[1]))
+				if (! \str_contains($parts[0], 'Rt ' . $parts[1]))
 					{
 					$parts[1] = 'Rt ' . $parts[1];
 					}
@@ -151,7 +153,7 @@ class CueSheet extends \FPDF
 
 		$this->Text($this->margin, $this->topMargin, $title);
 		$this->SetXY($this->width - 50, $y);
-		$this->writeLabel('Dist', round($this->distance, 2) . ' ' . $units);
+		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . $units);
 		$this->writeLabel(' Ele', "+{$this->ascent}/-{$this->descent}");
 
 		$this->setLineWidth(0.1);
@@ -165,6 +167,7 @@ class CueSheet extends \FPDF
 		$end = $this->height / 2 - $this->margin * 2.5;
 		}
 
+	/** @param array<string, string> $row */
 	private function printRow(float $x, float $y, array $row, string $border, float $lineHeight = 7.0) : float
 		{
 		$height = $lineHeight;
@@ -280,6 +283,7 @@ class CueSheet extends \FPDF
 		return $height;
 		}
 
+	/** @param \ArrayIterator<string, string> $reader */
 	private function printSection(float $x, float $y, float $height, \ArrayIterator $reader) : void
 		{
 		$this->SetXY($x, $y);
@@ -294,17 +298,17 @@ class CueSheet extends \FPDF
 		$this->SetFont('Arial', 'B', 8);
 		$this->SetFillColor(204);
 
-		$row = [];
-		$row['distance'] = 'Distance';
-		$row['turn'] = '';
-		$row['gox'] = 'Go X';
-		$row['street'] = '';
-		$y += $this->printRow($x, $y, $row, 'TL', 4);
+		$header = [];
+		$header['distance'] = 'Distance';
+		$header['turn'] = '';
+		$header['gox'] = 'Go X';
+		$header['street'] = '';
+		$y += $this->printRow($x, $y, $header, 'TL', 4);
 		$this->SetFont('Arial', 'B', 8);
-		$row['distance'] = 'At Turn';
-		$row['gox'] = 'Miles';
-		$row['street'] = 'Then Turn Onto';
-		$y += $this->printRow($x, $y, $row, 'LB', 4);
+		$header['distance'] = 'At Turn';
+		$header['gox'] = 'Miles';
+		$header['street'] = 'Then Turn Onto';
+		$y += $this->printRow($x, $y, $header, 'LB', 4);
 
 		$this->SetFont('Arial', '', 14);
 		$count = 1;
@@ -321,17 +325,18 @@ class CueSheet extends \FPDF
 				}
 
 			$row = $reader->current();
-			$row['distance'] = $row['distance'] ?? 0;
-			$row['distance'] = \number_format($row['distance'], 2);
+			// @phpstan-ignore-next-line
+			$row['distance'] = (float)\number_format($row['distance'] ?? 0.0, 2);
 			$row['gox'] = \number_format($row['distance'] - $this->lastDistance, 2);
-			$this->lastDistance = $row['distance'];
+			// @phpstan-ignore-next-line
+			$this->lastDistance = (float)$row['distance'];
 			$y += $this->printRow($x, $y, $row, 'LB');
 			$reader->next();
 			++$count;
 			}
 		}
 
-	private function Rotate(int $angle, $x = -1, $y = -1) : void
+	private function Rotate(int $angle, float $x = -1.0, float $y = -1.0) : void
 		{
 		if (-1 == $x)
 			{

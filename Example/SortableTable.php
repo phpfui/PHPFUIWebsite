@@ -4,7 +4,6 @@ namespace Example;
 
 class SortableTable extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -21,7 +20,7 @@ class SortableTable extends \Example\Page
 		$sort = $parameters['s'] ?? 'a';
 
 		$headers = ['s' => 'Sequence', 'r' => 'Random'];
-		$table->setHeaders($headers)->setSortableColumns(array_keys($headers))->setSortedColumnOrder($column, $sort);
+		$table->setSortableColumns(\array_keys($headers))->setSortedColumnOrder($column, $sort)->setHeaders($headers);
 
 		$count = 10000;
 		$lastPage = (int)($count / $limit);
@@ -45,7 +44,7 @@ class SortableTable extends \Example\Page
 
 			// set page to magic value for replacement
 			$parameters['p'] = 'PAGE';
-			$url = $table->getBaseUrl() . '?' . http_build_query($parameters);
+			$url = $table->getBaseUrl() . '?' . \http_build_query($parameters);
 
 			// Add the paginator to the bottom
 			$paginator = new \PHPFUI\Pagination($p, $lastPage, $url);
@@ -58,5 +57,4 @@ class SortableTable extends \Example\Page
 			$this->addBody(new \PHPFUI\SubHeader('Page not found'));
 			}
 		}
-
 	}

@@ -9,13 +9,12 @@ abstract class Input extends \PHPFUI\Input
 	{
 	protected ?\PHPFUI\HTML5Element $error = null;
 
+	/** @var array<string> */
 	protected array $errorMessages = [];
 
 	protected ?\PHPFUI\HTML5Element $hint = null;
 
 	protected string $hintText = '';
-
-	protected ?string $label = '';
 
 	protected bool $required = false;
 
@@ -32,11 +31,10 @@ abstract class Input extends \PHPFUI\Input
 	 * @param ?string $value default initial value
 	 * @throws \Exception if an invalid input type or a specific class exists for an input type like Date
 	 */
-	public function __construct(string $type, string $name = '', string $label = '', ?string $value = '')
+	public function __construct(string $type, string $name = '', protected ?string $label = '', ?string $value = '')
 		{
 		parent::__construct($type, $name, $value);
 		$this->addAttribute('onkeypress', 'return event.keyCode!=13;');
-		$this->label = $label;
 
 		switch ($this->type)
 			{
@@ -79,7 +77,7 @@ abstract class Input extends \PHPFUI\Input
 	 *
 	 * @param string $error to display on form validation
 	 */
-	public function addErrorMessage(string $error) : Input
+	public function addErrorMessage(string $error) : static
 		{
 		$this->errorMessages[] = $error;
 
@@ -89,7 +87,7 @@ abstract class Input extends \PHPFUI\Input
 	/**
 	 * Set the validator for this input field.  You must also add it to the page with addAbideValidator()
 	 */
-	public function setValidator(\PHPFUI\Validator $validator, string $errorMessage = '', $data = null) : Input
+	public function setValidator(\PHPFUI\Validator $validator, string $errorMessage = '', ?string $data = null) : static
 		{
 		$this->setAttribute('data-validator', $validator->getValidatorName());
 
@@ -109,9 +107,9 @@ abstract class Input extends \PHPFUI\Input
 	/**
 	 * Set all error messages
 	 *
-	 * @param array $errors to display on form validation
+	 * @param array<string> $errors to display on form validation
 	 */
-	public function setErrorMessages(array $errors) : Input
+	public function setErrorMessages(array $errors) : static
 		{
 		$this->errorMessages = $errors;
 
@@ -157,7 +155,7 @@ abstract class Input extends \PHPFUI\Input
 		return $this->label;
 		}
 
-	public function setDataMask(\PHPFUI\Interfaces\Page $page, string $mask) : Input
+	public function setDataMask(\PHPFUI\Interfaces\Page $page, string $mask) : static
 		{
 		$page->addTailScript('jquery.mask.min.js');
 		$this->setAttribute('data-mask', $mask);
@@ -170,7 +168,7 @@ abstract class Input extends \PHPFUI\Input
 	 *
 	 * @param string $hint to display with input
 	 */
-	public function setHint(string $hint) : Input
+	public function setHint(string $hint) : static
 		{
 		$this->hintText = $hint;
 		$this->hint = null;
@@ -181,7 +179,7 @@ abstract class Input extends \PHPFUI\Input
 	/**
 	 * Set a label if not specified in constructor
 	 */
-	public function setLabel(string $label) : Input
+	public function setLabel(string $label) : static
 		{
 		$this->label = $label;
 
@@ -198,13 +196,13 @@ abstract class Input extends \PHPFUI\Input
 	 *
 	 * @param bool $required default true
 	 */
-	public function setRequired(bool $required = true) : Input
+	public function setRequired(bool $required = true) : static
 		{
 		$this->required = $required;
 
 		if ($required)
 			{
-			$this->setAttribute('required', false);
+			$this->setAttribute('required');
 			}
 		else
 			{
@@ -217,7 +215,7 @@ abstract class Input extends \PHPFUI\Input
 	/**
 	 * Toggle the passed in element when this field gets focus.
 	 */
-	public function toggleFocus(\PHPFUI\HTML5Element $element) : Input
+	public function toggleFocus(\PHPFUI\HTML5Element $element) : static
 		{
 		$this->addAttribute('data-toggle-focus', $element->getId());
 		$element->addClass('is-hidden');

@@ -6,25 +6,13 @@ class ToFromList extends \PHPFUI\Base
 	{
 	use \PHPFUI\Traits\Page;
 
-	protected $callback;
-
-	protected string $callbackIndex;
-
-	protected array $inGroup;
-
 	protected \PHPFUI\Container $inIcon;
 
 	protected string $inName = 'In';
 
-	protected string $name;
-
-	protected array $notInGroup;
-
 	protected \PHPFUI\Container $outIcon;
 
 	protected string $outName = 'Out';
-
-	protected \PHPFUI\Interfaces\Page $page;
 
 	private static bool $outputJs = false;
 
@@ -51,23 +39,17 @@ class ToFromList extends \PHPFUI\Base
 	 * function (string $fieldName, string $index, mixed $userData, string $type) : string
 	 * ```
 	 *
-	 * @param Page $page needed for JavaScript
+	 * @param \PHPFUI\Interfaces\Page $page needed for JavaScript
 	 * @param string $name identifying this ToFromList from others on the same page.  Needs to be
 	 *  		 unique per page
-	 * @param array $inGroup data for the selected group.  See below for array requirements.
-	 * @param array $notInGroup data for the unselected group.  See below for array requirements.
+	 * @param array<int, array<string, string>> $inGroup data for the selected group.  See below for array requirements.
+	 * @param array<int, array<string, string>> $notInGroup data for the unselected group.  See below for array requirements.
 	 * @param string $callbackIndex is used to identify records by index in your master set of data.
 	 * @param callable $callback used to format the text used to drag and drop.
 	 */
-	public function __construct(\PHPFUI\Interfaces\Page $page, string $name, array $inGroup, array $notInGroup, string $callbackIndex, callable $callback)
+	public function __construct(protected \PHPFUI\Interfaces\Page $page, protected string $name, protected array $inGroup, protected array $notInGroup, protected string $callbackIndex, protected $callback)
 		{
 		parent::__construct();
-		$this->page = $page;
-		$this->inGroup = $inGroup;
-		$this->notInGroup = $notInGroup;
-		$this->name = $name;
-		$this->callbackIndex = $callbackIndex;
-		$this->callback = $callback;
 
 		$this->inIcon = new \PHPFUI\Container();
 		$rightIcon = new \PHPFUI\Icon('arrow-right');
@@ -117,7 +99,7 @@ class ToFromList extends \PHPFUI\Base
 	 *
 	 * @param mixed $inIcon should convert to valid html string
 	 */
-	public function setInIcon($inIcon) : ToFromList
+	public function setInIcon(mixed $inIcon) : static
 		{
 		$this->inIcon = $inIcon;
 
@@ -127,7 +109,7 @@ class ToFromList extends \PHPFUI\Base
 	/**
 	 * Sets the header name for the "in" group
 	 */
-	public function setInName(string $inName) : ToFromList
+	public function setInName(string $inName) : static
 		{
 		$this->inName = $inName;
 
@@ -139,7 +121,7 @@ class ToFromList extends \PHPFUI\Base
 	 *
 	 * @param mixed $outIcon should convert to valid html string
 	 */
-	public function setOutIcon($outIcon) : ToFromList
+	public function setOutIcon(mixed $outIcon) : static
 		{
 		$this->outIcon = $outIcon;
 
@@ -149,13 +131,14 @@ class ToFromList extends \PHPFUI\Base
 	/**
 	 * Sets the header name for the "out" group
 	 */
-	public function setOutName(string $outName) : ToFromList
+	public function setOutName(string $outName) : static
 		{
 		$this->outName = $outName;
 
 		return $this;
 		}
 
+	/** @param array<array<string>> $group */
 	protected function createWindow(array $group, string $type) : string
 		{
 		$output = "<div id='{$this->name}_{$type}' class='ToFromList' ondrop='dropToFromList(event,\"{$this->name}\")' ondragover='allowDropToFromList(event)'>";
@@ -184,7 +167,7 @@ class ToFromList extends \PHPFUI\Base
 		$out->add($this->createWindow($this->notInGroup, 'out'));
 		$row->add($out);
 
-		return "{$row}";
+		return (string)$row;
 		}
 
 	protected function getEnd() : string

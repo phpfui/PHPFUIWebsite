@@ -4,7 +4,7 @@ namespace Example\Model;
 
 class State
 	{
-
+	/** @var array<array<string, string>> */
 	private array $states = [];
 
 	public function __construct()
@@ -19,13 +19,14 @@ class State
 			}
 		}
 
+	/** @return array<array<string, string>> */
 	public function getFiltered(callable $filter) : array
 		{
 		$filtered = [];
 
 		foreach ($this->states as $state)
 			{
-			if (call_user_func($filter, $state['name']))
+			if (\call_user_func($filter, $state['name']))
 				{
 				$filtered[] = $state;
 				}
@@ -34,6 +35,11 @@ class State
 		return $filtered;
 		}
 
+	/**
+	 * @param array<int> $selected
+	 *
+	 * @return array<array<string, string>>
+	 */
 	public function getSelected(array $selected) : array
 		{
 		$group = [];
@@ -46,16 +52,15 @@ class State
 		return $group;
 		}
 
+	/** @return array<string, string> */
 	public function getState(int $index) : array
 		{
 		return $this->states[$index] ?? [];
 		}
 
+	/** @return array<array<string, string>> */
 	public function getStates() : array
 		{
 		return $this->states;
 		}
-
-//	if (strpos(' AEIOU', $state['name'][0]) )
-
 	}

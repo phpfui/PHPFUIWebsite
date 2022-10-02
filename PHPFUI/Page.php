@@ -7,8 +7,10 @@ namespace PHPFUI;
  */
 class Page extends \PHPFUI\VanillaPage implements \PHPFUI\Interfaces\Page
 	{
+	/** @var array<string, array<string, string>> */
 	private array $plugins = [];
 
+	/** @var array<\PHPFUI\Reveal> */
 	private array $reveals = [];
 
 	public function __construct()
@@ -32,14 +34,14 @@ class Page extends \PHPFUI\VanillaPage implements \PHPFUI\Interfaces\Page
 	 * $page->addPluginDefault('Abide', 'patterns["zip"]', '/^[0-9-]*$/');
 	 * $page->addPluginDefault('Abide', "validators['AutoCompleteRequired']", 'AutoCompleteRequired');
 	 */
-	public function addPluginDefault(string $pluginName, string $property, string $value) : Page
+	public function addPluginDefault(string $pluginName, string $property, string $value) : static
 		{
 		$this->plugins[$pluginName][$property] = $value;
 
 		return $this;
 		}
 
-	public function addAbideValidator(\PHPFUI\Validator $validator) : \PHPFUI\Page
+	public function addAbideValidator(\PHPFUI\Validator $validator) : static
 		{
 		$js = $validator->getJavaScript();
 
@@ -57,9 +59,9 @@ class Page extends \PHPFUI\VanillaPage implements \PHPFUI\Interfaces\Page
 	/**
 	 * Add a reveal dialog to the page
 	 *
-	 * @param Reveal $reveal dialog to store in the page
+	 * @param \PHPFUI\Reveal $reveal dialog to store in the page
 	 */
-	public function addReveal(Reveal $reveal) : Page
+	public function addReveal(\PHPFUI\Reveal $reveal) : static
 		{
 		$this->reveals[] = $reveal;
 
@@ -70,7 +72,7 @@ class Page extends \PHPFUI\VanillaPage implements \PHPFUI\Interfaces\Page
 		{
 		foreach ($this->reveals as &$reveal)
 			{
-			$this->add("{$reveal}");
+			$this->add((string)$reveal);
 			}
 
 		foreach ($this->plugins as $plugin => $options)

@@ -4,7 +4,7 @@ namespace Example;
 
 class Pagination extends \Example\Page
 	{
-
+	/** @param array<string, string> $parameters */
 	public function __construct(array $parameters)
 		{
 		parent::__construct();
@@ -33,5 +33,4 @@ class Pagination extends \Example\Page
 
 		$this->addBody($form);
 		}
-
 	}

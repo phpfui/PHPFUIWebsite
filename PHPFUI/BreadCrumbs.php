@@ -7,6 +7,7 @@ namespace PHPFUI;
  */
 class BreadCrumbs extends \PHPFUI\HTML5Element implements \Countable
 	{
+	/** @var array<string, string> */
 	protected array $links = [];
 
 	private bool $started = false;
@@ -23,7 +24,7 @@ class BreadCrumbs extends \PHPFUI\HTML5Element implements \Countable
 	 * @param string $text of the breadcrumb
 	 * @param string $link when clicked, empty for disabled
 	 */
-	public function addCrumb(string $text, string $link = '') : BreadCrumbs
+	public function addCrumb(string $text, string $link = '') : static
 		{
 		$this->links[$text . '|' . \count($this)] = $link;
 

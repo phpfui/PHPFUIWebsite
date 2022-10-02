@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $openButton = new \PHPFUI\Button('Click me for a modal');

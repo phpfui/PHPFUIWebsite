@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $toggleDropdownButton = new \PHPFUI\Button('Toggle Dropdown');

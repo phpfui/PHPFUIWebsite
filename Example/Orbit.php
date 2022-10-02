@@ -4,7 +4,6 @@ namespace Example;
 
 class Orbit extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -33,5 +32,4 @@ class Orbit extends \Example\Page
 
 		return $callout;
 		}
-
 	}

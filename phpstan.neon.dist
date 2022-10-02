@@ -2,14 +2,15 @@ parameters:
 	level: 6
 	errorFormat: raw
 	editorUrl: '%%file%% %%line%% %%column%%: %%error%%'
+	scanFiles:
+		- common.php
+		- commonbase.php
 	paths:
-		- src
+		- App
+		- Example
+		- examples
 	ignoreErrors:
 		-
-			message: '#Access to an undefined property PHPFUI\\PayPal[a-zA-Z0-9\\_]+::[\$a-zA-Z0-9_]+#'
+			message: '#Variable \$this might not be defined#'
 			paths:
-				- src/*
-		-
-			message: '#PHPFUI\\PayPal#'
-			paths:
-				- src/PHPFUI/PayPal/*
+				- examples/*

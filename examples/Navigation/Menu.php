@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $container->add($this->makeMenu(new \PHPFUI\Menu(), 'Menu'));

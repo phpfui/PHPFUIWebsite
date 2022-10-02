@@ -10,6 +10,7 @@ class Time extends \PHPFUI\Input\Input
 	{
 	private static ?\PHPFUI\Interfaces\Page $page = null;
 
+	/** @var array<string, string> */
 	private array $options = ['callback' => 'function(selected){let timeString=selected instanceof Date?selected.toTimeString().substring(0,8):"";input.attr("value",timeString)}'];
 
 	/**
@@ -52,13 +53,13 @@ class Time extends \PHPFUI\Input\Input
 			{
 			parent::__construct('time', $name, $label, $value);
 			}
-		$this->setAttribute('step', $interval * 60);
+		$this->setAttribute('step', (string)($interval * 60));
 		}
 
 	/**
 	 * If you place a Time control in a Reveal, you must call **setParentReveal** with the reveal, otherwise closing the time dialog will also close the parent Reveal
 	 */
-	public function setParentReveal(\PHPFUI\Reveal $reveal) : self
+	public function setParentReveal(\PHPFUI\Reveal $reveal) : static
 		{
 		$this->options['reveal'] = $reveal->getId();
 
@@ -109,7 +110,7 @@ class Time extends \PHPFUI\Input\Input
 					break;
 				}
 
-			if (false !== \strpos($ampm, 'P'))
+			if (\str_contains($ampm, 'P'))
 				{
 				$hour += 12;
 				}

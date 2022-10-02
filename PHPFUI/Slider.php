@@ -16,18 +16,15 @@ class Slider extends \PHPFUI\HTML5Element
 
 	private int $step = 1;
 
-	private int $value;
-
 	private bool $vertical = false;
 
 	/**
 	 * @param int $value the initial slider value
 	 * @param SliderHandle $handle an optional slider handle. You must supply this if you want a field to be updated by slider changes.
 	 */
-	public function __construct(int $value = 0, ?\PHPFUI\SliderHandle $handle = null)
+	public function __construct(private int $value = 0, ?\PHPFUI\SliderHandle $handle = null)
 		{
 		parent::__construct('div');
-		$this->value = $value;
 		$this->addClass('slider');
 		$this->setAttribute('data-slider');
 		$this->sliderHandle = $handle ?: new \PHPFUI\SliderHandle($value);
@@ -36,7 +33,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * The max allowed value
 	 */
-	public function setMax(int $max = 100) : Slider
+	public function setMax(int $max = 100) : static
 		{
 		$this->max = $max;
 
@@ -46,7 +43,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * The min allowed value
 	 */
-	public function setMin(int $min = 0) : Slider
+	public function setMin(int $min = 0) : static
 		{
 		$this->min = $min;
 
@@ -56,7 +53,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * @param string $function algorithm used for non linear function, must be either log or pow
 	 */
-	public function setNonLinear(int $base = 5, string $function = 'log') : Slider
+	public function setNonLinear(int $base = 5, string $function = 'log') : static
 		{
 		$functions = ['log',
 			'pow', ];
@@ -67,7 +64,7 @@ class Slider extends \PHPFUI\HTML5Element
 			}
 
 		$this->setAttribute('data-position-value-function', $function);
-		$this->setAttribute('data-non-linear-base', $base);
+		$this->setAttribute('data-non-linear-base', (string)$base);
 
 		return $this;
 		}
@@ -75,7 +72,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * Specify a range handle
 	 */
-	public function setRangeHandle(SliderHandle $handle) : Slider
+	public function setRangeHandle(SliderHandle $handle) : static
 		{
 		$this->rangeHandle = $handle;
 
@@ -85,7 +82,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * Set the step up or down
 	 */
-	public function setStep(int $step = 1) : Slider
+	public function setStep(int $step = 1) : static
 		{
 		$this->step = $step;
 
@@ -95,7 +92,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * Set the initial value for the slider
 	 */
-	public function setValue(int $value) : Slider
+	public function setValue(int $value) : static
 		{
 		$this->value = $value;
 
@@ -105,7 +102,7 @@ class Slider extends \PHPFUI\HTML5Element
 	/**
 	 * Set the slider to be vertical
 	 */
-	public function setVertical(bool $vertical = true) : Slider
+	public function setVertical(bool $vertical = true) : static
 		{
 		$this->vertical = $vertical;
 
@@ -117,10 +114,10 @@ class Slider extends \PHPFUI\HTML5Element
 		if (! $this->started)
 			{
 			$this->started = true;
-			$this->setAttribute('data-initial-start', $this->value);
-			$this->setAttribute('data-start', $this->min);
-			$this->setAttribute('data-end', $this->max);
-			$this->setAttribute('data-step', $this->step);
+			$this->setAttribute('data-initial-start', (string)$this->value);
+			$this->setAttribute('data-start', (string)$this->min);
+			$this->setAttribute('data-end', (string)$this->max);
+			$this->setAttribute('data-step', (string)$this->step);
 
 			if ($this->vertical)
 				{
@@ -128,10 +125,10 @@ class Slider extends \PHPFUI\HTML5Element
 				$this->setAttribute('data-vertical', 'true');
 				}
 
-			$this->sliderHandle->setAttribute('aria-valuemax', $this->max);
-			$this->sliderHandle->setAttribute('aria-valuemin', $this->min);
-			$this->sliderHandle->setAttribute('aria-valuenow', $this->value);
-			$this->setAttribute('data-initial-end', (float)$this->sliderHandle->getValue());
+			$this->sliderHandle->setAttribute('aria-valuemax', (string)$this->max);
+			$this->sliderHandle->setAttribute('aria-valuemin', (string)$this->min);
+			$this->sliderHandle->setAttribute('aria-valuenow', (string)$this->value);
+			$this->setAttribute('data-initial-end', (string)$this->sliderHandle->getValue());
 			$this->add($this->sliderHandle);
 			$this->add("<span class='slider-fill' data-slider-fill></span>");
 
@@ -157,10 +154,10 @@ class Slider extends \PHPFUI\HTML5Element
 					{
 					$endInput = $this->rangeHandle->getBind();
 					}
-				$this->setAttribute('data-initial-end', $this->rangeHandle->getValue());
-				$this->rangeHandle->setAttribute('aria-valuemax', $this->max);
-				$this->rangeHandle->setAttribute('aria-valuemin', $this->min);
-				$this->rangeHandle->setAttribute('aria-valuenow', $this->rangeHandle->getValue());
+				$this->setAttribute('data-initial-end', (string)$this->rangeHandle->getValue());
+				$this->rangeHandle->setAttribute('aria-valuemax', (string)$this->max);
+				$this->rangeHandle->setAttribute('aria-valuemin', (string)$this->min);
+				$this->rangeHandle->setAttribute('aria-valuenow', (string)$this->rangeHandle->getValue());
 				}
 			}
 

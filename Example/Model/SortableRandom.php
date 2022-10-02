@@ -4,25 +4,27 @@ namespace Example\Model;
 
 class SortableRandom implements \countable
 	{
+	/** @var array<array<string, int>> */
 	private array $data = [];
 
 	public function __construct(int $count)
 		{
 		for ($i = 0; $i < $count; ++$i)
 			{
-			srand($i); // always use a known seed per position
-			$this->data[] = ['s' => $i, 'r' => rand()];
+			\srand($i); // always use a known seed per position
+			$this->data[] = ['s' => $i, 'r' => \rand()];
 			}
 		}
 
 	public function count() : int
 		{
-		return count($this->data);
+		return \count($this->data);
 		}
 
+	/** @return array<string, int> */
 	public function getRow(int $index) : array
 		{
-		if ($index < 0 || $index >= count($this->data))
+		if ($index < 0 || $index >= \count($this->data))
 			{
 			return [];
 			}
@@ -37,22 +39,22 @@ class SortableRandom implements \countable
 			{
 			if ('a' == $sort)
 				{
-				usort($this->data, static function($a, $b) { return $a['s'] <=> $b['s']; });
+				\usort($this->data, static function($a, $b) { return $a['s'] <=> $b['s']; });
 				}
 			else
 				{
-				usort($this->data, static function($a, $b) { return $b['s'] <=> $a['s']; });
+				\usort($this->data, static function($a, $b) { return $b['s'] <=> $a['s']; });
 				}
 			}
 		else
 			{
 			if ('a' == $sort)
 				{
-				usort($this->data, static function($a, $b) { return $a['r'] <=> $b['r']; });
+				\usort($this->data, static function($a, $b) { return $a['r'] <=> $b['r']; });
 				}
 			else
 				{
-				usort($this->data, static function($a, $b) { return $b['r'] <=> $a['r']; });
+				\usort($this->data, static function($a, $b) { return $b['r'] <=> $a['r']; });
 				}
 			}
 		}

@@ -4,31 +4,28 @@ namespace PHPFUI;
 
 class AJAX
 	{
+	/** @var array<string, string> */
 	protected array $conditions = [];
-
-	protected string $name;
-
-	protected string $question;
 
 	/**
 	 * Set up an AJAX callback
 	 *
 	 * @param string $name JavaScript function name to be created
-	 * @param string $confirmQuestion prompt with this question if set
+	 * @param string $question prompt with this question if set
 	 *
 	 * The $name is used as the generated function name. Is is also POSTed to the page as the 'action'
 	 * parameter.
 	 */
-	public function __construct(string $name, string $confirmQuestion = '')
+	public function __construct(protected string $name, protected string $question = '')
 		{
-		$this->name = $name;
-		$this->question = $confirmQuestion;
 		}
 
 	/**
 	 * Return true if the post is from this AJAX call
+	 *
+	 * @param array<string, string> $post
 	 */
-	public function isMyCallback($post) : bool
+	public function isMyCallback(array $post) : bool
 		{
 		return \PHPFUI\Session::checkCSRF() && ($post['action'] ?? '') == $this->name;
 		}
@@ -39,7 +36,7 @@ class AJAX
 	 *
 	 * @link https://api.jquery.com/jQuery.ajax/#jQuery-ajax-settings
 	 */
-	public function addFunction(string $function, string $script) : AJAX
+	public function addFunction(string $function, string $script) : static
 		{
 		$this->conditions[$function] = $script;
 
@@ -49,7 +46,7 @@ class AJAX
 	/**
 	 * Return JavaScript that will execute a function call
 	 *
-	 * @param array $parameters anything you want to pass as data to
+	 * @param array<string, string> $parameters anything you want to pass as data to
 	 *  						the AJAX call
 	 *
 	 * @return string of JavaScript code to be added to the page

@@ -23,14 +23,15 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 			try
 				{
+				// @phpstan-ignore-next-line
 				$this->reflection->isInstantiable();
 				}
-			catch (\Throwable $e)
+			catch (\Throwable)
 				{
 				$this->reflection = new \ReflectionEnum($this->class);
 				}
 			}
-		catch (\Throwable $e)
+		catch (\Throwable)
 			{
 			// Try to parse as functions
 			$functionView = new \PHPFUI\InstaDoc\Section\Functions($this->controller);
@@ -194,6 +195,8 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		$parent = $this->reflection->getParentClass();
 
+		$allMenuItem = null;
+
 		if ($parentNames)
 			{
 			$parts = \array_merge(['All', 'self'], $parentNames);
@@ -255,9 +258,9 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		}
 
 	/**
-	 * Return the color coded access level (public, private, protected)
+	 * @return string the color coded access level (public, private, protected)
 	 */
-	protected function getAccess($constant) : string
+	protected function getAccess(\ReflectionProperty|\ReflectionClassConstant $constant) : string
 		{
 		if ($constant->isPrivate())
 			{
@@ -280,7 +283,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $type;
 		}
 
-	protected function getConstant(\ReflectionClassConstant $constant, string $name, $value) : string
+	protected function getConstant(\ReflectionClassConstant $constant, string $name, mixed $value) : string
 		{
 		/**
 		 * @todo get attributes everywhere
@@ -399,7 +402,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
-	protected function getName($method, string $name, bool $fullyQualify = false) : string
+	protected function getName(\ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $method, string $name, bool $fullyQualify = false) : string
 		{
 		$parent = $this->getNameScope($method, $fullyQualify);
 
@@ -412,7 +415,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $name;
 		}
 
-	protected function getNameScope($method, bool $fullyQualify = false) : string
+	protected function getNameScope(\ReflectionProperty|\ReflectionMethod|\ReflectionClassConstant $method, bool $fullyQualify = false) : string
 		{
 		$parent = $method->getDeclaringClass();
 
@@ -438,6 +441,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 
 		if ($type)
 			{
+			// @phpstan-ignore-next-line
 			$info .= $this->getColor('type', $this->getClassName($type->getName())) . ' ';
 			}
 		$info .= $this->getName($property, $this->getColor('variable', '$' . $property->getName()));
@@ -457,7 +461,7 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return $info;
 		}
 
-	protected function getRowClasses($method) : string
+	protected function getRowClasses(\ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $method) : string
 		{
 		$class = $this->getNameScope($method);
 
@@ -469,18 +473,23 @@ class Doc extends \PHPFUI\InstaDoc\Section\CodeCommon
 		return 'self';
 		}
 
-	protected function objectCompare($lhs, $rhs) : int
+	protected function objectCompare(object $lhs, object $rhs) : int
 		{
 		return \strcasecmp($lhs->name, $rhs->name);
 		}
 
+	/**
+	 * @param array<object> $objects to sort
+	 */
 	protected function objectSort(array &$objects) : void
 		{
 		\usort($objects, [$this, 'objectCompare']);
 		}
 
 	/**
-	 * return traits for the entire inheritance tree, not just the current class
+	 * @param \ReflectionClass<object> $reflection
+	 *
+	 * @return array<string, \ReflectionClass<object>> array of traits for the entire inheritance tree, not just the current class
 	 */
 	private function getTraits(\ReflectionClass $reflection) : array
 		{

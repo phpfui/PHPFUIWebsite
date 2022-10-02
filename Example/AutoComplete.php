@@ -25,13 +25,18 @@ class AutoComplete extends Page
 		$this->addBody("{$form}");
 		}
 
+	/**
+	 * @param array<string, string> $parameters
+	 *
+	 * @return array<string, array<array<string, string>>>
+	 */
 	public function callback(array $parameters) : array
 		{
 		$returnValue = [];
 
 		if (empty($parameters['save']))
 			{
-			$names = explode(' ', trim($parameters['AutoComplete']));
+			$names = \explode(' ', \trim($parameters['AutoComplete']));
 
 			foreach ($this->model->getCountries() as $row)
 				{
@@ -40,7 +45,7 @@ class AutoComplete extends Page
 
 				foreach ($names as $part)
 					{
-					$pos = stripos($country, $part, $pos);
+					$pos = \stripos($country, $part, $pos);
 
 					if (false === $pos)
 						{
@@ -53,10 +58,6 @@ class AutoComplete extends Page
 					$returnValue[] = ['value' => $country, 'data' => $country];
 					}
 				}
-			}
-		else
-			{
-			// save $parameters['AutoComplete'];
 			}
 
 		return ['suggestions' => $returnValue];

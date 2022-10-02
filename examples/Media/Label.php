@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $label = new \PHPFUI\Label('Primary Label');

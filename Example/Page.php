@@ -5,10 +5,14 @@ namespace Example;
 class Page extends \PHPFUI\Page
 	{
 	private \PHPFUI\Menu $footerMenu;
+
 	private \PHPFUI\Cell $mainColumn;
+
 	private \PHPFUI\OffCanvas $offCanvas;
+
 	private string $menuId;
 
+	// @phpstan-ignore-next-line
 	public function __construct(private $callback = null)
 		{
 		parent::__construct();
@@ -21,12 +25,13 @@ class Page extends \PHPFUI\Page
 <meta name="msapplication-TileColor" content="#ffc40d">
 <meta name="theme-color" content="#ffffff">');
 
-		$this->addCSS("code{tab-size:2;-moz-tab-size:2;}");
+		$this->addCSS('code{tab-size:2;-moz-tab-size:2;}');
 
 		$body = new \PHPFUI\HTML5Element('div');
 		$body->addClass('body-info');
 		$magellan = $this->getMagellanMenu();
 		$grid = new \PHPFUI\GridX();
+
 		if ($magellan)
 			{
 			$magellan->addClass('ks-toc');
@@ -44,6 +49,7 @@ class Page extends \PHPFUI\Page
 		$stickyMenu->add($menu);
 		$menuColumn->add($stickyMenu);
 		$grid->add($menuColumn);
+
 		if ($magellan)
 			{
 			$this->mainColumn = new \PHPFUI\Cell(12, 6, 8);
@@ -54,6 +60,7 @@ class Page extends \PHPFUI\Page
 			}
 		$this->mainColumn->addClass('main-column');
 		$grid->add($this->mainColumn);
+
 		if ($magellan)
 			{
 			$magellanColumn = new \PHPFUI\Cell(2);
@@ -72,24 +79,24 @@ class Page extends \PHPFUI\Page
 
 		$this->offCanvas = new \PHPFUI\OffCanvas($body);
 
-		$parts = parse_url($_SERVER['REQUEST_URI']);
-		$parts = explode('/', $parts['path']);
-		$file = array_pop($parts);
-		$class = str_replace('.php', '', $file);
+		$parts = \parse_url($_SERVER['REQUEST_URI']);
+		$parts = \explode('/', $parts['path']);
+		$file = \array_pop($parts);
+		$class = \str_replace('.php', '', $file);
 
-		if (ctype_upper($class[0]))
+		if (\ctype_upper($class[0]))
 			{
 			$this->setDebug(1);
 
 			if (! empty($_POST['save']) && \PHPFUI\Session::checkCSRF())
 				{
-				if (is_callable($this->callback))
+				if (\is_callable($this->callback))
 					{
-					call_user_func($this->callback, $_POST);
+					\call_user_func($this->callback, $_POST);
 					}
 				else
 					{
-					\PHPFUI\Session::setFlash('post', json_encode($_POST));
+					\PHPFUI\Session::setFlash('post', \json_encode($_POST));
 					}
 				$this->redirect();
 
@@ -110,24 +117,25 @@ class Page extends \PHPFUI\Page
 			foreach (['alert', 'warning', 'success', 'secondary', ] as $type)
 				{
 				$message = \PHPFUI\Session::getFlash($type);
+
 				if ($message)
 					{
 					$callout = new \PHPFUI\Callout($type);
-					$callout->add(json_decode($message, true));
+					$callout->add(\json_decode($message, true));
 					$this->addBody($callout);
 					}
 				}
 
-			if (is_array($post) && ! is_callable($this->callback))
+			if ($post && ! \is_callable($this->callback))
 				{
-				$post = json_decode($post, true);
+				$post = \json_decode($post, true);
 				$callout = new \PHPFUI\Callout('success');
 				$callout->add('You posted the following:');
 				$ul = new \PHPFUI\UnorderedList();
 
 				foreach ($post as $key => $value)
 					{
-					$value = print_r($value, 1);
+					$value = \print_r($value, true);
 					$ul->addItem(new \PHPFUI\ListItem("<b>{$key}</b> {$value}"));
 					}
 				$callout->add($ul);
@@ -142,12 +150,7 @@ class Page extends \PHPFUI\Page
 		$this->footerMenu->addMenuItem(new \PHPFUI\MenuItem('github', 'https://github.com/phpfui/phpfui'));
 		}
 
-	protected function getMagellanMenu() : \PHPFUI\Menu | null
-		{
-		return null;
-		}
-
-	public function addBody($item) : self
+	public function addBody(mixed $item) : static
 		{
 		$this->mainColumn->add($item);
 
@@ -176,13 +179,15 @@ class Page extends \PHPFUI\Page
 			'SelectAutoComplete' => '/Examples/SelectAutoComplete.php',
 			'Sortable Table' => '/Examples/SortableTable.php',
 			'To From List' => '/Examples/ToFromList.php',
-			];
+		];
 
 		$exampleMenu = new \PHPFUI\Menu();
+
 		foreach ($options as $name => $url)
 			{
 			$menuItem = new \PHPFUI\MenuItem($name, $url);
-			if (str_contains($_SERVER['REQUEST_URI'], $url))
+
+			if (\str_contains($_SERVER['REQUEST_URI'], $url))
 				{
 				$menuItem->setActive();
 				}
@@ -191,6 +196,11 @@ class Page extends \PHPFUI\Page
 		$exampleMenu->sort();
 
 		return $exampleMenu;
+		}
+
+	protected function getMagellanMenu() : \PHPFUI\Menu | null
+		{
+		return null;
 		}
 
 	protected function getStart() : string
@@ -219,11 +229,10 @@ class Page extends \PHPFUI\Page
 
 		$footer = new \PHPFUI\TopBar();
 		$footer->addLeft($this->footerMenu);
-		$year = date('Y');
+		$year = \date('Y');
 		$footer->addRight("&copy; {$year} Bruce Wells");
 		$this->add("{$footer}");
 
 		return parent::getStart();
 		}
-
 	}

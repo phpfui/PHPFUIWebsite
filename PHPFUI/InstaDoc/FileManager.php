@@ -12,8 +12,14 @@ class FileManager
 
 	private string $fileName = '';
 
+	/**
+	 * @var array<string>
+	 */
 	private array $excludedNamespaces = [];
 
+	/**
+	 * @var array<array<string>>
+	 */
 	private array $includedNamespaces = [];
 
 	/**
@@ -26,7 +32,7 @@ class FileManager
 	public function __construct(string $composerJsonPath = '')
 		{
 		$this->setComposerPath($composerJsonPath);
-		$class = __CLASS__;
+		$class = self::class;
 		$this->fileName = \substr($class, \strrpos($class, '\\') + 1);
 		}
 
@@ -110,6 +116,8 @@ class FileManager
 	/**
 	 * Sometimes you don't feel like a nut. Pass namespaces in an
 	 * array to remove them from your documentation.
+	 *
+	 * @param array<string> $namespaces
 	 */
 	public function excludeNamespaces(array $namespaces) : FileManager
 		{
@@ -150,7 +158,7 @@ class FileManager
 
 		foreach ($this->includedNamespaces as $parameters)
 			{
-			NamespaceTree::addNameSpace($parameters[0], $parameters[1], $parameters[2]);
+			NamespaceTree::addNameSpace($parameters[0], $parameters[1], (bool)$parameters[2]);
 			}
 
 		foreach ($this->excludedNamespaces as $namespace)
@@ -228,7 +236,7 @@ class FileManager
 
 		$composerJsonPath = $this->composerJsonPath . 'composer.lock';
 		$composerJsonPath = \str_replace('//', '/', $composerJsonPath);
-		$json = \json_decode(@\file_get_contents($composerJsonPath), true);
+		$json = \json_decode(@\file_get_contents($composerJsonPath), true, 512);
 
 		if (! $json)
 			{

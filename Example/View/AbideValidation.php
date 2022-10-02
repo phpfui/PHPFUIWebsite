@@ -4,11 +4,11 @@ namespace Example\View;
 
 class AbideValidation
 	{
-
 	private \PHPFUI\Validator\GT $gtValidator;
 
 	private \PHPFUI\Validator\LT $ltValidator;
 
+	/** @param array<string, string> $parameters */
 	public function __construct(private \PHPFUI\Page $page, private array $parameters)
 		{
 		$this->gtValidator = new \PHPFUI\Validator\GT();
@@ -50,5 +50,4 @@ class AbideValidation
 
 		return $container;
 		}
-
 	}

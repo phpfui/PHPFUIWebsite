@@ -8,6 +8,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 	protected \PHPFUI\InstaDoc\MarkDownParser $parsedown;
 
+	/**
+	 * @var \ReflectionClass<object> | \ReflectionEnum | \ReflectionFunction
+	 */
 	protected $reflection;
 
 	public function __construct(\PHPFUI\InstaDoc\Controller $controller, string $fullClassPath = '')
@@ -24,23 +27,24 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				try
 					{
+					// @phpstan-ignore-next-line
 					$this->reflection->isInstantiable();
 					}
-				catch (\Throwable $e)
+				catch (\Throwable)
 					{
 					$this->reflection = new \ReflectionEnum($fullClassPath);
 					}
 				}
-			catch (\Throwable $e)
+			catch (\Throwable)
 				{
 				}
 			}
 		}
 
 	/**
-	 * @param \ReflectionFunction | \ReflectionMethod $method
+	 * @param array<string, string> $parameterComments comments indexed by parameter name
 	 */
-	public function getMethodParameters($method, array $parameterComments = []) : string
+	public function getMethodParameters(\ReflectionFunction|\ReflectionMethod $method, array $parameterComments = []) : string
 		{
 		$info = $comma = '';
 
@@ -65,8 +69,8 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			 */
 			if (isset($parameterComments[$name]))
 				{
-				$tip = new \PHPFUI\ToolTip($tip, $parameterComments[$name]);
-				$tip->addAttribute('data-allow-html', true);
+				$tip = new \PHPFUI\ToolTip($tip, \htmlspecialchars($parameterComments[$name]));
+				$tip->addAttribute('data-allow-html');
 				}
 			$info .= $this->getColor('variable', $tip);
 
@@ -79,7 +83,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					{
 					if (\is_object($value))
 						{
-						$value = \get_class($value);
+						$value = $value::class;
 						}
 					$extra = $parameter->getDefaultValueConstantName();
 					$info .= \str_replace($value, '', $extra);
@@ -90,7 +94,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $info;
 		}
 
-	public function getValueString($value) : string
+	public function getValueString(mixed $value) : string
 		{
 		switch (\gettype($value))
 			{
@@ -123,7 +127,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			case 'object':
-				$class = \get_class($value);
+				$class = $value::class;
 
 				if ('ReflectionNamedType' == $class)
 					{
@@ -176,7 +180,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 				break;
 
 			default:
-				$value = $this->getColor('number', $value);
+				$value = $this->getColor('number', (string)$value);
 			}
 
 		return $value;
@@ -247,6 +251,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 				if (\method_exists($tag, 'getAuthorName'))
 					{
+					// @phpstan-ignore-next-line
 					$body .= \PHPFUI\Link::email($tag->getEmail(), $tag->getAuthorName());
 					}
 
@@ -323,7 +328,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 					$class = \substr($class, 1);
 					}
 
-				if (false !== \strpos($class, '[]'))
+				if (\str_contains($class, '[]'))
 					{
 					$array = '[]';
 					$class = \str_replace($array, '', $class);
@@ -344,7 +349,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			}
 
-		return $this->getColor('type', $class) . $array;
+		return $this->getColor('type', \htmlspecialchars($class)) . $array;
 		}
 
 	/**
@@ -380,7 +385,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $gridX;
 		}
 
-	protected function getDocBlock($method) : ?\phpDocumentor\Reflection\DocBlock
+	protected function getDocBlock(object $method) : ?\phpDocumentor\Reflection\DocBlock
 		{
 		$comments = $method->getDocComment();
 
@@ -396,7 +401,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 			{
 			$docBlock = $this->factory->create($comments);
 			}
-		catch (\Exception $e)
+		catch (\Exception)
 			{
 			$docBlock = null;
 			}
@@ -438,7 +443,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = $parent->getMethod($reflectionMethod->name);
 						}
-					catch (\Throwable $e)
+					catch (\Throwable)
 						{
 						$method = null;
 						}
@@ -462,6 +467,11 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $summary;
 		}
 
+	/**
+	 * @param array<int, \phpDocumentor\Reflection\DocBlock\Tag> $tags
+	 *
+	 * @return array<int, \phpDocumentor\Reflection\DocBlock\Tag>
+	 */
 	protected function getInheritedDocBlock(array $tags, \ReflectionMethod $reflectionMethod) : array
 		{
 		foreach ($tags as $index => $tag)
@@ -477,7 +487,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 						{
 						$method = $parent->getMethod($reflectionMethod->name);
 						}
-					catch (\Throwable $e)
+					catch (\Throwable)
 						{
 						$method = null;
 						}
@@ -504,6 +514,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $tags;
 		}
 
+	/**
+	 * @return array<string, string>
+	 */
 	protected function getParameterComments(?\phpDocumentor\Reflection\DocBlock $docBlock) : array
 		{
 		$comments = [];
@@ -520,6 +533,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 
 			if ('param' == $name && $description)
 				{
+				// @phpstan-ignore-next-line
 				$var = $tag->getVariableName();
 				$comments[$var] = $this->parsedown->html($description);
 				}
@@ -528,10 +542,7 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $comments;
 		}
 
-	/**
-	 * @param \ReflectionFunction | \ReflectionMethod $method
-	 */
-	protected function getMethodParametersBlock($method) : string
+	protected function getMethodParametersBlock(\ReflectionFunction|\ReflectionMethod $method) : string
 		{
 		$docBlock = $this->getDocBlock($method);
 		$parameterComments = $this->getParameterComments($docBlock);
@@ -563,7 +574,10 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return $section;
 		}
 
-	protected function getAttributes($reflection) : array
+	/**
+	 * @return array<int, \ReflectionAttribute<object>>
+	 */
+	protected function getAttributes(?object $reflection) : array
 		{
 		if ($reflection && \method_exists($reflection, 'getAttributes'))
 			{
@@ -573,6 +587,9 @@ class CodeCommon extends \PHPFUI\InstaDoc\Section
 		return [];
 		}
 
+	/**
+	 * @param \ReflectionAttribute<object> $attribute
+	 */
 	protected function formatAttribute(\ReflectionAttribute $attribute) : string
 		{
 		$parameters = '';

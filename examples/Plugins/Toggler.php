@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $toggleAll = new \PHPFUI\Button('Toggle All These');
@@ -21,7 +22,7 @@ $toggleFocus = new \PHPFUI\Input\Text('test', 'Toggle on Focus');
 $callout = new \PHPFUI\Callout('secondary');
 $callout->add('<p>This is only visible when the above field has focus.</p>');
 
-$toggleFocus->toggleFocus($callout, 'hinge-in-from-top hinge-out-from-bottom');
+$toggleFocus->toggleFocus($callout);
 
 $container->add(new \PHPFUI\MultiColumn($toggleFocus));
 $container->add($callout);

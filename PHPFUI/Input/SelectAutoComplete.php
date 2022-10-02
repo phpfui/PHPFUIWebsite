@@ -17,37 +17,33 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 
 	protected string $arrayName = '';
 
+	/** @var array<string, string | bool> */
 	protected array $autoCompleteOptions = [
-		'minChars' => 1,
+		'minChars' => '1',
 		'type' => "'POST'",
 		'autoSelectFirst' => 'true',
 		'lookup' => 'arrayName',
 		'onSelect' => 'function(suggestion){ac.attr("placeholder",suggestion.value);ac.val("");fld.val(suggestion.data);fld.change()}',
 	];
 
-	protected bool $freeformInput;
-
 	protected \PHPFUI\Input\Hidden $hidden;
-
-	protected \PHPFUI\Interfaces\Page $page;
 
 	protected string $realName;
 
-	protected $toolTip;
+	protected string | \PHPFUI\ToolTip $toolTip = '';
 
 	/**
 	 * Construct a SelectAutoComplete. Add options as you would a
 	 * regular Select
 	 *
-	 * @param \PHPFUI\Interfaces\Page $page requires JavaScript
+	 * @param \PHPFUI\Page $page requires JavaScript
 	 * @param string $name of the field
 	 * @param string $label optional
 	 * @param bool $freeformInput if true allow anything to be
 	 *  					 entered, but will suggest options
 	 */
-	public function __construct(\PHPFUI\Interfaces\Page $page, string $name, string $label = '', bool $freeformInput = false)
+	public function __construct(protected \PHPFUI\Page $page, string $name, string $label = '', protected bool $freeformInput = false)
 		{
-		$this->freeformInput = $freeformInput;
 		$suffix = '';
 		$nameField = $name;
 
@@ -61,7 +57,6 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 		parent::__construct($nameField, $label);
 		$this->acInput = new \PHPFUI\Input\Text($nameField, $label);
 		$this->realName = $name;
-		$this->page = $page;
 		$this->type = 'text'; // really a text Input field, not a Select
 		$this->page->addTailScript('jquery.autocomplete.js');
 		$this->hidden = new \PHPFUI\Input\Hidden($this->realName);
@@ -73,7 +68,7 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 	 *
 	 * @link https://github.com/devbridge/jQuery-Autocomplete
 	 */
-	public function addAutoCompleteOption(string $option, $value) : self
+	public function addAutoCompleteOption(string $option, mixed $value) : static
 		{
 		$this->autoCompleteOptions[$option] = $value;
 
@@ -106,7 +101,7 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 	 * @link https://github.com/devbridge/jQuery-Autocomplete
 	 * @param string $option to remove
 	 */
-	public function removeAutoCompleteOption(string $option) : self
+	public function removeAutoCompleteOption(string $option) : static
 		{
 		unset($this->autoCompleteOptions[$option]);
 
@@ -120,10 +115,8 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 	 *
 	 * Set the second and subsequent SelectAutoComplete fields to an
 	 * array name of the first SelectAutoComplete name.
-	 *
-	 * @param string $name of array
 	 */
-	public function setArray($name) : self
+	public function setArray(string $name) : static
 		{
 		$this->arrayName = $name;
 
@@ -132,10 +125,8 @@ class SelectAutoComplete extends \PHPFUI\Input\Select
 
 	/**
 	 * Set the tool tip.  Can either be a ToolTip or a string.  If it is a string, it will be converted to a ToolTip
-	 *
-	 * @param string|\PHPFUI\ToolTip $tip can be either a string or ToolTip
 	 */
-	public function setToolTip($tip) : \PHPFUI\HTML5Element
+	public function setToolTip(string | \PHPFUI\ToolTip $tip) : static
 		{
 		$this->toolTip = $tip;
 

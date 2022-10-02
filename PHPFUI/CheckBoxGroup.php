@@ -7,25 +7,23 @@ namespace PHPFUI;
  */
 class CheckBoxGroup extends \PHPFUI\HTML5Element implements \Countable
 	{
+	/** @var array<int, \PHPFUI\Input\CheckBox> */
 	protected array $checkboxes = [];
 
 	protected bool $separateRows = false;
 
-	protected string $label;
-
 	/**
 	 * Construct a CheckBoxGroup
 	 */
-	public function __construct(string $label = '')
+	public function __construct(protected string $label = '')
 		{
 		parent::__construct('div');
-		$this->label = $label;
 		}
 
 	/**
 	 * Add a checkbox
 	 */
-	public function addCheckBox(\PHPFUI\Input\CheckBox $checkBox) : CheckBoxGroup
+	public function addCheckBox(\PHPFUI\Input\CheckBox $checkBox) : static
 		{
 		$this->checkboxes[] = $checkBox;
 
@@ -46,7 +44,7 @@ class CheckBoxGroup extends \PHPFUI\HTML5Element implements \Countable
 	 *
 	 * @param bool $sep default true
 	 */
-	public function setSeparateRows(bool $sep = true) : CheckBoxGroup
+	public function setSeparateRows(bool $sep = true) : static
 		{
 		$this->separateRows = $sep;
 

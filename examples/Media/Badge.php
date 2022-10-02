@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $primaryBadge = new \PHPFUI\Badge('1');

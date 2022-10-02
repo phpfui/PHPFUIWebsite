@@ -7,7 +7,7 @@ namespace PHPFUI;
  *
  * Overrides string output for easy output and concatination
  */
-abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
+abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable, \Stringable
 	{
 	use \PHPFUI\Traits\Walkable;
 
@@ -17,6 +17,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 
 	private static bool $done = false;
 
+	/** @var array<mixed> */
 	private array $items = [];
 
 	private static string $response = '';
@@ -52,10 +53,8 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	 * Base add function.  Adds to the end of the current objects
 	 *
 	 * @param mixed $item should be convertable to string
-	 *
-	 * @return Base
 	 */
-	public function add($item)
+	public function add($item) : static
 		{
 		if (null !== $item)
 			{
@@ -70,10 +69,8 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	 * object
 	 *
 	 * @param mixed $item should be convertable to string
-	 *
-	 * @return Base
 	 */
-	public function addAsFirst($item)
+	public function addAsFirst(mixed $item) : static
 		{
 		if (null !== $item)
 			{
@@ -94,7 +91,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	/**
 	 * Form is done rendering
 	 */
-	public function done(bool $done = true) : Base
+	public function done(bool $done = true) : static
 		{
 		self::$done = $done;
 
@@ -133,7 +130,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	/**
 	 * Add an object in front of existing object
 	 */
-	public function prepend($item) : Base
+	public function prepend(mixed $item) : static
 		{
 		\array_unshift($this->items, $item);
 
@@ -158,7 +155,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	/**
 	 * Sets the page response directly
 	 */
-	public function setRawResponse(string $response, bool $asJSON = true) : Base
+	public function setRawResponse(string $response, bool $asJSON = true) : static
 		{
 		if (! $this->isDone())
 			{
@@ -180,7 +177,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 	 * @param string $response to return
 	 * @param string $color used for the save button
 	 */
-	public function setResponse(string $response, string $color = 'lime') : Base
+	public function setResponse(string $response, string $color = 'lime') : static
 		{
 		if (! $this->isDone())
 			{
@@ -190,6 +187,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 		return $this;
 		}
 
+	/** @return array<mixed> */
 	protected function getItems() : array
 		{
 		return $this->items;
@@ -227,7 +225,7 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 
 		try
 			{
-			$output .= "{$this->getStart()}";
+			$output .= (string)$this->getStart();
 
 			if ($output)
 				{
@@ -236,21 +234,21 @@ abstract class Base implements \Countable, \PHPFUI\Interfaces\Walkable
 
 			foreach ($this->items as $item)
 				{
-				$output .= "{$item}";
+				$output .= (string)$item;
 
 				if ($item)
 					{
 					$output .= $debug;
 					}
 				}
-			$body = "{$this->getBody()}";
+			$body = (string)$this->getBody();
 			$output .= $body;
 
 			if ($body)
 				{
 				$output .= $debug;
 				}
-			$end = "{$this->getEnd()}";
+			$end = (string)$this->getEnd();
 			$output .= $end;
 
 			if ($end)

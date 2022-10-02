@@ -4,8 +4,10 @@ namespace PHPFUI;
 
 class Menu extends \PHPFUI\HTML5Element
 	{
+	/** @var array<string, \PHPFUI\MenuItem | \PHPFUI\Menu> */
 	protected array $menuItems = [];
 
+	/** @var array<string, string> */
 	protected array $menuLabels = [];
 
 	protected bool $sorted = false;
@@ -20,7 +22,7 @@ class Menu extends \PHPFUI\HTML5Element
 		$this->addClass('menu');
 		}
 
-	public function addMenuItem(MenuItem $item) : Menu
+	public function addMenuItem(\PHPFUI\MenuItem $item) : static
 		{
 		$name = $item->getName() . ':' . \count($this->menuItems);
 		$this->menuItems[$name] = $item;
@@ -29,7 +31,7 @@ class Menu extends \PHPFUI\HTML5Element
 		return $this;
 		}
 
-	public function addSubMenu(MenuItem $item, Menu $subMenu) : Menu
+	public function addSubMenu(\PHPFUI\MenuItem $item, \PHPFUI\Menu $subMenu) : static
 		{
 		$subMenu->addClass('nested');
 		$name = $item->getName() . ':' . \count($this->menuItems);
@@ -60,12 +62,13 @@ class Menu extends \PHPFUI\HTML5Element
 		return false;
 		}
 
+	/** @return array<string, \PHPFUI\MenuItem> */
 	public function getMenuItems() : array
 		{
 		return $this->menuItems;
 		}
 
-	public function getName()
+	public function getName() : string
 		{
 		return 'Menu';
 		}
@@ -113,7 +116,7 @@ class Menu extends \PHPFUI\HTML5Element
 	/**
 	 * @param string $type must one of top, right, bottom, left
 	 */
-	public function setIconAlignment(string $type) : Menu
+	public function setIconAlignment(string $type) : static
 		{
 		$types = ['top',
 			'right',
@@ -135,7 +138,7 @@ class Menu extends \PHPFUI\HTML5Element
 	/**
 	 * Sort the menu by name displayed to the user.
 	 */
-	public function sort() : Menu
+	public function sort() : static
 		{
 		$this->sorted = true;
 		\ksort($this->menuItems);

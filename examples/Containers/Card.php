@@ -1,4 +1,5 @@
 <?php
+
 $card = new \PHPFUI\Card();
 $card->addAttribute('style', 'width: 300px');
 $card->addDivider(new \PHPFUI\Header("I'm featured", 4));

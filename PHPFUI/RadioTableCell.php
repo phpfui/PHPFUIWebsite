@@ -6,10 +6,6 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 	{
 	private string $disabled = '';
 
-	private string $disabledColor = 'gray';
-
-	private string $name;
-
 	private string $offBackgroundColor = 'lightgray';
 
 	private string $offColor = 'white';
@@ -22,13 +18,9 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 
 	private ?\PHPFUI\HTML5Element $radioButton = null;
 
-	private ?string $value;
-
-	public function __construct(string $name, ?string $value = '')
+	public function __construct(private string $name, private ?string $value = '')
 		{
 		parent::__construct('label');
-		$this->name = $name;
-		$this->value = $value;
 		}
 
 	public function getDisabled() : bool
@@ -41,23 +33,7 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 		return $this->name;
 		}
 
-	public function getOffColor($checked)
-		{
-		if ($this->disabled)
-			{
-			return $this->disabledColor;
-			}
-		}
-
-	public function getOnColor($checked)
-		{
-		if ($this->disabled)
-			{
-			return $this->disabledColor;
-			}
-		}
-
-	public function getRadioButton()
+	public function getRadioButton() : \PHPFUI\HTML5Element
 		{
 		if ($this->radioButton)
 			{
@@ -66,7 +42,7 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 
 		if (! $this->parent)
 			{
-			throw new \Exception('No parent set for ' . __CLASS__);
+			throw new \Exception('No parent set for ' . self::class);
 			}
 
 		$value = $this->value;
@@ -101,14 +77,14 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 	 *
 	 * @param bool $disabled default to true
 	 */
-	public function setDisabled(bool $disabled = true) : RadioTableCell
+	public function setDisabled(bool $disabled = true) : static
 		{
 		$this->disabled = $disabled ? 'disabled' : '';
 
 		return $this;
 		}
 
-	public function setOffColor(string $text = 'white', string $background = 'lightgray') : RadioTableCell
+	public function setOffColor(string $text = 'white', string $background = 'lightgray') : static
 		{
 		$this->offColor = $text;
 		$this->offBackgroundColor = $background;
@@ -116,7 +92,7 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 		return $this;
 		}
 
-	public function setOnColor(string $text = 'black', string $background = 'white') : RadioTableCell
+	public function setOnColor(string $text = 'black', string $background = 'white') : static
 		{
 		$this->onColor = $text;
 		$this->onBackgroundColor = $background;
@@ -124,7 +100,7 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 		return $this;
 		}
 
-	public function setParent(\PHPFUI\RadioTable $parent)
+	public function setParent(\PHPFUI\RadioTable $parent) : static
 		{
 		$this->parent = $parent;
 
@@ -135,7 +111,7 @@ class RadioTableCell extends \PHPFUI\HTML5Element
 		{
 		if (! $this->parent)
 			{
-			throw new \Exception('No parent set for ' . __CLASS__);
+			throw new \Exception('No parent set for ' . self::class);
 			}
 
 		$radioButton = $this->getRadioButton();

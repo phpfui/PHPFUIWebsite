@@ -4,20 +4,21 @@ namespace Example;
 
 class GPX2CueSheet extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
 
-		\PHPFUI\Session::setFlash('post', json_encode($_POST));
+		\PHPFUI\Session::setFlash('post', \json_encode($_POST));
 		$fieldName = 'gpxFile';
+
 		if (isset($_FILES[$fieldName]))
 			{
 			$model = new \Example\Model\GPX($_FILES[$fieldName], $_POST['units'] ?? 'mi');
 			$error = $model->validate();
+
 			if ($error)
 				{
-				\PHPFUI\Session::setFlash('alert', json_encode($error));
+				\PHPFUI\Session::setFlash('alert', \json_encode($error));
 				$this->redirect();
 
 				return;
@@ -25,7 +26,7 @@ class GPX2CueSheet extends \Example\Page
 			$title = empty($_POST['title']) ? $model->getFileName() : $_POST['title'];
 			$cuesheetGenerator = new \Example\Report\CueSheet();
 			$cuesheetGenerator->generate($model->getData(), $title, $model->getDistance(), $_POST['units'] ?? 'mi', $model->getAscent(), $model->getDescent());
-			$cuesheetGenerator->Output('D', str_replace(' ', '_', $title) . '.pdf', true);
+			$cuesheetGenerator->Output('D', \str_replace(' ', '_', $title) . '.pdf', true);
 
 			return;
 			}
@@ -42,5 +43,4 @@ class GPX2CueSheet extends \Example\Page
 
 		$this->addBody($form);
 		}
-
 	}

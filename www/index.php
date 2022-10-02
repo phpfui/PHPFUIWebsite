@@ -1,7 +1,8 @@
 <?php
+
 include '../common.php';
 
-set_time_limit(99999);
+\set_time_limit(99999);
 
 $generateStaticFiles = false;
 $useComposer = false;
@@ -36,9 +37,10 @@ else
 		'voku',
 		'Webmozart',
 		'ZBateson',
-		];
+	];
 
 	$fileManager = new \PHPFUI\InstaDoc\FileManager();
+
 	foreach ($libraries as $library)
 		{
 		$fileManager->addNamespace($library, '../' . $library, true);
@@ -50,7 +52,7 @@ $fileManager->load();
 \PHPFUI\InstaDoc\ChildClasses::load('../ChildClasses.serial');
 \PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe\markdown\tests');
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
-$controller->setGitRoot(getcwd() . '/../');
+$controller->setGitRoot(\getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
 $controller->addHomePageMarkdown('../PHPFUI/InstaDoc/README.md');
 $controller->setHomeUrl('/');
@@ -71,7 +73,7 @@ if ($generateStaticFiles)
 	{
 	echo '<pre>';
 	$controller->setGitFileOffset('..');
-	print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE, ]));
+	\print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE, ]));
 	}
 else
 	{
@@ -81,10 +83,11 @@ else
 		$exampleMenu = \Example\Page::getMenu();
 		$menu->addSubMenu(new \PHPFUI\MenuItem('Examples'), $exampleMenu);
 		}
+
 	if ($addBlog)
 		{
 		$menu = $controller->getMenu();
-		$blogTitle = 'Thoughts on PHP blog';     ;
+		$blogTitle = 'Thoughts on PHP blog';
 		$menuItem = new \PHPFUI\MenuItem($blogTitle, '#');
 		$menuItem->setLinkObject(new \PHPFUI\Link('http://blog.phpfui.com', $blogTitle));
 		$menu->addMenuItem($menuItem);
@@ -92,12 +95,14 @@ else
 
 	// handle direct .md or .markdown extensions
 	$requestUri = $_SERVER['REQUEST_URI'] ?? '';
-	$extensionIndex = strrpos($requestUri, '.');
+	$extensionIndex = \strrpos($requestUri, '.');
+
 	if ($extensionIndex)
 		{
-		$extension = strtolower(substr($requestUri, $extensionIndex + 1));
+		$extension = \strtolower(\substr($requestUri, $extensionIndex + 1));
 		$file = PROJECT_ROOT . $requestUri;
-		if (in_array($extension, ['md', 'markdown']) && file_exists($file))
+
+		if (\in_array($extension, ['md', 'markdown']) && \file_exists($file))
 			{
 			$parser = new \PHPFUI\InstaDoc\MarkDownParser();
 			$page = $controller->getPage();
@@ -106,11 +111,10 @@ else
 			$cell->add($parser->fileText($file));
 			$page->add($cell);
 			echo $page;
+
 			exit;
 			}
 		}
 
 	echo $controller->display();
 	}
-
-

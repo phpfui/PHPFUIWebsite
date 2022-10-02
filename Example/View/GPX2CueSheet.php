@@ -4,7 +4,6 @@ namespace Example\View;
 
 class GPX2CueSheet
 	{
-
 	public function __construct(private \PHPFUI\Page $page, private string $fieldName)
 		{
 		}
@@ -33,5 +32,4 @@ class GPX2CueSheet
 
 		return $container;
 		}
-
 	}

@@ -4,7 +4,6 @@ namespace Example;
 
 class Abide extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -15,7 +14,7 @@ class Abide extends \Example\Page
 
 		if ($parameters)
 			{
-			$parameters = json_decode($parameters, true);
+			$parameters = \json_decode($parameters, true);
 			}
 		else
 			{
@@ -29,7 +28,9 @@ class Abide extends \Example\Page
 		$reveal->addClass('success');
 		$this->getReveal($reveal);
 		$buttonGroup->addButton($reveal);
-		$buttonGroup->addButton((new \PHPFUI\Reset('Clear'))->addClass('warning'));
+		$clear = new \PHPFUI\Reset('Clear');
+		$clear->addClass('warning');
+		$buttonGroup->addButton($clear);
 		$form->add($buttonGroup);
 		$this->addBody($form);
 		}
@@ -49,10 +50,11 @@ class Abide extends \Example\Page
 		$buttonGroup = new \PHPFUI\ButtonGroup();
 		$submit = new \PHPFUI\Submit('Save', 'save');
 		$buttonGroup->addButton($submit);
-		$buttonGroup->addButton((new \PHPFUI\Reset('Clear'))->addClass('warning'));
+		$clear = new \PHPFUI\Reset('Clear');
+		$clear->addClass('warning');
+		$buttonGroup->addButton($clear);
 		$buttonGroup->addButton($modal->getCloseButton());
 		$form->add($buttonGroup);
 		$modal->add($form);
 		}
-
 	}

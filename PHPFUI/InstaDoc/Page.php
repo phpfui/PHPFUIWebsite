@@ -4,25 +4,22 @@ namespace PHPFUI\InstaDoc;
 
 class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 	{
-	private \PHPFUI\InstaDoc\Controller $controller;
-
 	private string $generating = '';
 
 	private string $homeUrl = '#';
 
 	private \PHPFUI\Cell $mainColumn;
 
-	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+	public function __construct(private \PHPFUI\InstaDoc\Controller $controller)
 		{
 		parent::__construct();
-		$this->controller = $controller;
 		$this->mainColumn = new \PHPFUI\Cell(12, 8, 9);
 		$this->addStyleSheet('css/styles.css');
 		$this->addStyleSheet('css/markdown.css');
 		$this->addStyleSheet('highlighter/styles/PHPFUI.css');
 		}
 
-	public function addBody($item) : PageInterface
+	public function addBody(mixed $item) : PageInterface
 		{
 		$this->mainColumn->add($item);
 
@@ -134,9 +131,9 @@ class Page extends \PHPFUI\Page implements \PHPFUI\InstaDoc\PageInterface
 		$cssSelector->setToolTip('Sets the style sheet for PHP code');
 		$fieldSet->add($cssSelector);
 
-		$tabStop = new \PHPFUI\Input\Number(Controller::TAB_SIZE, 'Tab Stop Spaces', $this->controller->getParameter(Controller::TAB_SIZE, 2));
-		$tabStop->setAttribute('min', 0);
-		$tabStop->setAttribute('max', 10);
+		$tabStop = new \PHPFUI\Input\Number(Controller::TAB_SIZE, 'Tab Stop Spaces', $this->controller->getParameter(Controller::TAB_SIZE, '2'));
+		$tabStop->setAttribute('min', '0');
+		$tabStop->setAttribute('max', '10');
 		$tabStop->setToolTip('Indent tabbed files with this number of spaces');
 		$fieldSet->add($tabStop);
 

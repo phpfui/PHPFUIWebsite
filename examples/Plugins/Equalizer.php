@@ -1,4 +1,5 @@
 <?php
+
 $innerEqualizer = new \PHPFUI\Equalizer(new \PHPFUI\Callout());
 $co1 = new \PHPFUI\Callout('primary');
 $co1->add('This is a callout');

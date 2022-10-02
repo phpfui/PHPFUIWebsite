@@ -4,7 +4,7 @@ namespace Example\View;
 
 class ComposerVersion
 	{
-
+	// @phpstan-ignore-next-line
 	public function __construct(private \PHPFUI\Page $page, private array $parameters)
 		{
 		}
@@ -36,5 +36,4 @@ class ComposerVersion
 
 		return $container;
 		}
-
 	}

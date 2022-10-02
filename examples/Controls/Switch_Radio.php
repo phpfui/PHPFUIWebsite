@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\GridX();
 $switchRB1 = new \PHPFUI\Input\SwitchRadio('radio', 1);
 $switchRB1->setActiveLabel('Yes')->setInactiveLabel('No')->addClass('large');

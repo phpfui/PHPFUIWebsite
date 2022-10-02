@@ -4,7 +4,6 @@ namespace Example\View;
 
 class CountryAccordionToFromList extends \PHPFUI\AccordionToFromList
 	{
-
 	public function __construct(\PHPFUI\Page $page, string $name, private \Example\Model\Country $model, array $inGroup, array $notInGroup)
 		{
 		$callback = [$this, 'callback', ];
@@ -19,5 +18,4 @@ class CountryAccordionToFromList extends \PHPFUI\AccordionToFromList
 
 		return $country['Country'] . new \PHPFUI\Input\Hidden("{$fieldName}-{$type}[]", $userData);
 		}
-
 	}

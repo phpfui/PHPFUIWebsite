@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $iconPlain = new \PHPFUI\Icon('edit');

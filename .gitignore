@@ -31,3 +31,6 @@ composer.phar
 /www/photos
 /www/bfw.php
 trackingCode.php
+.php-cs-fixer.cache
+codestyle.bat
+

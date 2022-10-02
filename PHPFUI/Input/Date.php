@@ -16,6 +16,7 @@ class Date extends \PHPFUI\Input\Input
 	 * @param string $label optional
 	 * @param ?string $value optional in YYYY-MM-DD format
 	 */
+	// @phpstan-ignore-next-line
 	public function __construct(\PHPFUI\Interfaces\Page $page, string $name, string $label = '', ?string $value = '')
 		{
 		if ('0000-00-00' == $value)
@@ -28,7 +29,7 @@ class Date extends \PHPFUI\Input\Input
 	/**
 	 * @deprecated no longer needed. Will be removed in V7.
 	 */
-	public function addOption(string $option, $value) : Date
+	public function addOption(string $option, mixed $value) : static
 		{
 		return $this;
 		}
@@ -40,7 +41,7 @@ class Date extends \PHPFUI\Input\Input
 	 * @param string $date in YYYY/MM/DD format
 	 * @deprecated use addAttribute('max', ...) instead. Will be removed in V7.
 	 */
-	public function setMaxDate(string $date) : Date
+	public function setMaxDate(string $date) : static
 		{
 		$this->addAttribute('max', $date);
 
@@ -54,7 +55,7 @@ class Date extends \PHPFUI\Input\Input
 	 * @param string $date in YYYY/MM/DD format
 	 * @deprecated use addAttribute('max', ...) instead. Will be removed in V7.
 	 */
-	public function setMinDate(string $date) : Date
+	public function setMinDate(string $date) : static
 		{
 		$this->addAttribute('min', $date);
 

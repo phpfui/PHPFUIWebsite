@@ -9,11 +9,8 @@ namespace PHPFUI\InstaDoc;
  */
 class Section
 	{
-	protected \PHPFUI\InstaDoc\Controller $controller;
-
-	public function __construct(\PHPFUI\InstaDoc\Controller $controller)
+	public function __construct(protected \PHPFUI\InstaDoc\Controller $controller)
 		{
-		$this->controller = $controller;
 		}
 
 	public function generate(\PHPFUI\InstaDoc\PageInterface $page, string $object) : \PHPFUI\Container
@@ -43,6 +40,9 @@ class Section
 		return \array_pop($parts);
 		}
 
+	/**
+	 * @param array<string> $allowedMenus
+	 */
 	public function getMenu(string $className, array $allowedMenus) : ?\PHPFUI\Menu
 		{
 		$menu = new \PHPFUI\Menu();

@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 $tabs = new \PHPFUI\Tabs();
 $tabs->addTab('One', 'Check me out! I\'m a super cool Tab panel with text content!');

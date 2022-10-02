@@ -4,7 +4,6 @@ namespace Example;
 
 class ComposerVersion extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct([$this, 'processPost']);
@@ -15,7 +14,7 @@ class ComposerVersion extends \Example\Page
 
 		if ($parameters)
 			{
-			$parameters = json_decode($parameters, true);
+			$parameters = \json_decode($parameters, true);
 			}
 		else
 			{
@@ -28,14 +27,16 @@ class ComposerVersion extends \Example\Page
 		$this->addBody($form);
 		}
 
+	/** @param array<string, string> $post */
 	public function processPost(array $post) : void
 		{
-		\PHPFUI\Session::setFlash('post', json_encode($_POST));
+		\PHPFUI\Session::setFlash('post', \json_encode($_POST));
 		$version = $post['version'] ?? '';
 		$constraint = $post['constraint'] ?? '';
+
 		if (! $constraint || ! $version)
 			{
-			\PHPFUI\Session::setFlash('alert', json_encode('constraint and / or version field not found'));
+			\PHPFUI\Session::setFlash('alert', \json_encode('constraint and / or version field not found'));
 
 			return;
 			}
@@ -44,20 +45,18 @@ class ComposerVersion extends \Example\Page
 			{
 			if (\Composer\Semver\Semver::satisfies($version, $constraint))
 				{
-				\PHPFUI\Session::setFlash('success', json_encode("Version '<b>{$version}</b>' satifies constraint '<b>{$constraint}</b>'"));
+				\PHPFUI\Session::setFlash('success', \json_encode("Version '<b>{$version}</b>' satifies constraint '<b>{$constraint}</b>'"));
 
 				return;
 				}
 			}
 		catch (\Throwable $e)
 			{
-			\PHPFUI\Session::setFlash('alert', json_encode($e->getMessage()));
+			\PHPFUI\Session::setFlash('alert', \json_encode($e->getMessage()));
 
 			return;
 			}
 
-		\PHPFUI\Session::setFlash('warning', json_encode("Version '<b>{$version}</b>' is not allowed for constraint '<b>{$constraint}</b>'"));
+		\PHPFUI\Session::setFlash('warning', \json_encode("Version '<b>{$version}</b>' is not allowed for constraint '<b>{$constraint}</b>'"));
 		}
-
 	}
-

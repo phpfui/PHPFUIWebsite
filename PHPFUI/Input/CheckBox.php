@@ -37,7 +37,7 @@ class CheckBox extends \PHPFUI\Input\Input
 		return (bool)$this->checked;
 		}
 
-	public function setChecked(?bool $checked = true) : CheckBox
+	public function setChecked(?bool $checked = true) : static
 		{
 		$this->checked = $checked ? ' checked' : '';
 
@@ -46,7 +46,7 @@ class CheckBox extends \PHPFUI\Input\Input
 
 	protected function getEnd() : string
 		{
-		return "{$this->getHint()}";
+		return (string)$this->getHint();
 		}
 
 	protected function getStart() : string

@@ -9,8 +9,10 @@ class SortableTable extends \PHPFUI\Table
 	{
 	private string $columnParameter = 'c';
 
+	/** @var array<string, string> */
 	private array $parameters = [];
 
+	/** @var array<string, int> */
 	private array $sortableColumns = [];
 
 	private string $sortedColumn = '';
@@ -57,6 +59,8 @@ class SortableTable extends \PHPFUI\Table
 
 	/**
 	 * Get parameters parsed off the url
+	 *
+	 * @return array<string, string>
 	 */
 	public function getParsedParameters() : array
 		{
@@ -78,7 +82,7 @@ class SortableTable extends \PHPFUI\Table
 	/**
 	 * Set the column and sort direction parameter names.
 	 */
-	public function setParameters(string $column = 'c', string $sort = 's') : SortableTable
+	public function setParameters(string $column = 'c', string $sort = 's') : static
 		{
 		$this->columnParameter = $column;
 		$this->sortParameter = $sort;
@@ -88,8 +92,10 @@ class SortableTable extends \PHPFUI\Table
 
 	/**
 	 * Set the valid sortable columns
+	 *
+	 * @param array<string> $columns
 	 */
-	public function setSortableColumns(array $columns) : SortableTable
+	public function setSortableColumns(array $columns) : static
 		{
 		$this->sortableColumns = \array_flip($columns);
 
@@ -99,7 +105,7 @@ class SortableTable extends \PHPFUI\Table
 	/**
 	 * Set the current sorted column and sorted order.
 	 */
-	public function setSortedColumnOrder(string $column, string $order) : SortableTable
+	public function setSortedColumnOrder(string $column, string $order) : static
 		{
 		$order = \strtolower($order);
 

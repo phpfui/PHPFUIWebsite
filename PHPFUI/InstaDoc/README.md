@@ -1,4 +1,4 @@
-# PHPFUI\InstaDoc Library [![Tests](https://github.com/phpfui/InstaDoc/actions/workflows/tests.yml/badge.svg)](https://github.com/phpfui/InstaDoc/actions?query=workflow%3Atests) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/InstaDoc.svg)](https://packagist.org/packages/phpfui/InstaDoc)
+# PHPFUI\InstaDoc Library [![Tests](https://github.com/phpfui/InstaDoc/actions/workflows/tests.yml/badge.svg)](https://github.com/phpfui/InstaDoc/actions?query=workflow%3Atests) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/InstaDoc.svg)](https://packagist.org/packages/phpfui/InstaDoc) ![](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat)
 
 ## A quick and easy way to add documentation to your PHP project
 
@@ -28,7 +28,7 @@ But with PHPFUI/InstaDoc, you can document your site in about a minute (OK, mayb
  * 5+ line config compatible with all PHP frameworks, or standalone.
  * Uses [Foundation CSS framework](https://get.foundation) for a great experience on mobile.
 
-### Install PHPFUI/InstaDoc (requires PHP >= 7.4)
+### Install PHPFUI/InstaDoc (requires PHP >= 8.0)
 ```
 composer require phpfui/InstaDoc
 ```

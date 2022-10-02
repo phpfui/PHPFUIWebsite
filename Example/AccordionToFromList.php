@@ -19,15 +19,15 @@ class AccordionToFromList extends \Example\Page
 
 		if ($post)
 			{
-			$posted = json_decode($post, true);
+			$posted = \json_decode($post, true);
 			$inGroup = $model->getSelected($posted[$name . '-in'] ?? []);
 			$notInGroup = $model->getSelected($posted[$name . '-out'] ?? []);
 			}
 
-		if (0 == count($inGroup) + count($notInGroup))
+		if (0 == \count($inGroup) + \count($notInGroup))
 			{
-			$inGroup = $model->getFiltered(static function($countryName) {return strpos(' AEIOU', $countryName[0]);});
-			$notInGroup = $model->getFiltered(static function($countryName) {return ! strpos(' AEIOU', $countryName[0]);});
+			$inGroup = $model->getFiltered(static function($countryName) {return \strpos(' AEIOU', $countryName[0]);});
+			$notInGroup = $model->getFiltered(static function($countryName) {return ! \strpos(' AEIOU', $countryName[0]);});
 			}
 
 		$toFromList = new \Example\View\CountryAccordionToFromList($this, $name, $model, $inGroup, $notInGroup);

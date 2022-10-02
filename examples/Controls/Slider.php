@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $container->add(new \PHPFUI\Slider(25));

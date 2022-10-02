@@ -1,4 +1,5 @@
 <?php
+
 $topbar = new \PHPFUI\TopBar();
 $topbar->addLeft($this->makeMenu(new \PHPFUI\DropDownMenu(), 'Site Title', '', $this->subMenu()));
 

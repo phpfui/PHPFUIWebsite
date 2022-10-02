@@ -1,4 +1,5 @@
 <?php
+
 $breadCrumbs = new \PHPFUI\BreadCrumbs();
 $breadCrumbs->addCrumb('Home', '#');
 $breadCrumbs->addCrumb('Features', '#');

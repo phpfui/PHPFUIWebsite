@@ -4,7 +4,7 @@ namespace Example\Model;
 
 class Country
 	{
-
+	/** @var array<array<string, string>> */
 	private array $countries = [];
 
 	public function __construct()
@@ -19,23 +19,26 @@ class Country
 			}
 		}
 
+	/** @return array<array<string, string>> */
 	public function getCountries() : array
 		{
 		return $this->countries;
 		}
 
+	/** @return array<string, string> */
 	public function getCountry(int $index) : array
 		{
 		return $this->countries[$index] ?? [];
 		}
 
+	/** @return array<array<string, string>> */
 	public function getFiltered(callable $filter) : array
 		{
 		$filtered = [];
 
 		foreach ($this->countries as $country)
 			{
-			if (call_user_func($filter, $country['Country']))
+			if (\call_user_func($filter, $country['Country']))
 				{
 				$filtered[$country['Country'][0]][] = $country;
 				}
@@ -44,6 +47,11 @@ class Country
 		return $filtered;
 		}
 
+	/**
+	 * @param array<int> $selected
+	 *
+	 * @return array<string, array<string, string>>
+	 */
 	public function getSelected(array $selected) : array
 		{
 		$group = [];
@@ -52,9 +60,8 @@ class Country
 			{
 			$group[$this->countries[$index]['Country'][0]][] = $this->countries[$index];
 			}
-		ksort($group);
+		\ksort($group);
 
 		return $group;
 		}
-
 	}

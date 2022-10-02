@@ -4,21 +4,21 @@ namespace PHPFUI\InstaDoc;
 
 class NamespaceTree
 	{
-	private static $activeClass;
+	private static string $activeClass;
 
-	private static $activeNamespace;
+	private static string $activeNamespace;
 
 	/**
-	 * @var array indexed by namespace part containing a NamespaceTree
+	 * @var array<string, NamespaceTree> indexed by namespace part containing a NamespaceTree
 	 */
 	private array $children = [];
 
 	/**
-	 * @var array indexed by fully qualified class name containing the file name
+	 * @var array<string, string> indexed by fully qualified class name containing the file name
 	 */
 	private array $classes = [];
 
-	private static $controller;
+	private static \PHPFUI\InstaDoc\Controller $controller;
 
 	/**
 	 * @var bool true if this namespace is in the local git repo
@@ -26,7 +26,7 @@ class NamespaceTree
 	private bool $localGit = false;
 
 	/**
-	 * @var array of unique markdown files indexed by file name
+	 * @var array<string, bool> of unique markdown files indexed by file name
 	 */
 	private array $md = [];
 
@@ -38,9 +38,9 @@ class NamespaceTree
 	/**
 	 * @var NamespaceTree our parent
 	 */
-	private $parent = null;
+	private ?\PHPFUI\InstaDoc\NamespaceTree $parent = null;
 
-	private static $root = null;
+	private static ?\PHPFUI\InstaDoc\NamespaceTree $root = null;
 
 	// only we can make us to ensure the tree is good
 	private function __construct()
@@ -81,7 +81,7 @@ class NamespaceTree
 			$filename = $fileinfo->getFilename();
 			$filenameLength = \strlen($filename);
 
-			if ($fileinfo->isDir() && false === \strpos($filename, '.'))
+			if ($fileinfo->isDir() && ! \str_contains($filename, '.'))
 				{
 				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
 				}
@@ -133,7 +133,7 @@ class NamespaceTree
 		}
 
 	/**
-	 * Returns array of all classes
+	 * @return array<string, string> all classes
 	 */
   public static function getAllClasses(?NamespaceTree $tree = null) : array
 		{
@@ -159,6 +159,9 @@ class NamespaceTree
 		return $classes;
 		}
 
+	/**
+	 * @return array<string>
+	 */
 	public static function getAllMDFiles(?NamespaceTree $tree = null) : array
 		{
 		if (! $tree)
@@ -175,13 +178,16 @@ class NamespaceTree
 		return $files;
 		}
 
+	/**
+	 * @return array<string, NamespaceTree> indexed by namespace part containing a NamespaceTree
+	 */
 	public function getChildren() : array
 		{
 		return $this->children;
 		}
 
 	/**
-	 * Return an array with full paths of all the classes in the
+	 * @return array<string, string> an array with full paths of all the classes in the
 	 * namespace, indexed by class name
 	 */
   public function getClassFilenames() : array
@@ -194,6 +200,9 @@ class NamespaceTree
 		return $this->localGit;
 		}
 
+	/**
+	 * @return array<string> md file names
+	 */
 	public function getMDFiles() : array
 		{
 		return \array_keys($this->md);

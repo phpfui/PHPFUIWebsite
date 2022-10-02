@@ -4,7 +4,6 @@ namespace Example;
 
 class OrderableTable extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -29,5 +28,4 @@ class OrderableTable extends \Example\Page
 			}
 		$this->addBody($table);
 		}
-
 	}

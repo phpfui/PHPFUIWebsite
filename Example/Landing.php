@@ -4,7 +4,6 @@ namespace Example;
 
 class Landing extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -19,5 +18,4 @@ class Landing extends \Example\Page
 
 		$this->addBody($ul);
 		}
-
 	}

@@ -7,6 +7,7 @@ namespace PHPFUI\Input;
  */
 class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	{
+	/** @var array<array<string, string | bool>> */
 	protected array $buttons = [];
 
 	protected bool $separateRows = false;
@@ -20,7 +21,7 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	 */
 	public function __construct(string $name, string $label = '', ?string $value = null)
 		{
-		parent::__construct('radio', $name, $label, $value);
+		parent::__construct('radio', $name, $label, (string)$value);
 		}
 
 	/**
@@ -30,7 +31,7 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	 * @param string $value for the button returned on post
 	 * @param bool $disabled default false
 	 */
-	public function addButton(string $label, ?string $value = null, bool $disabled = false) : RadioGroup
+	public function addButton(string $label, ?string $value = null, bool $disabled = false) : static
 		{
 		if (null === $value)
 			{
@@ -38,8 +39,8 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 			}
 
 		$this->buttons[] = ['label' => $label,
-			'value' => $value,
-			'disabled' => $disabled ? 'disabled' : '', ];
+			'value' => (string)$value,
+			'disabled' => $disabled];
 
 		return $this;
 		}
@@ -58,7 +59,7 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 	 *
 	 * @param bool $sep default true
 	 */
-	public function setSeparateRows(bool $sep = true) : RadioGroup
+	public function setSeparateRows(bool $sep = true) : static
 		{
 		$this->separateRows = $sep;
 
@@ -107,6 +108,6 @@ class RadioGroup extends \PHPFUI\Input\Input implements \Countable
 
 		$output->add($rows);
 
-		return "{$output}";
+		return (string)$output;
 		}
 	}

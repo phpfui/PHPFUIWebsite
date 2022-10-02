@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $input = new \PHPFUI\Input\Text('inputLabel', 'Input Label');
@@ -10,7 +11,7 @@ $input->addAttribute('aria-describedby', $helpText->getId());
 $container->add($input);
 $container->add($helpText);
 
-$container->add(new \PHPFUI\Input\Number('puppies', 'How many puppies?', 100));
+$container->add(new \PHPFUI\Input\Number('puppies', 'How many puppies?', '100'));
 $books = new \PHPFUI\Input\TextArea('books', 'What books did you read over summer break?');
 $books->addAttribute('placeholder', 'None');
 $container->add($books);
@@ -29,6 +30,7 @@ $color->addButton('Yellow');
 
 $checkBoxes = new \PHPFUI\CheckBoxGroup('Check these out');
 $checkBoxes->setToolTip('This is a tool tip you can add to any input field');
+
 for ($i = 1; $i <= 3; ++$i)
 	{
 	$checkBoxes->addCheckBox(new \PHPFUI\Input\CheckBoxBoolean('cb' . $i, 'Checkbox ' . $i));

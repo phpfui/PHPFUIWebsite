@@ -1,4 +1,5 @@
 <?php
+
 $table = new \PHPFUI\Table();
 $table->setCaption('This is the table caption');
 $table->addArrowNavigation($this);
@@ -12,7 +13,7 @@ for ($i = 0; $i < 10; ++$i)
 
 	foreach ($headers as $field)
 		{
-		$numbers[$field] = rand();
+		$numbers[$field] = \rand();
 		}
 
 	$numbers['Edit'] = new \PHPFUI\Input\Text('edit[]');

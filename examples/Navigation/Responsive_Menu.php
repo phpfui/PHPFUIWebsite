@@ -1,4 +1,5 @@
 <?php
+
 $menu = new \PHPFUI\Menu();
 $menu->setIconAlignment('left');
 $menu->addClass('vertical medium-horizontal');

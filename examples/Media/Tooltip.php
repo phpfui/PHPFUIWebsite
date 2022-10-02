@@ -1,4 +1,5 @@
 <?php
+
 $container = new \PHPFUI\Container();
 
 $toolTip = new \PHPFUI\ToolTip('scarabaeus', 'Fancy word for a beetle');

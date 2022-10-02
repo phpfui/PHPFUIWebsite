@@ -4,7 +4,7 @@ namespace Example\View;
 
 class Abide
 	{
-
+	/** @param array<string, string> $parameters */
 	public function __construct(private \PHPFUI\Page $page, private array $parameters)
 		{
 		}
@@ -45,10 +45,10 @@ class Abide
 		$state = new \Example\View\State($this->page, 'state', 'State of Residence', $this->parameters['state'] ?? '');
 		$optionalFields->add(new \PHPFUI\MultiColumn($date, $time, $state));
 		$movie = new \PHPFUI\Input\RadioGroup('movie', 'Favorite Movie Franchise', $this->parameters['movie'] ?? '');
-		$movie->addButton('Star Wars', 1);
-		$movie->addButton('Star Trek', 2);
-		$movie->addButton('Monty Python', 3);
-		$movie->addButton('Batman', 4);
+		$movie->addButton('Star Wars', '1');
+		$movie->addButton('Star Trek', '2');
+		$movie->addButton('Monty Python', '3');
+		$movie->addButton('Batman', '4');
 		$optionalFields->add($movie);
 
 		$file = new \PHPFUI\Input\File($this->page, 'resume', 'Upload Your Resume');
@@ -62,5 +62,4 @@ class Abide
 
 		return $container;
 		}
-
 	}

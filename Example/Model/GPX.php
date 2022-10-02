@@ -4,9 +4,12 @@ namespace Example\Model;
 
 class GPX
 	{
+	private string $name;
 
+	/** @var array<string, float> */
 	private array $mileages = [];
 
+	/** @var array<string, string | float> */
 	private array $rows = [];
 
 	private float $ascent = 0.0;
@@ -15,13 +18,15 @@ class GPX
 
 	private float $totalDistance = 0.0;
 
+	/** @param array<string, string> $file */
 	public function __construct(private array $file, private string $unit = 'mi')
 		{
-		$this->name = str_replace('_', ' ', $this->file['name']);
-		$dotIndex = strpos($this->name, '.');
+		$this->name = \str_replace('_', ' ', $this->file['name']);
+		$dotIndex = \strpos($this->name, '.');
+
 		if ($dotIndex)
 			{
-			$this->name = substr($this->name, 0, $dotIndex);
+			$this->name = \substr($this->name, 0, $dotIndex);
 			}
 		}
 
@@ -30,14 +35,14 @@ class GPX
 		return $this->totalDistance;
 		}
 
-	public function getAscent() : int
+	public function getAscent() : float
 		{
-		return round($this->ascent);
+		return \round($this->ascent);
 		}
 
-	public function getDescent() : int
+	public function getDescent() : float
 		{
-		return round($this->descent);
+		return \round($this->descent);
 		}
 
 	public function getFileName() : string
@@ -45,6 +50,7 @@ class GPX
 		return $this->name;
 		}
 
+	/** @return array<string, string | float> */
 	public function getData() : array
 		{
 		return $this->rows;
@@ -52,13 +58,14 @@ class GPX
 
 	public function validate() : string
 		{
-		$file = file_get_contents($this->file['tmp_name']);
+		$file = \file_get_contents($this->file['tmp_name']);
+
 		if (! $file)
 			{
-			return "Error reading file";
+			return 'Error reading file';
 			}
 
-		$xml = simplexml_load_string($file);
+		$xml = \simplexml_load_string($file);
 
 		if (empty($xml->trk->trkseg->trkpt))
 			{
@@ -81,6 +88,7 @@ class GPX
 			$temp = (array)$element;
 			$elevation = $temp['ele'];
 			$elevationDiff = $elevation - $lastElevation;
+
 			if ($elevationDiff > 0)
 				{
 				$this->ascent += $elevationDiff;
@@ -92,9 +100,11 @@ class GPX
 			$lastElevation = $elevation;
 			$key = $temp['@attributes']['lat'] . ',' . $temp['@attributes']['lon'];
 			$next = new \League\Geotools\Coordinate\Coordinate($key);
+
 			if ($last)
 				{
 				$distance = $geotools->distance()->setFrom($last)->setTo($next);
+				// @phpstan-ignore-next-line
 				$mileage = $distance->in($this->unit)->greatCircle();
 				}
 			$this->totalDistance += $mileage;
@@ -104,6 +114,7 @@ class GPX
 
 		$this->rows = [];
 		$lastMileage = 0;
+
 		foreach ($xml->wpt as $element)
 			{
 			$data = (array)$element;
@@ -114,21 +125,17 @@ class GPX
 			$lastMileage = $mileage;
 			}
 
-		if ($this->unit == 'mi')
+		if ('mi' == $this->unit)
 			{
 			$this->ascent *= 3.28084;
 			$this->descent *= 3.28084;
 			}
 
 		return '';
-		return new \PHPFUI\Debug($this->rows);
 		}
 
-	public function getCueSheet() : \Example\Report\Cuesheet
+	public function getCueSheet() : \Example\Report\CueSheet
 		{
-		$cuesheet = new \Example\Report\Cuesheet();
-
-		return $cuesheet;
+		return new \Example\Report\CueSheet();
 		}
-
 	}

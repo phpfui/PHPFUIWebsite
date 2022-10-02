@@ -4,7 +4,6 @@ namespace Example;
 
 class AbideValidation extends \Example\Page
 	{
-
 	public function __construct()
 		{
 		parent::__construct();
@@ -15,7 +14,7 @@ class AbideValidation extends \Example\Page
 
 		if ($parameters)
 			{
-			$parameters = json_decode($parameters, true);
+			$parameters = \json_decode($parameters, true);
 			}
 		else
 			{
@@ -25,11 +24,12 @@ class AbideValidation extends \Example\Page
 		$form->add($abide->render());
 		$buttonGroup = new \PHPFUI\ButtonGroup();
 		$buttonGroup->addButton(new \PHPFUI\Submit('Save', 'save'));
-		$buttonGroup->addButton((new \PHPFUI\Reset('Clear'))->addClass('warning'));
+		$clear = new \PHPFUI\Reset('Clear');
+		$clear->addClass('warning');
+		$buttonGroup->addButton($clear);
 		$form->add($buttonGroup);
 		$form->add(new \PHPFUI\FormError());
 
 		$this->addBody($form);
 		}
-
 	}

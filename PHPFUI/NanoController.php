@@ -34,10 +34,13 @@ namespace PHPFUI;
  */
 class NanoController implements \PHPFUI\Interfaces\NanoController
 	{
+	/** @var array<string> */
 	private array $errors = [];
 
+	/** @var array<string, array<string, string>> */
 	private array $files = [];
 
+	/** @var array<string, string> */
 	private array $get = [];
 
 	private string $invokedPath = '';
@@ -48,18 +51,16 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 
 	private string $missingMethod = '';
 
+	/** @var array<string, string> */
 	private array $post = [];
 
 	private string $rootNamespace = '';
 
-	private string $uri = '';
-
 	/**
 	 * Construct the controller.  You generally pass $_SERVER['REQUEST_URI'], but it is up to you.
 	 */
-	public function __construct(string $uri)
+	public function __construct(private string $uri)
 		{
-		$this->uri = $uri;
 		// initialize all the parameters to defaults
 		$reflection = new \ReflectionClass($this);
 		$methods = $reflection->getMethods();
@@ -68,7 +69,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 			{
 			$name = $method->name;
 
-			if (0 === \strpos($name, 'set'))
+			if (\str_starts_with($name, 'set'))
 				{
 				// call the set function with default parameters
 				$this->{$name}();
@@ -83,18 +84,20 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		}
 
 	/**
-	 * @return array of errors found, for diagnostic information
+	 * @return array<string> of errors found, for diagnostic information
 	 */
 	public function getErrors() : array
 		{
 		return \array_keys($this->errors);
 		}
 
+	/** @return array<string, array<string, string>> */
 	public function getFiles() : array
 		{
 		return $this->files;
 		}
 
+	/** @return array<string, string> $files */
 	public function getGet() : array
 		{
 		return $this->get;
@@ -110,6 +113,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		return \str_replace('\\', '/', $invokedPath);
 		}
 
+	/** @return array<string, string> $files */
 	public function getPost() : array
 		{
 		return $this->post;
@@ -176,14 +180,16 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		return $this->punt($class);
 		}
 
-	public function setFiles(array $files = []) : self
+	/** @param array<string, array<string, string>> $files */
+	public function setFiles(array $files = []) : static
 		{
 		$this->files = $files;
 
 		return $this;
 		}
 
-	public function setGet(array $get = []) : self
+	/** @param array<string, string> $get */
+	public function setGet(array $get = []) : static
 		{
 		$this->get = $get;
 
@@ -193,7 +199,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	/**
 	 * If no class::method is found in the URI, return an instance of this class.
 	 */
-	public function setMissingClass(string $missingClass = 'App\\Missing') : self
+	public function setMissingClass(string $missingClass = 'App\\Missing') : static
 		{
 		$this->missingClass = $missingClass;
 
@@ -203,7 +209,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	/**
 	 * If no URI (or /) is provided, return an instance of this class.
 	 */
-	public function setHomePageClass(string $homePageClass = 'App\\HomePage') : self
+	public function setHomePageClass(string $homePageClass = 'App\\HomePage') : static
 		{
 		$this->homePageClass = $homePageClass;
 
@@ -213,14 +219,15 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	/**
 	 * If a class is found, but a method is not, then try calling this missing method. If no missing method is defined, go back up the tree looking for this method.
 	 */
-	public function setMissingMethod(string $missingMethod = '') : self
+	public function setMissingMethod(string $missingMethod = '') : static
 		{
 		$this->missingMethod = $missingMethod;
 
 		return $this;
 		}
 
-	public function setPost(array $post = []) : self
+	/** @param array<string, string> $post */
+	public function setPost(array $post = []) : static
 		{
 		$this->post = $post;
 
@@ -230,7 +237,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	/**
 	 * Namespace prefix for your classes so they don't have to be in the root namespace
 	 */
-	public function setRootNamespace(string $namespace = 'App') : self
+	public function setRootNamespace(string $namespace = 'App') : static
 		{
 		$this->rootNamespace = $namespace;
 
@@ -247,6 +254,9 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 
 	/**
 	 * Test if the class and method exists, and if so, return the instantiated class with the method called
+	 *
+	 * @param array<string> $class
+	 * @param array<string> $parts
 	 *
 	 * @return null|\PHPFUI\Interfaces\NanoClass null value indicates class::method was not found
 	 */
@@ -310,13 +320,13 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 			if ($parameter->hasType())
 				{
 				$type = $parameter->getType();
-				/** @phpstan-ignore-next-line */
+				// @phpstan-ignore-next-line
 				$parameterType = $type->getName();
 
-				/** @phpstan-ignore-next-line */
+				// @phpstan-ignore-next-line
 				if ($type->isBuiltIn())
 					{
-					/** @phpstan-ignore-next-line */
+					// @phpstan-ignore-next-line
 					switch ($type->getName())
 						{
 						case 'array': // remaining arguments are put into this parameter and processing stops
@@ -356,6 +366,8 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 
 	/**
 	 * We can't find a Class\Method pair, so just find a class and check if it has a landing page if defined, else go up one level.
+	 *
+	 * @param array<string> $classParts
 	 *
 	 * @return \PHPFUI\Interfaces\NanoClass object will return the missing class if the missing method can't be loaded
 	 */
