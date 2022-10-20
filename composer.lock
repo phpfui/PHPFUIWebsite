@@ -1716,28 +1716,28 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V22.9.0",
+            "version": "V22.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "91eceaf1d1ffce100b478ce2698a2873a993503d"
+                "reference": "29cb41babaacf59e22efb60143c813f1fec046e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/91eceaf1d1ffce100b478ce2698a2873a993503d",
-                "reference": "91eceaf1d1ffce100b478ce2698a2873a993503d",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/29cb41babaacf59e22efb60143c813f1fec046e4",
+                "reference": "29cb41babaacf59e22efb60143c813f1fec046e4",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.3",
                 "php": ">=8.0 <8.2",
-                "phpstan/phpstan": "^1.8",
                 "spatie/guzzle-rate-limiter-middleware": "^2.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "gitonomy/gitlib": ">=1.2",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": ">=9.0",
                 "roave/security-advisories": "dev-latest",
                 "symfony/yaml": "^5.3"
@@ -1770,9 +1770,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V22.9.0"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V22.10.0"
             },
-            "time": "2022-09-16T05:11:07+00:00"
+            "time": "2022-10-20T05:11:09+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
@@ -2217,65 +2217,6 @@
                 }
             ],
             "time": "2022-10-07T12:23:10+00:00"
-        },
-        {
-            "name": "phpstan/phpstan",
-            "version": "1.8.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0c4459dc42c568b818b3f25186589f3acddc1823",
-                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2|^8.0"
-            },
-            "conflict": {
-                "phpstan/phpstan-shim": "*"
-            },
-            "bin": [
-                "phpstan",
-                "phpstan.phar"
-            ],
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHPStan - PHP Static Analysis Tool",
-            "keywords": [
-                "dev",
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.10"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/ondrejmirtes",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/phpstan",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-10-17T14:23:35+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6601,6 +6542,65 @@
                 }
             ],
             "time": "2022-10-12T14:20:51+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "1.8.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0c4459dc42c568b818b3f25186589f3acddc1823",
+                "reference": "0c4459dc42c568b818b3f25186589f3acddc1823",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.10"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-10-17T14:23:35+00:00"
         },
         {
             "name": "psr/event-dispatcher",

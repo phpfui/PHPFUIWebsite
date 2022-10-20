@@ -29,7 +29,7 @@ class ContactsFileImport extends \PHPFUI\ConstantContact\Base
 	 * exceeds 4 MB, only the contacts contained in the first 4 MB are imported
 	 * and the remaining data is dropped.
 	 *
-	 * @param file $file The CSV file you are importing. The column headings that you can use in the file are: `first_name`,
+	 * @param string $file The CSV file you are importing. The column headings that you can use in the file are: `first_name`,
 `last_name`, `email`, `phone`, `job_title`, `anniversary`, `birthday_day`, `birthday_month`, `company_name`, `street`, `street2`, `city`, `state`, `zip`, and `country`. The only required column heading is `email`.
 
 
@@ -37,7 +37,7 @@ You can also use custom fields as column headings. Enter the custom field name p
 
 	 * @param array $list_ids Specify which contact lists you are adding all imported contacts to as an array of up to 50 contact `list_id` values.
 	 */
-	public function post(file $file, array $list_ids) : array
+	public function post(string $file, array $list_ids) : array
 		{
 
 		return $this->doPost(['file' => $file, 'list_ids' => $list_ids, ]);
