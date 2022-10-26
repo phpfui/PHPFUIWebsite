@@ -22,6 +22,7 @@ else
 		'Example',
 		'Gitonomy',
 		'GuzzleHttp',
+		'Druidfi',
 		'Highlight',
 		'Html2Text',
 		'HtmlValidator',
