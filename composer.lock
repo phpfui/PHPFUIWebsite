@@ -980,16 +980,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.4.2",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "3148458748274be1546f8f2809a6c09fe66f44aa"
+                "reference": "67c26b443f348a51926030c83481b85718457d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/3148458748274be1546f8f2809a6c09fe66f44aa",
-                "reference": "3148458748274be1546f8f2809a6c09fe66f44aa",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
+                "reference": "67c26b443f348a51926030c83481b85718457d3d",
                 "shasum": ""
             },
             "require": {
@@ -1079,7 +1079,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.2"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
             },
             "funding": [
                 {
@@ -1095,7 +1095,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-25T13:49:28+00:00"
+            "time": "2022-10-26T14:07:24+00:00"
         },
         {
             "name": "html2text/html2text",
@@ -1186,16 +1186,16 @@
         },
         {
             "name": "league/geotools",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/geotools.git",
-                "reference": "9ddb49c708408b95c37f53fda06ca791c6ce9244"
+                "reference": "489e9a1c7a3de8e1aed380ced90dde25c4ca12e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/geotools/zipball/9ddb49c708408b95c37f53fda06ca791c6ce9244",
-                "reference": "9ddb49c708408b95c37f53fda06ca791c6ce9244",
+                "url": "https://api.github.com/repos/thephpleague/geotools/zipball/489e9a1c7a3de8e1aed380ced90dde25c4ca12e5",
+                "reference": "489e9a1c7a3de8e1aed380ced90dde25c4ca12e5",
                 "shasum": ""
             },
             "require": {
@@ -1261,7 +1261,7 @@
                 "issues": "https://github.com/thephpleague/geotools/issues",
                 "source": "https://github.com/thephpleague/geotools"
             },
-            "time": "2022-02-11T08:56:59+00:00"
+            "time": "2022-10-26T19:43:53+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2081,16 +2081,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.2.0",
+            "version": "V6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "1c641a999f97bc06972a4752f0daab8d5c1ab17f"
+                "reference": "1dfd12962e918d5c89605a3550d1af897721243e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/1c641a999f97bc06972a4752f0daab8d5c1ab17f",
-                "reference": "1c641a999f97bc06972a4752f0daab8d5c1ab17f",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/1dfd12962e918d5c89605a3550d1af897721243e",
+                "reference": "1dfd12962e918d5c89605a3550d1af897721243e",
                 "shasum": ""
             },
             "require": {
@@ -2142,9 +2142,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.2.0"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.2.1"
             },
-            "time": "2022-10-02T20:58:00+00:00"
+            "time": "2022-10-20T00:19:09+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
