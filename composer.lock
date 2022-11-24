@@ -1920,16 +1920,16 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.2.2",
+            "version": "V1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "d79792f012f4447d3179c4b3973e0b9602a00888"
+                "reference": "0434de5abf73b7ce5ff08da574b9ca7e686319e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/d79792f012f4447d3179c4b3973e0b9602a00888",
-                "reference": "d79792f012f4447d3179c4b3973e0b9602a00888",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/0434de5abf73b7ce5ff08da574b9ca7e686319e4",
+                "reference": "0434de5abf73b7ce5ff08da574b9ca7e686319e4",
                 "shasum": ""
             },
             "require": {
@@ -1980,9 +1980,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.2.2"
+                "source": "https://github.com/phpfui/InstaDoc/tree/V1.2.3"
             },
-            "time": "2022-11-08T16:18:33+00:00"
+            "time": "2022-11-23T16:08:32+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -2040,16 +2040,16 @@
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.2.1",
+            "version": "V6.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "1dfd12962e918d5c89605a3550d1af897721243e"
+                "reference": "b3aeb763b6d91c550d04e5c08080d31201fcfce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/1dfd12962e918d5c89605a3550d1af897721243e",
-                "reference": "1dfd12962e918d5c89605a3550d1af897721243e",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/b3aeb763b6d91c550d04e5c08080d31201fcfce8",
+                "reference": "b3aeb763b6d91c550d04e5c08080d31201fcfce8",
                 "shasum": ""
             },
             "require": {
@@ -2101,9 +2101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.2.1"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.2.2"
             },
-            "time": "2022-10-20T00:19:09+00:00"
+            "time": "2022-11-23T16:17:19+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",

@@ -158,11 +158,10 @@ class Controller
 
 			$div = new \PHPFUI\GridX();
 			$div->add($section->getBreadCrumbs($fullClassName));
-
-			$cell = new \PHPFUI\Cell();
 			$div->add(' &nbsp; ');
 			$icon = new \PHPFUI\FAIcon('far', 'clipboard');
 			$icon->setToolTip('Send Constructor to Clipboard');
+			$div->add($icon);
 			$callout = new \PHPFUI\Callout('success');
 			$callout->add('Copied!');
 			$callout->addClass('small');
@@ -170,7 +169,6 @@ class Controller
 			$parameters = \str_replace("\n", '', $parameters);
 			// @phpstan-ignore-next-line hack for now
 			$page->addCopyToClipboard("new \\{$fullClassName}({$parameters});", $icon, $callout);
-			$page->setDebug(1);
 			$div->add($callout);
 			$mainColumn->add($div);
 

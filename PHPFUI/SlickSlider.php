@@ -4,6 +4,8 @@ namespace PHPFUI;
 
 /**
  * Wrapper for a carousel http://kenwheeler.github.io/slick/
+ *
+ * To use, you will need to add the correct css and fonts from the subtrees/kenwheeler/slick directory
  */
 class SlickSlider extends \PHPFUI\HTML5Element
 	{
@@ -30,7 +32,7 @@ class SlickSlider extends \PHPFUI\HTML5Element
 	 * Add an image and alt text to the slider
 	 *
 	 * @param string $image path/filename of image to add
-	 * @param string $alt text
+	 * @param string $alt caption
 	 */
 	public function addImage(string $image, string $alt = '') : SlickSlider
 		{
@@ -95,7 +97,7 @@ class SlickSlider extends \PHPFUI\HTML5Element
 
 	protected function getStart() : string
 		{
-		$js = '$("#' . $this->getId() . '").slick(' . \PHPFUI\TextHelper::arrayToJS($this->attributes) . ');$(".slick-slider").show();';
+		$js = '$("#' . $this->getId() . '").slick(' . \PHPFUI\TextHelper::arrayToJS($this->attributes) . ');$("#' . $this->getId() . '").show();';
 		$this->page->addJavaScript($js);
 
 		return parent::getStart();
