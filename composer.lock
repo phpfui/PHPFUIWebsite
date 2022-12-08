@@ -1739,21 +1739,21 @@
         },
         {
             "name": "phpfui/constantcontact",
-            "version": "V22.10.1",
+            "version": "V22.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/ConstantContact.git",
-                "reference": "43ad995b998225e8004d5568f1cd19ef8cdbe9e7"
+                "reference": "90f31e19b05c7af0ac19ced14b2436bca3c6dd7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/43ad995b998225e8004d5568f1cd19ef8cdbe9e7",
-                "reference": "43ad995b998225e8004d5568f1cd19ef8cdbe9e7",
+                "url": "https://api.github.com/repos/phpfui/ConstantContact/zipball/90f31e19b05c7af0ac19ced14b2436bca3c6dd7b",
+                "reference": "90f31e19b05c7af0ac19ced14b2436bca3c6dd7b",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.3",
-                "php": ">=8.0 <8.2",
+                "php": ">=8.0 <8.3",
                 "spatie/guzzle-rate-limiter-middleware": "^2.0"
             },
             "require-dev": {
@@ -1793,31 +1793,32 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/ConstantContact/issues",
-                "source": "https://github.com/phpfui/ConstantContact/tree/V22.10.1"
+                "source": "https://github.com/phpfui/ConstantContact/tree/V22.12.0"
             },
-            "time": "2022-10-21T05:11:09+00:00"
+            "time": "2022-12-07T19:05:04+00:00"
         },
         {
             "name": "phpfui/html-unit-tester",
-            "version": "V1.0.7",
+            "version": "V1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/HTMLUnitTester.git",
-                "reference": "5ecef82d813ce79e97dcfba7ca0421c031ef7040"
+                "reference": "bf87c8140059d991457d93e20b5d763facfa82e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/5ecef82d813ce79e97dcfba7ca0421c031ef7040",
-                "reference": "5ecef82d813ce79e97dcfba7ca0421c031ef7040",
+                "url": "https://api.github.com/repos/phpfui/HTMLUnitTester/zipball/bf87c8140059d991457d93e20b5d763facfa82e5",
+                "reference": "bf87c8140059d991457d93e20b5d763facfa82e5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4 <8.2",
+                "php": ">=7.4 <8.3",
                 "rexxars/html-validator": ">=2.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.2",
                 "phpfui/phpunit-syntax-coverage": ">=1.0",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^7.0 | <10.0",
                 "roave/security-advisories": "dev-latest"
             },
@@ -1850,9 +1851,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/HTMLUnitTester/issues",
-                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.7"
+                "source": "https://github.com/phpfui/HTMLUnitTester/tree/V1.0.8"
             },
-            "time": "2021-11-25T15:09:19+00:00"
+            "time": "2022-12-07T20:35:05+00:00"
         },
         {
             "name": "phpfui/icalendar",
@@ -1986,24 +1987,25 @@
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
-            "version": "V1.0.6",
+            "version": "V1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/MySQLSlowQueryParser.git",
-                "reference": "9a7b26246fe4f2524e17fb1a254cc05e0789666e"
+                "reference": "c05864a1d3edfb7347d16ec6167aa3ed5a1c9857"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/9a7b26246fe4f2524e17fb1a254cc05e0789666e",
-                "reference": "9a7b26246fe4f2524e17fb1a254cc05e0789666e",
+                "url": "https://api.github.com/repos/phpfui/MySQLSlowQueryParser/zipball/c05864a1d3edfb7347d16ec6167aa3ed5a1c9857",
+                "reference": "c05864a1d3edfb7347d16ec6167aa3ed5a1c9857",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4 <8.2"
+                "php": ">=7.4 <8.3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "phpfui/phpunit-syntax-coverage": "^1.0",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": ">=9.0",
                 "roave/security-advisories": "dev-latest"
             },
@@ -2034,22 +2036,22 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/MySQLSlowQueryParser/issues",
-                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.6"
+                "source": "https://github.com/phpfui/MySQLSlowQueryParser/tree/V1.0.7"
             },
-            "time": "2021-11-26T03:05:57+00:00"
+            "time": "2022-12-07T19:28:50+00:00"
         },
         {
             "name": "phpfui/phpfui",
-            "version": "V6.2.2",
+            "version": "V6.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/phpfui.git",
-                "reference": "b3aeb763b6d91c550d04e5c08080d31201fcfce8"
+                "reference": "0fa67ec80f18afc2d640f7acf4d63c7abaac6a54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/b3aeb763b6d91c550d04e5c08080d31201fcfce8",
-                "reference": "b3aeb763b6d91c550d04e5c08080d31201fcfce8",
+                "url": "https://api.github.com/repos/phpfui/phpfui/zipball/0fa67ec80f18afc2d640f7acf4d63c7abaac6a54",
+                "reference": "0fa67ec80f18afc2d640f7acf4d63c7abaac6a54",
                 "shasum": ""
             },
             "require": {
@@ -2057,7 +2059,7 @@
                 "fortawesome/font-awesome": "^5 | ^6",
                 "google/recaptcha": "^1.2",
                 "igorescobar/jquery-mask-plugin": "^1.14",
-                "php": ">=8.0 <8.2",
+                "php": ">=8.0 <8.3",
                 "zurb/foundation": "^6.6"
             },
             "require-dev": {
@@ -2101,30 +2103,31 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/phpfui/issues",
-                "source": "https://github.com/phpfui/phpfui/tree/V6.2.2"
+                "source": "https://github.com/phpfui/phpfui/tree/V6.2.3"
             },
-            "time": "2022-11-23T16:17:19+00:00"
+            "time": "2022-12-07T21:08:46+00:00"
         },
         {
             "name": "phpfui/phpunit-syntax-coverage",
-            "version": "V1.0.5",
+            "version": "V1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/PHPUnitSyntaxCoverage.git",
-                "reference": "b82aa10c993398effef68f80c8cb39a8c28c856f"
+                "reference": "f6eae5c9459b1dc7ef0744c74d3b9f70f3fa930d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/b82aa10c993398effef68f80c8cb39a8c28c856f",
-                "reference": "b82aa10c993398effef68f80c8cb39a8c28c856f",
+                "url": "https://api.github.com/repos/phpfui/PHPUnitSyntaxCoverage/zipball/f6eae5c9459b1dc7ef0744c74d3b9f70f3fa930d",
+                "reference": "f6eae5c9459b1dc7ef0744c74d3b9f70f3fa930d",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4.13",
-                "php": ">=8.0  <8.2"
+                "php": ">=8.0  <8.3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": ">=8.0",
                 "roave/security-advisories": "dev-latest",
                 "symfony/translation-contracts": ">=2.3"
@@ -2159,9 +2162,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/PHPUnitSyntaxCoverage/issues",
-                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.5"
+                "source": "https://github.com/phpfui/PHPUnitSyntaxCoverage/tree/V1.0.6"
             },
-            "time": "2022-06-09T14:40:54+00:00"
+            "time": "2022-12-07T22:42:24+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -4770,16 +4773,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.1.1",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918"
+                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918",
-                "reference": "07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/1ee04c65529dea5d8744774d474e7cbd2f1206d3",
+                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3",
                 "shasum": ""
             },
             "require": {
@@ -4788,7 +4791,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.1-dev"
+                    "dev-main": "3.3-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -4817,7 +4820,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.1.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.0"
             },
             "funding": [
                 {
@@ -4833,7 +4836,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-25T11:15:52+00:00"
+            "time": "2022-11-25T10:21:52+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -6949,16 +6952,16 @@
         },
         {
             "name": "symfony/event-dispatcher-contracts",
-            "version": "v3.1.1",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "02ff5eea2f453731cfbc6bc215e456b781480448"
+                "reference": "0782b0b52a737a05b4383d0df35a474303cabdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/02ff5eea2f453731cfbc6bc215e456b781480448",
-                "reference": "02ff5eea2f453731cfbc6bc215e456b781480448",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/0782b0b52a737a05b4383d0df35a474303cabdae",
+                "reference": "0782b0b52a737a05b4383d0df35a474303cabdae",
                 "shasum": ""
             },
             "require": {
@@ -6971,7 +6974,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.1-dev"
+                    "dev-main": "3.3-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -7008,7 +7011,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.1.1"
+                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.2.0"
             },
             "funding": [
                 {
@@ -7024,7 +7027,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-25T11:15:52+00:00"
+            "time": "2022-11-25T10:21:52+00:00"
         },
         {
             "name": "symfony/filesystem",

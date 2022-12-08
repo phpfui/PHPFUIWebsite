@@ -8,16 +8,20 @@ class Parser
 
 	private const TIME = '# Time: ';
 
+	/** @var array<int, \PHPFUI\MySQLSlowQuery\Entry> */
 	private array $entries = [];
 
+	/** @var array<int, string> */
 	private array $extraLines = [];
 
 	private string $fileName = '';
 
+	// @phpstan-ignore-next-line
 	private $handle;
 
 	private bool $inSession = true;
 
+	/** @var array<int, \PHPFUI\MySQLSlowQuery\Session> */
 	private array $sessions = [];
 
 	private string $sortColumn = 'Query_time';
@@ -39,6 +43,8 @@ class Parser
 	 *
 	 * @throws Exception\EmptyLog
 	 * @throws Exception\LogLine
+	 * @return array<int, \PHPFUI\MySQLSlowQuery\Entry>
+	 *
 	 */
 	public function getEntries(int $session = -1) : array
 		{
@@ -66,10 +72,10 @@ class Parser
 		}
 
 	/**
-	 * Return \PHPFUI\MySQLSlowQuery\Session sessions from file
-	 *
 	 * @throws Exception\EmptyLog
 	 * @throws Exception\LogLine
+	 * @return array<int, \PHPFUI\MySQLSlowQuery\Session> sessions from file
+	 *
 	 */
 	public function getSessions() : array
 		{
@@ -114,7 +120,7 @@ class Parser
 		return $lhs->{$column} <=> $rhs->{$column};
 		}
 
-	private function getNextLine()
+	private function getNextLine() : string
 		{
 		if ($this->extraLines)
 			{
@@ -163,7 +169,8 @@ class Parser
 
 				$query = [];
 
-				while (\strlen($line = $this->getNextLine()) && '#' !== $line[0])
+				// @phpstan-ignore-next-line
+				while (\strlen($line = $this->getNextLine()) > 0 && '#' !== $line[0])
 					{
 					if (0 === \stripos($line, self::PORT))	// found a session
 						{
@@ -179,10 +186,7 @@ class Parser
 
 						break;
 						}
-
-
-						$query[] = \trim($line);
-
+					$query[] = \trim($line);
 					}
 
 				if (\strlen($line) && '#' === $line[0])
