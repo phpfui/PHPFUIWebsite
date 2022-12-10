@@ -1857,23 +1857,24 @@
         },
         {
             "name": "phpfui/icalendar",
-            "version": "V1.0.4",
+            "version": "V1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/icalendar.git",
-                "reference": "e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a"
+                "reference": "295592cc1c0e171aca3cb8379a33d7c3c3094491"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a",
-                "reference": "e0eadcc8e6e9cdd3c0074122dcb8365b02e1800a",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/295592cc1c0e171aca3cb8379a33d7c3c3094491",
+                "reference": "295592cc1c0e171aca3cb8379a33d7c3c3094491",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4 <8.2"
+                "php": ">=7.4 <8.3"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.3",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^8.4 | ^9.0"
             },
             "type": "library",
@@ -1900,6 +1901,7 @@
                 "calendar",
                 "daylight",
                 "file",
+                "iCalendar",
                 "management",
                 "rfc2445",
                 "rfc5545",
@@ -1915,7 +1917,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/icalendar/issues",
-                "source": "https://github.com/phpfui/icalendar/tree/V1.0.4"
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.5"
             },
             "time": "2019-10-31T00:00:00+00:00"
         },
@@ -2566,16 +2568,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.26",
+            "version": "9.5.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "851867efcbb6a1b992ec515c71cdcf20d895e9d2"
+                "reference": "a2bc7ffdca99f92d959b3f2270529334030bba38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/851867efcbb6a1b992ec515c71cdcf20d895e9d2",
-                "reference": "851867efcbb6a1b992ec515c71cdcf20d895e9d2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a2bc7ffdca99f92d959b3f2270529334030bba38",
+                "reference": "a2bc7ffdca99f92d959b3f2270529334030bba38",
                 "shasum": ""
             },
             "require": {
@@ -2648,7 +2650,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.26"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.27"
             },
             "funding": [
                 {
@@ -2664,7 +2666,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-28T06:00:21+00:00"
+            "time": "2022-12-09T07:31:23+00:00"
         },
         {
             "name": "pimple/pimple",

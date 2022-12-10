@@ -1,12 +1,11 @@
 <?php
 /**
- * ical.php	create iCalendar data structure
+ * Create iCalendar data structure
  *
- * @package	ZapCalLib
  * @author	Dan Cogliano <http://zcontent.net>
  * @copyright   Copyright (C) 2006 - 2018 by Dan Cogliano
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
- * @link	http://icalendar.org/php-library.html
+ * @link http://phpfui.com/?n=ICalendarOrg
  */
 
 namespace ICalendarOrg;
@@ -18,17 +17,13 @@ class ZCiCal
 	{
 	/**
 	 * The most recently created  node in the tree
-	 *
-	 * @var object
 	 */
-	public $curnode = null;
+	public ?ZCiCalNode $curnode = null;
 
 	/**
 	 * The root node of the object tree
-	 *
-	 * @var object
 	 */
-	public $tree = null;
+	public ?ZCiCalNode $tree = null;
 
 	/**
 	 * The main iCalendar object containing ZCiCalDataNodes and ZCiCalNodes.
@@ -39,20 +34,16 @@ class ZCiCal
 	 * @param int $maxevents maximum # of events to read
 	 * @param int $startevent starting event to read
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function __construct(string $data = '', int $maxevents = 1000000, int $startevent = 0)
 		{
+
 		if ('' != $data)
 			{
 			// unfold lines
 			// first change all eol chars to "\n"
-			$data = \str_replace(["\r\n", "\n\r", "\n", "\r"], "\n", $data);
-			// now unfold lines
-			//$data = str_replace(array("\n ", "\n	"),"!?", $data);
-			$data = \str_replace(["\n ", "\n	"], '', $data);
-			// replace special iCal chars
-			$data = \str_replace(['\\\\', "\,", "\;"], ['\\', ',', ';'], $data);
+			$data = \str_replace(["\r\n", "\n\r", "\r"], "\n", $data);
 
 			// parse each line
 			$lines = \explode("\n", $data);
@@ -141,7 +132,7 @@ class ZCiCal
 									}
 								else
 									{
-									$this->curnode->data[$datanode->getName()]->value[] = $datanode->value[0];
+									$this->curnode->data[$datanode->getName()]->values[] = $datanode->values[0];
 									}
 								}
 							else
@@ -152,9 +143,12 @@ class ZCiCal
 									}
 								else
 									{
-									$tnode = $this->curnode->data[$datanode->getName()];
-									$this->curnode->data[$datanode->getName()] = [];
-									$this->curnode->data[$datanode->getName()][] = $tnode;
+									if (! \is_array($this->curnode->data[$datanode->getName()]))
+										{
+										$tnode = $this->curnode->data[$datanode->getName()];
+										$this->curnode->data[$datanode->getName()] = [];
+										$this->curnode->data[$datanode->getName()][] = $tnode;
+										}
 									$this->curnode->data[$datanode->getName()][] = $datanode;
 									}
 								}
@@ -170,7 +164,7 @@ class ZCiCal
 								}
 							else
 								{
-								$this->curnode->data[$datanode->getName()]->value[] = $datanode->value[0];
+								$this->curnode->data[$datanode->getName()]->values[] = $datanode->values[0];
 								}
 							}
 						else
@@ -181,9 +175,12 @@ class ZCiCal
 								}
 							else
 								{
-								$tnode = $this->curnode->data[$datanode->getName()];
-								$this->curnode->data[$datanode->getName()] = [];
-								$this->curnode->data[$datanode->getName()][] = $tnode;
+								if (! \is_array($this->curnode->data[$datanode->getName()]))
+									{
+									$tnode = $this->curnode->data[$datanode->getName()];
+									$this->curnode->data[$datanode->getName()] = [];
+									$this->curnode->data[$datanode->getName()][] = $tnode;
+									}
 								$this->curnode->data[$datanode->getName()][] = $datanode;
 								}
 							}
@@ -287,25 +284,25 @@ class ZCiCal
 	 *
 	 * @param object $thisnode The parent object
 	 *
-	 * @return object The child object
+	 * @return ?object The child object
 	 */
-	public function getFirstChild($thisnode)
+	public function getFirstChild($thisnode) : ?object
 		{
 		if (\count($thisnode->child) > 0)
 			{
 			return $thisnode->child[0];
 			}
 
-
+		return null;
 		}
 
 	/**
 	 * Get first event in object list
 	 * Use getNextEvent() to navigate through list
 	 *
-	 * @return object The first event, or null
+	 * @return ?object The first event, or null
 	 */
-	public function getFirstEvent()
+	public function getFirstEvent() : ?object
 		{
 		if ($this->countEvents() > 0)
 			{
@@ -327,16 +324,16 @@ class ZCiCal
 			return $child;
 			}
 
-
+		return null;
 		}
 
 	/**
 	 * Get first venue in object list
 	 * Use getNextVenue() to navigate through list
 	 *
-	 * @return object The first venue, or null
+	 * @return ?object The first venue, or null
 	 */
-	public function getFirstVenue()
+	public function getFirstVenue() : ?object
 		{
 		if ($this->countVenues() > 0)
 			{
@@ -358,7 +355,7 @@ class ZCiCal
 			return $child;
 			}
 
-
+		return null;
 		}
 
 	/**
@@ -424,29 +421,29 @@ class ZCiCal
 	 *
 	 * Returning array contains the following array keys: tzoffsetfrom, tzoffsetto, tzname, dtstart, rrule
 	 *
-	 * @param array $node timezone object
+	 * @param ZCiCalNode $node timezone object
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
-	public static function getTZValues($node)
+	public static function getTZValues(ZCiCalNode $node) : array
 		{
 		$tzvalues = [];
 
-		$tnode = @$node->data['TZOFFSETFROM'];
+		$tnode = $node->data['TZOFFSETFROM'];
 
 		if (null != $tnode)
 			{
 			$tzvalues['tzoffsetfrom'] = $tnode->getValues();
 			}
 
-		$tnode = @$node->data['TZOFFSETTO'];
+		$tnode = $node->data['TZOFFSETTO'];
 
 		if (null != $tnode)
 			{
 			$tzvalues['tzoffsetto'] = $tnode->getValues();
 			}
 
-		$tnode = @$node->data['TZNAME'];
+		$tnode = $node->data['TZNAME'];
 
 		if (null != $tnode)
 			{
@@ -457,14 +454,14 @@ class ZCiCal
 			$tzvalues['tzname'] = '';
 			}
 
-		$tnode = @$node->data['DTSTART'];
+		$tnode = $node->data['DTSTART'];
 
 		if (null != $tnode)
 			{
 			$tzvalues['dtstart'] = \ICalendarOrg\ZDateHelper::fromiCaltoUnixDateTime($tnode->getValues());
 			}
 
-		$tnode = @$node->data['RRULE'];
+		$tnode = $node->data['RRULE'];
 
 		if (null != $tnode)
 			{
