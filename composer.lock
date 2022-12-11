@@ -1857,16 +1857,16 @@
         },
         {
             "name": "phpfui/icalendar",
-            "version": "V1.0.5",
+            "version": "V1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/icalendar.git",
-                "reference": "295592cc1c0e171aca3cb8379a33d7c3c3094491"
+                "reference": "367e893da2e9567faa65116e2bd377b836f432cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/295592cc1c0e171aca3cb8379a33d7c3c3094491",
-                "reference": "295592cc1c0e171aca3cb8379a33d7c3c3094491",
+                "url": "https://api.github.com/repos/phpfui/icalendar/zipball/367e893da2e9567faa65116e2bd377b836f432cc",
+                "reference": "367e893da2e9567faa65116e2bd377b836f432cc",
                 "shasum": ""
             },
             "require": {
@@ -1917,7 +1917,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/icalendar/issues",
-                "source": "https://github.com/phpfui/icalendar/tree/V1.0.5"
+                "source": "https://github.com/phpfui/icalendar/tree/V1.0.6"
             },
             "time": "2019-10-31T00:00:00+00:00"
         },
