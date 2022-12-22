@@ -18,7 +18,7 @@ class ComposerVersion
 		$packagist = new \PHPFUI\Link('https://packagist.org/', 'Packagist.org');
 		$rules = new \PHPFUI\Link('https://getcomposer.org/doc/articles/versions.md', 'here');
 		$callout->add("Getting Composer constraints are often not obvious. This form uses the same {$semver}
-									library to test version constraints so you won't be surprized when you upload to {$packagist}.
+									library to test version constraints so you won't be surprised when you upload to {$packagist}.
 									You can find all the Composer version rules {$rules}.");
 		$container->add($callout);
 

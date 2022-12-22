@@ -26,7 +26,7 @@ exec($composer . ' update');
 
 // Localize files
 $updater = new ComposerUpdate();
-
+$updater->setNoNameSpaceDirectory(__DIR__);
 $updater->setIgnoredRepos([
 	'components',
 	'doctrine',
@@ -55,7 +55,6 @@ $updater->deleteNamespace('Highlight\Highlight');
 $updater->deleteNamespace('Highlight\HighlightUtilities');
 $updater->deleteNamespace('HighlightUtilities');
 $updater->deleteNamespace('cebe\markdown\tests');
-$updater->deleteFileInNamespace('NoNameSpace', 'fpdf.php');
 $updater->deleteFileInNamespace('DeepCopy', 'deep_copy.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
@@ -68,6 +67,16 @@ if ($php == 'php')
 	{
 	echo "Running under Windows, exiting.\n";
 	exit;
+	}
+
+// move blog posts in to blog directory
+foreach (new \DirectoryIterator(PROJECT_ROOT) as $fileInfo)
+	{
+	$file = $fileInfo->getFilename();
+	if (str_ends_with($file, '.md') && ! str_starts_with($file, 'README'))
+		{
+		\rename($fileInfo->getPathname(), __DIR__ . '/blog/' . $file);
+		}
 	}
 
 // Stage all changed files

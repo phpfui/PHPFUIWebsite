@@ -506,8 +506,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function get(string $id, int $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object
     {
-        if ($this->isCompiled() && isset($this->removedIds[$id])) {
-            return ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $invalidBehavior ? parent::get($id) : null;
+        if ($this->isCompiled() && isset($this->removedIds[$id]) && ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $invalidBehavior) {
+            return parent::get($id);
         }
 
         return $this->doGet($id, $invalidBehavior);
@@ -524,9 +524,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         }
         try {
             if (ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE === $invalidBehavior) {
-                return $this->privates[$id] ?? parent::get($id, $invalidBehavior);
+                return parent::get($id, $invalidBehavior);
             }
-            if (null !== $service = $this->privates[$id] ?? parent::get($id, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
+            if ($service = parent::get($id, ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
                 return $service;
             }
         } catch (ServiceCircularReferenceException $e) {
@@ -1029,8 +1029,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
         $arguments = $this->doResolveServices($parameterBag->unescapeValue($parameterBag->resolveValue($arguments)), $inlineServices, $isConstructorArgument);
 
-        if (null !== $id && $definition->isShared() && (isset($this->services[$id]) || isset($this->privates[$id])) && (true === $tryProxy || !$definition->isLazy())) {
-            return $this->services[$id] ?? $this->privates[$id];
+        if (null !== $id && $definition->isShared() && isset($this->services[$id]) && (true === $tryProxy || !$definition->isLazy())) {
+            return $this->services[$id];
         }
 
         if (null !== $factory) {
@@ -1587,11 +1587,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         $inlineServices[$id ?? spl_object_hash($definition)] = $service;
 
         if (null !== $id && $definition->isShared()) {
-            if ($definition->isPrivate() && $this->isCompiled()) {
-                $this->privates[$id] = $service;
-            } else {
-                $this->services[$id] = $service;
-            }
+            $this->services[$id] = $service;
             unset($this->loading[$id]);
         }
     }

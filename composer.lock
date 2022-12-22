@@ -1183,8 +1183,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "League\\Geotools\\": "src",
-                    "League\\Geotools\\Tests\\": "tests"
+                    "League\\Geotools\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

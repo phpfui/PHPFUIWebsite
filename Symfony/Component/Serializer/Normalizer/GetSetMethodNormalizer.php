@@ -117,17 +117,17 @@ class GetSetMethodNormalizer extends AbstractObjectNormalizer
         $ucfirsted = ucfirst($attribute);
 
         $getter = 'get'.$ucfirsted;
-        if (method_exists($object, $getter) && \is_callable([$object, $getter])) {
+        if (\is_callable([$object, $getter])) {
             return $object->$getter();
         }
 
         $isser = 'is'.$ucfirsted;
-        if (method_exists($object, $isser) && \is_callable([$object, $isser])) {
+        if (\is_callable([$object, $isser])) {
             return $object->$isser();
         }
 
         $haser = 'has'.$ucfirsted;
-        if (method_exists($object, $haser) && \is_callable([$object, $haser])) {
+        if (\is_callable([$object, $haser])) {
             return $object->$haser();
         }
 
@@ -140,14 +140,7 @@ class GetSetMethodNormalizer extends AbstractObjectNormalizer
         $key = $object::class.':'.$setter;
 
         if (!isset(self::$setterAccessibleCache[$key])) {
-            try {
-                // We have to use is_callable() here since method_exists()
-                // does not "see" protected/private methods
-                self::$setterAccessibleCache[$key] = \is_callable([$object, $setter]) && !(new \ReflectionMethod($object, $setter))->isStatic();
-            } catch (\ReflectionException $e) {
-                // Method does not exist in the class, probably a magic method
-                self::$setterAccessibleCache[$key] = false;
-            }
+            self::$setterAccessibleCache[$key] = \is_callable([$object, $setter]) && !(new \ReflectionMethod($object, $setter))->isStatic();
         }
 
         if (self::$setterAccessibleCache[$key]) {

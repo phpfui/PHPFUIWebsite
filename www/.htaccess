@@ -4,6 +4,4 @@ ErrorDocument 404 /Missing
 #RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule !\.(php|html|js|ico|gif|jpg|png|css|ttf|eot|svg|woff|woff2)$ /index.php
-Header set X-Content-Type-Options nosniff
-Header set X-Frame-Options SAMEORIGIN
 

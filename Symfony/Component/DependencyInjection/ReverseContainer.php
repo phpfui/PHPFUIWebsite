@@ -63,6 +63,10 @@ final class ReverseContainer
      */
     public function getService(string $id): object
     {
+        if ($this->serviceContainer->has($id)) {
+            return $this->serviceContainer->get($id);
+        }
+
         if ($this->reversibleLocator->has($id)) {
             return $this->reversibleLocator->get($id);
         }
@@ -71,6 +75,7 @@ final class ReverseContainer
             throw new ServiceNotFoundException($id, null, null, [], sprintf('The "%s" service is private and cannot be accessed by reference. You should either make it public, or tag it as "%s".', $id, $this->tagName));
         }
 
-        return $this->serviceContainer->get($id);
+        // will throw a ServiceNotFoundException
+        $this->serviceContainer->get($id);
     }
 }

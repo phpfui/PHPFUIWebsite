@@ -72,10 +72,9 @@ final class LazyServiceDumper implements DumperInterface
             $instantiation .= sprintf(' $this->%s[%s] =', $definition->isPublic() && !$definition->isPrivate() ? 'services' : 'privates', var_export($id, true));
         }
 
-        $asGhostObject = str_contains($factoryCode, '$proxy');
-        $proxyClass = $this->getProxyClass($definition, $asGhostObject);
+        $proxyClass = $this->getProxyClass($definition);
 
-        if (!$asGhostObject) {
+        if (!str_contains($factoryCode, '$proxy')) {
             return <<<EOF
                     if (true === \$lazyLoad) {
                         $instantiation \$this->createProxy('$proxyClass', fn () => \\$proxyClass::createLazyProxy(fn () => $factoryCode));
@@ -105,7 +104,7 @@ final class LazyServiceDumper implements DumperInterface
         if (!$this->isProxyCandidate($definition, $asGhostObject, $id)) {
             throw new InvalidArgumentException(sprintf('Cannot instantiate lazy proxy for service "%s".', $id ?? $definition->getClass()));
         }
-        $proxyClass = $this->getProxyClass($definition, $asGhostObject, $class);
+        $proxyClass = $this->getProxyClass($definition, $class);
 
         if ($asGhostObject) {
             try {
@@ -143,12 +142,10 @@ final class LazyServiceDumper implements DumperInterface
         }
     }
 
-    public function getProxyClass(Definition $definition, bool $asGhostObject, \ReflectionClass &$class = null): string
+    public function getProxyClass(Definition $definition, \ReflectionClass &$class = null): string
     {
         $class = new \ReflectionClass($definition->getClass());
 
-        return preg_replace('/^.*\\\\/', '', $class->name)
-            .($asGhostObject ? 'Ghost' : 'Proxy')
-            .ucfirst(substr(hash('sha256', $this->salt.'+'.$class->name), -7));
+        return preg_replace('/^.*\\\\/', '', $class->name).'_'.substr(hash('sha256', $this->salt.'+'.$class->name), -7);
     }
 }

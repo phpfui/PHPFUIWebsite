@@ -545,10 +545,10 @@ EOF;
             if (!$definition = $this->isProxyCandidate($definition, $asGhostObject, $id)) {
                 continue;
             }
-            if (isset($alreadyGenerated[$asGhostObject][$class = $definition->getClass()])) {
+            if (isset($alreadyGenerated[$class = $definition->getClass()])) {
                 continue;
             }
-            $alreadyGenerated[$asGhostObject][$class] = true;
+            $alreadyGenerated[$class] = true;
             // register class' reflector for resource tracking
             $this->container->getReflectionClass($class);
             if ("\n" === $proxyCode = "\n".$proxyDumper->getProxyCode($definition, $id)) {

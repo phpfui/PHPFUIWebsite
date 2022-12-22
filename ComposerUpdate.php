@@ -6,20 +6,29 @@ class ComposerUpdate
 
 	private string $vendorDir = 'vendor/';
 
+	private string $noNameSpaceDir = 'NoNameSpace/';
+
 	private array $skipFiles = ['changelog', 'changes', 'license', 'conduct', 'contribut', 'upgrad', 'security', 'license', 'bug',  ];
 
 	private array $ignored = [];
 
 	public function setBaseDirectory(string $baseDir) : static
 		{
-		$this->baseDir = $baseDir;
+		$this->baseDir = $this->appendSlash($baseDir);
 
 		return $this;
 		}
 
-	public function setVendorDirectory(string $vendorDir) : static
+	public function setVendorDirectory(string $dir) : static
 		{
-		$this->vendorDir = $vendorDir;
+		$this->vendorDir = $this->appendSlash($dir);
+
+		return $this;
+		}
+
+	public function setNoNameSpaceDirectory(string $dir) : static
+		{
+		$this->noNameSpaceDir = $this->appendSlash($dir);
 
 		return $this;
 		}
@@ -33,26 +42,35 @@ class ComposerUpdate
 
 	public function copyFileFiltered(string $item, string $file, bool $phpFiles) : bool
 		{
-		$lcFile = strtolower($file);
-		if ($phpFiles && str_ends_with($lcFile, '.php'))
+		$lcFile = \strtolower($file);
+
+		if ($phpFiles && \str_ends_with($lcFile, '.php'))
 			{
-			return \copy( str_replace('\\', '/', $item),  str_replace('\\', '/', $file));
+			return \copy(str_replace('\\', '/', $item), str_replace('\\', '/', $file));
 			}
 
-		if (! str_ends_with($lcFile, '.md'))
+		if (! \str_ends_with($lcFile, '.md'))
 			{
 			return false;
 			}
 
 		foreach ($this->skipFiles as $skip)
 			{
-			if (str_contains($lcFile, $skip))
+			if (\str_contains($lcFile, $skip))
 				{
 				return false;
 				}
 			}
 
-			return \copy( str_replace('\\', '/', $item),  str_replace('\\', '/', $file));
+		// make sure directory exists
+		$dir = \substr($file, 0, \strrpos($file, '/'));
+
+		if (! \is_dir($dir))
+			{
+			return false;
+			}
+
+		return \copy(str_replace('\\', '/', $item), str_replace('\\', '/', $file));
 		}
 
 	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
@@ -89,7 +107,8 @@ class ComposerUpdate
 	public function deleteFileInNamespace(string $nameSpace, string $file) : void
 		{
 		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
-		if (! is_dir($path))
+
+		if (! \is_dir($path))
 			{
 			return;
 			}
@@ -107,7 +126,8 @@ class ComposerUpdate
 	public function deleteNamespace(string $nameSpace) : void
 		{
 		$path = \str_replace('\\', '/', $this->baseDir . $nameSpace);
-		if (! is_dir($path))
+
+		if (! \is_dir($path))
 			{
 			return;
 			}
@@ -126,11 +146,7 @@ class ComposerUpdate
 		{
 		foreach ($sources as $sourceDir)
 			{
-			if (str_starts_with($sourceDir, 'test'))
-				{
-				continue;
-				}
-			echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
+			//echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
 
 			if ($destDir)
 				{
@@ -140,6 +156,7 @@ class ComposerUpdate
 				$this->copyFiles($sourceDir, $localDestDir);
 				}
 			}
+
 		if ($destDir)
 			{
 			// copy project .md files
@@ -212,20 +229,32 @@ class ComposerUpdate
 					foreach ($autoload['classmap'] as $file)
 						{
 						$from = 'vendor/' . $install['name'] . '/' . $file;
-						$to = 'NoNameSpace/' . $file;
+						$to = $this->noNameSpaceDir . $file;
 						\copy( str_replace('\\', '/', $from),  str_replace('\\', '/', $to));
 						}
 					}
-				else
-					{
-					echo "No autoload for {$install['name']}\n";
-					}
+
+
+//					echo "No autoload for {$install['name']}\n";
+
 				}
-			else
-				{
-				echo "No autoloader for {$install['name']}\n";
-				}
+
+
+//				echo "No autoloader for {$install['name']}\n";
+
 			}
 		}
+
+	private function appendSlash(string $dir) : string
+		{
+		$dir = rtrim($dir, '\\');
+		if (! str_ends_with($dir, '/'))
+			{
+			$dir .= '/';
+			}
+
+		return $dir;
+		}
+
 	}
 

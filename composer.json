@@ -11,7 +11,6 @@
 		"phpfui/constantcontact": ">=21.9",
 		"composer/semver": ">=3.2",
 		"phpunit/phpunit": ">=9.3",
-		"scrivo/highlight.php": "dev-master",
 		"phpfui/icalendar": "^1.0",
 		"phpmailer/phpmailer": "^6.6",
 		"league/geotools": "^1.0",

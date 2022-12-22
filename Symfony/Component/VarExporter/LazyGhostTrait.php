@@ -193,37 +193,17 @@ trait LazyGhostTrait
 
         get_in_scope:
 
-        try {
-            if (null === $scope) {
-                if (null === $readonlyScope) {
-                    return $this->$name;
-                }
-                $value = $this->$name;
-
-                return $value;
+        if (null === $scope) {
+            if (null === $readonlyScope) {
+                return $this->$name;
             }
-            $accessor = Registry::$classAccessors[$scope] ??= Registry::getClassAccessors($scope);
+            $value = $this->$name;
 
-            return $accessor['get']($this, $name, null !== $readonlyScope);
-        } catch (\Error $e) {
-            if (\Error::class !== $e::class || !str_starts_with($e->getMessage(), 'Cannot access uninitialized non-nullable property')) {
-                throw $e;
-            }
-
-            try {
-                if (null === $scope) {
-                    $this->$name = [];
-
-                    return $this->$name;
-                }
-
-                $accessor['set']($this, $name, []);
-
-                return $accessor['get']($this, $name, null !== $readonlyScope);
-            } catch (\Error) {
-                throw $e;
-            }
+            return $value;
         }
+        $accessor = Registry::$classAccessors[$scope] ??= Registry::getClassAccessors($scope);
+
+        return $accessor['get']($this, $name, null !== $readonlyScope);
     }
 
     public function __set($name, $value): void

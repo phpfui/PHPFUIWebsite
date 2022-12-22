@@ -13,8 +13,8 @@ namespace Symfony\Component\DependencyInjection\LazyProxy\Instantiator;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\LazyServiceDumper;
+use Symfony\Component\VarExporter\LazyGhostTrait;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -25,14 +25,10 @@ final class LazyServiceInstantiator implements InstantiatorInterface
     {
         $dumper = new LazyServiceDumper();
 
-        if (!$dumper->isProxyCandidate($definition, $asGhostObject, $id)) {
-            throw new InvalidArgumentException(sprintf('Cannot instantiate lazy proxy for service "%s".', $id));
-        }
-
-        if (!class_exists($proxyClass = $dumper->getProxyClass($definition, $asGhostObject, $class), false)) {
+        if (!class_exists($proxyClass = $dumper->getProxyClass($definition, $class), false)) {
             eval($dumper->getProxyCode($definition, $id));
         }
 
-        return $asGhostObject ? $proxyClass::createLazyGhost($realInstantiator) : $proxyClass::createLazyProxy($realInstantiator);
+        return isset(class_uses($proxyClass)[LazyGhostTrait::class]) ? $proxyClass::createLazyGhost($realInstantiator) : $proxyClass::createLazyProxy($realInstantiator);
     }
 }
