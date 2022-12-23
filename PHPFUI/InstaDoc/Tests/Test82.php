@@ -2,16 +2,6 @@
 
 namespace PHPFUI\InstaDoc\Tests;
 
-trait ConstantsAllowed
-	{
-	public const CONSTANT = 1;
-
-	public function bar() : int
-    {
-		return Foo::CONSTANT;
-    }
-	}
-
 /**
  * A test class with no functionality.
  *
@@ -42,7 +32,7 @@ readonly class Test82
 		return null;
 		}
 
-	public function disjunctiveNormalFormTypes((ConstantsAllowed & Status) | null $post) : void
+	public function disjunctiveNormalFormTypes((ConstantsAllowed82 & Status) | null $post) : void
 		{
 		}
 
