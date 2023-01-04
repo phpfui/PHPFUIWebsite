@@ -16,8 +16,13 @@ class Checkout extends \PHPFUI\HTML5Element
 	{
 	use \PHPFUI\Traits\Page;
 
+	/** @var array<string, string> */
 	private array $functions = [];
 
+	/** @var array<string, string> */
+	private array $options = [];
+
+	/** @var array<string, string> */
 	private array $styles = [
 		'layout' => 'vertical',
 		'size' => 'responsive',
@@ -29,13 +34,20 @@ class Checkout extends \PHPFUI\HTML5Element
 	public function __construct(private \PHPFUI\Interfaces\Page $page, string $clientId)
 		{
 		parent::__construct('div');
-		$this->page->addHeadScript('https://www.paypal.com/sdk/js?client-id=' . $clientId);
+		$this->options['client-id'] = $clientId;
+		}
+
+	public function addOption(string $option, string $value) : static
+		{
+		$this->options[$option] = $value;
+
+		return $this;
 		}
 
 	/**
 	 * You can [style the PayPal buttons](https://developer.paypal.com/docs/archive/checkout/how-to/customize-button/#)
 	 */
-	public function addStyle(string $style, $value = null) : static
+	public function addStyle(string $style, ?string $value = null) : static
 		{
 		if (null === $value)
 			{
@@ -49,6 +61,7 @@ class Checkout extends \PHPFUI\HTML5Element
 		return $this;
 		}
 
+	/** @return array<string, string> */
 	public function getStyle() : array
 		{
 		return $this->styles;
@@ -64,6 +77,7 @@ class Checkout extends \PHPFUI\HTML5Element
 		return $this;
 		}
 
+	/** @param array<string, string> $styles */
 	public function setStyles(array $styles) : static
 		{
 		$this->styles = $styles;
@@ -73,6 +87,7 @@ class Checkout extends \PHPFUI\HTML5Element
 
 	protected function getStart() : string
 		{
+		$this->page->addHeadScript('https://www.paypal.com/sdk/js?' . \http_build_query($this->options));
 		$id = $this->getId();
 		$js = 'paypal.Buttons({style:' . \PHPFUI\TextHelper::arrayToJS($this->styles, "'");
 
