@@ -51,7 +51,7 @@ class NamespaceTree
 		{
 		$filenameLength = \strlen($filename);
 
-		if (\strpos($filename, '.php') == $filenameLength - 4)
+		if (\str_ends_with($filename, '.php'))
 			{
 			$root = self::getRoot();
 			$file = \str_replace('/', '\\', \str_replace('.php', '', $filename));
@@ -78,7 +78,7 @@ class NamespaceTree
 			{
 			$iterator = new \DirectoryIterator($directory);
 			}
-		catch (\Throwable $e)
+		catch (\Throwable)
 			{
 			$iterator = [];
 			}
@@ -92,7 +92,7 @@ class NamespaceTree
 				{
 				self::addNamespace($namespace . '\\' . $filename, $directory . '/' . $filename, $localGit);
 				}
-			elseif (\strpos($filename, '.php') == $filenameLength - 4)
+			elseif (\str_ends_with($filename, '.php'))
 				{
 				$class = \substr($filename, 0, $filenameLength - 4);
 				$class = $namespace . '\\' . $class;

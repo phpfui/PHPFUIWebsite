@@ -1,7 +1,7 @@
 {
 	"require": {
-		"php": ">=8.1",
-		"phpfui/instadoc": ">=1.2",
+		"php": "<8.2",
+		"phpfui/instadoc": "dev-master",
 		"scrivo/highlight.php": "dev-master",
 		"nxp/math-executor": ">=2.0",
 		"nikic/php-parser": ">=4.8",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fa42b5401ed1f0f11d7663003e9d39d",
+    "content-hash": "4f50857b26896852f1b994a455b71ffc",
     "packages": [
         {
             "name": "cache/adapter-common",
@@ -1924,25 +1924,25 @@
         },
         {
             "name": "phpfui/instadoc",
-            "version": "V1.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpfui/InstaDoc.git",
-                "reference": "0434de5abf73b7ce5ff08da574b9ca7e686319e4"
+                "reference": "c948759ce674a8c4290c89b6abfc0d6b18f95694"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/0434de5abf73b7ce5ff08da574b9ca7e686319e4",
-                "reference": "0434de5abf73b7ce5ff08da574b9ca7e686319e4",
+                "url": "https://api.github.com/repos/phpfui/InstaDoc/zipball/c948759ce674a8c4290c89b6abfc0d6b18f95694",
+                "reference": "c948759ce674a8c4290c89b6abfc0d6b18f95694",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "^1.2",
                 "gitonomy/gitlib": "^1.2",
-                "php": ">=8.0 <8.2",
+                "php": ">=8.0 <8.3",
                 "phpdocumentor/reflection-docblock": "^5.0",
                 "phpfui/phpfui": "^6.0",
-                "scrivo/highlight.php": "dev-master",
+                "scrivo/highlight.php": ">=v9.18",
                 "soundasleep/html2text": "^2.0",
                 "voku/simple_html_dom": "^4.7"
             },
@@ -1954,6 +1954,7 @@
                 "phpunit/phpunit": "<10.0",
                 "roave/security-advisories": "dev-latest"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1984,9 +1985,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpfui/InstaDoc/issues",
-                "source": "https://github.com/phpfui/InstaDoc/tree/V1.2.3"
+                "source": "https://github.com/phpfui/InstaDoc/tree/master"
             },
-            "time": "2022-11-23T16:08:32+00:00"
+            "time": "2022-12-28T15:25:25+00:00"
         },
         {
             "name": "phpfui/mysql-slow-log-parser",
@@ -7503,13 +7504,14 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "phpfui/instadoc": 20,
         "scrivo/highlight.php": 20,
         "league/geotools": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1"
+        "php": "<8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
