@@ -55,6 +55,8 @@ $updater->deleteNamespace('Highlight\Highlight');
 $updater->deleteNamespace('Highlight\HighlightUtilities');
 $updater->deleteNamespace('HighlightUtilities');
 $updater->deleteNamespace('cebe\markdown\tests');
+$updater->deleteFileInNamespace('PHPFUI', 'ConstantsAllowed82.php');
+$updater->deleteFileInNamespace('PHPFUI', 'Test82.php');
 $updater->deleteFileInNamespace('DeepCopy', 'deep_copy.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
