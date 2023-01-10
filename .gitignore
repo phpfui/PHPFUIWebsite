@@ -33,4 +33,5 @@ composer.phar
 trackingCode.php
 .php-cs-fixer.cache
 codestyle.bat
+composer.lock
 
