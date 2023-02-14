@@ -1,4 +1,4 @@
-# Zap Calendar iCalendar Library [![Tests](https://github.com/phpfui/icalendar/actions/workflows/tests.yml/badge.svg)](https://github.com/phpfui/icalendar/actions?query=workflow%3Atests) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/icalendar.svg)](https://packagist.org/packages/phpfui/icalendar)
+# Zap Calendar iCalendar Library [![Tests](https://github.com/phpfui/icalendar/actions/workflows/tests.yml/badge.svg)](https://github.com/phpfui/icalendar/actions?query=workflow%3Atests) [![Latest Packagist release](https://img.shields.io/packagist/v/phpfui/icalendar.svg)](https://packagist.org/packages/phpfui/icalendar) ![](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat)
 
 ## A modern 7.4 namespaced fork of [Zap Calendar iCalendar Library](https://github.com/zcontent/icalendar)
 
@@ -33,10 +33,10 @@ Add a start and end date to the event:
 
 ```php
 // add start date
-$eventobj->addNode(new \ICalendarOrg\ZCiCalDataNode("DTSTART:" . \ICalendarOrg\ZCiCal::fromSqlDateTime("2020-01-01 12:00:00")));
+$eventobj->addNode(new \ICalendarOrg\ZCiCalDataNode("DTSTART:" . \ICalendarOrg\ZDateHelper::fromSqlDateTime("2020-01-01 12:00:00")));
 
 // add end date
-$eventobj->addNode(new \ICalendarOrg\ZCiCalDataNode("DTEND:" . \ICalendarOrg\ZCiCal::fromSqlDateTime("2020-01-01 13:00:00")));
+$eventobj->addNode(new \ICalendarOrg\ZCiCalDataNode("DTEND:" . \ICalendarOrg\ZDateHelper::fromSqlDateTime("2020-01-01 13:00:00")));
 ```
 
 Write the object in iCalendar format using the  export() function call:
