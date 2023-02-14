@@ -423,7 +423,6 @@ class ZCRecurringDate
 	 */
 	public function getDates(?int $maxdate = null) : array
 		{
-		//$this->debug = 2;
 		self::debug(1, 'getDates()');
 		$nextdate = $enddate = $this->startdate;
 		$rdates = [];
@@ -557,12 +556,12 @@ class ZCRecurringDate
 				}
 			}
 
-		if ('u' == $this->repeatmode && $rdates[\count($rdates) - 1] > $this->until)
+		if ('u' == $this->repeatmode && $rdates[(\is_countable($rdates) ? \count($rdates) : 0) - 1] > $this->until)
 			{
 			// erase last item
 			\array_pop($rdates);
 			}
-		$count1 = \count($rdates);
+		$count1 = \is_countable($rdates) ? \count($rdates) : 0;
 		$rdates = \array_unique($rdates);
 		$count2 = \count($rdates);
 		$dups = $count1 - $count2;
@@ -703,7 +702,6 @@ class ZCRecurringDate
 								{
 								$rdates[] = $wdate;
 								$count++;
-								//break;
 								}
 							}
 						}

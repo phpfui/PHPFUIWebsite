@@ -36,7 +36,7 @@ class ZCiCal
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct(string $data = '', int $maxevents = 1000000, int $startevent = 0)
+	public function __construct(string $data = '', int $maxevents = 1_000_000, int $startevent = 0)
 		{
 
 		if ('' != $data)
@@ -288,7 +288,7 @@ class ZCiCal
 	 */
 	public function getFirstChild($thisnode) : ?object
 		{
-		if (\count($thisnode->child) > 0)
+		if ((\is_countable($thisnode->child) ? \count($thisnode->child) : 0) > 0)
 			{
 			return $thisnode->child[0];
 			}
