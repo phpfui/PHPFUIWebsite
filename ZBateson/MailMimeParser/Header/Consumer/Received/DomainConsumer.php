@@ -23,16 +23,15 @@ use ZBateson\MailMimeParser\Header\Part\CommentPart;
  * The parenthesized part normally (but not necessarily) following a name must
  * "look like" a tcp-info section of an extended domain as defined by RFC5321.
  * The validation is very purposefully very loose to be accommodating to many
- * erroneous implementations.  Strictly speaking, a domain part, if it exists,
- * must start with an alphanumeric character.  There must be at least one '.' in
- * the domain part, followed by any number of more alphanumeric, '.', and '-'
- * characters.  The address part must be within square brackets, '[]'...
- * although an address outside of square brackets could be matched by the domain
- * matcher if it exists alone within the parentheses.  The address, strictly
- * speaking, is any number of '.', numbers, ':' and letters a-f.  This allows it
- * to match ipv6 addresses as well.  In addition, the address may start with the
- * string "ipv6", and may be followed by a port number as some implementations
- * seem to do.
+ * erroneous implementations.  The only restriction is the host part must
+ * contain two characters, the first being alphanumeric, followed by any number
+ * of more alphanumeric, '.', and '-' characters.  The address part must be
+ * within square brackets, '[]'... although an address outside of square
+ * brackets could be matched by the domain matcher if it exists alone within the
+ * parentheses.  The address is any number of '.', numbers, ':' and letters a-f.
+ * This allows it to match ipv6 addresses as well.  In addition, the address may
+ * start with the string "ipv6", and may be followed by a port number as some
+ * implementations seem to do.
  *
  * Strings in parentheses not matching the aforementioned 'domain/address'
  * pattern will be considered comments, and will be returned as a separate
@@ -41,6 +40,7 @@ use ZBateson\MailMimeParser\Header\Part\CommentPart;
  * @see https://tools.ietf.org/html/rfc5321#section-4.4
  * @see https://github.com/Te-k/pyreceived/blob/master/test.py
  * @author Zaahid Bateson
+ * @author Mariusz Krzaczkowski
  */
 class DomainConsumer extends GenericReceivedConsumer
 {
@@ -66,13 +66,16 @@ class DomainConsumer extends GenericReceivedConsumer
     private function matchHostPart(string $value, ?string &$hostname, ?string &$address) : bool
     {
         $matches = [];
-        $pattern = '~^(?P<name>[a-z0-9\-]+\.[a-z0-9\-\.]+)?\s*(\[(IPv[64])?(?P<addr>[a-f\d\.\:]+)\])?$~i';
+        $pattern = '~^(\[(IPv[64])?(?P<addr1>[a-f\d\.\:]+)\])?\s*(helo=)?(?P<name>[a-z0-9\-]+[a-z0-9\-\.]+)?\s*(\[(IPv[64])?(?P<addr2>[a-f\d\.\:]+)\])?$~i';
         if (\preg_match($pattern, $value, $matches)) {
             if (!empty($matches['name'])) {
                 $hostname = $matches['name'];
             }
-            if (!empty($matches['addr'])) {
-                $address = $matches['addr'];
+            if (!empty($matches['addr1'])) {
+                $address = $matches['addr1'];
+            }
+            if (!empty($matches['addr2'])) {
+                $address = $matches['addr2'];
             }
             return true;
         }
