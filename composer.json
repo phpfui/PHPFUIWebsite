@@ -18,7 +18,8 @@
 		"symfony/dependency-injection": "^6.1",
 		"zbateson/mail-mime-parser": "^2.2",
 		"league/geotools": "dev-master",
-		"druidfi/mysqldump-php": "^1.0"
+		"druidfi/mysqldump-php": "^1.0",
+		"phpfui/translation": "^1.0"
 		},
 	"require-dev": {
 		"rector/rector": "^0.14.5",
