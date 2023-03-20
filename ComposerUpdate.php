@@ -233,15 +233,9 @@ class ComposerUpdate
 						\copy( str_replace('\\', '/', $from),  str_replace('\\', '/', $to));
 						}
 					}
-
-
 //					echo "No autoload for {$install['name']}\n";
-
 				}
-
-
 //				echo "No autoloader for {$install['name']}\n";
-
 			}
 		}
 
