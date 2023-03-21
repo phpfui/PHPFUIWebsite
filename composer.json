@@ -1,7 +1,7 @@
 {
 	"require": {
 		"php": ">=8.1 <8.3",
-		"phpfui/translation": "^1.0",
+		"phpfui/translation": "dev-main",
 		"scrivo/highlight.php": "dev-master",
 		"nxp/math-executor": ">=2.0",
 		"nikic/php-parser": ">=4.8",

@@ -2,7 +2,7 @@
 
 A simple, fast, and memory efficient translation system for PHP.
 
-Why another translation system? Simply for speed and reduced memory usage.  Just over 400 lines of code including comments, this translation system does not have high overhead like other existing systems. Since PHP is an interpreted scripting language, speed and memory usage matter.  This library attempts to solve both issues.
+Why another translation system? Simply for speed and reduced memory usage.  Just under 500 lines of code including comments, this translation system does not have high overhead like other existing systems. Since PHP is an interpreted scripting language, speed and memory usage matter.  This library attempts to solve both issues.
 
 ## Supported Features
 * Translations stored in native PHP arrays as key => value pairs.
@@ -86,7 +86,7 @@ The **count** variable (:count in the translated text) is used for determining t
  * Combine with **count** parameter - "No records found|One record found|:count records found"
 
 ## Full Class Documentation
-[PHPFUI/InstaDoc](http://phpfui.com/?n=PHPFUI/Translation)
+[PHPFUI/InstaDoc](http://phpfui.com/?n=PHPFUI%5CTranslation&c=Translator)
 
 ## License
 PHPFUI/Translation is distributed under the MIT License.
