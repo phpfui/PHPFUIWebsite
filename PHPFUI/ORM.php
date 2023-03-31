@@ -7,7 +7,7 @@ namespace PHPFUI;
  */
 class ORM
 	{
-	public static $namespaceRoot = __DIR__ . '/../..';
+	public static $namespaceRoot = __DIR__ . '/..';
 
 	public static $recordNamespace = 'App\\Record';
 
@@ -127,7 +127,7 @@ class ORM
 	/**
 	 * @return \PHPFUI\ORM\ArrayCursor  tracking the sql and input passed
 	 */
-	public static function getArrayCursor(string $sql, array $input = []) : \PHPFUI\ORM\ArrayCursor
+	public static function getArrayCursor(string $sql = 'select 0 limit 0', array $input = []) : \PHPFUI\ORM\ArrayCursor
 		{
 		return self::getInstance()->getArrayCursor($sql, $input);
 		}
@@ -135,7 +135,7 @@ class ORM
 	/**
 	 * @return \PHPFUI\ORM\RecordCursor  tracking the sql and input passed
 	 */
-	public static function getRecordCursor(\PHPFUI\ORM\Record $crud, string $sql, array $input = []) : \PHPFUI\ORM\RecordCursor
+	public static function getRecordCursor(\PHPFUI\ORM\Record $crud, string $sql = 'select 0 limit 0', array $input = []) : \PHPFUI\ORM\RecordCursor
 		{
 		return self::getInstance()->getRecordCursor($crud, $sql, $input);
 		}
@@ -281,6 +281,21 @@ class ORM
 	public static function executeStatement(\PDOStatement $statement, array $input = []) : ?\PDOStatement
 		{
 		return self::getInstance()->executeStatement($statement, $input);
+		}
+
+	/**
+	 * Get the correct class name from the table name
+	 */
+	public static function getBaseClassName(string $table) : string
+		{
+		$parts = \explode('_', $table);
+
+		foreach ($parts as $index => $part)
+			{
+			$parts[$index] = \ucfirst($part);
+			}
+
+		return \implode('', $parts);
 		}
 
 	private static function getInstance() : \PHPFUI\ORM\PDOInstance

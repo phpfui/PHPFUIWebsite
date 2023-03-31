@@ -19,7 +19,7 @@ class DataObject implements \ArrayAccess
 		// could be a related record, see if has a matching Id
 		if (\array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
 			{
-			$type = '\\' . \PHPFUI\ORM::$recordNamespace . '\\' . \ucfirst($field);
+			$type = '\\' . \PHPFUI\ORM::$recordNamespace . '\\' . \PHPFUI\ORM::getBaseClassName($field);
 
 			if (\class_exists($type))
 				{

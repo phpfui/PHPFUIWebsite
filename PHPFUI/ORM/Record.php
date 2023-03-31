@@ -31,7 +31,7 @@ abstract class Record extends DataObject
 
 	protected static array $primaryKeys = [];
 
-	protected static array $relationships = [];
+	protected static array $virtualFields = [];
 
 	protected static array $displayTransforms = [];
 
@@ -111,48 +111,28 @@ abstract class Record extends DataObject
 	 */
 	public function __get(string $field) : mixed
 		{
-		if (isset(static::$fields[$field]))
+		$relationship = static::$virtualFields[$field] ?? false;
+
+		if (is_array($relationship))
 			{
-			return $this->displayTransform($field);
-			}
+			$relationshipClass = array_shift($relationship);
+			$relationshipObject = new $relationshipClass($this, $field);
 
-		$relationship = static::$relationships[$field] ?? false;
-
-		if ($relationship)
-			{
-			$childTable = $this->getChildTable($field);
-
-			if (! $childTable)
-				{
-				$childTable = $this->getTable($field);
-				}
-
-			if ($childTable)
-				{
-				$condition = new \PHPFUI\ORM\Condition();
-
-				foreach (static::$primaryKeys as $primaryKey => $junk)
-					{
-					$condition->and($primaryKey, $this->current[$primaryKey]);
-					}
-				$childTable->setWhere($condition);
-
-				if (\is_callable($relationship))
-					{
-					$relationship($childTable, $this->current);
-					}
-
-				return $childTable->getRecordCursor();
-				}
+			return $relationshipObject->get($relationship);
 			}
 
 		$id = $field . \PHPFUI\ORM::$idSuffix;
 
 		if (isset(static::$fields[$id]))
 			{
-			$type = '\\' . \PHPFUI\ORM::$recordNamespace . '\\' . \ucfirst($field);
+			$type = '\\' . \PHPFUI\ORM::$recordNamespace . '\\' . \PHPFUI\ORM::getBaseClassName($field);
 
 			return new $type($this->current[$id] ?? 0);
+			}
+
+		if (isset(static::$fields[$field]))
+			{
+			return $this->displayTransform($field);
 			}
 
 		throw new \PHPFUI\ORM\Exception(static::class . "::{$field} is not a valid field");
@@ -163,7 +143,7 @@ abstract class Record extends DataObject
 	 */
 	public function __isset(string $field) : bool
 		{
-		if (\array_key_exists($field, $this->current) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
+		if (\array_key_exists($field, $this->current) || \array_key_exists($field, static::$virtualFields[$field]) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
 			{
 			return true;
 			}
@@ -178,8 +158,18 @@ abstract class Record extends DataObject
 	 */
 	public function __set(string $field, $value)
 		{
-		$id = $field . \PHPFUI\ORM::$idSuffix;
+		$relationship = static::$virtualFields[$field] ?? false;
 
+		if (is_array($relationship))
+			{
+			$relationshipClass = array_shift($relationship);
+			$relationshipObject = new $relationshipClass($this, $field);
+			$relationshipObject->set($value $relationship);
+
+			return $value;
+			}
+
+		$id = $field . \PHPFUI\ORM::$idSuffix;
 		if (isset(static::$fields[$id]) && $value instanceof \PHPFUI\ORM\Record)
 			{
 			$haveType = $value->getTableName();
@@ -200,9 +190,9 @@ abstract class Record extends DataObject
 				return $value;
 				}
 
-			$haveType = \ucfirst($haveType);
+			$haveType = \PHPFUI\ORM::getBaseClassName($haveType);
 			$recordNamespace = \PHPFUI\ORM::$recordNamespace;
-			$message = static::class . "::{$field} is of type \\{$recordNamespace}\\" . \ucfirst($field) . " but being assigned a type of \\{$recordNamespace}\\{$haveType}}";
+			$message = static::class . "::{$field} is of type \\{$recordNamespace}\\" . \PHPFUI\ORM::getBaseClassName($field) . " but being assigned a type of \\{$recordNamespace}\\{$haveType}}";
 			\PHPFUI\ORM::log(\Psr\Log\LogLevel::ERROR, $message);
 
 			throw new \PHPFUI\ORM\Exception($message);
@@ -266,11 +256,9 @@ abstract class Record extends DataObject
 	/**
 	 * Add a transform for get.  Callback is passed value.
 	 */
-	public function addDisplayTransform(string $field, callable $callback) : static
+	public static function addDisplayTransform(string $field, callable $callback) : void
 		{
 		static::$displayTransforms[$field] = $callback;
-
-		return $this;
 		}
 
 	public function offsetGet(mixed $offset) : mixed
@@ -308,7 +296,7 @@ abstract class Record extends DataObject
 			{
 			$primaryKey = \array_key_first(static::$primaryKeys);
 
-			foreach (static::$relationships as $relationship => $status)
+			foreach (static::$virtualFields as $relationship => $status)
 				{
 				$childTable = $this->getChildTable($relationship);
 
@@ -406,13 +394,13 @@ abstract class Record extends DataObject
 		}
 
 	/**
-	 * Get the record relationships to mostly children
+	 * Get the virtual field names
 	 *
 	 * @return array<string>
 	 */
-	public static function getRelationships() : array
+	public static function getVirtualFields() : array
 		{
-		return \array_keys(static::$relationships);
+		return \array_keys(static::$virtualFields);
 		}
 
 	/**
@@ -800,18 +788,6 @@ abstract class Record extends DataObject
 		$type = '\\' . \PHPFUI\ORM::$tableNamespace . '\\' . $recordType;
 
 		return new $type();
-		}
-
-	private function getTable(string $tableName) : ?\PHPFUI\ORM\Table
-		{
-		$className = '\\' . \PHPFUI\ORM::$tableNamespace . '\\' . $tableName;
-
-		if (! \class_exists($className))
-			{
-			return null;
-			}
-
-		return new $className();
 		}
 
 	/**

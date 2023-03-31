@@ -93,7 +93,7 @@ PHP;
 				}
 			}
 
-		$ucTable = $this->getBaseClassName($table);
+		$ucTable = \PHPFUI\ORM::getBaseClassName($table);
 		$keys = '[';
 
 		foreach ($this->getPrimaryKeys($table) as $key)
@@ -222,7 +222,7 @@ PHP;
 
 			if (! isset($commentedFields[$var]))
 				{
-				$table = $this->getBaseClassName($var);
+				$table = \PHPFUI\ORM::getBaseClassName($var);
 				$block .= "\n * @property \\~~RECORD_NAMESPACE~~\\" . $table . ' $' . $var . ' related record';
 				}
 			$commentedFields[$var] = true;

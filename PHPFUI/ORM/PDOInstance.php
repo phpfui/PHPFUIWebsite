@@ -114,7 +114,7 @@ class PDOInstance extends \PDO
 	/**
 	 * @return \PHPFUI\ORM\ArrayCursor  tracking the sql and input passed
 	 */
-	public function getArrayCursor(string $sql, array $input = []) : \PHPFUI\ORM\ArrayCursor
+	public function getArrayCursor(string $sql = 'select 0 limit 0', array $input = []) : \PHPFUI\ORM\ArrayCursor
 		{
 		$this->lastParameters = $input;
 		$this->lastSql = $sql;
@@ -125,7 +125,7 @@ class PDOInstance extends \PDO
 	/**
 	 * @return \PHPFUI\ORM\RecordCursor  tracking the sql and input passed
 	 */
-	public function getRecordCursor(\PHPFUI\ORM\Record $crud, string $sql, array $input = []) : \PHPFUI\ORM\RecordCursor
+	public function getRecordCursor(\PHPFUI\ORM\Record $crud, string $sql = 'select 0 limit 0', array $input = []) : \PHPFUI\ORM\RecordCursor
 		{
 		$this->lastParameters = $input;
 		$this->lastSql = $sql;

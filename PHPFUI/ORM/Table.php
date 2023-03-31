@@ -112,7 +112,7 @@ abstract class Table implements \Countable
 	 */
 	public function addJoin(string $table, string | \PHPFUI\ORM\Condition $on = '', string $type = 'LEFT', string $as = '') : static
 		{
-		$ucfTable = \ucfirst($table);
+		$ucfTable = \PHPFUI\ORM::getBaseClassName($table);
 		$joinTableClass = '\\' . \PHPFUI\ORM::$tableNamespace . "\\{$ucfTable}";
 
 		if (! \class_exists($joinTableClass))
@@ -388,7 +388,7 @@ abstract class Table implements \Countable
 		return $this->havingCondition;
 		}
 
-	public function setHaving(\PHPFUI\ORM\Condition $condition) : static
+	public function setHaving(?\PHPFUI\ORM\Condition $condition = null) : static
 		{
 		$this->havingCondition = $condition;
 
@@ -713,7 +713,7 @@ abstract class Table implements \Countable
 		return $this;
 		}
 
-	public function setWhere(\PHPFUI\ORM\Condition $condition) : static
+	public function setWhere(?\PHPFUI\ORM\Condition $condition = null) : static
 		{
 		$this->whereCondition = $condition;
 
@@ -941,7 +941,7 @@ abstract class Table implements \Countable
 
 		foreach ($parts as $index => $part)
 			{
-			$parts[$index] = \ucfirst($part);
+			$parts[$index] = \PHPFUI\ORM::getBaseClassName($part);
 			}
 
 		return self::capitalSplit(\implode('', $parts));

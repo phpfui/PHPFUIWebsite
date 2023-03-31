@@ -16,7 +16,7 @@ class Validator extends Base
 		// sort fields so table order is ignored on update
 		\usort($fields, [$this, 'nameSort']);
 
-		$ucTable = $this->getBaseClassName($table);
+		$ucTable = \PHPFUI\ORM::getBaseClassName($table);
 
 		$keys = $this->getPrimaryKeys($table);
 
@@ -103,8 +103,8 @@ PHP;
 
 				break;
 
-			case 'integer':
-				$validators[] = $type;
+			case 'int':
+				$validators[] = 'integer';
 
 				break;
 

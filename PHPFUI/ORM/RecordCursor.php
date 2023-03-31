@@ -7,17 +7,19 @@ namespace PHPFUI\ORM;
  */
 class RecordCursor extends \PHPFUI\ORM\DataObjectCursor
 	{
+	private \PHPFUI\ORM\Record $current;
+
 	/**
 	 * You must pass an instance if the Record object that will be filled and returned by **current()** method
 	 */
-	public function __construct(\PHPFUI\ORM\Record $instance, \PDOStatement $statement, array $input)
+	public function __construct(\PHPFUI\ORM\Record $instance, ?\PDOStatement $statement = null, array $input = [])
 		{
 		$this->current = clone $instance;
 		parent::__construct($statement, $input);
 		}
 
 	/**
-	 * @return object  representation of the current row
+	 * @return mixed representation of the current row
 	 */
 	public function current() : mixed
 		{
@@ -32,6 +34,11 @@ class RecordCursor extends \PHPFUI\ORM\DataObjectCursor
 	public function next() : void
 		{
 		$this->init();
+		if (! $this->statement)
+			{
+			return;
+			}
+
 		$data = $this->statement->fetch(\PDO::FETCH_ASSOC);
 
 		if (false === $data)

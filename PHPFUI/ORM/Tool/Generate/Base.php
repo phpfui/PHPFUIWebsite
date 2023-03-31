@@ -111,16 +111,4 @@ abstract class Base
 
 		return (float)$precision;
 		}
-
-	protected function getBaseClassName(string $table) : string
-		{
-		$parts = \explode('_', $table);
-
-		foreach ($parts as $index => $part)
-			{
-			$parts[$index] = \ucfirst($part);
-			}
-
-		return \implode('', $parts);
-		}
 	}

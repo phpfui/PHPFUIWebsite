@@ -9,7 +9,7 @@ class Field implements \Stringable
 	{
 	private string $fieldName = '';
 
-	public function __construct(string $name)
+	public function __construct(string $name, string $as = '')
 		{
 		$parts = \explode('.', $name);
 		$dot = '';
@@ -18,6 +18,11 @@ class Field implements \Stringable
 			{
 			$this->fieldName .= $dot . '`' . $part . '`';
 			$dot = '.';
+			}
+
+		if ($as)
+			{
+			$this->fieldName .= ' AS `' . $as . '`';
 			}
 		}
 
