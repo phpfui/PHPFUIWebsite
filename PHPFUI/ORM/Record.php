@@ -118,7 +118,12 @@ abstract class Record extends DataObject
 			$relationshipClass = array_shift($relationship);
 			$relationshipObject = new $relationshipClass($this, $field);
 
-			return $relationshipObject->get($relationship);
+			return $relationshipObject->getValue($relationship);
+			}
+
+		if (isset(static::$fields[$field]))
+			{
+			return $this->displayTransform($field);
 			}
 
 		$id = $field . \PHPFUI\ORM::$idSuffix;
@@ -130,11 +135,6 @@ abstract class Record extends DataObject
 			return new $type($this->current[$id] ?? 0);
 			}
 
-		if (isset(static::$fields[$field]))
-			{
-			return $this->displayTransform($field);
-			}
-
 		throw new \PHPFUI\ORM\Exception(static::class . "::{$field} is not a valid field");
 		}
 
@@ -143,12 +143,12 @@ abstract class Record extends DataObject
 	 */
 	public function __isset(string $field) : bool
 		{
-		if (\array_key_exists($field, $this->current) || \array_key_exists($field, static::$virtualFields[$field]) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
+		if (\array_key_exists($field, $this->current) || \array_key_exists($field, static::$virtualFields) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
 			{
 			return true;
 			}
 
-		throw new \PHPFUI\ORM\Exception(static::class . "::{$field} is not a valid field");
+		return false;
 		}
 
 	/**
@@ -164,7 +164,7 @@ abstract class Record extends DataObject
 			{
 			$relationshipClass = array_shift($relationship);
 			$relationshipObject = new $relationshipClass($this, $field);
-			$relationshipObject->set($value $relationship);
+			$relationshipObject->setValue($value, $relationship);
 
 			return $value;
 			}
@@ -826,10 +826,6 @@ abstract class Record extends DataObject
 				}
 			}
 
-		if (! \count($values))
-			{
-			return false;
-			}
 		$sql .= ') values (' . \implode(',', $values) . ')';
 
 		if ($updateOnDuplicate)
