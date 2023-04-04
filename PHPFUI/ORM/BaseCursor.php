@@ -89,6 +89,7 @@ abstract class BaseCursor implements \Countable, \Iterator
 	public function rewind() : void
 		{
 		$this->index = 0;
+
 		if (! $this->statement)
 			{
 			return;

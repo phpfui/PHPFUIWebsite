@@ -113,9 +113,9 @@ abstract class Record extends DataObject
 		{
 		$relationship = static::$virtualFields[$field] ?? false;
 
-		if (is_array($relationship))
+		if (\is_array($relationship))
 			{
-			$relationshipClass = array_shift($relationship);
+			$relationshipClass = \array_shift($relationship);
 			$relationshipObject = new $relationshipClass($this, $field);
 
 			return $relationshipObject->getValue($relationship);
@@ -128,11 +128,14 @@ abstract class Record extends DataObject
 
 		$id = $field . \PHPFUI\ORM::$idSuffix;
 
-		if (isset(static::$fields[$id]))
+		if (\array_key_exists($id, $this->current))
 			{
 			$type = '\\' . \PHPFUI\ORM::$recordNamespace . '\\' . \PHPFUI\ORM::getBaseClassName($field);
 
-			return new $type($this->current[$id] ?? 0);
+			if (\class_exists($type))
+				{
+				return new $type($this->current[$id]);
+				}
 			}
 
 		throw new \PHPFUI\ORM\Exception(static::class . "::{$field} is not a valid field");
@@ -143,12 +146,7 @@ abstract class Record extends DataObject
 	 */
 	public function __isset(string $field) : bool
 		{
-		if (\array_key_exists($field, $this->current) || \array_key_exists($field, static::$virtualFields) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current))
-			{
-			return true;
-			}
-
-		return false;
+		return (bool)(\array_key_exists($field, $this->current) || \array_key_exists($field, static::$virtualFields) || \array_key_exists($field . \PHPFUI\ORM::$idSuffix, $this->current));
 		}
 
 	/**
@@ -160,9 +158,9 @@ abstract class Record extends DataObject
 		{
 		$relationship = static::$virtualFields[$field] ?? false;
 
-		if (is_array($relationship))
+		if (\is_array($relationship))
 			{
-			$relationshipClass = array_shift($relationship);
+			$relationshipClass = \array_shift($relationship);
 			$relationshipObject = new $relationshipClass($this, $field);
 			$relationshipObject->setValue($value, $relationship);
 
@@ -170,6 +168,7 @@ abstract class Record extends DataObject
 			}
 
 		$id = $field . \PHPFUI\ORM::$idSuffix;
+
 		if (isset(static::$fields[$id]) && $value instanceof \PHPFUI\ORM\Record)
 			{
 			$haveType = $value->getTableName();
@@ -396,7 +395,7 @@ abstract class Record extends DataObject
 	/**
 	 * Get the virtual field names
 	 *
-	 * @return array<string>
+	 * @return string[]
 	 */
 	public static function getVirtualFields() : array
 		{

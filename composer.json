@@ -1,7 +1,7 @@
 {
 	"require": {
 		"php": ">=8.1 <8.3",
-		"phpfui/translation": "dev-main",
+		"phpfui/translation": "^1.0",
 		"scrivo/highlight.php": "dev-master",
 		"nxp/math-executor": ">=2.0",
 		"nikic/php-parser": ">=4.8",
@@ -20,7 +20,8 @@
 		"league/geotools": "dev-master",
 		"druidfi/mysqldump-php": "^1.0",
 		"phpfui/instadoc": "dev-master",
-		"voku/portable-utf8": "^6.0"
+		"voku/portable-utf8": "^6.0",
+		"phpfui/orm": "^1.0"
 		},
 	"require-dev": {
 		"rector/rector": "^0.14.5",

@@ -57,4 +57,3 @@ class CleanBackup
 		return $line;
 		}
 	}
-

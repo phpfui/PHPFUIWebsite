@@ -34,6 +34,7 @@ class RecordCursor extends \PHPFUI\ORM\DataObjectCursor
 	public function next() : void
 		{
 		$this->init();
+
 		if (! $this->statement)
 			{
 			return;

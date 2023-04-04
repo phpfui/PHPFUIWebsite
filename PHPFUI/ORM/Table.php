@@ -314,15 +314,10 @@ abstract class Table implements \Countable
 		}
 
 	/**
-	 * Record cursors DO NOT support joins, use ArrayCursor or DataObjectCursor instead
 	 * Return a Record collection matching the requested parameters
 	 */
 	public function getRecordCursor() : \PHPFUI\ORM\RecordCursor
 		{
-		if (\count($this->joins))
-			{
-			throw new \PHPFUI\ORM\Exception('Record cursors DO NOT support joins, use ArrayCursor or DataObjectCursor instead');
-			}
 		$this->lastInput = [];
 		$this->lastSql = $this->getSQL($this->lastInput);
 

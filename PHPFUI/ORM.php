@@ -7,15 +7,17 @@ namespace PHPFUI;
  */
 class ORM
 	{
-	public static $namespaceRoot = __DIR__ . '/..';
+	public static string $namespaceRoot = __DIR__ . '/..';
 
-	public static $recordNamespace = 'App\\Record';
+	public static string $recordNamespace = 'App\\Record';
 
-	public static $tableNamespace = 'App\\Table';
+	public static string $tableNamespace = 'App\\Table';
 
-	public static $migrationNamespace = 'App\\Migration';
+	public static string $migrationNamespace = 'App\\Migration';
 
-	public static $idSuffix = 'Id';
+	public static string $idSuffix = 'Id';
+
+	private static $translationCallback = null;
 
 	private static array $instances = [];
 
@@ -36,11 +38,6 @@ class ORM
 	public static function getMigrationNamespacePath() : string
 		{
 		return self::filePath(self::$namespaceRoot . '/' . self::$migrationNamespace);
-		}
-
-	private static function filePath(string $namespace) : string
-		{
-		return \str_replace('\\', '/', $namespace);
 		}
 
 	/**
@@ -199,7 +196,7 @@ class ORM
 		}
 
 	/**
-	 * @return array  a single row of the first matching record or an empty array if an error
+	 * @return array<string, string> a single row of the first matching record or an empty array if an error
 	 */
 	public static function getRow(string $sql, array $input = []) : array
 		{
@@ -225,7 +222,7 @@ class ORM
 		}
 
 	/**
-	 * @return array of values from query
+	 * @return array<mixed> of the first value in each row from the query
 	 */
 	public static function getValueArray(string $sql, array $input = []) : array
 		{
@@ -275,6 +272,27 @@ class ORM
 		return self::getInstance()->rollBack();
 		}
 
+	public static function setTranslationCallback($callback) : void
+		{
+		self::$translationCallback = $callback;
+		}
+
+	/**
+	 * Translate a field.  See [PHPFUI\Translation](http://www.phpfui.com/?n=PHPFUI%5CTranslation)
+	 *
+	 * @param array<mixed, mixed> $variables
+	 */
+	public static function trans(string $text, array $variables = []) : string
+		{
+		if (self::$translationCallback)
+			{
+			$callback = self::$translationCallback;
+			return $callback($text, $variables);
+			}
+
+		return $text;
+		}
+
 	/**
 	 * Executes the query and catches any errors
 	 */
@@ -296,6 +314,11 @@ class ORM
 			}
 
 		return \implode('', $parts);
+		}
+
+	private static function filePath(string $namespace) : string
+		{
+		return \str_replace('\\', '/', $namespace);
 		}
 
 	private static function getInstance() : \PHPFUI\ORM\PDOInstance

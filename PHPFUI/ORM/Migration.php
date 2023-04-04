@@ -4,10 +4,10 @@ namespace PHPFUI\ORM;
 
 abstract class Migration
 	{
-	/** @var array<string> */
+	/** @var string[] */
 	protected array $errors = [];
 
-	/** @var array<string> */
+	/** @var string[] */
 	protected array $myslqDefaults = [
 		'CURRENT_TIMESTAMP',
 		'CURRENT_DATE',
@@ -63,7 +63,7 @@ abstract class Migration
 		}
 
 	/**
-	 * @return array<string> of table names
+	 * @return string[] of table names
 	 */
 	public function getAllTables(string $type = 'BASE TABLE') : array
 		{
@@ -86,7 +86,7 @@ abstract class Migration
 		return $tables;
 		}
 
-	/** @return array<string> */
+	/** @return string[] */
 	public function getErrors() : array
 		{
 		return $this->errors;

@@ -30,16 +30,9 @@ namespace ~~RECORD_NAMESPACE~~\Validation;
  */
 class ~~CLASS~~ extends \PHPFUI\ORM\Validator
 	{
-
-	/** @var array<string, array<string>> */
+	/** @var array<string, string[]> */
 	public static array $validators = [
 ~~FIELD_ARRAY~~		];
-
-	public function __construct(\~~RECORD_NAMESPACE~~\~~CLASS~~ $record)
-		{
-		parent::__construct($record);
-		}
-
 	}
 
 PHP;

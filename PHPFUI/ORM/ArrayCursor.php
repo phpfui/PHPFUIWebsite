@@ -28,7 +28,7 @@ class ArrayCursor extends \PHPFUI\ORM\BaseCursor
 		{
 		$this->init();
 		$data = $this->statement ? $this->statement->fetch(\PDO::FETCH_ASSOC) : [];
-		$this->current = $data ? $data : [];
+		$this->current = $data ?: [];
 		++$this->index;
 		}
 

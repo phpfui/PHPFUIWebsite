@@ -190,7 +190,7 @@ class PDOInstance extends \PDO
 		}
 
 	/**
-	 * @return array  a single row of the first matching record or an empty array if an error
+	 * @return array<string, string> a single row of the first matching record or an empty array if an error
 	 */
 	public function getRow(string $sql, array $input = []) : array
 		{
@@ -262,7 +262,7 @@ class PDOInstance extends \PDO
 		}
 
 	/**
-	 * @return array of values from query
+	 * @return array<mixed> of the first value in each row from the query
 	 */
 	public function getValueArray(string $sql, array $input = []) : array
 		{

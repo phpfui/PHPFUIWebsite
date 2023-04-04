@@ -60,7 +60,7 @@ namespace ~~TABLE_NAMESPACE~~;
 
 class ~~CLASS~~ extends \PHPFUI\ORM\Table
 	{
-	protected static string $className = '\\~~RECORD_NAMESPACE~~\\~~CLASS~~';
+	protected static string $className = \~~RECORD_NAMESPACE~~\~~CLASS~~::class;
 	}
 
 PHP;

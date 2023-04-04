@@ -7,7 +7,7 @@ namespace PHPFUI\ORM\Record\Validation;
  */
 class Migration extends \PHPFUI\ORM\Validator
 	{
-	/** @var array<string, array<string>> */
+	/** @var array<string, string[]> */
 	public static array $validators = [
 		'ran' => ['required', 'datetime'],
 	];

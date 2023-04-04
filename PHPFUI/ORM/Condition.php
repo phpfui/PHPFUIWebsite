@@ -59,7 +59,7 @@ class Condition implements \Countable, \Stringable
 					$retVal .= "{$first}{$escapedField}{$operator} ";
 					$first = ' ';
 
-					if (\is_array($value))
+					if (\is_array($value) || $value instanceof \PHPFUI\ORM\Table)
 						{
 						$retVal .= '(' . \implode(',', \array_fill(0, \count($value), '?')) . ')';
 						}
@@ -119,7 +119,7 @@ class Condition implements \Countable, \Stringable
 		}
 
 	/**
-	 * @return array<string>  of all the fields used by the condition
+	 * @return string[]  of all the fields used by the condition
 	 */
 	public function getFields(?self $condition = null) : array
 		{
@@ -141,7 +141,7 @@ class Condition implements \Countable, \Stringable
 		}
 
 	/**
-	 * @return array<string>  of values that will match the ? returned in the condition string for PDO execution
+	 * @return string[]  of values that will match the ? returned in the condition string for PDO execution
 	 */
 	public function getInput() : array
 		{
@@ -153,7 +153,13 @@ class Condition implements \Countable, \Stringable
 				{
 				$value = $parts[3];
 
-				if (\is_array($value))
+				if ($value instanceof \PHPFUI\ORM\Table)
+					{
+					$input = [];
+					$sql = $value->getSQL($input);
+					$retVal = \array_merge($retVal, \PHPFUI\ORM::getValueArray($sql, $input));
+					}
+				elseif (\is_array($value))
 					{
 					$retVal = \array_merge($retVal, $value);
 					}
