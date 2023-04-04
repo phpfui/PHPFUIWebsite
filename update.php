@@ -62,6 +62,21 @@ $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
 // update the public files
 exec($php . ' vendor/phpfui/instadoc/install.php www/PHPFUI');
 
+// copy docs to correct locations
+$vendorDir = 'vendor/phpfui/';
+copy($vendorDir . 'phpfui/README.md', 'PHPFUI/README.md');
+copy($vendorDir . 'phpfui/src/PHPFUI/PayPal.md', 'PHPFUI/PayPal.md');
+copy($vendorDir . 'phpfui/src/PHPFUI/PayPal.md', 'PHPFUI/PayPal.md');
+// copy ORM docs in to ORM directory
+foreach (new \DirectoryIterator($vendorDir . 'orm/docs') as $fileInfo)
+	{
+	$file = $fileInfo->getFilename();
+	if (str_ends_with($file, '.md'))
+		{
+		copy($fileInfo->getPathname(), 'PHPFUI/ORM/' . $file);
+		}
+	}
+
 // don't update if running under windows
 if ($php == 'php')
 	{
