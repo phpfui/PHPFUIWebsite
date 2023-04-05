@@ -23,13 +23,9 @@ class Landing extends \PHPFUI\InstaDoc\Section
 			foreach ($files as $file)
 				{
 				$parts = \explode('/', \str_replace('\\', '/', $file));
-				// $section is the file name
 				$section = \array_pop($parts);
-				// remove .md
-				$section = substr($section, 0, strlen($section) - 3);
-				// make more readable
-				$section = \str_replace('_', ' ', strtolower($section));
-				// proper case words
+				$section = \str_replace('_', ' ', \strtolower($section));
+				$section = \str_replace('.md', '', $section);
 				$accordion->addTab(\ucwords($section), $parsedown->fileText($file));
 				}
 			$container->add($accordion);
