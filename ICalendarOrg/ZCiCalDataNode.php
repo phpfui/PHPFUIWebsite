@@ -135,7 +135,7 @@ class ZCiCalDataNode
 
 			while (\strlen($value) > 70)
 				{
-				$part = $part . \substr($value, 0, 67) . " \r\n";
+				$part = $part . \substr($value, 0, 67) . "\r\n ";
 				$value = \substr($value, 67);
 				}
 			$part .= $value;
