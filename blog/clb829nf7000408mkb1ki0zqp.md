@@ -1,4 +1,12 @@
-# Packagist Best Practices
+---
+title: "Packagist Best Practices"
+datePublished: Sat Dec 03 2022 14:59:50 GMT+0000 (Coordinated Universal Time)
+cuid: clb829nf7000408mkb1ki0zqp
+slug: packagist-best-practices
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1670079385265/Av6KR_0EU.png
+tags: php, composer, packagist
+
+---
 
 When creating a package for other PHP developers to use, it helps to follow some basic rules to help the developers you are trying to get to use your package. While there are [other guides](https://www.makeuseof.com/learn-how-to-distribute-your-php-packages-with-packagist/) on how to [publish](https://www.w3resource.com/php/composer/create-publish-and-use-your-first-composer-package.php) a package on packagist.org, I thought I would cover some of the unsaid things that lead to better packages.
 
@@ -40,7 +48,7 @@ Use autoload-dev for PSR autoloading of your tests. Do not list your test files 
 
 ### Put all source files in the src directory
 
-The src directory should only include source files that you want in production. DO NOT include test or example code here. Any files that are not PHP source code, but required for operation, should be included here and referenced in the source code with the **DIR** PHP macro (DIR with two preceding and trailing underscores, apparently that is Markdown for something!)
+The src directory should only include the source files that you want in production. DO NOT include test or example code here. Any files that are not PHP source code, but required for operation, should be included here and referenced in the source code with the **\_\_DIR\_\_** PHP macro.
 
 With PSR-0 loading you will have to start from the root namespace in the src directory. PSR-4 allows you to skip deep namespace directories, but which you use is an individual preference.
 
@@ -115,19 +123,19 @@ Check any config files from these tools in to the root of your project. This wil
 
 Your **README.MD** file is your primary sales tool. It should have the following sections:
 
-*   Overview
+* Overview
     
-*   Installation if other than **composer require**
+* Installation if other than **composer require**
     
-*   Explain the features of your package
+* Explain the features of your package
     
-*   Examples
+* Examples
     
-*   Documentation or links to documentation
+* Documentation or links to documentation
     
-*   Other interesting links
+* Other interesting links
     
-*   License
+* License
     
 
 Assume your users know how to install packages, get to your GitHub repo, and understand dependencies, as Packagist handles all this for you.
