@@ -856,7 +856,7 @@ class KitchenSink
 		return $menu;
 		}
 
-	private function makeMenu(Menu $menu, string $name, ?string $class = '', ?\PHPFUI\Menu $subMenu = null) : Menu
+	public static function makeMenu(Menu $menu, string $name, ?string $class = '', ?\PHPFUI\Menu $subMenu = null) : Menu
 		{
 		$menu->addMenuItem(new \PHPFUI\MenuItem($name));
 		$menu->addMenuItem(new \PHPFUI\MenuItem('One', '#'));
