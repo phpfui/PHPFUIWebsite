@@ -8,6 +8,7 @@ $generateStaticFiles = false;
 $useComposer = false;
 $addExamples = true;
 $addBlog = true;
+$addPetty = true;
 
 if ($useComposer)
 	{
@@ -83,6 +84,15 @@ else
 		$menu = $controller->getMenu();
 		$exampleMenu = \Example\Page::getMenu();
 		$menu->addSubMenu(new \PHPFUI\MenuItem('Examples'), $exampleMenu);
+		}
+
+	if ($addPetty)
+		{
+		$menu = $controller->getMenu();
+		$title = 'Tom Petty Buried Treasure Playlists';
+		$menuItem = new \PHPFUI\MenuItem($title, '#');
+		$menuItem->setLinkObject(new \PHPFUI\Link('http://buriedtreasure.phpfui.com', $title));
+		$menu->addMenuItem($menuItem);
 		}
 
 	if ($addBlog)
