@@ -62,12 +62,7 @@ class AutoComplete extends \PHPFUI\Input\Input
 		parent::__construct($type, $name, $label, $value);
 		$this->hidden->setId($this->getId() . 'hidden');
 		$this->add($this->hidden);
-		$this->className = \basename(self::class);
-
-		if (false !== ($pos = \strrpos($this->className, '\\')))
-			{
-			$this->className = \substr($this->className, $pos + 1);
-			}
+		$this->className = \basename(\str_replace('\\', '/', self::class));
 		$this->page->addTailScript('jquery.autocomplete.js');
 		$this->addAttribute('autocomplete', 'off');
 
@@ -156,7 +151,7 @@ class AutoComplete extends \PHPFUI\Input\Input
 
 		if ($this->noFreeForm)
 			{
-			$this->addAttribute('placeholder', $this->value);
+			$this->addAttribute('placeholder', \str_replace("'", '&#39;', $this->value));
 			$this->value = '';
 			}
 		else
