@@ -1,3 +1,3 @@
 <?php
 
-return \PHPFUI\KitchenSink::makeMenu(new \PHPFUI\AccordionMenu(), 'Accordion Menu', '', $this->subMenu());
+return \PHPFUI\KitchenSink::makeMenu(new \PHPFUI\AccordionMenu(), 'Accordion Menu', '', \PHPFUI\KitchenSink::subMenu());

@@ -22,11 +22,6 @@
 		"phpfui/instadoc": "dev-master",
 		"voku/portable-utf8": "^6.0",
 		"phpfui/orm": "^1.0"
-		},
-	"require-dev": {
-		"rector/rector": "^0.14.5",
-		"phpstan/phpstan": "^1.8",
-		"friendsofphp/php-cs-fixer": "^3.11"
 	},
 	"config": {
 		"allow-plugins": {

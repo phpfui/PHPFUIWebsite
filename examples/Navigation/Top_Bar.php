@@ -1,7 +1,7 @@
 <?php
 
 $topbar = new \PHPFUI\TopBar();
-$topbar->addLeft(\PHPFUI\KitchenSink::makeMenu(new \PHPFUI\DropDownMenu(), 'Site Title', '', $this->subMenu()));
+$topbar->addLeft(\PHPFUI\KitchenSink::makeMenu(new \PHPFUI\DropDownMenu(), 'Site Title', '', \PHPFUI\KitchenSink::subMenu()));
 
 $menu = new \PHPFUI\Menu();
 $search = new \PHPFUI\Input('search', '');
