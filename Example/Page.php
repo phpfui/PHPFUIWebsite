@@ -109,8 +109,11 @@ class Page extends \PHPFUI\Page
 			$this->addBody($sourceMenu);
 			// add markdown if there
 			$docFile = $_SERVER['DOCUMENT_ROOT'] . '/../Example/docs/' . $class . '.md';
-			$parser = new \PHPFUI\InstaDoc\MarkDownParser();
-			$this->addBody($parser->fileText($docFile));
+			if (file_exists($docFile))
+				{
+				$parser = new \PHPFUI\InstaDoc\MarkDownParser();
+				$this->addBody($parser->fileText($docFile));
+				}
 
 			$post = \PHPFUI\Session::getFlash('post');
 

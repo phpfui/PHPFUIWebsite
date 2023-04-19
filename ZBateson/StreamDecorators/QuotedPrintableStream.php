@@ -57,11 +57,9 @@ class QuotedPrintableStream implements StreamInterface
     /**
      * Not supported.
      *
-     * @param int $offset
-     * @param int $whence
      * @throws RuntimeException
      */
-    public function seek(int $offset, int $whence = \Psr\Http\Message\SEEK_SET) : void
+    public function seek(int $offset, int $whence = SEEK_SET) : void
     {
         throw new RuntimeException('Cannot seek a QuotedPrintableStream');
     }
@@ -138,10 +136,8 @@ class QuotedPrintableStream implements StreamInterface
     /**
      * Reads up to $length decoded bytes from the underlying quoted-printable
      * encoded stream and returns them.
-     *
-     * @param int $length
      */
-    public function read($length) : string : string
+    public function read($length) : string
     {
         // let Guzzle decide what to do.
         if ($length <= 0 || $this->eof()) {

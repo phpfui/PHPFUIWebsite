@@ -1,11 +1,13 @@
 <?php
 
+namespace Example\Tool;
+
 class SessionManager
 	{
 
 	public static function getDirectory()
 		{
-		return $_SERVER['DOCUMENT_ROOT'] . '/../session';
+		return PROJECT_ROOT . '/session';
 		}
 
 	public static function purgeOld(int $secondsBack = 7200) : void

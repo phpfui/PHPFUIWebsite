@@ -1,6 +1,5 @@
 <?php
 // allow the autoloader and db to be included from any script that needs it.
-error_reporting(E_ALL);
 
 if (! defined('PROJECT_ROOT'))
 	{
@@ -11,11 +10,14 @@ if (! defined('PROJECT_ROOT'))
 	function autoload(string $className) : void
 		{
 		$path = str_replace('\\', DIRECTORY_SEPARATOR, PROJECT_ROOT . "/{$className}.php");
-
-		@include_once $path;
+		if (file_exists($path))
+			{
+			@include_once $path;
+			}
 		}
 
 	spl_autoload_register('autoload');
+	$errorLogger = new \Example\Tool\ErrorLogging();
 	}
 
 date_default_timezone_set('America/New_York');

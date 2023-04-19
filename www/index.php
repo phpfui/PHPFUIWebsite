@@ -28,6 +28,7 @@ else
 		'HtmlValidator',
 		'ICalendarOrg',
 		'League',
+		'Maknz',
 		'NXP',
 		'phpDocumentor',
 		'PHPFUI',

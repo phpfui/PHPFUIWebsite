@@ -2,5 +2,5 @@
 
 include 'commonbase.php';
 
-\SessionManager::start();
+\Example\Tool\SessionManager::start();
 

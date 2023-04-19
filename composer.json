@@ -21,7 +21,8 @@
 		"druidfi/mysqldump-php": "^1.0",
 		"phpfui/instadoc": "dev-master",
 		"voku/portable-utf8": "^6.0",
-		"phpfui/orm": "^1.0"
+		"phpfui/orm": "^1.0",
+		"alek13/slack": "^2.2"
 	},
 	"config": {
 		"allow-plugins": {
