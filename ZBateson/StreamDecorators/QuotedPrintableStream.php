@@ -61,7 +61,7 @@ class QuotedPrintableStream implements StreamInterface
      * @param int $whence
      * @throws RuntimeException
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek(int $offset, int $whence = \Psr\Http\Message\SEEK_SET) : void
     {
         throw new RuntimeException('Cannot seek a QuotedPrintableStream');
     }
@@ -141,7 +141,7 @@ class QuotedPrintableStream implements StreamInterface
      *
      * @param int $length
      */
-    public function read($length) : string
+    public function read($length) : string : string
     {
         // let Guzzle decide what to do.
         if ($length <= 0 || $this->eof()) {
