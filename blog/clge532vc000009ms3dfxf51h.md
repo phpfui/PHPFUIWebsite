@@ -188,7 +188,7 @@ class Dice implements \Countable
   }
 ```
 
-The first thing to notice about this class is that it has no constructor. Why? Because we can initialize the single property with an empty array. PHP constructors are optional if can initialize the object to a valid state with just property initializers. While Dice with no associated die is probably not useful or a valid use case, Aour class will work with no Die in it, so we don't need a constructor, the object is valid without one.
+The first thing to notice about this class is that it has no constructor. Why? Because we can initialize the single property with an empty array. PHP constructors are optional if can initialize the object to a valid state with just property initializers. While Dice with no associated die is probably not useful or a valid use case, our class will work with no Die in it, so we don't need a constructor, the object is valid without one.
 
 The real work starts with the add() method. We pass it an ADie object we want to add. We are using the PHP 8.1 feature that allows a default value to be a new object, in this case, a default six-sided ADie. Our user can add as many ADie as they want, and of any type of ADie.
 

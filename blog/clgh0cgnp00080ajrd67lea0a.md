@@ -202,7 +202,7 @@ We now have an ImageDie class that we could make much fancier, but this is a sim
 
 ## How to Test HTML and CSS
 
-While this is another fairly trivial class, we still should test it. But how? The code outputs HTML as a string. How do we know it is valid HTML? We did write a program (above) to see that it worked for our own eyes, but it would be nice to know if a future change invalidates the HTML for some reason. I had this problem before, so I write a solution for it! It is called \[[phpfui/html-unit-tester](https://packagist.org/packages/phpfui/html-unit-tester)\]([https://packagist.org/packages/phpfui/html-unit-tester](https://packagist.org/packages/phpfui/html-unit-tester)) and it uses the W3C Java validation server. Check out the installation instructions if you want to follow along at home.
+While this is another fairly trivial class, we still should test it. But how? The code outputs HTML as a string. How do we know it is valid HTML? We did write a program (above) to see that it worked for our own eyes, but it would be nice to know if a future change invalidates the HTML for some reason. I had this problem before, so I write a solution for it! It is called [phpfui/html-unit-tester](https://packagist.org/packages/phpfui/html-unit-tester) and it uses the W3C Java validation server. Check out the installation instructions if you want to follow along at home.
 
 ```php
 namespace Tests\Monopoly;
@@ -279,7 +279,7 @@ What we have done with MonopolyDice is created a concrete class that solves our 
 
 ## Follow Along At Home
 
-I am posting all the code in this blog to \[GitHub\]([https://github.com/phpfui/ThoughtsBlogCode](https://github.com/phpfui/ThoughtsBlogCode)) so you can experiment with the code yourself.
+I am posting all the code in this blog to GitHub so you can experiment with the code yourself.
 
 ## Takeaways
 
