@@ -84,16 +84,6 @@ if ($php == 'php')
 	exit;
 	}
 
-// move blog posts in to blog directory
-foreach (new \DirectoryIterator(PROJECT_ROOT) as $fileInfo)
-	{
-	$file = $fileInfo->getFilename();
-	if (str_ends_with($file, '.md') && ! str_starts_with($file, 'README'))
-		{
-		\rename($fileInfo->getPathname(), __DIR__ . '/blog/' . $file);
-		}
-	}
-
 // Stage all changed files
 $repo->run('add', ['.']);
 
