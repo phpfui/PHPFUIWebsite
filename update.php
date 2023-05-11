@@ -17,10 +17,10 @@ exec($composer . ' self-update');
 
 include 'commonbase.php';
 
-// get the latest
-$repo = new \Gitonomy\Git\Repository(__DIR__);
-$repo->run('checkout', ['master']);
-$repo->run('pull');
+//// get the latest
+//$repo = new \Gitonomy\Git\Repository(__DIR__);
+//$repo->run('checkout', ['master']);
+//$repo->run('pull');
 
 exec($composer . ' update');
 
@@ -77,6 +77,8 @@ foreach (new \DirectoryIterator($vendorDir . 'orm/docs') as $fileInfo)
 		}
 	}
 
+upperCaseFile('fpdf.php');
+
 // don't update if running under windows
 if ($php == 'php')
 	{
@@ -105,4 +107,21 @@ $repo->run('push');
 file('http://www.phpfui.com/update.php');
 
 echo "http://www.phpfui.com updated.\n";
+
+function upperCaseFile(string $file)
+	{
+	$contents = file_get_contents($file);
+	if (is_file($file))
+		{
+		unlink($file);
+		}
+	$parts = explode('.', $file);
+	$parts[0] = strtoupper($parts[0]);
+	$file = implode('.', $parts);
+	if (is_file($file))
+		{
+		unlink($file);
+		}
+	file_put_contents($file, $contents);
+	}
 

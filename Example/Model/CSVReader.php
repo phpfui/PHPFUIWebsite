@@ -16,9 +16,6 @@ namespace Example\Model;
  */
 class CSVReader implements \Iterator
 	{
-	use \App\DB\StrictGet;
-	use \App\DB\StrictSet;
-
 	/** @var array<string, string> */
 	private array $current = [];
 
