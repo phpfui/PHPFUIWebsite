@@ -8,11 +8,10 @@ class Page extends \PHPFUI\Page
 
 	private \PHPFUI\Cell $mainColumn;
 
-	private \PHPFUI\OffCanvas $offCanvas;
-
 	private string $menuId;
 
-	// @phpstan-ignore-next-line
+	private \PHPFUI\OffCanvas $offCanvas;
+
 	public function __construct(private $callback = null)
 		{
 		parent::__construct();
@@ -109,7 +108,8 @@ class Page extends \PHPFUI\Page
 			$this->addBody($sourceMenu);
 			// add markdown if there
 			$docFile = $_SERVER['DOCUMENT_ROOT'] . '/../Example/docs/' . $class . '.md';
-			if (file_exists($docFile))
+
+			if (\file_exists($docFile))
 				{
 				$parser = new \PHPFUI\InstaDoc\MarkDownParser();
 				$this->addBody($parser->fileText($docFile));

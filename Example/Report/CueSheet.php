@@ -6,6 +6,12 @@ class CueSheet extends \FPDF
 	{
 	private int $angle = 0;
 
+	private int $ascent = 0;
+
+	private int $descent = 0;
+
+	private float $distance = 0.0;
+
 	private float $firstColumn;
 
 	private float $height = 0.0;
@@ -22,15 +28,9 @@ class CueSheet extends \FPDF
 
 	private float $topRow;
 
-	private float $width;
-
 	private string $units;
 
-	private int $ascent = 0;
-
-	private int $descent = 0;
-
-	private float $distance = 0.0;
+	private float $width;
 
 	public function __construct()
 		{
@@ -45,34 +45,6 @@ class CueSheet extends \FPDF
 		$this->topRow = $this->margin * 1.5;
 		$this->secondRow = $this->height / 2.0 + $this->margin;
 		$this->SetMargins($this->margin, $this->topMargin, $this->margin);
-		}
-
-	/** @param array<string, string> $data */
-	public function generate(array $data, string $title, float $distance, string $units, float $ascent, float $descent) : static
-		{
-		$this->ascent = (int)$ascent;
-		$this->descent = (int)$descent;
-
-		$this->distance = $distance;
-		$this->units = $units;
-
-		$reader = new \ArrayIterator($data);
-
-		$title = $this->cleanStreet($title, false);
-
-		$topHeight = $this->height / 2.0 - $this->margin * 2.5;
-		$bottomHeight = $this->height / 2.0 - $this->margin * 2;
-
-		while ($reader->valid())
-			{
-			$this->newPage($title, $units);
-			$this->printSection($this->firstColumn, $this->topRow, $topHeight, $reader);
-			$this->printSection($this->secondColumn, $this->topRow, $topHeight, $reader);
-			$this->printSection($this->firstColumn, $this->secondRow, $bottomHeight, $reader);
-			$this->printSection($this->secondColumn, $this->secondRow, $bottomHeight, $reader);
-			}
-
-		return $this;
 		}
 
 	public function cleanStreet(string $street, bool $minimize = true) : string
@@ -123,6 +95,34 @@ class CueSheet extends \FPDF
 		return $street;
 		}
 
+	/** @param array<string, string> $data */
+	public function generate(array $data, string $title, float $distance, string $units, float $ascent, float $descent) : static
+		{
+		$this->ascent = (int)$ascent;
+		$this->descent = (int)$descent;
+
+		$this->distance = $distance;
+		$this->units = $units;
+
+		$reader = new \ArrayIterator($data);
+
+		$title = $this->cleanStreet($title, false);
+
+		$topHeight = $this->height / 2.0 - $this->margin * 2.5;
+		$bottomHeight = $this->height / 2.0 - $this->margin * 2;
+
+		while ($reader->valid())
+			{
+			$this->newPage($title, $units);
+			$this->printSection($this->firstColumn, $this->topRow, $topHeight, $reader);
+			$this->printSection($this->secondColumn, $this->topRow, $topHeight, $reader);
+			$this->printSection($this->firstColumn, $this->secondRow, $bottomHeight, $reader);
+			$this->printSection($this->secondColumn, $this->secondRow, $bottomHeight, $reader);
+			}
+
+		return $this;
+		}
+
 	private function limit(string &$street, float $streetWidth) : string
 		{
 		$printWidth = $this->GetStringWidth($street);
@@ -157,7 +157,7 @@ class CueSheet extends \FPDF
 
 		$this->Text($this->margin, $this->topMargin, $title);
 		$this->SetXY($this->width - 51, $y);
-		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . substr($units, 0, 2));
+		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . \substr($units, 0, 2));
 		$this->writeLabel(' Ele', " +{$this->ascent}/-{$this->descent}");
 
 		$this->setLineWidth(0.1);
@@ -386,7 +386,7 @@ class CueSheet extends \FPDF
 
 	private function writeLabel(string $label, string $value) : void
 		{
-		if (strlen($value))
+		if (\strlen($value))
 			{
 			$this->SetFont('Arial', 'B', 8);
 			$this->Write(2.7, $label . ': ');

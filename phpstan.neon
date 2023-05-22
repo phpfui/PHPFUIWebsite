@@ -1,0 +1,13 @@
+parameters:
+	level: 5
+	errorFormat: raw
+	editorUrl: '%%file%% %%line%% %%column%%: %%error%%'
+	paths:
+		- Example
+		- examples
+	scanFiles:
+		- common.php
+		- commonbase.php
+		- update.php
+		- www/update.php
+

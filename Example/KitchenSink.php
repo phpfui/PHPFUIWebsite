@@ -4,9 +4,9 @@ namespace Example;
 
 class KitchenSink extends \Example\Page
 	{
-	private \PHPFUI\Menu $magellanMenu;
-
 	private \Highlight\Highlighter $hl;
+
+	private \PHPFUI\Menu $magellanMenu;
 
 	private \PHPFUI\HTML5Element $sections;
 

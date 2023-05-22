@@ -95,30 +95,6 @@ class ErrorLogging
 		self::sendMessage("{$varname} {$at}: " . \print_r($message, true));
 		}
 
-	public static function warning(string $message) : void
-		{
-		self::sendMessage($message, 'warning');
-		}
-
-	public static function sendMessage(string $message, string $type = 'error') : void
-		{
-		self::initialize();
-
-		if (! self::$client)
-			{
-			return;
-			}
-
-		try
-			{
-			$link = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . ($_SERVER['SERVER_NAME'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '') . "\n";
-			self::$client->send($link . $message);
-			}
-		catch (\Exception $e)
-			{
-			}
-		}
-
 	public static function getErrorMessages() : array
 		{
 		return self::$messages;
@@ -168,6 +144,30 @@ class ErrorLogging
 		self::sendMessage($message);
 
 		return false;
+		}
+
+	public static function sendMessage(string $message, string $type = 'error') : void
+		{
+		self::initialize();
+
+		if (! self::$client)
+			{
+			return;
+			}
+
+		try
+			{
+			$link = ($_SERVER['REQUEST_SCHEME'] ?? 'http') . '://' . ($_SERVER['SERVER_NAME'] ?? 'localhost') . ($_SERVER['REQUEST_URI'] ?? '') . "\n";
+			self::$client->send($link . $message);
+			}
+		catch (\Exception $e)
+			{
+			}
+		}
+
+	public static function warning(string $message) : void
+		{
+		self::sendMessage($message, 'warning');
 		}
 
 	private static function initialize() : void

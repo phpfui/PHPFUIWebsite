@@ -4,14 +4,14 @@ namespace Example\Model;
 
 class RWGPS
 	{
+	private float $ascent = 0.0;
+
+	private float $descent = 0.0;
+
 	private string $name = '';
 
 	/** @var array<string, string | float> */
 	private array $rows = [];
-
-	private float $ascent = 0.0;
-
-	private float $descent = 0.0;
 
 	private float $totalDistance = 0.0;
 
@@ -19,24 +19,9 @@ class RWGPS
 		{
 		}
 
-	public function getTitle() : string
-		{
-		return $this->name;
-		}
-
-	public function getDistance() : float
-		{
-		return $this->getBigUnits($this->totalDistance);
-		}
-
 	public function getAscent() : float
 		{
 		return \round($this->getSmallUnits($this->ascent));
-		}
-
-	public function getDescent() : float
-		{
-		return \round($this->getSmallUnits($this->descent));
 		}
 
 	/** @return array<string, string | float> */
@@ -45,16 +30,32 @@ class RWGPS
 		return $this->rows;
 		}
 
+	public function getDescent() : float
+		{
+		return \round($this->getSmallUnits($this->descent));
+		}
+
+	public function getDistance() : float
+		{
+		return $this->getBigUnits($this->totalDistance);
+		}
+
+	public function getTitle() : string
+		{
+		return $this->name;
+		}
+
 	public function validate() : string
 		{
-		$json = file_get_contents($this->url . '.json');
+		$json = \file_get_contents($this->url . '.json');
 
 		if (empty($json))
 			{
 			return $this->url . ' does not appear to be a valid Ride With GPS link.';
 			}
 
-		$data = json_decode($json, true);
+		$data = \json_decode($json, true);
+
 		if (empty($data['has_course_points']))
 			{
 			return $this->url . ' does not have street directions.';
@@ -86,7 +87,7 @@ class RWGPS
 
 	private function getBigUnits(float $meters) : float
 		{
-		if ($this->unit == 'Miles')
+		if ('Miles' == $this->unit)
 			{
 			// return miles
 			return $meters * 0.000621371;
@@ -98,7 +99,7 @@ class RWGPS
 
 	private function getSmallUnits(float $meters) : float
 		{
-		if ($this->unit == 'Miles')
+		if ('Miles' == $this->unit)
 			{
 			// return feet
 			return $meters * 3.28084;

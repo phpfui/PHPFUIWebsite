@@ -4,7 +4,6 @@ namespace Example\Tool;
 
 class SessionManager
 	{
-
 	public static function getDirectory()
 		{
 		return PROJECT_ROOT . '/session';
@@ -12,13 +11,13 @@ class SessionManager
 
 	public static function purgeOld(int $secondsBack = 7200) : void
 		{
-		$endTime = time() - $secondsBack;
+		$endTime = \time() - $secondsBack;
 
-		foreach (glob(self::getDirectory() . '/*') as $file)
+		foreach (\glob(self::getDirectory() . '/*') as $file)
 			{
-			if (filemtime($file) < $endTime)
+			if (\filemtime($file) < $endTime)
 				{
-				unlink($file);
+				\unlink($file);
 				}
 			}
 		}
@@ -27,23 +26,22 @@ class SessionManager
 		{
 		try
 			{
-			$lifetime = 30*24*60*60;
-			ini_set('session.gc_maxlifetime', $lifetime);
-			ini_set('session.use_cookies', 1);
-			ini_set('session.cookie_lifetime', $lifetime);
-			ini_set('session.gc_divisor', '1');
-			ini_set('session.gc_probability', '1');
-			session_set_cookie_params($lifetime);
-			session_save_path(self::getDirectory());
-			session_start();
+			$lifetime = 30 * 24 * 60 * 60;
+			\ini_set('session.gc_maxlifetime', $lifetime);
+			\ini_set('session.use_cookies', 1);
+			\ini_set('session.cookie_lifetime', $lifetime);
+			\ini_set('session.gc_divisor', '1');
+			\ini_set('session.gc_probability', '1');
+			\session_set_cookie_params($lifetime);
+			\session_save_path(self::getDirectory());
+			\session_start();
 			\PHPFUI\Session::cycleFlash();
 			}
 		catch (\Exception $e)
 			{
 			$_SESSION = [];
-			session_write_close();
-			session_start();
+			\session_write_close();
+			\session_start();
 			}
 		}
-
 	}

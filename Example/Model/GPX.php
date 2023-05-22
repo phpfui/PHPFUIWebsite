@@ -4,17 +4,17 @@ namespace Example\Model;
 
 class GPX
 	{
-	private string $name;
+	private float $ascent = 0.0;
+
+	private float $descent = 0.0;
 
 	/** @var array<string, float> */
 	private array $mileages = [];
 
+	private string $name;
+
 	/** @var array<string, string | float> */
 	private array $rows = [];
-
-	private float $ascent = 0.0;
-
-	private float $descent = 0.0;
 
 	private float $totalDistance = 0.0;
 
@@ -30,14 +30,15 @@ class GPX
 			}
 		}
 
-	public function getDistance() : float
-		{
-		return $this->totalDistance;
-		}
-
 	public function getAscent() : float
 		{
 		return \round($this->ascent);
+		}
+
+	/** @return array<string, string | float> */
+	public function getData() : array
+		{
+		return $this->rows;
 		}
 
 	public function getDescent() : float
@@ -45,15 +46,14 @@ class GPX
 		return \round($this->descent);
 		}
 
+	public function getDistance() : float
+		{
+		return $this->totalDistance;
+		}
+
 	public function getFileName() : string
 		{
 		return $this->name;
-		}
-
-	/** @return array<string, string | float> */
-	public function getData() : array
-		{
-		return $this->rows;
 		}
 
 	public function validate() : string

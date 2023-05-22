@@ -19,7 +19,6 @@ class CSVReader implements \Iterator
 	/** @var array<string, string> */
 	private array $current = [];
 
-	// @phpstan-ignore-next-line
 	private $fh = false;
 
 	/** @var array<string> */

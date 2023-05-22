@@ -31,7 +31,7 @@ class Country
 		return $this->countries[$index] ?? [];
 		}
 
-	/** @return array<array<string, string>> */
+	/** @return array<string, string> */
 	public function getFiltered(callable $filter) : array
 		{
 		$filtered = [];

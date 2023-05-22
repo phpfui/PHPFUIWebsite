@@ -34,7 +34,7 @@ class RWGPS2CueSheet extends \Example\Page
 
 		$this->addBody(new \PHPFUI\Header('RWGPS Route Url to Cue Sheet PDF'));
 		$form = new \PHPFUI\Form($this);
-		$input = new \Example\View\RWGPS2CueSheet($this, $fieldName);
+		$input = new \Example\View\RWGPS2CueSheet($fieldName);
 		$form->add($input->render());
 		$form->add('<br>');
 		$buttonGroup = new \PHPFUI\ButtonGroup();

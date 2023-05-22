@@ -46,14 +46,14 @@ class Pagination
 		return $form;
 		}
 
-	public function getCenter() : bool
-		{
-		return $this->center;
-		}
-
 	public function getAlwaysShow() : bool
 		{
 		return $this->alwaysShow;
+		}
+
+	public function getCenter() : bool
+		{
+		return $this->center;
 		}
 
 	public function getFastForward() : int

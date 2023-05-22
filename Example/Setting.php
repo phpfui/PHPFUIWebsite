@@ -8,10 +8,10 @@ namespace Example;
  */
 abstract class Setting
 	{
+	private string $fileName = 'NOT FOUND';
+
 	// @var array<string, mixed>
 	private array $settings = [];
-
-	private string $fileName = 'NOT FOUND';
 
 	public function __construct(private string $serverName = '')
 		{
@@ -20,6 +20,17 @@ abstract class Setting
 			$this->serverName = $_SERVER['SERVER_NAME'] ?? '';
 			}
 		$this->load();
+		}
+
+	public function __call(string $name, array $args)
+		{
+		if (! \str_starts_with($name, 'get'))
+			{
+			throw new \Exception('Method ' . $name . ' is not defined for ' . static::class);
+			}
+		$name = \lcfirst(\substr($name, 3));
+
+		return $this->settings[$name] ?? null;
 		}
 
 	/**
@@ -44,27 +55,6 @@ abstract class Setting
 		return $value;
 		}
 
-	public function __call(string $name, array $args)
-		{
-		if (! \str_starts_with($name, 'get'))
-			{
-			throw new \Exception('Method ' . $name . ' is not defined for ' . static::class);
-			}
-		$name = \lcfirst(\substr($name, 3));
-
-		return $this->settings[$name] ?? null;
-		}
-
-	public function getLoadedFileName() : string
-		{
-		return $this->fileName;
-		}
-
-	public function empty() : bool
-		{
-		return empty($this->settings);
-		}
-
 	/**
 	 * Add fields
 	 *
@@ -77,22 +67,20 @@ abstract class Setting
 		return $this;
 		}
 
-	/**
-	 * Set the fields
-	 *
-	 * @param array<string, mixed> $fields key / value field pairs that will now be valid fields
-	 */
-	public function setFields(array $fields) : static
+	public function empty() : bool
 		{
-		$this->settings = $fields;
-
-		return $this;
+		return empty($this->settings);
 		}
 
 	// @return array<string, mixed>
 	public function getFields() : array
 		{
 		return $this->settings;
+		}
+
+	public function getLoadedFileName() : string
+		{
+		return $this->fileName;
 		}
 
 	public function save() : bool
@@ -126,6 +114,28 @@ abstract class Setting
 		}
 
 	/**
+	 * Set the fields
+	 *
+	 * @param array<string, mixed> $fields key / value field pairs that will now be valid fields
+	 */
+	public function setFields(array $fields) : static
+		{
+		$this->settings = $fields;
+
+		return $this;
+		}
+
+	private function getFileName(string $fileName) : string
+		{
+		if (false == \strpos($fileName, '.php'))
+			{
+			$fileName .= '.php';
+			}
+
+		return PROJECT_ROOT . '/config/' . $fileName;
+		}
+
+	/**
 	 * Load settings file from config directory in project root. The following is the file search order:
 	 *
 	 * - Server name directory, class base name.
@@ -151,16 +161,6 @@ abstract class Setting
 			}
 
 		$this->settings = $this->loadFile($className);
-		}
-
-	private function getFileName(string $fileName) : string
-		{
-		if (false == \strpos($fileName, '.php'))
-			{
-			$fileName .= '.php';
-			}
-
-		return PROJECT_ROOT . '/config/' . $fileName;
 		}
 
 	private function loadFile(string $configName) : array

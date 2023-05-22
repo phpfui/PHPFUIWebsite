@@ -4,7 +4,7 @@ namespace Example\View;
 
 class RWGPS2CueSheet
 	{
-	public function __construct(private \PHPFUI\Page $page, private string $fieldName)
+	public function __construct(private string $fieldName)
 		{
 		}
 
