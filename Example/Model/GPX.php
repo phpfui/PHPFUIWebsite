@@ -89,13 +89,13 @@ class GPX
 			$elevation = $temp['ele'];
 			$elevationDiff = $elevation - $lastElevation;
 
-			if ($elevationDiff > 0)
+			if ($elevationDiff > 0.0)
 				{
 				$this->ascent += $elevationDiff;
 				}
 			else
 				{
-				$this->descent += (0 - $elevationDiff);
+				$this->descent += (0.0 - $elevationDiff);
 				}
 			$lastElevation = $elevation;
 			$key = $temp['@attributes']['lat'] . ',' . $temp['@attributes']['lon'];
@@ -132,10 +132,5 @@ class GPX
 			}
 
 		return '';
-		}
-
-	public function getCueSheet() : \Example\Report\CueSheet
-		{
-		return new \Example\Report\CueSheet();
 		}
 	}

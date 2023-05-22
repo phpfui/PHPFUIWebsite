@@ -2,7 +2,7 @@
 
 namespace Example\View;
 
-class GPX2CueSheet
+class RWGPS2CueSheet
 	{
 	public function __construct(private \PHPFUI\Page $page, private string $fieldName)
 		{
@@ -14,16 +14,13 @@ class GPX2CueSheet
 
 		$container = new \PHPFUI\Container();
 		$callout = new \PHPFUI\Callout('info');
-		$gpxLink = new \PHPFUI\Link('https://en.wikipedia.org/wiki/GPS_Exchange_Format', 'GPX');
+		$rwgpsLink = new \PHPFUI\Link('https://ridewithgps.com', 'Ride With GPS Route');
 		$PDFLink = new \PHPFUI\Link('https://en.wikipedia.org/wiki/PDF', 'PDF');
-		$callout->add("Convert a {$gpxLink} file to a {$PDFLink} version of a CueSheet. Drag in a {$gpxLink} file and press Generate to download a {$PDFLink} version of a cue sheet.");
+		$callout->add("Convert a {$rwgpsLink} url to a {$PDFLink} version of a CueSheet.");
 		$container->add($callout);
-		$file = new \PHPFUI\Input\File($this->page, $this->fieldName, 'GPX File to convert to a cuesheet. You must remove the existing file to drag in a different file.');
-		$file->setAllowedExtensions(['gpx']);
-		$file->setRequired();
-		$container->add($file);
-
-		$container->add(new \PHPFUI\Input\Text('title', 'Title, or leave blank to use file name', $parameters['title'] ?? ''));
+		$url = new \PHPFUI\Input\Url($this->fieldName, 'Ride With GPS Route link to convert to a cuesheet.');
+		$url->setRequired();
+		$container->add($url);
 
 		$radioGroup = new \PHPFUI\Input\RadioGroup('units', 'Distance Units', $parameters['units'] ?? 'Miles');
 		$radioGroup->addButton('Miles', 'Miles');

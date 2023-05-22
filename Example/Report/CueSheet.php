@@ -24,6 +24,8 @@ class CueSheet extends \FPDF
 
 	private float $width;
 
+	private string $units;
+
 	private int $ascent = 0;
 
 	private int $descent = 0;
@@ -50,7 +52,9 @@ class CueSheet extends \FPDF
 		{
 		$this->ascent = (int)$ascent;
 		$this->descent = (int)$descent;
+
 		$this->distance = $distance;
+		$this->units = $units;
 
 		$reader = new \ArrayIterator($data);
 
@@ -152,9 +156,9 @@ class CueSheet extends \FPDF
 
 
 		$this->Text($this->margin, $this->topMargin, $title);
-		$this->SetXY($this->width - 50, $y);
-		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . $units);
-		$this->writeLabel(' Ele', "+{$this->ascent}/-{$this->descent}");
+		$this->SetXY($this->width - 51, $y);
+		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . substr($units, 0, 2));
+		$this->writeLabel(' Ele', " +{$this->ascent}/-{$this->descent}");
 
 		$this->setLineWidth(0.1);
 		$this->SetDash(2, 2);
@@ -306,7 +310,7 @@ class CueSheet extends \FPDF
 		$y += $this->printRow($x, $y, $header, 'TL', 4);
 		$this->SetFont('Arial', 'B', 8);
 		$header['distance'] = 'At Turn';
-		$header['gox'] = 'Miles';
+		$header['gox'] = $this->units;
 		$header['street'] = 'Then Turn Onto';
 		$y += $this->printRow($x, $y, $header, 'LB', 4);
 
@@ -382,7 +386,7 @@ class CueSheet extends \FPDF
 
 	private function writeLabel(string $label, string $value) : void
 		{
-		if ($value)
+		if (strlen($value))
 			{
 			$this->SetFont('Arial', 'B', 8);
 			$this->Write(2.7, $label . ': ');

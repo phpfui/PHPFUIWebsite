@@ -175,6 +175,7 @@ class Page extends \PHPFUI\Page
 			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
 			'Composer Version Checker' => '/Examples/ComposerVersion.php',
 			'GPX to CueSheet' => '/Examples/GPX2CueSheet.php',
+			'RWGPS to CueSheet' => '/Examples/RWGPS2CueSheet.php',
 			'Kitchen Sink' => '/Examples/KitchenSink.php',
 			'Orbit Carousel' => '/Examples/Orbit.php',
 			'Orderable Table' => '/Examples/OrderableTable.php',
