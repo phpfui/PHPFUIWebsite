@@ -7,7 +7,7 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	}
 else
 	{
-	$php = '/usr/bin/php8.1';
+	$php = '/usr/bin/php8.2';
 	$composer = 'composer.phar';
 	}
 
@@ -18,9 +18,9 @@ exec($composer . ' self-update');
 include 'commonbase.php';
 
 //// get the latest
-//$repo = new \Gitonomy\Git\Repository(__DIR__);
-//$repo->run('checkout', ['master']);
-//$repo->run('pull');
+$repo = new \Gitonomy\Git\Repository(__DIR__);
+$repo->run('checkout', ['master']);
+$repo->run('pull');
 
 exec($composer . ' update');
 

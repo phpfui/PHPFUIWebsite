@@ -13,11 +13,9 @@ namespace PHPFUI\ORM;
  */
 abstract class Record extends DataObject
 	{
-	public const ALLOWS_NULL_INDEX = 4;
+	public const ALLOWS_NULL_INDEX = 3;
 
-	public const DEFAULT_INDEX = 5;
-
-	public const KEY_INDEX = 3;
+	public const DEFAULT_INDEX = 4;
 
 	public const LENGTH_INDEX = 2;
 
@@ -440,14 +438,6 @@ abstract class Record extends DataObject
 		}
 
 	/**
-	 * Save the record, will either update if it exists or insert if not
-	 */
-	public function save() : int | bool
-		{
-		return $this->privateInsert(true);
-		}
-
-	/**
 	 * @return bool  true if loaded from the disk
 	 */
 	public function loaded() : bool
@@ -544,6 +534,14 @@ abstract class Record extends DataObject
 			}
 
 		return $this->read($keys);
+		}
+
+	/**
+	 * Save the record, will either update if it exists or insert if not
+	 */
+	public function save() : int | bool
+		{
+		return $this->privateInsert(true);
 		}
 
 	/**
