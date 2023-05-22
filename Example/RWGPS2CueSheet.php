@@ -38,7 +38,7 @@ class RWGPS2CueSheet extends \Example\Page
 		$form->add($input->render());
 		$form->add('<br>');
 		$buttonGroup = new \PHPFUI\ButtonGroup();
-		$buttonGroup->addButton(new \PHPFUI\Submit('Download CueSheet'));
+		$buttonGroup->addButton(new \PHPFUI\Submit('Download Cue Sheet'));
 		$form->add($buttonGroup);
 		$form->add(new \PHPFUI\FormError());
 

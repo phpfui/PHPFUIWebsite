@@ -16,9 +16,9 @@ class RWGPS2CueSheet
 		$callout = new \PHPFUI\Callout('info');
 		$rwgpsLink = new \PHPFUI\Link('https://ridewithgps.com', 'Ride With GPS Route');
 		$PDFLink = new \PHPFUI\Link('https://en.wikipedia.org/wiki/PDF', 'PDF');
-		$callout->add("Convert a {$rwgpsLink} url to a {$PDFLink} version of a CueSheet.");
+		$callout->add("Convert a {$rwgpsLink} url to a {$PDFLink} version of a Cue Sheet.");
 		$container->add($callout);
-		$url = new \PHPFUI\Input\Url($this->fieldName, 'Ride With GPS Route link to convert to a cuesheet.');
+		$url = new \PHPFUI\Input\Url($this->fieldName, 'Ride With GPS Route link to convert to a Cue Sheet.');
 		$url->setRequired();
 		$container->add($url);
 
