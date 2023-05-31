@@ -20,13 +20,15 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
  * Denormalizes a date string to an instance of {@see \DateTime} or {@see \DateTimeImmutable}.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
+ *
+ * @final since Symfony 6.3
  */
 class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface, CacheableSupportsMethodInterface
 {
     public const FORMAT_KEY = 'datetime_format';
     public const TIMEZONE_KEY = 'datetime_timezone';
 
-    private $defaultContext = [
+    private array $defaultContext = [
         self::FORMAT_KEY => \DateTime::RFC3339,
         self::TIMEZONE_KEY => null,
     ];
@@ -45,6 +47,17 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface, 
     public function setDefaultContext(array $defaultContext): void
     {
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        $isCacheable = __CLASS__ === static::class || $this->hasCacheableSupportsMethod();
+
+        return [
+            \DateTimeInterface::class => $isCacheable,
+            \DateTimeImmutable::class => $isCacheable,
+            \DateTime::class => $isCacheable,
+        ];
     }
 
     /**
@@ -133,8 +146,13 @@ class DateTimeNormalizer implements NormalizerInterface, DenormalizerInterface, 
         return isset(self::SUPPORTED_TYPES[$type]);
     }
 
+    /**
+     * @deprecated since Symfony 6.3, use "getSupportedTypes()" instead
+     */
     public function hasCacheableSupportsMethod(): bool
     {
+        trigger_deprecation('symfony/serializer', '6.3', 'The "%s()" method is deprecated, use "getSupportedTypes()" instead.', __METHOD__);
+
         return __CLASS__ === static::class;
     }
 
