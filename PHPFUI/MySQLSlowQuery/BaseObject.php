@@ -32,7 +32,7 @@ abstract class BaseObject
 	 *
 	 * @return mixed returns $value so you can string together assignments
 	 */
-	public function __set(string $field, $value)
+	public function __set(string $field, mixed $value)
 		{
 		if (! \array_key_exists($field, $this->fields))
 			{
@@ -41,7 +41,7 @@ abstract class BaseObject
 
 		$this->fields[$field] = $value;
 
-		return $value;
+
 		}
 
 	/** @return array<string, mixed>  */

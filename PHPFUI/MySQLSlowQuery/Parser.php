@@ -14,12 +14,8 @@ class Parser
 	/** @var array<int, string> */
 	private array $extraLines = [];
 
-	private string $fileName = '';
-
 	// @phpstan-ignore-next-line
 	private $handle;
-
-	private bool $inSession = true;
 
 	/** @var array<int, \PHPFUI\MySQLSlowQuery\Session> */
 	private array $sessions = [];
@@ -31,9 +27,8 @@ class Parser
 	/**
 	 * Parse a MySQL Slow Query Log file
 	 */
-	public function __construct(string $fileName)
+	public function __construct(private string $fileName)
 		{
-		$this->fileName = $fileName;
 		}
 
 	/**
@@ -132,63 +127,131 @@ class Parser
 		return $line;
 		}
 
+	/**
+	 * Derive a string value that determines how the log is parsed.
+	 */
+	private function getParseMode(string $sessionHeaderFirstLine) : string
+		{
+		return \stripos($sessionHeaderFirstLine, 'MariaDB') ? 'mariadb' : '';
+		}
+
 	private function parse() : void
 		{
 		$this->handle = @\fopen($this->fileName, 'r');
 
 		if (! $this->handle)
 			{
-			throw new Exception\EmptyLog(__CLASS__ . ': ' . $this->fileName . ' appears to not exist or is empty');
+			throw new Exception\EmptyLog(self::class . ': ' . $this->fileName . ' appears to not exist or is empty');
 			}
 
-		$currentSession = [];
+		$newSessionHeader = [];
+		$parseMode = '';
+		$previousTimeLine = '';
+		$processingSessionHeader = true;
 
+		// Get line from stack (if pushed in below loop) or file. Any comment line
+		// not starting with "# Time: " gets discarded.
 		while (\strlen($line = $this->getNextLine()))
 			{
-			if (0 === \stripos($line, self::PORT))	// in middle of session, end it
+			if (0 === \stripos($line, self::PORT))
 				{
-				$currentSession[] = $line;
+				$newSessionHeader[] = $line;
+				$parseMode = $this->getParseMode($newSessionHeader[0]);
 				// eat the next line
 				$this->getNextLine();
 				// create a new session
-				$this->sessions[] = new \PHPFUI\MySQLSlowQuery\Session($currentSession);
-				$currentSession = [];
-				$this->inSession = false;
-				}
-			elseif ($this->inSession)	// in session, grab line
-				{
-				$currentSession[] = $line;
-				}
-			elseif (0 === \strpos($line, self::TIME))	// start of log entry
-				{
-				$entry = new \PHPFUI\MySQLSlowQuery\Entry();
-				// parse the next three lines
-				$entry->setFromLine($line);
-				$entry->setFromLine(\fgets($this->handle));
-				$entry->setFromLine(\fgets($this->handle));
+				$this->sessions[] = new \PHPFUI\MySQLSlowQuery\Session($newSessionHeader, $parseMode);
+				$newSessionHeader = [];
+				$processingSessionHeader = false;
 
+				// The next line is expected to be a comment connected to the first
+				// query in this session. In non backward compatible mode, check this:
+				// if it's not a comment line, this is assumed to be the start of the
+				// next session header (i.e. there are zero queries in this session).
+				if ('mariadb' === $parseMode && \strlen($line = $this->getNextLine()) > 0)
+					{
+					if ('#' !== $line[0])
+						{
+						$processingSessionHeader = true;
+						}
+					$this->pushLine($line);
+					}
+				}
+			elseif ($processingSessionHeader) // not in session yet
+				{
+				// store lines until "TCP Port: " is found in a next line
+				$newSessionHeader[] = $line;
+				}
+			elseif ('#' === $line[0])	// start of log entry
+				{
+				$entry = new \PHPFUI\MySQLSlowQuery\Entry(['parse_mode' => $parseMode]);
 				$query = [];
 
-				// @phpstan-ignore-next-line
-				while (\strlen($line = $this->getNextLine()) > 0 && '#' !== $line[0])
+				if ('' === $parseMode)
 					{
-					if (0 === \stripos($line, self::PORT))	// found a session
+					// Backward compatible parsing:
+					// - Ignore comment lines up until "# Time:"
+					// - Iarse exactly three lines. If any of these are non-comments,
+					//   throw an exception.
+					// - If there are more than three comment lines, the query below
+					//   them is ignored.
+					if (! \str_starts_with($line, self::TIME))
+						{
+						continue;
+						}
+					$entry->setFromLine($line);
+					$entry->setFromLine(\fgets($this->handle));
+					$entry->setFromLine(\fgets($this->handle));
+					}
+				else
+					{
+					$timeLineFound = false;
+					// Parse any following comment lines, and interpret the next
+					// non-comment line as a query line.
+					do
+						{
+						$entry->setFromLine($line);
+
+						if ('mariadb' == $parseMode && \str_starts_with($line, self::TIME))
+							{
+							$timeLineFound = true;
+							$previousTimeLine = $line;
+							}
+						}
+					while (\strlen($line = $this->getNextLine()) > 0 && '#' === $line[0]); // @phpstan-ignore-line
+
+					if ('mariadb' == $parseMode && ! $timeLineFound && $previousTimeLine) // @phpstan-ignore-line
+						{
+						// Always add the Time property. Assume that if it is not in the
+						// log, it's the same as the previous logged query, and that the
+						// line contains no other properties we don't want to add.
+						$entry->setFromLine($previousTimeLine);
+						}
+					$query[] = \trim($line);
+					}
+
+				// gather (more) query lines until a non-query line is reached
+				while (\strlen($line = $this->getNextLine()) > 0 && '#' !== $line[0]) // @phpstan-ignore-line
+					{
+					if (0 === \stripos($line, self::PORT))	// found a new session header
 						{
 						$this->pushLine($line);
-						// push this and previous line back on to stack
+						// Push this and previous line back on to stack. (Implicitly assume
+						// "TCP Port: " is on the second line of the new session header.)
 						if (\count($query))
 							{
 							$this->pushLine(\array_pop($query));
 							}
 						$line = '';
-						$currentSession = [];
-						$this->inSession = true;
+						$newSessionHeader = [];
+						$processingSessionHeader = true;
 
 						break;
 						}
 					$query[] = \trim($line);
 					}
 
+				// push unprocessed comment line (for next query) back on to stack
 				if (\strlen($line) && '#' === $line[0])
 					{
 					$this->pushLine($line);
@@ -202,6 +265,12 @@ class Parser
 		\fclose($this->handle);
 		}
 
+	/**
+	 * Push line back on to stack for further processing.
+	 *
+	 * Lines will later be processed by getNextLine() in the reverse order as
+	 * they are pushed.
+	 */
 	private function pushLine(string $line) : self
 		{
 		\array_unshift($this->extraLines, $line);
