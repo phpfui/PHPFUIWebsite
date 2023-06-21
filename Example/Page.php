@@ -12,7 +12,7 @@ class Page extends \PHPFUI\Page
 
 	private \PHPFUI\OffCanvas $offCanvas;
 
-	public function __construct(private ?callable $callback = null)
+	public function __construct(private $callback = null)
 		{
 		parent::__construct();
 		$this->addStyleSheet('css/styles.css');
