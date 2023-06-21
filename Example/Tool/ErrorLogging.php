@@ -6,8 +6,14 @@ class ErrorLogging
 	{
 	private static ?\Maknz\Slack\Client $client = null;
 
+	/**
+	 * @var array<string,bool>
+	 */
 	private static array $messages = [];
 
+	/**
+	 * @var array<string, bool>
+	 */
 	private static array $pages = [];
 
 	private static ?\Example\Setting\Slack $settings = null;
@@ -42,7 +48,7 @@ class ErrorLogging
 		self::$messages = [];
 		}
 
-	public static function debug($message, string $location = '') : void
+	public static function debug(mixed $message, string $location = '') : void
 		{
 		if (empty(self::$settings->optional('debug')))
 			{
@@ -95,15 +101,18 @@ class ErrorLogging
 		self::sendMessage("{$varname} {$at}: " . \print_r($message, true));
 		}
 
+	/**
+	 * @return array<string>
+	 */
 	public static function getErrorMessages() : array
 		{
-		return self::$messages;
+		return array_keys(self::$messages);
 		}
 
 	/**
 	 * Error handler, passes flow over the exception logger with new ErrorException.
 	 */
-	public static function log_error($num, $str, $file, $line, $context = null) : bool
+	public static function log_error(int $num, string $str, string $file, int $line, mixed $context = null) : bool
 		{
 		self::log_exception(new \ErrorException($str, 0, $num, $file, $line));
 
@@ -172,10 +181,10 @@ class ErrorLogging
 
 	private static function initialize() : void
 		{
-		if (! self::$client && self::$settings && self::$settings->getLoggingWebhook() && \strlen(self::$settings->getLoggingWebhook()) > 20)
+		if (! self::$client && self::$settings && self::$settings->optional('LoggingWebhook') && \strlen(self::$settings->optional('LoggingWebhook')) > 20)
 			{
 			$guzzle = new \GuzzleHttp\Client(['connect_timeout' => 1, 'timeout' => 1, 'verify' => false, 'http_errors' => false]);
-			self::$client = new \Maknz\Slack\Client(self::$settings->getLoggingWebhook(), [], $guzzle);
+			self::$client = new \Maknz\Slack\Client(self::$settings->optional('LoggingWebhook'), [], $guzzle);
 			}
 		}
 	}

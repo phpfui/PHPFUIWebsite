@@ -5,8 +5,10 @@ parameters:
 	scanFiles:
 		- common.php
 		- commonbase.php
+		- ComposerUpdate.php
+		- update.php
+		- www/update.php
 	paths:
-		- App
 		- Example
 		- examples
 	ignoreErrors:

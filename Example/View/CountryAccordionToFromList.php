@@ -12,10 +12,10 @@ class CountryAccordionToFromList extends \PHPFUI\AccordionToFromList
 		$this->setOutName('Starts with Consonant');
 		}
 
-	protected function callback(string $fieldName, string $index, $userData, string $type) : string
+	protected function callback(string $fieldName, string $index, int $userData, string $type) : string
 		{
 		$country = $this->model->getCountry($userData);
 
-		return $country['Country'] . new \PHPFUI\Input\Hidden("{$fieldName}-{$type}[]", $userData);
+		return $country['Country'] . new \PHPFUI\Input\Hidden("{$fieldName}-{$type}[]", (string)$userData);
 		}
 	}

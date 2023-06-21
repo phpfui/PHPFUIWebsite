@@ -4,7 +4,7 @@ namespace Example\Model;
 
 class TempFile implements \Stringable
 	{
-	protected $handle = null;
+	protected $handle = null; // @phpstan-ignore-line
 
 	protected string $name = '';
 

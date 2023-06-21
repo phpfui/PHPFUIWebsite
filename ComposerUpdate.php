@@ -75,6 +75,11 @@ class ComposerUpdate
 
 	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
 		{
+		if (! is_dir($source))
+			{
+			return;
+			}
+
 		if (! \is_dir($dest))
 			{
 			\mkdir($dest, 0755, true);

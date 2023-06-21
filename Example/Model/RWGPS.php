@@ -111,6 +111,9 @@ class RWGPS
 		return $meters;
 		}
 
+	/**
+	 * @param array<string, string> $parsed_url
+	 */
 	private function unparse_url(array $parsed_url) : string
 		{
 		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';

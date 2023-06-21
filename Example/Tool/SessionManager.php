@@ -4,7 +4,7 @@ namespace Example\Tool;
 
 class SessionManager
 	{
-	public static function getDirectory()
+	public static function getDirectory() : string
 		{
 		return PROJECT_ROOT . '/session';
 		}

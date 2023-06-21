@@ -31,7 +31,7 @@ class Country
 		return $this->countries[$index] ?? [];
 		}
 
-	/** @return array<string, string> */
+	/** @return array<string, array<int, array<string, string>>> */
 	public function getFiltered(callable $filter) : array
 		{
 		$filtered = [];
@@ -50,7 +50,7 @@ class Country
 	/**
 	 * @param array<int> $selected
 	 *
-	 * @return array<string, array<string, string>>
+	 * @return array<string, array<int, array<string, string>>>
 	 */
 	public function getSelected(array $selected) : array
 		{

@@ -10,7 +10,9 @@ abstract class Setting
 	{
 	private string $fileName = 'NOT FOUND';
 
-	// @var array<string, mixed>
+	/**
+	 * @var array<string, mixed>
+	 */
 	private array $settings = [];
 
 	public function __construct(private string $serverName = '')
@@ -22,7 +24,10 @@ abstract class Setting
 		$this->load();
 		}
 
-	public function __call(string $name, array $args)
+	/**
+	 * @param array<string, mixed> $args
+	 */
+	public function __call(string $name, array $args) : ?string
 		{
 		if (! \str_starts_with($name, 'get'))
 			{
@@ -38,21 +43,17 @@ abstract class Setting
 	 *
 	 * Unset fields will return null
 	 */
-	public function __get(string $field)
+	public function __get(string $field) : mixed
 		{
 		return $this->settings[$field] ?? null;
 		}
 
 	/**
 	 * Allows for $object->field = $x syntax
-	 *
-	 * @return mixed  returns $value so you can string together assignments
 	 */
-	public function __set(string $field, $value)
+	public function __set(string $field, mixed $value)
 		{
 		$this->settings[$field] = $value;
-
-		return $value;
 		}
 
 	/**
@@ -67,12 +68,19 @@ abstract class Setting
 		return $this;
 		}
 
+	public function optional(string $key) : mixed
+		{
+		return $this->settings[$key] ?? false;
+		}
+
 	public function empty() : bool
 		{
 		return empty($this->settings);
 		}
 
-	// @return array<string, mixed>
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getFields() : array
 		{
 		return $this->settings;
@@ -163,6 +171,9 @@ abstract class Setting
 		$this->settings = $this->loadFile($className);
 		}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	private function loadFile(string $configName) : array
 		{
 		$fileName = $this->getFileName($configName);
