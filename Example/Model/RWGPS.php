@@ -15,7 +15,7 @@ class RWGPS
 
 	private float $totalDistance = 0.0;
 
-	public function __construct(private string $url, private string $unit = 'mi')
+	public function __construct(private string $url, private string $unit = 'Miles')
 		{
 		}
 
