@@ -20,7 +20,7 @@ class RWGPS2CueSheet extends \Example\Page
 				}
 			else
 				{
-				$url = 'https://ridewithgps.com/routes/' . (int)$_GET['id']);
+				$url = 'https://ridewithgps.com/routes/' . (int)$_GET['id'];
 				$units = $_GET['units'] ?? 'Miles';
 				}
 			$model = new \Example\Model\RWGPS($url, $units);
