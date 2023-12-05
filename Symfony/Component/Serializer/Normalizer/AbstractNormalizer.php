@@ -405,6 +405,8 @@ abstract class AbstractNormalizer implements NormalizerInterface, DenormalizerIn
                         true
                     );
                     $context['not_normalizable_value_exceptions'][] = $exception;
+
+                    return $reflectionClass->newInstanceWithoutConstructor();
                 }
             }
 

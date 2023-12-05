@@ -44,7 +44,6 @@ class TextHelper
 				/** @noinspection PhpMissingBreakStatementInspection */
 				case 'object':
 					$value = \json_decode(\json_encode($value), true, 512);
-
 					// Intentionally fall through
 				case 'array':
 					$js .= self::arrayToJS($value, $stringQuote);
@@ -55,11 +54,9 @@ class TextHelper
 					$js .= $value ? 'true' : 'false';
 
 					break;
-
 				/** @noinspection PhpMissingBreakStatementInspection */
 				case 'string':
 					$value = "{$stringQuote}{$value}{$stringQuote}";
-
 					// Intentionally fall through
 				case 'integer':
 				case 'double':

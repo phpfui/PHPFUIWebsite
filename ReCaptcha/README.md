@@ -76,6 +76,7 @@ response (usually in `$_POST['g-recaptcha-response']` or the response from
 and user's IP address. For example:
 
 ```php
+<?php
 $recaptcha = new \ReCaptcha\ReCaptcha($secret);
 $resp = $recaptcha->setExpectedHostname('recaptcha-demo.appspot.com')
                   ->verify($gRecaptchaResponse, $remoteIp);
@@ -104,6 +105,7 @@ Each of the `set`\*`()` methods return the `ReCaptcha` instance so you can chain
 them together. For example:
 
 ```php
+<?php
 $recaptcha = new \ReCaptcha\ReCaptcha($secret);
 $resp = $recaptcha->setExpectedHostname('recaptcha-demo.appspot.com')
                   ->setExpectedAction('homepage')

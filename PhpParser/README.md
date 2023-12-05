@@ -37,11 +37,13 @@ Install the library using [composer](https://getcomposer.org):
 Parse some PHP code into an AST and dump the result in human-readable form:
 
 ```php
+<?php
 use PhpParser\Error;
 use PhpParser\NodeDumper;
 use PhpParser\ParserFactory;
 
 $code = <<<'CODE'
+<?php
 
 function test($foo)
 {
@@ -167,6 +169,8 @@ echo $prettyPrinter->prettyPrintFile($ast);
 This gives us our original code, minus the `var_dump()` call inside the function:
 
 ```php
+<?php
+
 function test($foo)
 {
 }

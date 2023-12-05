@@ -40,6 +40,8 @@ composer require druidfi/mysqldump-php
 ## Getting started
 
 ```php
+<?php
+
 try {
     $dump = new \Druidfi\Mysqldump\Mysqldump('mysql:host=localhost;dbname=testdb', 'username', 'password');
     $dump->start('storage/work/dump.sql');
@@ -135,7 +137,7 @@ All options:
 - **include-views**
   - Only include these views (array of view names), include all if empty. By default, all views named as the include-tables array are included.
 - **if-not-exists**
-  - Only create a new table when a table of the same name does not already exist. No error message is thrown if the table already exists.
+  - Only create a new table when a table of the same name does not already exist. No error message is thrown if the table already exists. 
 - **compress**
   - Possible values: `Bzip2|Gzip|Gzipstream|None`, default is `None`
   - Could be specified using the consts: `CompressManagerFactory::GZIP`, `CompressManagerFactory::BZIP2` or `CompressManagerFactory::NONE`
@@ -217,7 +219,7 @@ To dump a database, you need the following privileges:
   - If "lock tables" option was enabled.
 - **PROCESS**
   - If you don’t use the --no-tablespaces option.
-
+    
 Use **SHOW GRANTS FOR user@host;** to know what privileges user has. See the following link for more information:
 
 - [Which are the minimum privileges required to get a backup of a MySQL database schema?](https://dba.stackexchange.com/questions/55546/which-are-the-minimum-privileges-required-to-get-a-backup-of-a-mysql-database-sc/55572#55572)

@@ -35,6 +35,8 @@ Example Usage
 -------------
 
 ```php
+<?php
+
 use Gitonomy\Git\Repository;
 
 $repository = new Repository('/path/to/repository');

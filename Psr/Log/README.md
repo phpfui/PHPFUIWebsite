@@ -20,6 +20,8 @@ Usage
 If you need a logger, you can use the interface like this:
 
 ```php
+<?php
+
 use Psr\Log\LoggerInterface;
 
 class Foo
@@ -36,7 +38,7 @@ class Foo
         if ($this->logger) {
             $this->logger->info('Doing work');
         }
-
+           
         try {
             $this->doSomethingElse();
         } catch (Exception $exception) {

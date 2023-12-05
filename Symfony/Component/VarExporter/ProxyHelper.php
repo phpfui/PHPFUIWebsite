@@ -215,7 +215,7 @@ final class ProxyHelper
 
     public static function exportSignature(\ReflectionFunctionAbstract $function, bool $withParameterTypes = true, string &$args = null): string
     {
-        $byRefIndex = 0;
+        $hasByRef = false;
         $args = '';
         $param = null;
         $parameters = [];
@@ -225,20 +225,16 @@ final class ProxyHelper
                 .($param->isPassedByReference() ? '&' : '')
                 .($param->isVariadic() ? '...' : '').'$'.$param->name
                 .($param->isOptional() && !$param->isVariadic() ? ' = '.self::exportDefault($param) : '');
-            if ($param->isPassedByReference()) {
-                $byRefIndex = 1 + $param->getPosition();
-            }
+            $hasByRef = $hasByRef || $param->isPassedByReference();
             $args .= ($param->isVariadic() ? '...$' : '$').$param->name.', ';
         }
 
-        if (!$param || !$byRefIndex) {
+        if (!$param || !$hasByRef) {
             $args = '...\func_get_args()';
         } elseif ($param->isVariadic()) {
             $args = substr($args, 0, -2);
         } else {
-            $args = explode(', ', $args, 1 + $byRefIndex);
-            $args[$byRefIndex] = sprintf('...\array_slice(\func_get_args(), %d)', $byRefIndex);
-            $args = implode(', ', $args);
+            $args .= sprintf('...\array_slice(\func_get_args(), %d)', \count($parameters));
         }
 
         $signature = 'function '.($function->returnsReference() ? '&' : '')

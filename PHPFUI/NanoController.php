@@ -263,7 +263,6 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	private function invokeClassMethod(array $class, string $method, array $parts = [], int $index = 0) : ?\PHPFUI\Interfaces\NanoClass
 		{
 		$className = \implode('\\', $class);
-
 		// if we are at the root namespace, we are done
 		if ($className == $this->rootNamespace)
 			{
@@ -378,7 +377,6 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		while (\count($classParts))
 			{
 			$className = \implode('\\', $classParts);
-
 			// if we are at the rool namespace, we are done
 			if ($className == $this->rootNamespace)
 				{

@@ -82,17 +82,10 @@ class Menu extends \PHPFUI\HTML5Element
 		{
 		foreach ($this->menuItems as &$menuItem)
 			{
-			if ($menuItem instanceof \PHPFUI\MenuItem)
+			if ($menuItem->getLink() == $link)
 				{
-				if ($menuItem->getLink() == $link)
-					{
-					$menuItem->setActive();
+				$menuItem->setActive();
 
-					return true;
-					}
-				}
-			elseif ($menuItem->setActiveLink($link))
-				{
 				return true;
 				}
 			}

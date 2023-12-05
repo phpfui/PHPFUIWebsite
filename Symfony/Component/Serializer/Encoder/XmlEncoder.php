@@ -154,7 +154,15 @@ class XmlEncoder implements EncoderInterface, DecoderInterface, NormalizationAwa
             return $rootNode->nodeValue;
         }
 
-        return array_merge($this->parseXmlAttributes($rootNode, $context), ['#' => $rootNode->nodeValue]);
+        $data = [];
+
+        foreach ($rootNode->attributes as $attrKey => $attr) {
+            $data['@'.$attrKey] = $attr->nodeValue;
+        }
+
+        $data['#'] = $rootNode->nodeValue;
+
+        return $data;
     }
 
     public function supportsEncoding(string $format): bool

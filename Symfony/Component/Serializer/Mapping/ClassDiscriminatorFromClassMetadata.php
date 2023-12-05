@@ -65,9 +65,7 @@ class ClassDiscriminatorFromClassMetadata implements ClassDiscriminatorResolverI
     {
         $reflectionClass = new \ReflectionClass($object);
         if ($parentClass = $reflectionClass->getParentClass()) {
-            if (null !== ($parentMapping = $this->getMappingForMappedObject($parentClass->getName()))) {
-                return $parentMapping;
-            }
+            return $this->getMappingForMappedObject($parentClass->getName());
         }
 
         foreach ($reflectionClass->getInterfaceNames() as $interfaceName) {
