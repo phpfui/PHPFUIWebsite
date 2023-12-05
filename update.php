@@ -91,6 +91,7 @@ $repo->run('add', ['.']);
 
 // if any files are staged, then make new version, else bail as we are done
 $output = $repo->run('status', ['--porcelain']);
+echo $output;
 if (! strlen(trim($output)))
 	{
 	echo "No changes detected, exiting.\n";
