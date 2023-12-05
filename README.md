@@ -5,13 +5,12 @@ PHP client for the [validator.nu](https://validator.nu/) API. Can be configured 
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/rexxars/html-validator.svg?style=flat-square)](https://packagist.org/packages/rexxars/html-validator)[![PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg?style=flat-square)](https://php.net)[![License](https://img.shields.io/github/license/rexxars/html-validator.svg?style=flat-square)](https://packagist.org/packages/rexxars/html-validator)[![Build Status](https://img.shields.io/travis/rexxars/html-validator/master.svg?style=flat-square)](https://travis-ci.org/rexxars/html-validator)
 
-Version >= 2.0.0 requires PHP >= 5.6.  
+Version >= 2.0.0 requires PHP >= 5.6.
 Version <= 1.1.0 supports PHP <= 5.6, but won't be maintained anymore.
 
 # Usage
 
 ```php
-<?php
 $document = file_get_contents('my-page.html');
 
 $validator = new HtmlValidator\Validator();
@@ -60,7 +59,6 @@ Document to be validated (`validate-me.html`):
 
 Using the validator:
 ```php
-<?php
 $document = file_get_contents('validate-me.html');
 
 $validator = new HtmlValidator\Validator();
@@ -95,7 +93,6 @@ ed closed </span></li>
 Since 1.1.0 you can validate URLs as well:
 
 ```php
-<?php
 $validator = new HtmlValidator\Validator();
 $validator->setParser(HtmlValidator\Validator::PARSER_HTML5);
 $result = $validator->validateUrl($url);
@@ -119,7 +116,6 @@ Check out [validator.nu](http://about.validator.nu/#src) for instructions on set
 Once set up, you can configure the validator to use a different host:
 
 ```php
-<?php
 $validator = new HtmlValidator\Validator('http://self-hosted-validator.domain.com');
 
 ```

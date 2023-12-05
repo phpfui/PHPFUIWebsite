@@ -50,8 +50,6 @@ single [`run()`](#run) call that is controlled by the user.
 Here is an async HTTP server built with just the event loop.
 
 ```php
-<?php
-
 use React\EventLoop\Loop;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -527,7 +525,7 @@ The return value of the timer callback function will be ignored and has
 no effect, so for performance reasons you're recommended to not return
 any excessive data structures.
 
-This method returns a timer instance. The same timer instance will also be 
+This method returns a timer instance. The same timer instance will also be
 passed into the timer callback function as described above.
 You can invoke [`cancelTimer`](#canceltimer) to cancel a pending timer.
 Unlike [`addPeriodicTimer()`](#addperiodictimer), this method will ensure
@@ -596,10 +594,10 @@ The return value of the timer callback function will be ignored and has
 no effect, so for performance reasons you're recommended to not return
 any excessive data structures.
 
-This method returns a timer instance. The same timer instance will also be 
+This method returns a timer instance. The same timer instance will also be
 passed into the timer callback function as described above.
-Unlike [`addTimer()`](#addtimer), this method will ensure the callback 
-will be invoked infinitely after the given interval or until you invoke 
+Unlike [`addTimer()`](#addtimer), this method will ensure the callback
+will be invoked infinitely after the given interval or until you invoke
 [`cancelTimer`](#canceltimer).
 
 ```php

@@ -43,7 +43,6 @@ Example: **php vendor/phpfui/instadoc/install.php public/PHPFUI** will add all n
 PHPFUI/InstaDoc does not reply on any framework and can run on a standalone page. It is recommended that you do not make your documentation public, as PHPFUI/InstaDoc will display PHP source files. How you restrict access to the page is up to you.  The following does not restrict access and is simply an example:
 
 ```php
-<?php
 include 'yourAutoLoader.php';
 
 // pass the directory containing your composer.json file

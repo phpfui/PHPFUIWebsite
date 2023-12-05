@@ -5,7 +5,6 @@ secret key, specify any additional validation rules, and then call `verify()`
 with the reCAPTCHA response and user's IP address. For example:
 
 ```php
-<?php
 $recaptcha = new \ReCaptcha\ReCaptcha($secret);
 $resp = $recaptcha->setExpectedHostname('recaptcha-demo.appspot.com')
                   ->verify($gRecaptchaResponse, $remoteIp);
@@ -31,14 +30,12 @@ For example, if you want to use [cURL](https://secure.php.net/curl) instead you
 can do this:
 
 ```php
-<?php
 $recaptcha = new \ReCaptcha\ReCaptcha($secret, new \ReCaptcha\RequestMethod\CurlPost());
 ```
 
 Alternatively, you can also use a [socket](https://secure.php.net/fsockopen):
 
 ```php
-<?php
 $recaptcha = new \ReCaptcha\ReCaptcha($secret, new \ReCaptcha\RequestMethod\SocketPost());
 ```
 

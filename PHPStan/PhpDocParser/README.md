@@ -26,8 +26,6 @@ composer require phpstan/phpdoc-parser
 ## Basic usage
 
 ```php
-<?php
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
@@ -63,8 +61,6 @@ and print it again as close as possible to the original.
 It's heavily inspired by format-preserving printer component in [nikic/PHP-Parser](https://github.com/nikic/PHP-Parser).
 
 ```php
-<?php
-
 require_once __DIR__ . '/vendor/autoload.php';
 
 use PHPStan\PhpDocParser\Ast\NodeTraverser;

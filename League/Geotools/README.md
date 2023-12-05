@@ -73,8 +73,6 @@ $ php composer.phar install
 Now you can add the autoloader, and you will have access to the library:
 
 ```php
-<?php
-
 require 'vendor/autoload.php';
 ```
 
@@ -94,8 +92,6 @@ Here are the available ellipsoids: `AIRY`, `AUSTRALIAN_NATIONAL`, `BESSEL_1841`,
 
 If you need to use an other ellipsoid, just create an array like this:
 ``` php
-<?php
-
 $myEllipsoid = \League\Geotools\Coordinate\Ellipsoid::createFromArray([
     'name' => 'My Ellipsoid', // The name of the Ellipsoid
     'a'    => 123.0, // The semi-major axis (equatorial radius) in meters
@@ -121,8 +117,6 @@ Latitudes below -90.0 or above 90.0 degrees are *capped* through `\League\Geotoo
 Longitudes below -180.0 or above 180.0 degrees are *wrapped* through `\League\Geotools\Coordinate\Coordinate::normalizeLongitude()`.
 
 ```php
-<?php
-
 use League\Geotools\Coordinate\Coordinate;
 use League\Geotools\Coordinate\Ellipsoid;
 
@@ -159,8 +153,6 @@ You can also convert them in the Universal Transverse Mercator (UTM) projection 
 region of Svalbard are covered).
 
 ```php
-<?php
-
 $geotools   = new \League\Geotools\Geotools();
 $coordinate = new \League\Geotools\Coordinate\Coordinate('40.446195, -79.948862');
 $converted  = $geotools->convert($coordinate);
@@ -207,8 +199,6 @@ NB: Before you implement caching in your app please be sure that doing so does n
 for your(s) geocoding provider(s).
 
 ```php
-<?php
-
 $geocoder = new \Geocoder\ProviderAggregator(); // or \Geocoder\TimedGeocoder
 $httpClient  = HttpClientDiscovery::find();
 
@@ -281,8 +271,6 @@ geoip|::ffff:66.147.244.214|The GeoipProvider does not support IPv6 addresses.
 Batch reverse geocoding is something like:
 
 ```php
-<?php
-
 // ... $geocoder like the previous example ...
 // If you want to reverse one coordinate
 try {
@@ -316,8 +304,6 @@ using *flat* (most performant), *great circle*, *haversine* or *vincenty* (most 
 Those coordinates should be in the same ellipsoid.
 
 ```php
-<?php
-
 $geotools = new \League\Geotools\Geotools();
 $coordA   = new \League\Geotools\Coordinate\Coordinate([48.8234055, 2.3072664]);
 $coordB   = new \League\Geotools\Coordinate\Coordinate([43.296482, 5.36978]);
@@ -337,8 +323,6 @@ the *middle point* and the *destination point*. The middle and the destination p
 `\League\Geotools\Coordinate\Coordinate` object with the same ellipsoid.
 
 ```php
-<?php
-
 $geotools = new \League\Geotools\Geotools();
 $coordA   = new \League\Geotools\Coordinate\Coordinate([48.8234055, 2.3072664]);
 $coordB   = new \League\Geotools\Coordinate\Coordinate([43.296482, 5.36978]);
@@ -365,8 +349,6 @@ It provides methods to get the *geo hash* and its *bounding box's coordinates* (
 of a coordinate and the *coordinate* and its *bounding box's coordinates* (SouthWest & NorthEast) of a geo hash.
 
 ```php
-<?php
-
 $geotools       = new \League\Geotools\Geotools();
 $coordToGeohash = new \League\Geotools\Coordinate\Coordinate('43.296482, 5.36978');
 
@@ -404,8 +386,6 @@ Represent a location with 10m accuracy using a 10 character code that includes f
 entering the code. Read more about the algorithm [here](http://blog.jgc.org/2006/07/simple-code-for-entering-latitude-and.html).
 
 ```php
-<?php
-
 $tenten = new \League\Geotools\Tests\Geohash\TenTen;
 $tenten->encode(new Coordinate([51.09559, 1.12207])); // MEQ N6G 7NY5
 ```
@@ -416,7 +396,6 @@ Represents a segment with a direction.
 You can find if two vertexes are on the same line.
 
 ```php
-<?php
 	$vertexA->setFrom(48.8234055);
 	$vertexA->setTo(2.3072664);
 
@@ -436,8 +415,6 @@ First you need to create the polygon, you can provide:
 - a `CoordinateCollection`
 
 ```php
-<?php
-
 $polygon = new \League\Geotools\Polygon\Polygon([
     [48.9675969, 1.7440796],
     [48.4711003, 2.5268555],

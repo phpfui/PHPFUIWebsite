@@ -67,7 +67,6 @@ RateLimiterMiddleware::perSecond(3, new RateLimiterStore());
 A Laravel example of a custom `Store`:
 
 ```php
-<?php
 
 namespace MyApp;
 
