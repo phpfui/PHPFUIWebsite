@@ -106,7 +106,7 @@ class ErrorLogging
 	 */
 	public static function getErrorMessages() : array
 		{
-		return array_keys(self::$messages);
+		return \array_keys(self::$messages);
 		}
 
 	/**

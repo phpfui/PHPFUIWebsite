@@ -51,7 +51,7 @@ abstract class Setting
 	/**
 	 * Allows for $object->field = $x syntax
 	 */
-	public function __set(string $field, mixed $value)
+	public function __set(string $field, mixed $value) : void
 		{
 		$this->settings[$field] = $value;
 		}
@@ -66,11 +66,6 @@ abstract class Setting
 		$this->settings = \array_merge($this->settings, $fields);
 
 		return $this;
-		}
-
-	public function optional(string $key) : mixed
-		{
-		return $this->settings[$key] ?? false;
 		}
 
 	public function empty() : bool
@@ -89,6 +84,11 @@ abstract class Setting
 	public function getLoadedFileName() : string
 		{
 		return $this->fileName;
+		}
+
+	public function optional(string $key) : mixed
+		{
+		return $this->settings[$key] ?? false;
 		}
 
 	public function save() : bool

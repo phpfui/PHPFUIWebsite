@@ -174,6 +174,7 @@ class Page extends \PHPFUI\Page
 			'AutoComplete' => '/Examples/AutoComplete.php',
 			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
 			'Composer Version Checker' => '/Examples/ComposerVersion.php',
+			'EMail Button Generator' => '/Examples/EMailButtonGenerator.php',
 			'GPX to Cue Sheet' => '/Examples/GPX2CueSheet.php',
 			'RWGPS to Cue Sheet' => '/Examples/RWGPS2CueSheet.php',
 			'Kitchen Sink' => '/Examples/KitchenSink.php',

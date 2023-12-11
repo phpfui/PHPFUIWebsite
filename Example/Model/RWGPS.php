@@ -128,5 +128,4 @@ class RWGPS
 
 		return "{$scheme}{$user}{$pass}{$host}{$port}{$path}{$query}{$fragment}";
 		}
-
 	}
