@@ -398,6 +398,19 @@ abstract class Table implements \Countable
 		}
 
 	/**
+	 * Return an array of the explain query
+	 *
+	 * @return array<array<string,mixed>>
+	 */
+	public function getExplainRows() : array
+		{
+		$this->lastInput = [];
+		$this->lastSql = 'explain ' . $this->getSQL($this->lastInput);
+
+		return \PHPFUI\ORM::getRows($this->lastSql, $this->lastInput);
+		}
+
+	/**
 	 * @return array<string,array<mixed>>
 	 */
 	public function getFields() : array
@@ -416,7 +429,7 @@ abstract class Table implements \Countable
 			}
 
 		$comma = '';
-		$retVal = ' GROUP BY';
+		$retVal = "\nGROUP BY";
 		$addRollup = 0;
 
 		foreach ($this->groupBys as $field => $rollup)
@@ -424,7 +437,7 @@ abstract class Table implements \Countable
 			$parts = \explode('.', $field);
 			$field = \implode('`.`', $parts);
 			$retVal .= "{$comma} `{$field}`";
-			$comma = ',';
+			$comma = ",\n";
 
 			$addRollup |= (int)$rollup;
 			}
@@ -453,7 +466,7 @@ abstract class Table implements \Countable
 
 		$input = \array_merge($input, $this->havingCondition->getInput());
 
-		return ' HAVING ' . $this->havingCondition;
+		return "\nHAVING " . $this->havingCondition;
 		}
 
 	public function getHavingCondition() : \PHPFUI\ORM\Condition
@@ -495,7 +508,7 @@ abstract class Table implements \Countable
 		// could just be a string, return it
 		if ($this->limit && ! $this->offset && null === $this->page)
 			{
-			return ' LIMIT ' . $this->limit;
+			return "\nLIMIT {$this->limit}";
 			}
 
 		if (! $this->limit)
@@ -515,7 +528,7 @@ abstract class Table implements \Countable
 			}
 		$this->offset = $offset;
 
-		return " LIMIT {$offset}, {$this->limit}";
+		return "\nLIMIT {$offset}, {$this->limit}";
 		}
 
 	public function getOffset() : ?int
@@ -534,7 +547,7 @@ abstract class Table implements \Countable
 			}
 
 		$comma = '';
-		$retVal = ' ORDER BY';
+		$retVal = "\nORDER BY";
 
 		foreach ($this->orderBys as $field => $direction)
 			{
@@ -607,7 +620,8 @@ abstract class Table implements \Countable
 
 			$columns = [];
 			// make explicit column names for joined tables since we don't have explicit selects
-			$sql = "`{$this->instance->getTableName()}`.*";
+			$sql = "\n`{$this->instance->getTableName()}`.*";
+
 			// set column names from explicit select
 			foreach ($this->getFields() as $field => $data)
 				{
@@ -625,11 +639,11 @@ abstract class Table implements \Countable
 					{
 					if (isset($columns[$field]))
 						{
-						$sql .= ",`{$tableName}`.`{$field}` as `{$tableName}_{$field}`";
+						$sql .= ",\n`{$tableName}`.`{$field}` as `{$tableName}_{$field}`";
 						}
 					else
 						{
-						$sql .= ",`{$tableName}`.`{$field}`";
+						$sql .= ",\n`{$tableName}`.`{$field}`";
 						$columns[$field] = true;
 						}
 					}
@@ -639,7 +653,7 @@ abstract class Table implements \Countable
 				{
 				return $sql;
 				}
-			$comma = ',';
+			$comma = ",\n";
 			}
 
 		foreach ($this->selects as $field => $as)
@@ -650,7 +664,7 @@ abstract class Table implements \Countable
 				{
 				$sql .= ' as `' . $as . '`';
 				}
-			$comma = ',';
+			$comma = ",\n";
 			}
 		$sql = \str_replace('`*`', '*', $sql);
 
@@ -672,7 +686,7 @@ abstract class Table implements \Countable
 		$having = $this->getHaving($input);
 		$orderBy = $this->getOrderBy();
 		$limit = $this->getLimitClause();
-		$sql = "SELECT {$this->distinct} {$select} FROM `{$table}`" . $joins . $where . $groupBy . $having;
+		$sql = "SELECT {$this->distinct} {$select}\nFROM `{$table}`" . $joins . $where . $groupBy . $having;
 
 		if ($this->unions)
 			{
@@ -719,7 +733,7 @@ abstract class Table implements \Countable
 
 		$input = \array_merge($input, $this->whereCondition->getInput());
 
-		return ' WHERE ' . $this->whereCondition;
+		return "\nWHERE " . $this->whereCondition;
 		}
 
 	public function getWhereCondition() : \PHPFUI\ORM\Condition
@@ -752,7 +766,7 @@ abstract class Table implements \Countable
 		foreach ($fields as $fieldName)
 			{
 			$sql .= "{$comma}`{$fieldName}`";
-			$comma = ',';
+			$comma = ",\n";
 			}
 
 		$sql .= ') values ';
@@ -773,7 +787,7 @@ abstract class Table implements \Countable
 			foreach ($fields as $fieldName)
 				{
 				$sql .= $comma . '?';
-				$comma = ',';
+				$comma = ",\n";
 				$input[] = $record[$fieldName];
 				}
 			$comma = '),(';
@@ -965,7 +979,7 @@ abstract class Table implements \Countable
 			{
 			$this->lastSql .= "{$comma} `{$field}`=?";
 			$this->lastInput[] = $value;
-			$comma = ',';
+			$comma = ",\n";
 			}
 
 		$where = $this->getWhere($this->lastInput);
@@ -996,6 +1010,7 @@ abstract class Table implements \Countable
 				{
 				$data = [];
 
+				$record = new static::$className($existingKey);
 				foreach ($fields as $field => $typeInfo)
 					{
 					if (isset($request[$field]))
@@ -1010,7 +1025,7 @@ abstract class Table implements \Countable
 							}
 						}
 					}
-				$this->instance->setEmpty()->setFrom($data)->insertOrUpdate();
+				$record->setFrom($data)->insertOrUpdate();
 				}
 			}
 
@@ -1062,7 +1077,7 @@ abstract class Table implements \Countable
 			$onCondition = $joinInfo[1];
 			$joinType = $joinInfo[2];
 			$input = \array_merge($input, $onCondition->getInput());
-			$joins .= " {$joinType} JOIN `{$joinTableName}`{$as} ON {$onCondition}";
+			$joins .= "\n{$joinType} JOIN `{$joinTableName}`{$as} ON {$onCondition}";
 			}
 
 		return $joins;
