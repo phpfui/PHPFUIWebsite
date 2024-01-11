@@ -5,7 +5,7 @@
 		"composer/semver": ">=3.2",
 		"druidfi/mysqldump-php": "^1.0",
 		"league/geotools": "^1.0",
-		"nikic/php-parser": ">=4.8",
+		"nikic/php-parser": "^5.0",
 		"nxp/math-executor": ">=2.0",
 		"phpfui/constantcontact": "dev-main",
 		"phpfui/html-unit-tester": "dev-master",
