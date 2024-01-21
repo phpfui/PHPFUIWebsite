@@ -37,7 +37,6 @@ $updater->setIgnoredRepos([
 	'phar-io',
 	'PHPStan',
 	'sebastian',
-	'phpunit',
 	'phpspec',
 	'ralouphie',
 	'Symplify',

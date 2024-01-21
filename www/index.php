@@ -17,7 +17,6 @@ if ($useComposer)
 else
 	{
 	$libraries = [
-		'cebe',
 		'Composer',
 		'DeepCopy',
 		'Example',
@@ -127,6 +126,5 @@ else
 			exit;
 			}
 		}
-
 	echo $controller->display();
 	}

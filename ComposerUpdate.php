@@ -233,9 +233,32 @@ class ComposerUpdate
 					{
 					foreach ($autoload['classmap'] as $file)
 						{
-						$from = 'vendor/' . $install['name'] . '/' . $file;
-						$to = $this->noNameSpaceDir . $file;
-						\copy( str_replace('\\', '/', $from),  str_replace('\\', '/', $to));
+						$fromDir = 'vendor/' . $install['name'] . '/' . $file;
+						if (is_file($fromDir))
+							{
+							continue;
+							}
+						$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fromDir));
+
+						foreach ($iterator as $file)
+							{
+							$fileName = strtolower($file->getFilename());
+							if ($file->isFile() && str_ends_with($fileName, '.php'))
+								{
+								$phpFile = file_get_contents($file->getPathname());
+								$namespacePos = strpos($phpFile, 'namespace') + 10;
+								$semicolin = strpos($phpFile, ';', $namespacePos);
+								$namespace = trim(substr($phpFile, $namespacePos, $semicolin - $namespacePos));
+								$sourceFile = str_replace('\\', '/', $file->getPathname());
+								$targetDir = str_replace('\\', '/', $this->noNameSpaceDir . $namespace);
+								if (! is_dir($targetDir))
+									{
+									mkdir($targetDir, recursive:true);
+									}
+								$targetFile = $targetDir . '/' . $file->getFilename();
+								\copy($sourceFile, $targetFile);
+								}
+							}
 						}
 					}
 //					echo "No autoload for {$install['name']}\n";
