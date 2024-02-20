@@ -52,7 +52,7 @@ else
 
 $fileManager->load();
 \PHPFUI\InstaDoc\ChildClasses::load('../ChildClasses.serial');
-\PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe\markdown\tests');
+\PHPFUI\InstaDoc\NamespaceTree::deleteNameSpace('cebe');
 $controller = new \PHPFUI\InstaDoc\Controller($fileManager);
 $controller->setGitRoot(\getcwd() . '/../');
 $controller->addHomePageMarkdown('../PHPFUI/README.md');
