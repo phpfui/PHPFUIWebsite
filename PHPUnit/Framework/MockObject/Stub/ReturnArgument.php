@@ -9,22 +9,33 @@
  */
 namespace PHPUnit\Framework\MockObject\Stub;
 
+use function sprintf;
 use PHPUnit\Framework\MockObject\Invocation;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class ReturnArgument implements Stub
+final class ReturnArgument implements Stub
 {
-    private int $argumentIndex;
+    /**
+     * @var int
+     */
+    private $argumentIndex;
 
-    public function __construct(int $argumentIndex)
+    public function __construct($argumentIndex)
     {
         $this->argumentIndex = $argumentIndex;
     }
 
-    public function invoke(Invocation $invocation): mixed
+    public function invoke(Invocation $invocation)
     {
-        return $invocation->parameters()[$this->argumentIndex] ?? null;
+        if (isset($invocation->getParameters()[$this->argumentIndex])) {
+            return $invocation->getParameters()[$this->argumentIndex];
+        }
+    }
+
+    public function toString(): string
+    {
+        return sprintf('return argument #%d', $this->argumentIndex);
     }
 }

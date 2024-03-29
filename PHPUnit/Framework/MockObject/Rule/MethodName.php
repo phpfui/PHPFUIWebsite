@@ -19,17 +19,26 @@ use PHPUnit\Framework\MockObject\MethodNameConstraint;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class MethodName
+final class MethodName
 {
-    private Constraint $constraint;
+    /**
+     * @var Constraint
+     */
+    private $constraint;
 
     /**
+     * @param Constraint|string $constraint
+     *
      * @throws InvalidArgumentException
      */
-    public function __construct(Constraint|string $constraint)
+    public function __construct($constraint)
     {
         if (is_string($constraint)) {
             $constraint = new MethodNameConstraint($constraint);
+        }
+
+        if (!$constraint instanceof Constraint) {
+            throw InvalidArgumentException::create(1, 'PHPUnit\Framework\Constraint\Constraint object or string');
         }
 
         $this->constraint = $constraint;
@@ -41,14 +50,16 @@ final readonly class MethodName
     }
 
     /**
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
      */
     public function matches(BaseInvocation $invocation): bool
     {
-        return $this->matchesName($invocation->methodName());
+        return $this->matchesName($invocation->getMethodName());
     }
 
     /**
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
      */
     public function matchesName(string $methodName): bool

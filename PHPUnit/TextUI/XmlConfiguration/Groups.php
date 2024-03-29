@@ -9,17 +9,22 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration;
 
-use PHPUnit\TextUI\Configuration\GroupCollection;
-
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final readonly class Groups
+final class Groups
 {
-    private GroupCollection $include;
-    private GroupCollection $exclude;
+    /**
+     * @var GroupCollection
+     */
+    private $include;
+
+    /**
+     * @var GroupCollection
+     */
+    private $exclude;
 
     public function __construct(GroupCollection $include, GroupCollection $exclude)
     {

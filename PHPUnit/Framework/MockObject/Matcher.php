@@ -9,6 +9,8 @@
  */
 namespace PHPUnit\Framework\MockObject;
 
+use function assert;
+use function implode;
 use function sprintf;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
@@ -19,18 +21,43 @@ use PHPUnit\Framework\MockObject\Rule\InvokedCount;
 use PHPUnit\Framework\MockObject\Rule\MethodName;
 use PHPUnit\Framework\MockObject\Rule\ParametersRule;
 use PHPUnit\Framework\MockObject\Stub\Stub;
-use PHPUnit\Util\ThrowableToStringMapper;
+use PHPUnit\Framework\TestFailure;
+use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class Matcher
 {
-    private readonly InvocationOrder $invocationRule;
-    private ?string $afterMatchBuilderId    = null;
-    private ?MethodName $methodNameRule     = null;
-    private ?ParametersRule $parametersRule = null;
-    private ?Stub $stub                     = null;
+    /**
+     * @var InvocationOrder
+     */
+    private $invocationRule;
+
+    /**
+     * @var mixed
+     */
+    private $afterMatchBuilderId;
+
+    /**
+     * @var bool
+     */
+    private $afterMatchBuilderIsInvoked = false;
+
+    /**
+     * @var MethodName
+     */
+    private $methodNameRule;
+
+    /**
+     * @var ParametersRule
+     */
+    private $parametersRule;
+
+    /**
+     * @var Stub
+     */
+    private $stub;
 
     public function __construct(InvocationOrder $rule)
     {
@@ -47,7 +74,7 @@ final class Matcher
         return $this->methodNameRule !== null;
     }
 
-    public function methodNameRule(): MethodName
+    public function getMethodNameRule(): MethodName
     {
         return $this->methodNameRule;
     }
@@ -78,32 +105,39 @@ final class Matcher
     }
 
     /**
-     * @throws Exception
      * @throws ExpectationFailedException
      * @throws MatchBuilderNotFoundException
      * @throws MethodNameNotConfiguredException
      * @throws RuntimeException
      */
-    public function invoked(Invocation $invocation): mixed
+    public function invoked(Invocation $invocation)
     {
         if ($this->methodNameRule === null) {
             throw new MethodNameNotConfiguredException;
         }
 
         if ($this->afterMatchBuilderId !== null) {
-            $matcher = $invocation->object()
+            $matcher = $invocation->getObject()
                 ->__phpunit_getInvocationHandler()
                 ->lookupMatcher($this->afterMatchBuilderId);
 
             if (!$matcher) {
                 throw new MatchBuilderNotFoundException($this->afterMatchBuilderId);
             }
+
+            assert($matcher instanceof self);
+
+            if ($matcher->invocationRule->hasBeenInvoked()) {
+                $this->afterMatchBuilderIsInvoked = true;
+            }
         }
 
         $this->invocationRule->invoked($invocation);
 
         try {
-            $this->parametersRule?->apply($invocation);
+            if ($this->parametersRule !== null) {
+                $this->parametersRule->apply($invocation);
+            }
         } catch (ExpectationFailedException $e) {
             throw new ExpectationFailedException(
                 sprintf(
@@ -125,6 +159,7 @@ final class Matcher
 
     /**
      * @throws ExpectationFailedException
+     * @throws InvalidArgumentException
      * @throws MatchBuilderNotFoundException
      * @throws MethodNameNotConfiguredException
      * @throws RuntimeException
@@ -132,13 +167,15 @@ final class Matcher
     public function matches(Invocation $invocation): bool
     {
         if ($this->afterMatchBuilderId !== null) {
-            $matcher = $invocation->object()
+            $matcher = $invocation->getObject()
                 ->__phpunit_getInvocationHandler()
                 ->lookupMatcher($this->afterMatchBuilderId);
 
             if (!$matcher) {
                 throw new MatchBuilderNotFoundException($this->afterMatchBuilderId);
             }
+
+            assert($matcher instanceof self);
 
             if (!$matcher->invocationRule->hasBeenInvoked()) {
                 return false;
@@ -174,6 +211,7 @@ final class Matcher
 
     /**
      * @throws ExpectationFailedException
+     * @throws InvalidArgumentException
      * @throws MethodNameNotConfiguredException
      */
     public function verify(): void
@@ -202,9 +240,36 @@ final class Matcher
                     "Expectation failed for %s when %s.\n%s",
                     $this->methodNameRule->toString(),
                     $this->invocationRule->toString(),
-                    ThrowableToStringMapper::map($e),
+                    TestFailure::exceptionToString($e),
                 ),
             );
         }
+    }
+
+    public function toString(): string
+    {
+        $list = [];
+
+        if ($this->invocationRule !== null) {
+            $list[] = $this->invocationRule->toString();
+        }
+
+        if ($this->methodNameRule !== null) {
+            $list[] = 'where ' . $this->methodNameRule->toString();
+        }
+
+        if ($this->parametersRule !== null) {
+            $list[] = 'and ' . $this->parametersRule->toString();
+        }
+
+        if ($this->afterMatchBuilderId !== null) {
+            $list[] = 'after ' . $this->afterMatchBuilderId;
+        }
+
+        if ($this->stub !== null) {
+            $list[] = 'will ' . $this->stub->toString();
+        }
+
+        return implode(' ', $list);
     }
 }

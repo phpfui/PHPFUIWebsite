@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Framework;
 
+use const PHP_EOL;
 use function sprintf;
 
 /**
@@ -25,6 +26,13 @@ final class ComparisonMethodDoesNotAcceptParameterTypeException extends Exceptio
                 $className,
                 $methodName,
             ),
+            0,
+            null,
         );
+    }
+
+    public function __toString(): string
+    {
+        return $this->getMessage() . PHP_EOL;
     }
 }

@@ -9,7 +9,6 @@
  */
 namespace PHPUnit\Framework\MockObject\Rule;
 
-use function sprintf;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 
@@ -18,20 +17,22 @@ use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
  */
 final class InvokedAtMostCount extends InvocationOrder
 {
-    private readonly int $allowedInvocations;
+    /**
+     * @var int
+     */
+    private $allowedInvocations;
 
-    public function __construct(int $allowedInvocations)
+    /**
+     * @param int $allowedInvocations
+     */
+    public function __construct($allowedInvocations)
     {
         $this->allowedInvocations = $allowedInvocations;
     }
 
     public function toString(): string
     {
-        return sprintf(
-            'invoked at most %d time%s',
-            $this->allowedInvocations,
-            $this->allowedInvocations !== 1 ? 's' : '',
-        );
+        return 'invoked at most ' . $this->allowedInvocations . ' times';
     }
 
     /**
@@ -42,17 +43,12 @@ final class InvokedAtMostCount extends InvocationOrder
      */
     public function verify(): void
     {
-        $actualInvocations = $this->numberOfInvocations();
+        $count = $this->getInvocationCount();
 
-        if ($actualInvocations > $this->allowedInvocations) {
+        if ($count > $this->allowedInvocations) {
             throw new ExpectationFailedException(
-                sprintf(
-                    'Expected invocation at most %d time%s but it occurred %d time%s.',
-                    $this->allowedInvocations,
-                    $this->allowedInvocations !== 1 ? 's' : '',
-                    $actualInvocations,
-                    $actualInvocations !== 1 ? 's' : '',
-                ),
+                'Expected invocation at most ' . $this->allowedInvocations .
+                ' times but it occurred ' . $count . ' time(s).',
             );
         }
     }
@@ -60,5 +56,9 @@ final class InvokedAtMostCount extends InvocationOrder
     public function matches(BaseInvocation $invocation): bool
     {
         return true;
+    }
+
+    protected function invokedDo(BaseInvocation $invocation): void
+    {
     }
 }

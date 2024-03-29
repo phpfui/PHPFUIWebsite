@@ -12,25 +12,53 @@ namespace PHPUnit\TextUI\XmlConfiguration\Logging;
 use PHPUnit\TextUI\XmlConfiguration\Exception;
 use PHPUnit\TextUI\XmlConfiguration\Logging\TestDox\Html as TestDoxHtml;
 use PHPUnit\TextUI\XmlConfiguration\Logging\TestDox\Text as TestDoxText;
+use PHPUnit\TextUI\XmlConfiguration\Logging\TestDox\Xml as TestDoxXml;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final readonly class Logging
+final class Logging
 {
-    private ?Junit $junit;
-    private ?TeamCity $teamCity;
-    private ?TestDoxHtml $testDoxHtml;
-    private ?TestDoxText $testDoxText;
+    /**
+     * @var ?Junit
+     */
+    private $junit;
 
-    public function __construct(?Junit $junit, ?TeamCity $teamCity, ?TestDoxHtml $testDoxHtml, ?TestDoxText $testDoxText)
+    /**
+     * @var ?Text
+     */
+    private $text;
+
+    /**
+     * @var ?TeamCity
+     */
+    private $teamCity;
+
+    /**
+     * @var ?TestDoxHtml
+     */
+    private $testDoxHtml;
+
+    /**
+     * @var ?TestDoxText
+     */
+    private $testDoxText;
+
+    /**
+     * @var ?TestDoxXml
+     */
+    private $testDoxXml;
+
+    public function __construct(?Junit $junit, ?Text $text, ?TeamCity $teamCity, ?TestDoxHtml $testDoxHtml, ?TestDoxText $testDoxText, ?TestDoxXml $testDoxXml)
     {
         $this->junit       = $junit;
+        $this->text        = $text;
         $this->teamCity    = $teamCity;
         $this->testDoxHtml = $testDoxHtml;
         $this->testDoxText = $testDoxText;
+        $this->testDoxXml  = $testDoxXml;
     }
 
     public function hasJunit(): bool
@@ -38,9 +66,6 @@ final readonly class Logging
         return $this->junit !== null;
     }
 
-    /**
-     * @throws Exception
-     */
     public function junit(): Junit
     {
         if ($this->junit === null) {
@@ -50,14 +75,25 @@ final readonly class Logging
         return $this->junit;
     }
 
+    public function hasText(): bool
+    {
+        return $this->text !== null;
+    }
+
+    public function text(): Text
+    {
+        if ($this->text === null) {
+            throw new Exception('Logger "Text" is not configured');
+        }
+
+        return $this->text;
+    }
+
     public function hasTeamCity(): bool
     {
         return $this->teamCity !== null;
     }
 
-    /**
-     * @throws Exception
-     */
     public function teamCity(): TeamCity
     {
         if ($this->teamCity === null) {
@@ -72,9 +108,6 @@ final readonly class Logging
         return $this->testDoxHtml !== null;
     }
 
-    /**
-     * @throws Exception
-     */
     public function testDoxHtml(): TestDoxHtml
     {
         if ($this->testDoxHtml === null) {
@@ -89,9 +122,6 @@ final readonly class Logging
         return $this->testDoxText !== null;
     }
 
-    /**
-     * @throws Exception
-     */
     public function testDoxText(): TestDoxText
     {
         if ($this->testDoxText === null) {
@@ -99,5 +129,19 @@ final readonly class Logging
         }
 
         return $this->testDoxText;
+    }
+
+    public function hasTestDoxXml(): bool
+    {
+        return $this->testDoxXml !== null;
+    }
+
+    public function testDoxXml(): TestDoxXml
+    {
+        if ($this->testDoxXml === null) {
+            throw new Exception('Logger "TestDox XML" is not configured');
+        }
+
+        return $this->testDoxXml;
     }
 }

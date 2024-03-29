@@ -17,7 +17,7 @@ use DOMXPath;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-abstract readonly class LogToReportMigration implements Migration
+abstract class LogToReportMigration implements Migration
 {
     /**
      * @throws MigrationException

@@ -18,9 +18,15 @@ use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
  */
 final class InvokedCount extends InvocationOrder
 {
-    private readonly int $expectedCount;
+    /**
+     * @var int
+     */
+    private $expectedCount;
 
-    public function __construct(int $expectedCount)
+    /**
+     * @param int $expectedCount
+     */
+    public function __construct($expectedCount)
     {
         $this->expectedCount = $expectedCount;
     }
@@ -32,11 +38,7 @@ final class InvokedCount extends InvocationOrder
 
     public function toString(): string
     {
-        return sprintf(
-            'invoked %d time%s',
-            $this->expectedCount,
-            $this->expectedCount !== 1 ? 's' : '',
-        );
+        return 'invoked ' . $this->expectedCount . ' time(s)';
     }
 
     public function matches(BaseInvocation $invocation): bool
@@ -52,16 +54,15 @@ final class InvokedCount extends InvocationOrder
      */
     public function verify(): void
     {
-        $actualCount = $this->numberOfInvocations();
+        $count = $this->getInvocationCount();
 
-        if ($actualCount !== $this->expectedCount) {
+        if ($count !== $this->expectedCount) {
             throw new ExpectationFailedException(
                 sprintf(
-                    'Method was expected to be called %d time%s, actually called %d time%s.',
+                    'Method was expected to be called %d times, ' .
+                    'actually called %d times.',
                     $this->expectedCount,
-                    $this->expectedCount !== 1 ? 's' : '',
-                    $actualCount,
-                    $actualCount !== 1 ? 's' : '',
+                    $count,
                 ),
             );
         }
@@ -72,19 +73,28 @@ final class InvokedCount extends InvocationOrder
      */
     protected function invokedDo(BaseInvocation $invocation): void
     {
-        $count = $this->numberOfInvocations();
+        $count = $this->getInvocationCount();
 
         if ($count > $this->expectedCount) {
             $message = $invocation->toString() . ' ';
 
-            $message .= match ($this->expectedCount) {
-                0       => 'was not expected to be called.',
-                1       => 'was not expected to be called more than once.',
-                default => sprintf(
-                    'was not expected to be called more than %d times.',
-                    $this->expectedCount,
-                ),
-            };
+            switch ($this->expectedCount) {
+                case 0:
+                    $message .= 'was not expected to be called.';
+
+                    break;
+
+                case 1:
+                    $message .= 'was not expected to be called more than once.';
+
+                    break;
+
+                default:
+                    $message .= sprintf(
+                        'was not expected to be called more than %d times.',
+                        $this->expectedCount,
+                    );
+            }
 
             throw new ExpectationFailedException($message);
         }

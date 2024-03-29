@@ -9,11 +9,11 @@
  */
 namespace PHPUnit\Util;
 
-use Throwable;
+use RuntimeException;
 
 /**
- * @internal This interface is not covered by the backward compatibility promise for PHPUnit
+ * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-interface Exception extends Throwable
+final class Exception extends RuntimeException implements \PHPUnit\Exception
 {
 }

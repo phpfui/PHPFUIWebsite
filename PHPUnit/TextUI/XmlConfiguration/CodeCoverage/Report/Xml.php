@@ -9,16 +9,19 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report;
 
-use PHPUnit\TextUI\Configuration\Directory;
+use PHPUnit\TextUI\XmlConfiguration\Directory;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final readonly class Xml
+final class Xml
 {
-    private Directory $target;
+    /**
+     * @var Directory
+     */
+    private $target;
 
     public function __construct(Directory $target)
     {

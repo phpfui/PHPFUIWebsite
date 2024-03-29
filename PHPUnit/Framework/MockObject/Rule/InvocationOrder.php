@@ -11,19 +11,20 @@ namespace PHPUnit\Framework\MockObject\Rule;
 
 use function count;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
+use PHPUnit\Framework\MockObject\Verifiable;
 use PHPUnit\Framework\SelfDescribing;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-abstract class InvocationOrder implements SelfDescribing
+abstract class InvocationOrder implements SelfDescribing, Verifiable
 {
     /**
-     * @psalm-var list<BaseInvocation>
+     * @var BaseInvocation[]
      */
-    private array $invocations = [];
+    private $invocations = [];
 
-    public function numberOfInvocations(): int
+    public function getInvocationCount(): int
     {
         return count($this->invocations);
     }
@@ -33,18 +34,14 @@ abstract class InvocationOrder implements SelfDescribing
         return count($this->invocations) > 0;
     }
 
-    final public function invoked(BaseInvocation $invocation): void
+    final public function invoked(BaseInvocation $invocation)
     {
         $this->invocations[] = $invocation;
 
-        $this->invokedDo($invocation);
+        return $this->invokedDo($invocation);
     }
 
     abstract public function matches(BaseInvocation $invocation): bool;
 
-    abstract public function verify(): void;
-
-    protected function invokedDo(BaseInvocation $invocation): void
-    {
-    }
+    abstract protected function invokedDo(BaseInvocation $invocation);
 }

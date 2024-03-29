@@ -9,15 +9,17 @@
  */
 namespace PHPUnit\Framework\MockObject\Stub;
 
+use function sprintf;
 use PHPUnit\Framework\MockObject\Invocation;
+use SebastianBergmann\Exporter\Exporter;
 use Throwable;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class Exception implements Stub
+final class Exception implements Stub
 {
-    private Throwable $exception;
+    private $exception;
 
     public function __construct(Throwable $exception)
     {
@@ -27,8 +29,18 @@ final readonly class Exception implements Stub
     /**
      * @throws Throwable
      */
-    public function invoke(Invocation $invocation): never
+    public function invoke(Invocation $invocation): void
     {
         throw $this->exception;
+    }
+
+    public function toString(): string
+    {
+        $exporter = new Exporter;
+
+        return sprintf(
+            'raise user-specified exception %s',
+            $exporter->export($this->exception),
+        );
     }
 }

@@ -9,7 +9,6 @@
  */
 namespace PHPUnit\Framework\MockObject\Rule;
 
-use function sprintf;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 
@@ -18,20 +17,22 @@ use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
  */
 final class InvokedAtLeastCount extends InvocationOrder
 {
-    private readonly int $requiredInvocations;
+    /**
+     * @var int
+     */
+    private $requiredInvocations;
 
-    public function __construct(int $requiredInvocations)
+    /**
+     * @param int $requiredInvocations
+     */
+    public function __construct($requiredInvocations)
     {
         $this->requiredInvocations = $requiredInvocations;
     }
 
     public function toString(): string
     {
-        return sprintf(
-            'invoked at least %d time%s',
-            $this->requiredInvocations,
-            $this->requiredInvocations !== 1 ? 's' : '',
-        );
+        return 'invoked at least ' . $this->requiredInvocations . ' times';
     }
 
     /**
@@ -42,17 +43,12 @@ final class InvokedAtLeastCount extends InvocationOrder
      */
     public function verify(): void
     {
-        $actualInvocations = $this->numberOfInvocations();
+        $count = $this->getInvocationCount();
 
-        if ($actualInvocations < $this->requiredInvocations) {
+        if ($count < $this->requiredInvocations) {
             throw new ExpectationFailedException(
-                sprintf(
-                    'Expected invocation at least %d time%s but it occurred %d time%s.',
-                    $this->requiredInvocations,
-                    $this->requiredInvocations !== 1 ? 's' : '',
-                    $actualInvocations,
-                    $actualInvocations !== 1 ? 's' : '',
-                ),
+                'Expected invocation at least ' . $this->requiredInvocations .
+                ' times but it occurred ' . $count . ' time(s).',
             );
         }
     }
@@ -60,5 +56,9 @@ final class InvokedAtLeastCount extends InvocationOrder
     public function matches(BaseInvocation $invocation): bool
     {
         return true;
+    }
+
+    protected function invokedDo(BaseInvocation $invocation): void
+    {
     }
 }
