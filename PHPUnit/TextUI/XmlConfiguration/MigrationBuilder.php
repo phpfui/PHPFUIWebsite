@@ -14,7 +14,7 @@ use function version_compare;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class MigrationBuilder
+final readonly class MigrationBuilder
 {
     private const AVAILABLE_MIGRATIONS = [
         '8.5' => [
@@ -36,7 +36,34 @@ final class MigrationBuilder
             CoverageTextToReport::class,
             CoverageXmlToReport::class,
             ConvertLogTypes::class,
-            UpdateSchemaLocationTo93::class,
+        ],
+
+        '9.5' => [
+            RemoveListeners::class,
+            RemoveTestSuiteLoaderAttributes::class,
+            RemoveCacheResultFileAttribute::class,
+            RemoveCoverageElementCacheDirectoryAttribute::class,
+            RemoveCoverageElementProcessUncoveredFilesAttribute::class,
+            IntroduceCacheDirectoryAttribute::class,
+            RenameBackupStaticAttributesAttribute::class,
+            RemoveBeStrictAboutResourceUsageDuringSmallTestsAttribute::class,
+            RemoveBeStrictAboutTodoAnnotatedTestsAttribute::class,
+            RemovePrinterAttributes::class,
+            RemoveVerboseAttribute::class,
+            RenameForceCoversAnnotationAttribute::class,
+            RenameBeStrictAboutCoversAnnotationAttribute::class,
+            RemoveConversionToExceptionsAttributes::class,
+            RemoveNoInteractionAttribute::class,
+            RemoveLoggingElements::class,
+            RemoveTestDoxGroupsElement::class,
+        ],
+
+        '10.0' => [
+            MoveCoverageDirectoriesToSource::class,
+        ],
+
+        '10.5' => [
+            RemoveRegisterMockObjectsFromTestArgumentsRecursivelyAttribute::class,
         ],
     ];
 
@@ -45,7 +72,7 @@ final class MigrationBuilder
      */
     public function build(string $fromVersion): array
     {
-        $stack = [];
+        $stack = [new UpdateSchemaLocation];
 
         foreach (self::AVAILABLE_MIGRATIONS as $version => $migrations) {
             if (version_compare($version, $fromVersion, '<')) {

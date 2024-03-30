@@ -9,19 +9,16 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration\Logging\TestDox;
 
-use PHPUnit\TextUI\XmlConfiguration\File;
+use PHPUnit\TextUI\Configuration\File;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final class Html
+final readonly class Html
 {
-    /**
-     * @var File
-     */
-    private $target;
+    private File $target;
 
     public function __construct(File $target)
     {

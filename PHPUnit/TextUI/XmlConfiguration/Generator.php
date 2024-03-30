@@ -14,7 +14,7 @@ use function str_replace;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class Generator
+final readonly class Generator
 {
     /**
      * @var string
@@ -24,28 +24,24 @@ final class Generator
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/{phpunit_version}/phpunit.xsd"
          bootstrap="{bootstrap_script}"
-         cacheResultFile="{cache_directory}/test-results"
+         cacheDirectory="{cache_directory}"
          executionOrder="depends,defects"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
+         requireCoverageMetadata="true"
+         beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         convertDeprecationsToExceptions="true"
          failOnRisky="true"
-         failOnWarning="true"
-         verbose="true">
+         failOnWarning="true">
     <testsuites>
         <testsuite name="default">
             <directory>{tests_directory}</directory>
         </testsuite>
     </testsuites>
 
-    <coverage cacheDirectory="{cache_directory}/code-coverage"
-              processUncoveredFiles="true">
+    <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
-            <directory suffix=".php">{src_directory}</directory>
+            <directory>{src_directory}</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>
 
 EOT;

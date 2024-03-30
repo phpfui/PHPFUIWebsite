@@ -9,105 +9,49 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration;
 
+use PHPUnit\TextUI\Configuration\ExtensionBootstrapCollection;
+use PHPUnit\TextUI\Configuration\Php;
+use PHPUnit\TextUI\Configuration\Source;
+use PHPUnit\TextUI\Configuration\TestSuiteCollection;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\CodeCoverage;
 use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
-use PHPUnit\Util\Xml\ValidationResult;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final class Configuration
+abstract readonly class Configuration
 {
-    /**
-     * @var string
-     */
-    private $filename;
+    private ExtensionBootstrapCollection $extensions;
+    private Source $source;
+    private CodeCoverage $codeCoverage;
+    private Groups $groups;
+    private Logging $logging;
+    private Php $php;
+    private PHPUnit $phpunit;
+    private TestSuiteCollection $testSuite;
 
-    /**
-     * @var ValidationResult
-     */
-    private $validationResult;
-
-    /**
-     * @var ExtensionCollection
-     */
-    private $extensions;
-
-    /**
-     * @var CodeCoverage
-     */
-    private $codeCoverage;
-
-    /**
-     * @var Groups
-     */
-    private $groups;
-
-    /**
-     * @var Groups
-     */
-    private $testdoxGroups;
-
-    /**
-     * @var ExtensionCollection
-     */
-    private $listeners;
-
-    /**
-     * @var Logging
-     */
-    private $logging;
-
-    /**
-     * @var Php
-     */
-    private $php;
-
-    /**
-     * @var PHPUnit
-     */
-    private $phpunit;
-
-    /**
-     * @var TestSuiteCollection
-     */
-    private $testSuite;
-
-    public function __construct(string $filename, ValidationResult $validationResult, ExtensionCollection $extensions, CodeCoverage $codeCoverage, Groups $groups, Groups $testdoxGroups, ExtensionCollection $listeners, Logging $logging, Php $php, PHPUnit $phpunit, TestSuiteCollection $testSuite)
+    public function __construct(ExtensionBootstrapCollection $extensions, Source $source, CodeCoverage $codeCoverage, Groups $groups, Logging $logging, Php $php, PHPUnit $phpunit, TestSuiteCollection $testSuite)
     {
-        $this->filename         = $filename;
-        $this->validationResult = $validationResult;
-        $this->extensions       = $extensions;
-        $this->codeCoverage     = $codeCoverage;
-        $this->groups           = $groups;
-        $this->testdoxGroups    = $testdoxGroups;
-        $this->listeners        = $listeners;
-        $this->logging          = $logging;
-        $this->php              = $php;
-        $this->phpunit          = $phpunit;
-        $this->testSuite        = $testSuite;
+        $this->extensions   = $extensions;
+        $this->source       = $source;
+        $this->codeCoverage = $codeCoverage;
+        $this->groups       = $groups;
+        $this->logging      = $logging;
+        $this->php          = $php;
+        $this->phpunit      = $phpunit;
+        $this->testSuite    = $testSuite;
     }
 
-    public function filename(): string
-    {
-        return $this->filename;
-    }
-
-    public function hasValidationErrors(): bool
-    {
-        return $this->validationResult->hasValidationErrors();
-    }
-
-    public function validationErrors(): string
-    {
-        return $this->validationResult->asString();
-    }
-
-    public function extensions(): ExtensionCollection
+    public function extensions(): ExtensionBootstrapCollection
     {
         return $this->extensions;
+    }
+
+    public function source(): Source
+    {
+        return $this->source;
     }
 
     public function codeCoverage(): CodeCoverage
@@ -118,16 +62,6 @@ final class Configuration
     public function groups(): Groups
     {
         return $this->groups;
-    }
-
-    public function testdoxGroups(): Groups
-    {
-        return $this->testdoxGroups;
-    }
-
-    public function listeners(): ExtensionCollection
-    {
-        return $this->listeners;
     }
 
     public function logging(): Logging
@@ -148,5 +82,21 @@ final class Configuration
     public function testSuite(): TestSuiteCollection
     {
         return $this->testSuite;
+    }
+
+    /**
+     * @psalm-assert-if-true DefaultConfiguration $this
+     */
+    public function isDefault(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @psalm-assert-if-true LoadedFromFileConfiguration $this
+     */
+    public function wasLoadedFromFile(): bool
+    {
+        return false;
     }
 }

@@ -9,13 +9,14 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration;
 
+use function assert;
 use DOMDocument;
 use DOMElement;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class MoveAttributesFromRootToCoverage implements Migration
+final readonly class MoveAttributesFromRootToCoverage implements Migration
 {
     /**
      * @throws MigrationException
@@ -28,6 +29,8 @@ final class MoveAttributesFromRootToCoverage implements Migration
         ];
 
         $root = $document->documentElement;
+
+        assert($root instanceof DOMElement);
 
         $coverage = $document->getElementsByTagName('coverage')->item(0);
 

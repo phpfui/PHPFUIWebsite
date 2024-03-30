@@ -9,29 +9,18 @@
  */
 namespace PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report;
 
-use PHPUnit\TextUI\XmlConfiguration\File;
+use PHPUnit\TextUI\Configuration\File;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  *
  * @psalm-immutable
  */
-final class Text
+final readonly class Text
 {
-    /**
-     * @var File
-     */
-    private $target;
-
-    /**
-     * @var bool
-     */
-    private $showUncoveredFiles;
-
-    /**
-     * @var bool
-     */
-    private $showOnlySummary;
+    private File $target;
+    private bool $showUncoveredFiles;
+    private bool $showOnlySummary;
 
     public function __construct(File $target, bool $showUncoveredFiles, bool $showOnlySummary)
     {

@@ -9,8 +9,6 @@
  */
 namespace PHPUnit\Framework;
 
-use const PHP_EOL;
-
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
@@ -20,13 +18,6 @@ final class ActualValueIsNotAnObjectException extends Exception
     {
         parent::__construct(
             'Actual value is not an object',
-            0,
-            null,
         );
-    }
-
-    public function __toString(): string
-    {
-        return $this->getMessage() . PHP_EOL;
     }
 }

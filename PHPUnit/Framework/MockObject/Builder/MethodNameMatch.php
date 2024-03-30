@@ -19,10 +19,6 @@ interface MethodNameMatch extends ParametersMatch
     /**
      * Adds a new method name match and returns the parameter match object for
      * further matching possibilities.
-     *
-     * @param Constraint $constraint Constraint for matching method, if a string is passed it will use the PHPUnit_Framework_Constraint_IsEqual
-     *
-     * @return ParametersMatch
      */
-    public function method($constraint);
+    public function method(Constraint|string $constraint): self;
 }

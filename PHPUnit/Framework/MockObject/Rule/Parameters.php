@@ -10,7 +10,6 @@
 namespace PHPUnit\Framework\MockObject\Rule;
 
 use function count;
-use function get_class;
 use function sprintf;
 use Exception;
 use PHPUnit\Framework\Constraint\Constraint;
@@ -18,7 +17,6 @@ use PHPUnit\Framework\Constraint\IsAnything;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
@@ -26,19 +24,11 @@ use SebastianBergmann\RecursionContext\InvalidArgumentException;
 final class Parameters implements ParametersRule
 {
     /**
-     * @var Constraint[]
+     * @psalm-var list<Constraint>
      */
-    private $parameters = [];
-
-    /**
-     * @var BaseInvocation
-     */
-    private $invocation;
-
-    /**
-     * @var bool|ExpectationFailedException
-     */
-    private $parameterVerificationResult;
+    private array $parameters           = [];
+    private ?BaseInvocation $invocation = null;
+    private null|bool|ExpectationFailedException $parameterVerificationResult;
 
     /**
      * @throws \PHPUnit\Framework\Exception
@@ -54,21 +44,6 @@ final class Parameters implements ParametersRule
 
             $this->parameters[] = $parameter;
         }
-    }
-
-    public function toString(): string
-    {
-        $text = 'with parameter';
-
-        foreach ($this->parameters as $index => $parameter) {
-            if ($index > 0) {
-                $text .= ' and';
-            }
-
-            $text .= ' ' . $index . ' ' . $parameter->toString();
-        }
-
-        return $text;
     }
 
     /**
@@ -94,7 +69,6 @@ final class Parameters implements ParametersRule
      * if an expectation is met.
      *
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     public function verify(): void
     {
@@ -103,7 +77,6 @@ final class Parameters implements ParametersRule
 
     /**
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     private function doVerify(): bool
     {
@@ -115,7 +88,7 @@ final class Parameters implements ParametersRule
             throw new ExpectationFailedException('Mocked method does not exist.');
         }
 
-        if (count($this->invocation->getParameters()) < count($this->parameters)) {
+        if (count($this->invocation->parameters()) < count($this->parameters)) {
             $message = 'Parameter count for invocation %s is too low.';
 
             // The user called `->with($this->anything())`, but may have meant
@@ -123,7 +96,7 @@ final class Parameters implements ParametersRule
             //
             // @see https://github.com/sebastianbergmann/phpunit-mock-objects/issues/199
             if (count($this->parameters) === 1 &&
-                get_class($this->parameters[0]) === IsAnything::class) {
+                $this->parameters[0]::class === IsAnything::class) {
                 $message .= "\nTo allow 0 or more parameters with any value, omit ->with() or use ->withAnyParameters() instead.";
             }
 
@@ -134,7 +107,7 @@ final class Parameters implements ParametersRule
 
         foreach ($this->parameters as $i => $parameter) {
             $parameter->evaluate(
-                $this->invocation->getParameters()[$i],
+                $this->invocation->parameters()[$i],
                 sprintf(
                     'Parameter %s for invocation %s does not match expected ' .
                     'value.',

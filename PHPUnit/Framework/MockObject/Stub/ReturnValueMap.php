@@ -17,21 +17,18 @@ use PHPUnit\Framework\MockObject\Invocation;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final class ReturnValueMap implements Stub
+final readonly class ReturnValueMap implements Stub
 {
-    /**
-     * @var array
-     */
-    private $valueMap;
+    private array $valueMap;
 
     public function __construct(array $valueMap)
     {
         $this->valueMap = $valueMap;
     }
 
-    public function invoke(Invocation $invocation)
+    public function invoke(Invocation $invocation): mixed
     {
-        $parameterCount = count($invocation->getParameters());
+        $parameterCount = count($invocation->parameters());
 
         foreach ($this->valueMap as $map) {
             if (!is_array($map) || $parameterCount !== (count($map) - 1)) {
@@ -40,14 +37,11 @@ final class ReturnValueMap implements Stub
 
             $return = array_pop($map);
 
-            if ($invocation->getParameters() === $map) {
+            if ($invocation->parameters() === $map) {
                 return $return;
             }
         }
-    }
 
-    public function toString(): string
-    {
-        return 'return value from a map';
+        return null;
     }
 }
