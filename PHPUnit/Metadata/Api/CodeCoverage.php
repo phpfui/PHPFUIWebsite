@@ -10,6 +10,7 @@
 namespace PHPUnit\Metadata\Api;
 
 use function assert;
+use function class_exists;
 use function count;
 use function interface_exists;
 use function sprintf;
@@ -20,11 +21,14 @@ use PHPUnit\Metadata\Covers;
 use PHPUnit\Metadata\CoversClass;
 use PHPUnit\Metadata\CoversDefaultClass;
 use PHPUnit\Metadata\CoversFunction;
+use PHPUnit\Metadata\CoversMethod;
 use PHPUnit\Metadata\Parser\Registry;
 use PHPUnit\Metadata\Uses;
 use PHPUnit\Metadata\UsesClass;
 use PHPUnit\Metadata\UsesDefaultClass;
 use PHPUnit\Metadata\UsesFunction;
+use PHPUnit\Metadata\UsesMethod;
+use ReflectionClass;
 use SebastianBergmann\CodeUnit\CodeUnitCollection;
 use SebastianBergmann\CodeUnit\Exception as CodeUnitException;
 use SebastianBergmann\CodeUnit\InvalidCodeUnitException;
@@ -33,8 +37,13 @@ use SebastianBergmann\CodeUnit\Mapper;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class CodeCoverage
+final class CodeCoverage
 {
+    /**
+     * @psalm-var array<class-string, non-empty-list<class-string>>
+     */
+    private array $withParents = [];
+
     /**
      * @psalm-param class-string $className
      * @psalm-param non-empty-string $methodName
@@ -73,13 +82,13 @@ final readonly class CodeCoverage
         $mapper    = new Mapper;
 
         foreach (Registry::parser()->forClassAndMethod($className, $methodName) as $metadata) {
-            if (!$metadata->isCoversClass() && !$metadata->isCoversFunction() && !$metadata->isCovers()) {
+            if (!$metadata->isCoversClass() && !$metadata->isCoversMethod() && !$metadata->isCoversFunction() && !$metadata->isCovers()) {
                 continue;
             }
 
-            assert($metadata instanceof CoversClass || $metadata instanceof CoversFunction || $metadata instanceof Covers);
+            assert($metadata instanceof CoversClass || $metadata instanceof CoversMethod || $metadata instanceof CoversFunction || $metadata instanceof Covers);
 
-            if ($metadata->isCoversClass() || $metadata->isCoversFunction()) {
+            if ($metadata->isCoversClass() || $metadata->isCoversMethod() || $metadata->isCoversFunction()) {
                 $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
             } elseif ($metadata->isCovers()) {
                 assert($metadata instanceof Covers);
@@ -151,13 +160,13 @@ final readonly class CodeCoverage
         $mapper    = new Mapper;
 
         foreach (Registry::parser()->forClassAndMethod($className, $methodName) as $metadata) {
-            if (!$metadata->isUsesClass() && !$metadata->isUsesFunction() && !$metadata->isUses()) {
+            if (!$metadata->isUsesClass() && !$metadata->isUsesMethod() && !$metadata->isUsesFunction() && !$metadata->isUses()) {
                 continue;
             }
 
-            assert($metadata instanceof UsesClass || $metadata instanceof UsesFunction || $metadata instanceof Uses);
+            assert($metadata instanceof UsesClass || $metadata instanceof UsesMethod || $metadata instanceof UsesFunction || $metadata instanceof Uses);
 
-            if ($metadata->isUsesClass() || $metadata->isUsesFunction()) {
+            if ($metadata->isUsesClass() || $metadata->isUsesMethod() || $metadata->isUsesFunction()) {
                 $codeUnits = $codeUnits->mergeWith($this->mapToCodeUnits($metadata));
             } elseif ($metadata->isUses()) {
                 assert($metadata instanceof Uses);
@@ -215,32 +224,85 @@ final readonly class CodeCoverage
     /**
      * @throws InvalidCoversTargetException
      */
-    private function mapToCodeUnits(CoversClass|CoversFunction|UsesClass|UsesFunction $metadata): CodeUnitCollection
+    private function mapToCodeUnits(CoversClass|CoversFunction|CoversMethod|UsesClass|UsesFunction|UsesMethod $metadata): CodeUnitCollection
     {
         $mapper = new Mapper;
+        $names  = $this->names($metadata);
 
         try {
-            return $mapper->stringToCodeUnits($metadata->asStringForCodeUnitMapper());
-        } catch (CodeUnitException $e) {
-            if ($metadata->isCoversClass() || $metadata->isUsesClass()) {
-                if (interface_exists($metadata->className())) {
-                    $type = 'Interface';
-                } else {
-                    $type = 'Class';
-                }
-            } else {
-                $type = 'Function';
+            if (count($names) === 1) {
+                return $mapper->stringToCodeUnits($names[0]);
             }
 
+            $codeUnits = CodeUnitCollection::fromList();
+
+            foreach ($names as $name) {
+                $codeUnits = $codeUnits->mergeWith(
+                    $mapper->stringToCodeUnits($name),
+                );
+            }
+
+            return $codeUnits;
+        } catch (CodeUnitException $e) {
             throw new InvalidCoversTargetException(
                 sprintf(
-                    '%s "%s" is not a valid target for code coverage',
-                    $type,
+                    '%s is not a valid target for code coverage',
                     $metadata->asStringForCodeUnitMapper(),
                 ),
                 $e->getCode(),
                 $e,
             );
         }
+    }
+
+    /**
+     * @psalm-return non-empty-list<non-empty-string>
+     *
+     * @throws InvalidCoversTargetException
+     */
+    private function names(CoversClass|CoversFunction|CoversMethod|UsesClass|UsesFunction|UsesMethod $metadata): array
+    {
+        $name  = $metadata->asStringForCodeUnitMapper();
+        $names = [$name];
+
+        if ($metadata->isCoversClass() || $metadata->isUsesClass()) {
+            if (isset($this->withParents[$name])) {
+                return $this->withParents[$name];
+            }
+
+            if (interface_exists($name)) {
+                throw new InvalidCoversTargetException(
+                    sprintf(
+                        'Interface "%s" is not a valid target for code coverage',
+                        $name,
+                    ),
+                );
+            }
+
+            if (!class_exists($name)) {
+                throw new InvalidCoversTargetException(
+                    sprintf(
+                        'Class "%s" is not a valid target for code coverage',
+                        $name,
+                    ),
+                );
+            }
+
+            assert(class_exists($names[0]));
+
+            $reflector = new ReflectionClass($name);
+
+            while ($reflector = $reflector->getParentClass()) {
+                if (!$reflector->isUserDefined()) {
+                    break;
+                }
+
+                $names[] = $reflector->getName();
+            }
+
+            $this->withParents[$name] = $names;
+        }
+
+        return $names;
     }
 }

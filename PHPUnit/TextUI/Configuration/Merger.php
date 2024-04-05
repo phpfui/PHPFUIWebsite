@@ -333,6 +333,14 @@ final readonly class Merger
             $coverageTextShowOnlySummary    = $xmlConfiguration->codeCoverage()->text()->showOnlySummary();
         }
 
+        if ($cliConfiguration->hasCoverageTextShowUncoveredFiles()) {
+            $coverageTextShowUncoveredFiles = $cliConfiguration->coverageTextShowUncoveredFiles();
+        }
+
+        if ($cliConfiguration->hasCoverageTextShowOnlySummary()) {
+            $coverageTextShowOnlySummary = $cliConfiguration->coverageTextShowOnlySummary();
+        }
+
         if ($cliConfiguration->hasCoverageText()) {
             $coverageText = $cliConfiguration->coverageText();
         } elseif ($coverageFromXmlConfiguration && $xmlConfiguration->codeCoverage()->hasText()) {
@@ -723,6 +731,10 @@ final readonly class Merger
                 $xmlConfiguration->source()->ignoreSuppressionOfPhpNotices(),
                 $xmlConfiguration->source()->ignoreSuppressionOfWarnings(),
                 $xmlConfiguration->source()->ignoreSuppressionOfPhpWarnings(),
+                $xmlConfiguration->source()->deprecationTriggers(),
+                $xmlConfiguration->source()->ignoreSelfDeprecations(),
+                $xmlConfiguration->source()->ignoreDirectDeprecations(),
+                $xmlConfiguration->source()->ignoreIndirectDeprecations(),
             ),
             $testResultCacheFile,
             $coverageClover,
