@@ -22,10 +22,11 @@ $repo = new \Gitonomy\Git\Repository(__DIR__);
 $repo->run('checkout', ['master']);
 $repo->run('pull');
 
+$updater = new ComposerUpdate();
+
 exec($composer . ' update');
 
 // Localize files
-$updater = new ComposerUpdate();
 $updater->setNoNameSpaceDirectory(__DIR__);
 $updater->setIgnoredRepos([
 	'components',

@@ -16,12 +16,12 @@
 		"phpfui/phpunit-syntax-coverage": "dev-master",
 		"phpfui/translation": "^1.0",
 		"phpmailer/phpmailer": "^6.6",
-		"phpunit/phpunit": ">=9.3",
+		"phpunit/phpunit": "^11.0",
 		"scrivo/highlight.php": "dev-master",
 		"setasign/fpdf": ">=1.8",
-		"symfony/dependency-injection": "^6.1",
+		"symfony/dependency-injection": "^7.0",
 		"voku/portable-utf8": "^6.0",
-		"zbateson/mail-mime-parser": "^2.2"
+		"zbateson/mail-mime-parser": "^3.0"
 	},
 	"config": {
 		"allow-plugins": {

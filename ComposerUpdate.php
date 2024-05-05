@@ -4,40 +4,64 @@ class ComposerUpdate
 	{
 	private string $baseDir = '';
 
-	private string $vendorDir = 'vendor/';
+	private array $ignored = [];
+
+	private array $installedVersions = [];
 
 	private string $noNameSpaceDir = 'NoNameSpace/';
 
 	private array $skipFiles = ['changelog', 'changes', 'license', 'conduct', 'contribut', 'upgrad', 'security', 'license', 'bug',  ];
 
-	private array $ignored = [];
+	private string $vendorDir = 'vendor/';
 
-	public function setBaseDirectory(string $baseDir) : static
+	public function __construct()
 		{
-		$this->baseDir = $this->appendSlash($baseDir);
+		$installed = @\json_decode(\file_get_contents($this->vendorDir . '../composer.lock'), true);
 
-		return $this;
+		foreach (($installed['packages'] ?? []) as $install)
+			{
+			$packageName = $install['name'];
+
+			foreach ($this->ignored as $ignore)
+				{
+				if (false !== \str_starts_with($packageName, $ignore))
+					{
+					continue 2;
+					}
+				}
+			$this->installedVersions[$packageName] = $install['version'];
+			}
 		}
 
-	public function setVendorDirectory(string $dir) : static
+	public function copyDirectory(string $source, string $dest) : void
 		{
-		$this->vendorDir = $this->appendSlash($dir);
+		if (! \is_dir($dest))
+			{
+			\mkdir($dest, 0755, true);
+			}
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST
+		);
 
-		return $this;
-		}
+		foreach ($iterator as $item)
+			{
+			$file = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
+			$file = \str_replace('\\', '/', $file);
+			$file = \str_replace('//', '/', $file);
 
-	public function setNoNameSpaceDirectory(string $dir) : static
-		{
-		$this->noNameSpaceDir = $this->appendSlash($dir);
-
-		return $this;
-		}
-
-	public function setIgnoredRepos(array $ignored) : static
-		{
-		$this->ignored = $ignored;
-
-		return $this;
+			if ($item->isDir())
+				{
+				if (! \is_dir($file))
+					{
+					\mkdir($file, 0755, true);
+					}
+				}
+			else
+				{
+				\copy($item, $file);
+				}
+			}
 		}
 
 	public function copyFileFiltered(string $item, string $file, bool $phpFiles) : bool
@@ -46,7 +70,7 @@ class ComposerUpdate
 
 		if ($phpFiles && \str_ends_with($lcFile, '.php'))
 			{
-			return \copy(str_replace('\\', '/', $item), str_replace('\\', '/', $file));
+			return \copy(\str_replace('\\', '/', $item), \str_replace('\\', '/', $file));
 			}
 
 		if (! \str_ends_with($lcFile, '.md'))
@@ -70,16 +94,16 @@ class ComposerUpdate
 			return false;
 			}
 
-		return \copy(str_replace('\\', '/', $item), str_replace('\\', '/', $file));
+		if (! \strcasecmp($file, './readme.md'))
+			{
+			return false;
+			}
+
+		return \copy(\str_replace('\\', '/', $item), \str_replace('\\', '/', $file));
 		}
 
 	public function copyFiles(string $source, string $dest, bool $phpFiles = true) : void
 		{
-		if (! is_dir($source))
-			{
-			return;
-			}
-
 		if (! \is_dir($dest))
 			{
 			\mkdir($dest, 0755, true);
@@ -106,6 +130,28 @@ class ComposerUpdate
 				{
 				$this->copyFileFiltered($item, $file, $phpFiles);
 				}
+			}
+		}
+
+	public function copyPath(string $name, array $sources, string $destDir) : void
+		{
+		foreach ($sources as $sourceDir)
+			{
+			//echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
+
+			if ($destDir)
+				{
+				$localDestDir = \str_replace('\\', '/', $this->baseDir . $destDir);
+				$localDestDir = \substr($destDir, 0, \strlen($localDestDir) - 1);
+				$sourceDir = $this->vendorDir . $name . '/' . $sourceDir;
+				$this->copyFiles($sourceDir, $localDestDir);
+				}
+			}
+
+		if ($destDir)
+			{
+			// copy project .md files
+			$this->copyFiles('vendor/' . $name, $destDir, false);
 			}
 		}
 
@@ -147,47 +193,51 @@ class ComposerUpdate
 			}
 		}
 
-	public function copyPath(string $name, array $sources, string $destDir) : void
+	public function setBaseDirectory(string $baseDir) : static
 		{
-		foreach ($sources as $sourceDir)
-			{
-			//echo $name . ": sourceDir {$sourceDir} => destDir {$destDir}\n";
+		$this->baseDir = $this->appendSlash($baseDir);
 
-			if ($destDir)
-				{
-				$localDestDir = \str_replace('\\', '/', $this->baseDir . $destDir);
-				$localDestDir = \substr($destDir, 0, \strlen($localDestDir) - 1);
-				$sourceDir = $this->vendorDir . $name . '/' . $sourceDir;
-				$this->copyFiles($sourceDir, $localDestDir);
-				}
-			}
+		return $this;
+		}
 
-		if ($destDir)
-			{
-			// copy project .md files
-			$this->copyFiles('vendor/' . $name, $destDir, false);
-			}
+	public function setIgnoredRepos(array $ignored) : static
+		{
+		$this->ignored = $ignored;
+
+		return $this;
+		}
+
+	public function setNoNameSpaceDirectory(string $dir) : static
+		{
+		$this->noNameSpaceDir = $this->appendSlash($dir);
+
+		return $this;
+		}
+
+	public function setVendorDirectory(string $dir) : static
+		{
+		$this->vendorDir = $this->appendSlash($dir);
+
+		return $this;
 		}
 
 	public function update() : void
 		{
-		$installed = \json_decode(\file_get_contents($this->vendorDir . '../composer.lock'), true);
+		$installed = @\json_decode(\file_get_contents($this->vendorDir . '../composer.lock'), true);
 
-		foreach ($installed['packages'] as $install)
+		foreach (($installed['packages'] ?? []) as $install)
 			{
-			$use = true;
+			$packageName = $install['name'];
 
 			foreach ($this->ignored as $ignore)
 				{
-				if (false !== \str_starts_with($install['name'], $ignore))
+				if (false !== \str_starts_with($packageName, $ignore))
 					{
-					$use = false;
-
-					break;
+					continue 2;
 					}
 				}
 
-			if (! $use)
+			if (($this->installedVersions[$packageName] ?? '') == $install['version'])
 				{
 				continue;
 				}
@@ -197,7 +247,12 @@ class ComposerUpdate
 				$autoload = $install['autoload'];
 				$sourceDir = '';
 
-				if (! empty($autoload['psr-4']))
+				if (! empty($autoload['files']))
+					{
+					$files = \str_replace('/', '\\', "vendor\\{$packageName}\\" . \implode(',', $autoload['files']));
+					echo "WARNING: Package {$packageName} contains an autoload files section ({$files})\n";
+					}
+				elseif (! empty($autoload['psr-4']))
 					{
 					foreach ($autoload['psr-4'] as $destDir => $sourceDir)
 						{
@@ -210,7 +265,7 @@ class ComposerUpdate
 							{
 							$sourceDir = [$sourceDir];
 							}
-						$this->copyPath($install['name'], $sourceDir, $destDir);
+						$this->copyPath($packageName, $sourceDir, $destDir);
 						}
 					}
 				elseif (! empty($autoload['psr-0']))
@@ -226,34 +281,64 @@ class ComposerUpdate
 							{
 							$sourceDir = [$sourceDir];
 							}
-						$this->copyPath($install['name'], $sourceDir, $destDir);
+						$this->copyPath($packageName, $sourceDir, $destDir);
 						}
 					}
 				elseif (! empty($autoload['classmap']))
 					{
 					foreach ($autoload['classmap'] as $file)
 						{
-						$fromDir = 'vendor/' . $install['name'] . '/' . $file;
-						if (is_file($fromDir))
+						$fromDir = 'vendor/' . $packageName . '/' . $file;
+
+						if (\is_file($fromDir))
 							{
+							$phpFile = \file_get_contents($fromDir);
+							$namespacePos = \strpos($phpFile, 'namespace');
+
+							if (false !== $namespacePos)
+								{
+								$namespacePos += 10;
+								$semicolin = \strpos($phpFile, ';', $namespacePos);
+								$namespace = \trim(\substr($phpFile, $namespacePos, $semicolin - $namespacePos));
+								$targetDir = \str_replace('\\', '/', $namespace) . '/';
+								}
+							else
+								{
+								$targetDir = \str_replace('\\', '/', $this->noNameSpaceDir);
+								}
+							$classPos = \strpos($phpFile, 'class ');
+
+							if (false === $classPos)
+								{
+								continue;
+								}
+							$parts = \explode(' ', \substr($phpFile, $classPos + 6));
+							$className = \array_shift($parts);
+							$parts = \explode("\n", $className);
+							$className = \array_shift($parts) . '.php';
+							$sourceFile = \str_replace('\\', '/', $fromDir);
+							\copy($sourceFile, $targetDir . $className);
+
 							continue;
 							}
 						$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($fromDir));
 
 						foreach ($iterator as $file)
 							{
-							$fileName = strtolower($file->getFilename());
-							if ($file->isFile() && str_ends_with($fileName, '.php'))
+							$fileName = \strtolower($file->getFilename());
+
+							if ($file->isFile() && \str_ends_with($fileName, '.php'))
 								{
-								$phpFile = file_get_contents($file->getPathname());
-								$namespacePos = strpos($phpFile, 'namespace') + 10;
-								$semicolin = strpos($phpFile, ';', $namespacePos);
-								$namespace = trim(substr($phpFile, $namespacePos, $semicolin - $namespacePos));
-								$sourceFile = str_replace('\\', '/', $file->getPathname());
-								$targetDir = str_replace('\\', '/', $this->noNameSpaceDir . $namespace);
-								if (! is_dir($targetDir))
+								$phpFile = \file_get_contents($file->getPathname());
+								$namespacePos = \strpos($phpFile, 'namespace') + 10;
+								$semicolin = \strpos($phpFile, ';', $namespacePos);
+								$namespace = \trim(\substr($phpFile, $namespacePos, $semicolin - $namespacePos));
+								$sourceFile = \str_replace('\\', '/', $file->getPathname());
+								$targetDir = \str_replace('\\', '/', $namespace);
+
+								if (! \is_dir($targetDir))
 									{
-									mkdir($targetDir, recursive:true);
+									\mkdir($targetDir, recursive:true);
 									}
 								$targetFile = $targetDir . '/' . $file->getFilename();
 								\copy($sourceFile, $targetFile);
@@ -261,22 +346,19 @@ class ComposerUpdate
 							}
 						}
 					}
-//					echo "No autoload for {$install['name']}\n";
 				}
-//				echo "No autoloader for {$install['name']}\n";
 			}
 		}
 
 	private function appendSlash(string $dir) : string
 		{
-		$dir = rtrim($dir, '\\');
-		if (! str_ends_with($dir, '/'))
+		$dir = \rtrim($dir, '\\');
+
+		if (! \str_ends_with($dir, '/'))
 			{
 			$dir .= '/';
 			}
 
 		return $dir;
 		}
-
 	}
-
