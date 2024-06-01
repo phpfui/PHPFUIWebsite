@@ -173,10 +173,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *
      * If you are not using the loaders and therefore don't want
      * to depend on the Config component, set this flag to false.
-     *
-     * @return void
      */
-    public function setResourceTracking(bool $track)
+    public function setResourceTracking(bool $track): void
     {
         $this->trackResources = $track;
     }
@@ -191,18 +189,13 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
     /**
      * Sets the instantiator to be used when fetching proxies.
-     *
-     * @return void
      */
-    public function setProxyInstantiator(InstantiatorInterface $proxyInstantiator)
+    public function setProxyInstantiator(InstantiatorInterface $proxyInstantiator): void
     {
         $this->proxyInstantiator = $proxyInstantiator;
     }
 
-    /**
-     * @return void
-     */
-    public function registerExtension(ExtensionInterface $extension)
+    public function registerExtension(ExtensionInterface $extension): void
     {
         $this->extensions[$extension->getAlias()] = $extension;
 
@@ -480,11 +473,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Sets a service.
      *
-     * @return void
-     *
      * @throws BadMethodCallException When this ContainerBuilder is compiled
      */
-    public function set(string $id, ?object $service)
+    public function set(string $id, ?object $service): void
     {
         if ($this->isCompiled() && (isset($this->definitions[$id]) && !$this->definitions[$id]->isSynthetic())) {
             // setting a synthetic service on a compiled container is alright
@@ -498,14 +489,14 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
     /**
      * Removes a service definition.
-     *
-     * @return void
      */
-    public function removeDefinition(string $id)
+    public function removeDefinition(string $id): void
     {
         if (isset($this->definitions[$id])) {
             unset($this->definitions[$id]);
-            $this->removedIds[$id] = true;
+            if ('.' !== ($id[0] ?? '-')) {
+                $this->removedIds[$id] = true;
+            }
         }
     }
 
@@ -609,11 +600,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * parameter, the value will still be 'bar' as defined in the ContainerBuilder
      * constructor.
      *
-     * @return void
-     *
      * @throws BadMethodCallException When this ContainerBuilder is compiled
      */
-    public function merge(self $container)
+    public function merge(self $container): void
     {
         if ($this->isCompiled()) {
             throw new BadMethodCallException('Cannot merge on a compiled container.');
@@ -702,10 +691,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * Prepends a config array to the configs of the given extension.
      *
      * @param array<string, mixed> $config
-     *
-     * @return void
      */
-    public function prependExtensionConfig(string $name, array $config)
+    public function prependExtensionConfig(string $name, array $config): void
     {
         if (!isset($this->extensionConfigs[$name])) {
             $this->extensionConfigs[$name] = [];
@@ -746,10 +733,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *                                     env vars or be replaced by uniquely identifiable placeholders.
      *                                     Set to "true" when you want to use the current ContainerBuilder
      *                                     directly, keep to "false" when the container is dumped instead.
-     *
-     * @return void
      */
-    public function compile(bool $resolveEnvPlaceholders = false)
+    public function compile(bool $resolveEnvPlaceholders = false): void
     {
         $compiler = $this->getCompiler();
 
@@ -785,6 +770,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         parent::compile();
 
         foreach ($this->definitions + $this->aliasDefinitions as $id => $definition) {
+            if ('.' === ($id[0] ?? '-')) {
+                continue;
+            }
             if (!$definition->isPublic() || $definition->isPrivate()) {
                 $this->removedIds[$id] = true;
             }
@@ -810,10 +798,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * Adds the service aliases.
      *
      * @param array<string, string|Alias> $aliases
-     *
-     * @return void
      */
-    public function addAliases(array $aliases)
+    public function addAliases(array $aliases): void
     {
         foreach ($aliases as $alias => $id) {
             $this->setAlias($alias, $id);
@@ -824,10 +810,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * Sets the service aliases.
      *
      * @param array<string, string|Alias> $aliases
-     *
-     * @return void
      */
-    public function setAliases(array $aliases)
+    public function setAliases(array $aliases): void
     {
         $this->aliasDefinitions = [];
         $this->addAliases($aliases);
@@ -858,14 +842,13 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         return $this->aliasDefinitions[$alias] = $id;
     }
 
-    /**
-     * @return void
-     */
-    public function removeAlias(string $alias)
+    public function removeAlias(string $alias): void
     {
         if (isset($this->aliasDefinitions[$alias])) {
             unset($this->aliasDefinitions[$alias]);
-            $this->removedIds[$alias] = true;
+            if ('.' !== ($alias[0] ?? '-')) {
+                $this->removedIds[$alias] = true;
+            }
         }
     }
 
@@ -897,7 +880,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Registers a service definition.
      *
-     * This methods allows for simple registration of service definition
+     * This method allows for simple registration of service definition
      * with a fluid interface.
      */
     public function register(string $id, ?string $class = null): Definition
@@ -920,10 +903,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * Adds the service definitions.
      *
      * @param array<string, Definition> $definitions
-     *
-     * @return void
      */
-    public function addDefinitions(array $definitions)
+    public function addDefinitions(array $definitions): void
     {
         foreach ($definitions as $id => $definition) {
             $this->setDefinition($id, $definition);
@@ -934,10 +915,8 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * Sets the service definitions.
      *
      * @param array<string, Definition> $definitions
-     *
-     * @return void
      */
-    public function setDefinitions(array $definitions)
+    public function setDefinitions(array $definitions): void
     {
         $this->definitions = [];
         $this->addDefinitions($definitions);
@@ -1326,10 +1305,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         return array_values(array_diff($this->findTags(), $this->usedTags));
     }
 
-    /**
-     * @return void
-     */
-    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider)
+    public function addExpressionLanguageProvider(ExpressionFunctionProviderInterface $provider): void
     {
         $this->expressionLanguageProviders[] = $provider;
     }
@@ -1623,7 +1599,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public static function hash(mixed $value): string
     {
-        $hash = substr(base64_encode(hash('sha256', serialize($value), true)), 0, 7);
+        $hash = substr(base64_encode(hash('xxh128', serialize($value), true)), 0, 7);
 
         return str_replace(['/', '+'], ['.', '_'], $hash);
     }
