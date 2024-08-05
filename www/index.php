@@ -1,6 +1,4 @@
-hi
 <?php
-echo "<pre>here3\n";
 
 include '../common.php';
 
@@ -13,7 +11,6 @@ $addExamples = true;
 $addBlog = true;
 $addPetty = true;
 
-echo "<pre>here1\n";
 if ($useComposer)
 	{
 	$fileManager = new \PHPFUI\InstaDoc\FileManager('../');
@@ -53,7 +50,6 @@ else
 		}
 	$fileManager->addGlobalNameSpaceClass('../FPDF.php', true);
 	}
-echo "here2\n";
 
 $fileManager->load();
 \PHPFUI\InstaDoc\ChildClasses::load('../ChildClasses.serial');
@@ -75,19 +71,14 @@ $trackingCode = include '../trackingCode.php';
 $page->addHeadScript("https://www.googletagmanager.com/gtag/js?id={$trackingCode}");
 $js = "window.dataLayer=window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{$trackingCode}');";
 $page->addHeadJavaScript($js);
-$i = 0;
-echo "{$i++}\n";
 if ($generateStaticFiles)
 	{
-	echo '<pre>';
 	$controller->setGitFileOffset('..');
 	\print_r($controller->generate('static', [\PHPFUI\InstaDoc\Controller::DOC_PAGE, \PHPFUI\InstaDoc\Controller::FILE_PAGE, \PHPFUI\InstaDoc\Controller::GIT_PAGE, ]));
-echo "{$i++}\n";
 	}
 else
 	{
-echo "jhere\n";
-       	if ($addExamples)
+ 	if ($addExamples)
 		{
 		$menu = $controller->getMenu();
 		$exampleMenu = \Example\Page::getMenu();
