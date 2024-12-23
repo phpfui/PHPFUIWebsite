@@ -2,7 +2,7 @@
 
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	{
-	$php = 'php';
+	$php = 'c:\wamp64\bin\php\php8.3.14\php';
 	$composer = 'composer';
 	}
 else
@@ -13,7 +13,9 @@ else
 
 $composer = $php . ' ' . $composer;
 
+echo "composer self-update\n";
 exec($composer . ' self-update');
+echo "done composer self-update\n";
 
 include 'commonbase.php';
 
@@ -23,8 +25,9 @@ $repo->run('checkout', ['master']);
 $repo->run('pull');
 
 $updater = new ComposerUpdate();
-
+echo "composer update\n";
 exec($composer . ' update');
+echo "done composer update\n";
 
 // Localize files
 $updater->setNoNameSpaceDirectory(__DIR__);
