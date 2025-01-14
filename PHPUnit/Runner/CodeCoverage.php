@@ -37,7 +37,11 @@ use SebastianBergmann\Timer\NoActiveTimerException;
 use SebastianBergmann\Timer\Timer;
 
 /**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ *
+ * @codeCoverageIgnore
  */
 final class CodeCoverage
 {
@@ -47,11 +51,6 @@ final class CodeCoverage
     private bool $collecting                                            = false;
     private ?TestCase $test                                             = null;
     private ?Timer $timer                                               = null;
-
-    /**
-     * @psalm-var array<string,list<int>>
-     */
-    private array $linesToBeIgnored = [];
 
     public static function instance(): self
     {
@@ -120,7 +119,7 @@ final class CodeCoverage
     }
 
     /**
-     * @psalm-assert-if-true !null $this->instance
+     * @phpstan-assert-if-true !null $this->instance
      */
     public function isActive(): bool
     {
@@ -163,7 +162,11 @@ final class CodeCoverage
         $this->collecting = true;
     }
 
-    public function stop(bool $append = true, array|false $linesToBeCovered = [], array $linesToBeUsed = []): void
+    /**
+     * @param array<string,list<int>>|false $linesToBeCovered
+     * @param array<string,list<int>>       $linesToBeUsed
+     */
+    public function stop(bool $append, array|false $linesToBeCovered = [], array $linesToBeUsed = []): void
     {
         if (!$this->collecting) {
             return;
@@ -180,7 +183,7 @@ final class CodeCoverage
         }
 
         /* @noinspection UnusedFunctionResultInspection */
-        $this->codeCoverage->stop($append, $status, $linesToBeCovered, $linesToBeUsed, $this->linesToBeIgnored);
+        $this->codeCoverage->stop($append, $status, $linesToBeCovered, $linesToBeUsed);
 
         $this->test       = null;
         $this->collecting = false;
@@ -308,7 +311,9 @@ final class CodeCoverage
             $textReport = $processor->process($this->codeCoverage(), $configuration->colors());
 
             if ($configuration->coverageText() === 'php://stdout') {
-                $printer->print($textReport);
+                if (!$configuration->noOutput() && !$configuration->debug()) {
+                    $printer->print($textReport);
+                }
             } else {
                 file_put_contents($configuration->coverageText(), $textReport);
             }
@@ -328,22 +333,6 @@ final class CodeCoverage
                 $this->codeCoverageGenerationFailed($printer, $e);
             }
         }
-    }
-
-    /**
-     * @psalm-param array<string,list<int>> $linesToBeIgnored
-     */
-    public function ignoreLines(array $linesToBeIgnored): void
-    {
-        $this->linesToBeIgnored = $linesToBeIgnored;
-    }
-
-    /**
-     * @psalm-return array<string,list<int>>
-     */
-    public function linesToBeIgnored(): array
-    {
-        return $this->linesToBeIgnored;
     }
 
     private function activate(Filter $filter, bool $pathCoverage): void

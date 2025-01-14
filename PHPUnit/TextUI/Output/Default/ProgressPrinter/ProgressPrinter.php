@@ -33,6 +33,8 @@ use PHPUnit\TextUI\Output\Printer;
 use PHPUnit\Util\Color;
 
 /**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
 final class ProgressPrinter
@@ -139,7 +141,8 @@ final class ProgressPrinter
             return;
         }
 
-        if ($this->source->ignoreSelfDeprecations() && $event->trigger()->isSelf()) {
+        if ($this->source->ignoreSelfDeprecations() &&
+            ($event->trigger()->isTest() || $event->trigger()->isSelf())) {
             return;
         }
 
@@ -169,7 +172,8 @@ final class ProgressPrinter
             return;
         }
 
-        if ($this->source->ignoreSelfDeprecations() && $event->trigger()->isSelf()) {
+        if ($this->source->ignoreSelfDeprecations() &&
+            ($event->trigger()->isTest() || $event->trigger()->isSelf())) {
             return;
         }
 
