@@ -22,6 +22,7 @@ else
 		'DeepCopy',
 		'Example',
 		'Gitonomy',
+		'Google',
 		'GuzzleHttp',
 		'Druidfi',
 		'Highlight',

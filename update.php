@@ -3,7 +3,7 @@
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	{
 	$php = 'php';
-	$composer = 'composer';
+	$composer = 'C:\ProgramData\ComposerSetup\bin\composer';
 	}
 else
 	{
