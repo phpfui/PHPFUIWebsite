@@ -21,7 +21,8 @@
 		"setasign/fpdf": ">=1.8",
 		"symfony/dependency-injection": "^7.0",
 		"voku/portable-utf8": "^6.0",
-		"zbateson/mail-mime-parser": "^3.0"
+		"zbateson/mail-mime-parser": "^3.0",
+		"google/cloud-recaptcha-enterprise": "^2.0"
 	},
 	"config": {
 		"allow-plugins": {
