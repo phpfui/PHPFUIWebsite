@@ -109,6 +109,11 @@ class PropertyAccessor implements PropertyAccessorInterface
         return $propertyValues[\count($propertyValues) - 1][self::VALUE];
     }
 
+    /**
+     * @template T of object|array
+     * @param T $objectOrArray
+     * @param-out ($objectOrArray is array ? array : T) $objectOrArray
+     */
     public function setValue(object|array &$objectOrArray, string|PropertyPathInterface $propertyPath, mixed $value): void
     {
         if (\is_object($objectOrArray) && (false === strpbrk((string) $propertyPath, '.[') || $objectOrArray instanceof \stdClass && property_exists($objectOrArray, $propertyPath))) {
@@ -216,7 +221,7 @@ class PropertyAccessor implements PropertyAccessorInterface
             ];
 
             // handle stdClass with properties with a dot in the name
-            if ($objectOrArray instanceof \stdClass && str_contains($propertyPath, '.')  && property_exists($objectOrArray, $propertyPath)) {
+            if ($objectOrArray instanceof \stdClass && str_contains($propertyPath, '.') && property_exists($objectOrArray, $propertyPath)) {
                 $this->readProperty($zval, $propertyPath, $this->ignoreInvalidProperty);
             } else {
                 $this->readPropertiesUntil($zval, $propertyPath, $propertyPath->getLength(), $this->ignoreInvalidIndices);
@@ -635,7 +640,7 @@ class PropertyAccessor implements PropertyAccessorInterface
 
         $mutatorForArray = $this->getWriteInfo($object::class, $property, []);
         if (PropertyWriteInfo::TYPE_PROPERTY === $mutatorForArray->getType()) {
-            return $mutatorForArray->getVisibility() === 'public';
+            return 'public' === $mutatorForArray->getVisibility();
         }
 
         if (PropertyWriteInfo::TYPE_NONE !== $mutatorForArray->getType()) {
