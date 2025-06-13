@@ -1,5 +1,4 @@
 <?php
-
 $container = new \PHPFUI\Container();
 
 $container->add(\PHPFUI\KitchenSink::makeMenu(new \PHPFUI\Menu(), 'Menu'));
