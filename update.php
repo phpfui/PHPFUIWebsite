@@ -66,7 +66,6 @@ exec($php . ' vendor/phpfui/instadoc/install.php www/PHPFUI');
 $vendorDir = 'vendor/phpfui/';
 copy($vendorDir . 'phpfui/README.md', 'PHPFUI/README.md');
 copy($vendorDir . 'phpfui/src/PHPFUI/PayPal.md', 'PHPFUI/PayPal.md');
-copy($vendorDir . 'phpfui/src/PHPFUI/PayPal.md', 'PHPFUI/PayPal.md');
 // copy ORM docs in to ORM directory
 foreach (new \DirectoryIterator($vendorDir . 'orm/docs') as $fileInfo)
 	{
