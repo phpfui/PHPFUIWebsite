@@ -546,36 +546,36 @@ class KitchenSink
 		}
 
   public function baseTabs() : Container
-		{
-		$container = new \PHPFUI\Container();
+	{
+	$container = new \PHPFUI\Container();
 
-		$tabs = new \PHPFUI\Tabs();
-		$tabs->addTab('One', 'Check me out! I\'m a super cool Tab panel with text content!');
-		$image = new \PHPFUI\Image('/images/rectangle-1.jpg');
-		$tabs->addTab('Two', $image);
-		$tabs->addTab('Three', '', true);
-		$tabs->addTab('Four', $image);
-		$container->add($tabs);
+	$tabs = new \PHPFUI\Tabs();
+	$tabs->addTab('One', 'Check me out! I\'m a super cool Tab panel with text content!');
+	$image = new \PHPFUI\Image('/images/rectangle-1.jpg');
+	$tabs->addTab('Two', $image);
+	$tabs->addTab('Three', '', true);
+	$tabs->addTab('Four', $image);
+	$container->add($tabs);
 
-		$grid = new \PHPFUI\GridX();
-		$grid->setMargin();
-		$cell = new \PHPFUI\Cell(3, 2, 1);
-		$vtabs = new \PHPFUI\Tabs(true);
-		$vtabs->addTab('One', 'Check me out! I\'m VERTICAL!');
-		$vtabs->addTab('Two', $image);
-		$vtabs->addTab('Three', '', true);
-		$vtabs->addTab('Four', $image);
-		$cell->add($vtabs->getTabs());
-		$grid->add($cell);
-		$content = new \PHPFUI\Cell();
-		$content->add($vtabs->getContent());
-		$grid->add($content);
-		$gridContainer = new \PHPFUI\GridContainer();
-		$gridContainer->add($grid);
-		$container->add($gridContainer);
+	$grid = new \PHPFUI\GridX();
+	$grid->setMargin();
+	$cell = new \PHPFUI\Cell(3, 2, 1);
+	$vtabs = new \PHPFUI\Tabs(true);
+	$vtabs->addTab('One', 'Check me out! I\'m VERTICAL!');
+	$vtabs->addTab('Two', $image);
+	$vtabs->addTab('Three', '', true);
+	$vtabs->addTab('Four', $image);
+	$cell->add($vtabs->getTabs());
+	$grid->add($cell);
+	$content = new \PHPFUI\Cell();
+	$content->add($vtabs->getContent());
+	$grid->add($content);
+	$gridContainer = new \PHPFUI\GridContainer();
+	$gridContainer->add($grid);
+	$container->add($gridContainer);
 
-		return $container;
-		}
+	return $container;
+	}
 
 	public function baseThumbnail() : Container
 		{
