@@ -790,10 +790,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      *  * The parameter bag is frozen;
      *  * Extension loading is disabled.
      *
-     * @param bool $resolveEnvPlaceholders Whether %env()% parameters should be resolved using the current
-     *                                     env vars or be replaced by uniquely identifiable placeholders.
-     *                                     Set to "true" when you want to use the current ContainerBuilder
-     *                                     directly, keep to "false" when the container is dumped instead.
+     * @param bool $resolveEnvPlaceholders Whether %env()% parameters should be resolved at build time using
+     *                                     the current env var values (true), or be resolved at runtime based
+     *                                     on the environment (false). In general, this should be set to "true"
+     *                                     when you want to use the current ContainerBuilder directly, and to
+     *                                     "false" when the container is dumped instead.
      */
     public function compile(bool $resolveEnvPlaceholders = false): void
     {
@@ -1108,14 +1109,15 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             }
 
             if (\is_array($callable) && (
-                $callable[0] instanceof Reference
+                'Closure' !== $class
+                || $callable[0] instanceof Reference
                 || $callable[0] instanceof Definition && !isset($inlineServices[spl_object_hash($callable[0])])
             )) {
                 $initializer = function () use ($callable, &$inlineServices) {
                     return $this->doResolveServices($callable[0], $inlineServices);
                 };
 
-                $proxy = eval('return '.LazyClosure::getCode('$initializer', $callable, $definition, $this, $id).';');
+                $proxy = eval('return '.LazyClosure::getCode('$initializer', $callable, $class, $this, $id).';');
                 $this->shareService($definition, $proxy, $id, $inlineServices);
 
                 return $proxy;
