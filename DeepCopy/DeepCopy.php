@@ -87,7 +87,7 @@ class DeepCopy
     /**
      * Deep copies the given object.
      *
-     * @template TObject of object
+     * @template TObject
      *
      * @param TObject $object
      *
