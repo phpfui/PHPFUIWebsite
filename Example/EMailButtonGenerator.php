@@ -4,6 +4,9 @@ namespace Example;
 
 class EMailButtonGenerator extends \Example\Page
 	{
+	/**
+	 * @param array<string,string> $parameters
+	 */
 	public function __construct(array $parameters)
 		{
 		parent::__construct();

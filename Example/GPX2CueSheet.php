@@ -25,7 +25,7 @@ class GPX2CueSheet extends \Example\Page
 				}
 			$title = empty($_POST['title']) ? $model->getFileName() : $_POST['title'];
 			$cuesheetGenerator = new \Example\Report\CueSheet();
-			$cuesheetGenerator->generate($model->getData(), $title, $model->getDistance(), $_POST['units'] ?? 'mi', $model->getAscent(), $model->getDescent());
+			$cuesheetGenerator->generate($model->getData(), $title, $model->getDistance(), $_POST['units'] ?? 'mi', $model->getAscent());
 			$cuesheetGenerator->Output('D', \str_replace(' ', '_', $title) . '.pdf', true);
 
 			return;

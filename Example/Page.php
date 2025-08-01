@@ -12,6 +12,9 @@ class Page extends \PHPFUI\Page
 
 	private \PHPFUI\OffCanvas $offCanvas;
 
+	/**
+	 * @param ?callable $callback
+	 */
 	public function __construct(private $callback = null)
 		{
 		parent::__construct();

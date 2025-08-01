@@ -127,7 +127,7 @@ class EMailButtonGenerator
 
 	public function setFontSize(int $fontSize) : static
 		{
-		$this->fontSize->setValue($fontSize);
+		$this->fontSize->setValue("{$fontSize}");
 		$this->button->setFontSize($fontSize);
 
 		return $this;
@@ -135,7 +135,7 @@ class EMailButtonGenerator
 
 	public function setHeight(int $height) : static
 		{
-		$this->height->setValue($height);
+		$this->height->setValue("{$height}");
 		$this->button->setHeight($height);
 
 		return $this;
@@ -143,7 +143,7 @@ class EMailButtonGenerator
 
 	public function setRadius(int $radius) : static
 		{
-		$this->radius->setValue($radius);
+		$this->radius->setValue("{$radius}");
 		$this->button->setRadius($radius);
 
 		return $this;
@@ -151,7 +151,7 @@ class EMailButtonGenerator
 
 	public function setWidth(int $width) : static
 		{
-		$this->width->setValue($width);
+		$this->width->setValue("{$width}");
 		$this->button->setWidth($width);
 
 		return $this;

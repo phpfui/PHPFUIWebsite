@@ -6,9 +6,7 @@ class CueSheet extends \FPDF
 	{
 	private int $angle = 0;
 
-	private int $ascent = 0;
-
-	private int $descent = 0;
+	private float $ascent = 0;
 
 	private float $distance = 0.0;
 
@@ -96,10 +94,9 @@ class CueSheet extends \FPDF
 		}
 
 	/** @param array<string, string> $data */
-	public function generate(array $data, string $title, float $distance, string $units, float $ascent, float $descent) : static
+	public function generate(array $data, string $title, float $distance, string $units, float $ascent) : static
 		{
-		$this->ascent = (int)$ascent;
-		$this->descent = (int)$descent;
+		$this->ascent = $ascent;
 
 		$this->distance = $distance;
 		$this->units = $units;
@@ -113,7 +110,7 @@ class CueSheet extends \FPDF
 
 		while ($reader->valid())
 			{
-			$this->newPage($title, $units);
+			$this->newPage($title);
 			$this->printSection($this->firstColumn, $this->topRow, $topHeight, $reader);
 			$this->printSection($this->secondColumn, $this->topRow, $topHeight, $reader);
 			$this->printSection($this->firstColumn, $this->secondRow, $bottomHeight, $reader);
@@ -148,17 +145,18 @@ class CueSheet extends \FPDF
 		return $streetContinued;
 		}
 
-	private function newPage(string $title, string $units) : void
+	private function newPage(string $title) : void
 		{
 		$this->AddPage();
 		$this->SetFont('Arial', 'B', 14);
 		$y = $this->margin;
 
-
 		$this->Text($this->margin, $this->topMargin, $title);
 		$this->SetXY($this->width - 51, $y);
-		$this->writeLabel('Dist', \round($this->distance, 2) . ' ' . \substr($units, 0, 2));
-		$this->writeLabel(' Ele', " +{$this->ascent}/-{$this->descent}");
+		$this->writeLabel('Dist', \number_format($this->distance, 2) . ' ' . \substr($this->units, 0, 2));
+		$ascent = \number_format($this->ascent, 2);
+		$unit = 'Miles' == $this->units ? 'ft' : 'm';
+		$this->writeLabel(' Ele', " +{$ascent} {$unit}");
 
 		$this->setLineWidth(0.1);
 		$this->SetDash(2, 2);
@@ -172,10 +170,11 @@ class CueSheet extends \FPDF
 		}
 
 	/** @param array<string, string> $row */
-	private function printRow(float $x, float $y, array $row, string $border, float $lineHeight = 7.0) : float
+	private function printRow(float $x, float $y, array $row, string $border, float $lineHeight = 7.0, string $alignment = 'R') : float
 		{
 		$height = $lineHeight;
 		$this->setXY($x, $y);
+
 		$row['street'] = $row['street'] ?? '';
 		$street = $this->cleanStreet($row['street']);
 		$streetWidth = 65;
@@ -188,8 +187,8 @@ class CueSheet extends \FPDF
 			}
 
 		$this->setLineWidth(0.2);
-		$this->Cell(14, $lineHeight, $row['distance'], $currentBorder, 0, 'C', true);
-		$this->Cell(12, $lineHeight, $row['gox'], $currentBorder, 0, 'C', true);
+		$this->Cell(14, $lineHeight, $row['distance'], $currentBorder, 0, $alignment, true);
+		$this->Cell(12, $lineHeight, $row['gox'], $currentBorder, 0, $alignment, true);
 		$turnY = $this->GetY();
 		$turnX = $this->GetX();
 		$this->Cell(5, $lineHeight, '', $currentBorder, 0, 'C', true);
@@ -213,13 +212,14 @@ class CueSheet extends \FPDF
 					break;
 
 
-				case 'Left_sharp':
-				case 'Left_slight':
-			  case 'Left':
-
+				case 'Slight Left':
+//					$angle = -30;
+				case 'Sharp Left':
+//					$angle += 30;
+				case 'Left':
+					$angle += 180;
 					$turnX += 4.75;
 					$turnY += 1.5;
-					$angle = 180;
 
 					break;
 
@@ -234,8 +234,10 @@ class CueSheet extends \FPDF
 					break;
 
 
-				case 'Right_sharp':
-				case 'Right_slight':
+				case 'Slight Right':
+//					$angle = 30;
+				case 'Sharp Right':
+//					$angle += 30;
 				case 'Right':
 
 					$turnY += $lineHeight - 2;
@@ -307,12 +309,12 @@ class CueSheet extends \FPDF
 		$header['turn'] = '';
 		$header['gox'] = 'Go X';
 		$header['street'] = '';
-		$y += $this->printRow($x, $y, $header, 'TL', 4);
+		$y += $this->printRow($x, $y, $header, 'TL', 4, 'C');
 		$this->SetFont('Arial', 'B', 8);
 		$header['distance'] = 'At Turn';
 		$header['gox'] = $this->units;
 		$header['street'] = 'Then Turn Onto';
-		$y += $this->printRow($x, $y, $header, 'LB', 4);
+		$y += $this->printRow($x, $y, $header, 'LB', 4, 'C');
 
 		$this->SetFont('Arial', '', 14);
 		$count = 1;
@@ -329,11 +331,10 @@ class CueSheet extends \FPDF
 				}
 
 			$row = $reader->current();
-			// @phpstan-ignore-next-line
-			$row['distance'] = (float)\number_format($row['distance'] ?? 0.0, 2);
-			$row['gox'] = \number_format($row['distance'] - $this->lastDistance, 2);
-			// @phpstan-ignore-next-line
-			$this->lastDistance = (float)$row['distance'];
+			$originalDistance = (float)$row['distance']; // @phpstan-ignore-line
+			$row['distance'] = \number_format($originalDistance, 2); // @phpstan-ignore-line
+			$row['gox'] = \number_format($originalDistance - $this->lastDistance, 2);
+			$this->lastDistance = $originalDistance;
 			$y += $this->printRow($x, $y, $row, 'LB');
 			$reader->next();
 			++$count;
