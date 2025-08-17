@@ -9,7 +9,6 @@ use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
-use ProxyManager\Proxy\LazyLoadingInterface;
 
 /**
  * Creates proxy classes.
@@ -39,7 +38,7 @@ class ProxyFactory implements ProxyFactoryInterface
      *
      * {@inheritDoc}
      */
-    public function createProxy(string $className, \Closure $createFunction) : LazyLoadingInterface
+    public function createProxy(string $className, \Closure $createFunction): object
     {
         return $this->proxyManager()->createProxy(
             $className,
