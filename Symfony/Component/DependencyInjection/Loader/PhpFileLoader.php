@@ -81,6 +81,9 @@ class PhpFileLoader extends FileLoader
             return include $path;
         }, null, null);
 
+        $instanceof = $this->instanceof;
+        $this->instanceof = [];
+
         try {
             try {
                 if (1 === $result = $load($path, $this->env)) {
@@ -95,7 +98,7 @@ class PhpFileLoader extends FileLoader
                     $result = null;
                 }
 
-                trigger_deprecation('symfony/dependency-injection', '7.4', 'Using `$this` or its internal scope in config files is deprecated, use the `$loader` variable instead in "%s" on line %d.', $e->getFile(), $e->getLine());
+                throw new LogicException(\sprintf('Using `$this` or its internal scope in config files is not supported anymore, use the `$loader` variable instead in "%s" on line %d.', $e->getFile(), $e->getLine()), $e->getCode(), $e);
             }
 
             if (\is_object($result) && \is_callable($result)) {
@@ -145,7 +148,7 @@ class PhpFileLoader extends FileLoader
 
             $this->loadExtensionConfigs();
         } finally {
-            $this->instanceof = [];
+            $this->instanceof = $instanceof;
             $this->registerAliasesForSinglyImplementedInterfaces();
         }
 

@@ -24,12 +24,13 @@ class ResolveClassPass implements CompilerPassInterface
     {
         foreach ($container->getDefinitions() as $id => $definition) {
             if ($definition->isSynthetic()
+                || $definition->hasErrors()
                 || null !== $definition->getClass()
                 || !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)++$/', $id)
             ) {
                 continue;
             }
-            if (class_exists($id) || interface_exists($id, false)) {
+            if ($container->getReflectionClass($id, false)) {
                 $definition->setClass($id);
                 continue;
             }
