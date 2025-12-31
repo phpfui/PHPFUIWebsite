@@ -40,7 +40,6 @@ else
 		'Soundasleep',
 		'voku',
 		'Webmozart',
-		'Webklex',
 		'ZBateson',
 	];
 
