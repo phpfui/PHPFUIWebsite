@@ -30,11 +30,19 @@ class ContactTags extends \PHPFUI\ConstantContact\Base
 	 * @param int $limit Use to specify the number of tag results (up to `500`) to display per page of output. The default is `50`.
 	 * @param bool $include_count Returns the total number of contacts (`contacts_count`) to which a tag applies.
 	 */
-	public function get(?int $limit = null, ?bool $include_count = null) : array
+	public function get(?int $limit = null, ?bool $include_count = null) : ?array
 		{
 
 		return $this->doGet(['limit' => $limit, 'include_count' => $include_count, ]);
 		}
+
+	public function getTyped(?int $limit = null, ?bool $include_count = null) : ?\PHPFUI\ConstantContact\Definition\Tags
+		{
+		$data = $this->get($limit, $include_count);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\Tags($data) : null;
+		}
+
 
 	/**
 	 * POST (Create) a Tag
@@ -47,9 +55,17 @@ class ContactTags extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\TagPost $body The JSON payload to use to create a new tag.
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\TagPost $body) : array
+	public function post(\PHPFUI\ConstantContact\Definition\TagPost $body) : ?array
 		{
 
 		return $this->doPost(['body' => $body->getData(), ]);
 		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\TagPost $body) : ?\PHPFUI\ConstantContact\Definition\Tag
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\Tag($data) : null;
+		}
+
 	}

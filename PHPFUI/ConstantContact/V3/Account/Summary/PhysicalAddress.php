@@ -20,11 +20,46 @@ class PhysicalAddress extends \PHPFUI\ConstantContact\Base
 	 *
 	 *
 	 */
-	public function get() : array
+	public function get() : ?array
 		{
 
 		return $this->doGet([]);
 		}
+
+	public function getTyped() : ?\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress
+		{
+		$data = $this->get();
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\AccountPhysicalAddress($data) : null;
+		}
+
+
+	/**
+	 * POST the Physical Address for the Account
+	 *
+	 * Use this method to add the address where the account's organization
+	 * physically resides. The physical address is required to send emails
+	 * and displays on the footer of every email that is sent from the account.
+	 * The country (<code>country_code</code>) where the account organization
+	 * resides determines whether you use the <code>state_code</code> to specify
+	 * United States (<code>US</code>) and Canada (<code>CA</code>) addresses,
+	 * or use the <code>state_name</code> to specify all other countries.
+	 *
+	 * @param \PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body Include all `AccountPhysicalAddress` properties required for the specified `country_code`. If a required property is not included or incorrectly formatted, a 400 error message is returned. If the address already exists, a 409 error message is returned.
+	 */
+	public function post(\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body) : ?array
+		{
+
+		return $this->doPost(['body' => $body->getData(), ]);
+		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body) : ?\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\AccountPhysicalAddress($data) : null;
+		}
+
 
 	/**
 	 * PUT (update) the Physical Address for an Account
@@ -43,9 +78,17 @@ class PhysicalAddress extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body Include all `AccountPhysicalAddress` properties required for the specified `country_code` and then update only those properties that you want to change. Excluding a non-read only field from the request body removes it from the physical address.
 	 */
-	public function put(\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body) : array
+	public function put(\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body) : ?array
 		{
 
 		return $this->doPut(['body' => $body->getData(), ]);
 		}
+
+	public function putTyped(\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress $body) : ?\PHPFUI\ConstantContact\Definition\AccountPhysicalAddress
+		{
+		$data = $this->put($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\AccountPhysicalAddress($data) : null;
+		}
+
 	}

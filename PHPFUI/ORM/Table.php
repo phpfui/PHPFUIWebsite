@@ -64,7 +64,7 @@ abstract class Table implements \Countable
 
 		foreach ($parameters as $field => $value)
 			{
-			$baseField = $field;
+			$baseField = $this->cleanField($field);
 			$parts = \explode(':', $field);
 			$direction = '';
 
@@ -78,7 +78,7 @@ abstract class Table implements \Countable
 				{
 				continue;
 				}
-			$type = $fields[$baseField][\PHPFUI\ORM\Record::PHP_TYPE_INDEX] ?? 'string';
+			$type = $fields[$baseField]->phpType ?? 'string';
 
 			if (\in_array($type, ['int', 'float', 'timestamp']))
 				{
@@ -229,6 +229,11 @@ abstract class Table implements \Countable
 		else
 			{
 			$parts = \explode('.', $field);
+
+			foreach ($parts as $index => $part)
+				{
+				$parts[$index] = $this->cleanField($part);
+				}
 			$field = \implode('`.`', $parts);
 			$this->selects['`' . $field . '`'] = $as;
 			}
@@ -296,7 +301,19 @@ abstract class Table implements \Countable
 
 	public function cleanField(string $fieldName) : string
 		{
-		return \preg_replace('/[^[a-zA-Z_][a-zA-Z0-9_.$@-]{0,63}$]/', '', $fieldName);  // string invalid characters since we can't use a placeholder in order and group by
+		// Remove invalid characters (replace with space) but allow * and . for fully specified fields
+		$sanitized = \preg_replace('/[^a-zA-Z0-9_$.*]/', '', $fieldName);
+
+		// Remove leading/trailing underscores
+		$sanitized = \trim($sanitized, '_');
+
+		// If the string is empty after sanitization, use *
+		if (! \strlen($sanitized))
+			{
+			$sanitized = '*';
+			}
+
+		return $sanitized;
 		}
 
 	/**
@@ -311,7 +328,7 @@ abstract class Table implements \Countable
 		}
 
 	/**
-	 * Delete record matching the requested parameters
+	 * Delete record matching the current where clause
 	 */
 	public function delete(bool $allowDeleteAll = false) : static
 		{
@@ -331,28 +348,6 @@ abstract class Table implements \Countable
 		\PHPFUI\ORM::execute($this->lastSql, $this->lastInput);
 
 		return $this;
-		}
-
-	/**
-	 * transform any field or table.field from join
-	 */
-	public function displayTransform(string $field, mixed $value = null) : mixed
-		{
-		$parts = \explode('_', $field);
-
-		if (2 <= \count($parts))
-			{
-			$field = $parts[1];
-
-			if (isset($this->joins[$parts[0]]))
-				{
-				$joinedTable = $this->joins[$parts[0]][0];
-
-				return $joinedTable->displayTransform($field, $value);
-				}
-			}
-
-		return $this->instance->displayTransform($field, $value);
 		}
 
 	/**
@@ -437,7 +432,7 @@ abstract class Table implements \Countable
 		}
 
 	/**
-	 * @return array<string,array<mixed>>
+	 * @return array<string,\PHPFUI\ORM\FieldDefinition>
 	 */
 	public function getFields() : array
 		{
@@ -553,6 +548,11 @@ abstract class Table implements \Countable
 			$offset = $this->page * $this->limit;
 			}
 		$this->offset = $offset;
+
+		if (\PHPFUI\ORM::getInstance()->postGre)
+			{
+			return "\nLIMIT {$this->limit} OFFSET {$offset}";
+			}
 
 		return "\nLIMIT {$offset}, {$this->limit}";
 		}
@@ -787,11 +787,20 @@ abstract class Table implements \Countable
 		$tableName = $this->getTableName();
 		$sql = "insert {$ignore} into `{$tableName}` (";
 
-		$fields = \array_keys($this->getFields());
+		$fields = $this->getFields();
 		$comma = '';
 
-		foreach ($fields as $fieldName)
+		$primaryKeys = $this->getPrimaryKeys();
+		$primaryKey = '';
+
+		foreach ($fields as $fieldName => $definition)
 			{
+			if (\in_array($fieldName, $primaryKeys) && $this->instance->getAutoIncrement())
+				{
+				$primaryKey = $fieldName;
+
+				continue;
+				}
 			$sql .= "{$comma}`{$fieldName}`";
 			$comma = ",\n";
 			}
@@ -811,11 +820,14 @@ abstract class Table implements \Countable
 				throw new \PHPFUI\ORM\Exception(__METHOD__ . ": record should be of type {$myType} but is of type {$haveType}");
 				}
 
-			foreach ($fields as $fieldName)
+			foreach ($fields as $fieldName => $definition)
 				{
-				$sql .= $comma . '?';
-				$comma = ",\n";
-				$input[] = $record[$fieldName];
+				if ($fieldName !== $primaryKey)
+					{
+					$sql .= $comma . '?';
+					$comma = ",\n";
+					$input[] = $record[$fieldName];
+					}
 				}
 			$comma = '),(';
 			}
@@ -1032,7 +1044,7 @@ abstract class Table implements \Countable
 	 */
 	public function updateFromTable(array $request) : bool
 		{
-		$fields = $this->instance->getFields();
+		$fields = $this->getFields();
 
 		$primaryKeys = $this->getPrimaryKeys();
 
@@ -1076,7 +1088,7 @@ abstract class Table implements \Countable
 	 */
 	public function validateFromTable(array $request) : array
 		{
-		$fields = $this->instance->getFields();
+		$fields = $this->getFields();
 
 		$primaryKeys = $this->getPrimaryKeys();
 

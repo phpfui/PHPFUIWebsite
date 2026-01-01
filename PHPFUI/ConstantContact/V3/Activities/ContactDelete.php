@@ -24,9 +24,17 @@ class ContactDelete extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\ContactDelete $body The request body contains an array of contact_ids <em>or</em> list_ids. All contact_ids provided are deleted, or all members of each specified list_id are deleted.
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\ContactDelete $body) : array
+	public function post(\PHPFUI\ConstantContact\Definition\ContactDelete $body) : ?array
 		{
 
 		return $this->doPost(['body' => $body->getData(), ]);
 		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\ContactDelete $body) : ?\PHPFUI\ConstantContact\Definition\ActivityDeleteStatus
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\ActivityDeleteStatus($data) : null;
+		}
+
 	}

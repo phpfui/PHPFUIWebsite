@@ -11,7 +11,7 @@ abstract class Base
 		return $lhs->name <=> $rhs->name;
 		}
 
-	abstract protected function getLine(\PHPFUI\ORM\Schema\Field $field) : string;
+	abstract protected function getFieldDefinition(\PHPFUI\ORM\Schema\Field $field) : string;
 
 	/**
 	 * @return array<string, string>
@@ -53,6 +53,12 @@ abstract class Base
 		if (false !== $start)
 			{
 			$precision = \rtrim(\substr($type, $start + 1), ')');
+
+			if (\str_contains($precision, ','))
+				{
+				$parts = \explode(',', $precision);
+				$precision = ((int)$parts[0]) + 1;
+				}
 			$type = \substr($type, 0, $start);
 			}
 		$type = \strtolower($type);
@@ -99,14 +105,19 @@ abstract class Base
 			'tinyint' => 'int',
 			'mediumint' => 'int',
 			'bigint' => 'int',
+			'smallserial' => 'int',
+			'serial' => 'int',
+			'bigserial' => 'int',
 			'decimal' => 'float',
 			'numeric' => 'float',
 			'float' => 'float',
 			'double' => 'float',
+			'real' => 'float',
+			'double precision' => 'float',
+			'money' => 'float',
 			'bit' => 'bool',
+			'boolean' => 'bool',
 			'year' => 'int',
-			'timestamp' => 'string',
-			'datetime' => 'string',
 		];
 		$type = $types[$type] ?? 'string';
 

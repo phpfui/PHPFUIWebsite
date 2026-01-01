@@ -7,16 +7,6 @@ abstract class Migration
 	/** @var string[] */
 	protected array $errors = [];
 
-	/** @var string[] */
-	protected array $myslqDefaults = [
-		'CURRENT_TIMESTAMP',
-		'CURRENT_DATE',
-		'true',
-		'false',
-		"b'0'",
-		"b'1'",
-	];
-
 	/** @var array<string, array<string>> */
 	private array $alters = [];
 
@@ -43,8 +33,7 @@ abstract class Migration
 		// do DROP, ADD and CHANGE for each table
 		foreach ($this->alters as $table => $alters)
 			{
-			$sql = 'ALTER TABLE `' . $table . '` ' . \implode(',', $alters);
-
+			$sql = "ALTER TABLE `{$table}` " . \implode(',', $alters);
 			$this->runSQL($sql);
 			}
 		$this->alters = [];
@@ -55,7 +44,7 @@ abstract class Migration
 	/**
 	 * @return string[] of table names
 	 */
-	public function getAllTables(string $type = 'BASE TABLE') : array
+	public function getAllTables() : array
 		{
 		return \PHPFUI\ORM::getTables();
 		}
@@ -71,7 +60,7 @@ abstract class Migration
 	 */
 	public function getMySQLSetting(string $variable) : string
 		{
-		$result = \PHPFUI\ORM::getRows('SHOW VARIABLES where Variable_name = "' . $variable . '"');
+		$result = \PHPFUI\ORM::getRows("SHOW VARIABLES where Variable_name = `{$variable}`");
 
 		return $result[0]['Value'];
 		}
@@ -159,7 +148,7 @@ abstract class Migration
 	 *
 	 * @param array<string> $columns
 	 */
-	protected function addForeignKey(string $toTable, string $referenceTable, array $columns, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE') : bool
+	protected function addForeignKey(string $table, string $referenceTable, array $columns, string $onDelete = 'CASCADE', string $onUpdate = 'CASCADE') : bool
 		{
 		$actions = ['RESTRICT', 'CASCADE', 'SET NULL', 'NO ACTION'];
 		$onDelete = \strtoupper($onDelete);
@@ -176,18 +165,16 @@ abstract class Migration
 			throw new \PHPFUI\ORM\Exception('$onUpdate option for ' . __METHOD__ . ' must be one of (' . \implode(',', $actions) . ") {$onUpdate} given.");
 			}
 
-		$this->addIndex($referenceTable, $columns);
-
 		// set missing relations to null
 		foreach ($columns as $column)
 			{
-			$foreignTable = \str_replace(\PHPFUI\ORM::$idSuffix, '', (string)$column);
-			$sql = "update `{$referenceTable}` set `{$column}`=null where `{$column}` not in (select `{$column}` from `{$toTable}`)";
+			$this->addIndex($referenceTable, [$column]);
+			$sql = "update `{$referenceTable}` set `{$column}`=null where `{$column}` not in (select `{$column}` from `{$table}`)";
 			$this->runSQL($sql);
 			}
 
 		$columnList = \implode(',', $columns);
-		$fkName = \implode('_', $columns) . '_FK';
+		$fkName = 'fk_' . $table . '_' . \implode('_', $columns);
 		$sql = "ADD CONSTRAINT {$fkName} FOREIGN KEY ({$columnList}) REFERENCES {$referenceTable}({$columnList})";
 
 		if ($onDelete)
@@ -200,7 +187,7 @@ abstract class Migration
 			$sql .= ' ON UPDATE ' . $onUpdate;
 			}
 
-		$this->alters[$toTable][] = $sql;
+		$this->alters[$table][] = $sql;
 
 		return true;
 		}
@@ -267,15 +254,15 @@ abstract class Migration
 		}
 
 	/**
-	 * Alters a column incluing a reneme if $newName is provided
+	 * Alters a column type. Use renameColumn to change the column name
 	 */
-	protected function alterColumn(string $table, string $field, string $parameters, string $newName = '') : bool
+	protected function alterColumn(string $table, string $field, string $parameters) : bool
 		{
 		$fieldInfo = $this->getFieldInfo($table, $field);
 
 		if ($fieldInfo)
 			{
-			$this->alter('CHANGE', $table, $field, $parameters, $newName);
+			$this->alter('CHANGE', $table, $field, $parameters);
 			}
 		else
 			{
@@ -328,11 +315,11 @@ abstract class Migration
 	protected function dropAllIndexes(string $table) : void
 		{
 		$dropped = [];
-		$rows = \PHPFUI\ORM::getRows("SHOW INDEX FROM `{$table}`");
+		$indexes = \PHPFUI\ORM::getIndexes($table);
 
-		foreach ($rows as $row)
+		foreach ($indexes as $index)
 			{
-			$indexName = $row['Key_name'];
+			$indexName = $index->keyName;
 
 			if (! isset($dropped[$indexName]))
 				{
@@ -360,17 +347,21 @@ abstract class Migration
 	/**
 	 * Drops the foreign key on the table
 	 *
-	 * @param array<string> $columns
+	 * @param string | array<string> $columns use string for specific name, or columns for a generated name
 	 */
-	protected function dropForeignKey(string $table, array $columns) : bool
+	protected function dropForeignKey(string $table, string | array $columns) : bool
 		{
-		$index = \implode('_', $columns) . '_FK';
-
-		if ($this->indexExists($table, $index))
+		if (\is_array($columns))
 			{
-			$sql = 'DROP FOREIGN KEY ' . \implode('_', $columns) . '_FK';
-			$this->alters[$table][] = $sql;
+			$index = "fk_{$table}_" . \implode('_', $columns);
 			}
+		else
+			{
+			$index = $columns;
+			}
+
+		$sql = 'DROP FOREIGN KEY ' . $index;
+		$this->alters[$table][] = $sql;
 
 		return true;
 		}
@@ -396,7 +387,14 @@ abstract class Migration
 			return true;
 			}
 
-		$sql = "DROP INDEX `{$indexName}` ON `{$table}`";
+		if (\PHPFUI\ORM::getInstance()->sqlite)
+			{
+			$sql = "DROP INDEX `{$indexName}`";
+			}
+		else
+			{
+			$sql = "DROP INDEX `{$indexName}` ON `{$table}`";
+			}
 
 		return $this->runSQL($sql);
 		}
@@ -406,18 +404,21 @@ abstract class Migration
 	 */
 	protected function dropPrimaryKey(string $table) : bool
 		{
-		$rows = \PHPFUI\ORM::getArrayCursor("SHOW COLUMNS FROM {$table}");
+		$fields = \PHPFUI\ORM::describeTable($table);
+		$indexes = \PHPFUI\ORM::getIndexes($table);
 
-		foreach ($rows as $row)
+		foreach ($indexes as $index)
 			{
-			if ('PRI' == $row['Key'])
+			if ($index->primaryKey)
 				{
 				$sql = 'alter table ' . $table;
 
-				if ('auto_increment' == $row['Extra'])
+				$field = $fields[$index->name];
+
+				if ($field->autoIncrement)
 					{
-					$nullable = 'NO' == $row['Null'] ? 'NOT NULL' : '';
-					$sql .= " change {$row['Field']} {$row['Field']} {$row['Type']} {$nullable},";
+					$nullable = $field->nullable ? '' : 'NOT NULL';
+					$sql .= " change `{$field->name}` `{$field->name}` {$field->type} {$nullable},";
 					}
 				$sql .= ' DROP PRIMARY KEY';
 				$this->runSQL($sql);
@@ -434,7 +435,7 @@ abstract class Migration
 	 */
 	protected function dropTable(string $table) : bool
 		{
-		return $this->runSQL('DROP TABLE IF EXISTS `' . $table . '`');
+		return $this->runSQL("DROP TABLE IF EXISTS `{$table}`");
 		}
 
 	/**
@@ -455,7 +456,7 @@ abstract class Migration
 	 */
 	protected function dropView(string $view) : bool
 		{
-		return $this->runSQL('DROP VIEW IF EXISTS ' . $view);
+		return $this->runSQL("DROP VIEW IF EXISTS `{$view}`");
 		}
 
 	/**
@@ -476,17 +477,25 @@ abstract class Migration
 	 */
 	protected function indexExists(string $table, string $indexName) : bool
 		{
-		$rows = \PHPFUI\ORM::getRows("SHOW INDEX FROM `{$table}`");
+		$indexes = \PHPFUI\ORM::getIndexes($table);
 
-		foreach ($rows as $row)
+		return isset($indexes[$indexName]);
+		}
+
+	/**
+	 * Rename a column incluing
+	 */
+	protected function renameColumn(string $table, string $field, string $newName) : bool
+		{
+		$fieldInfo = $this->getFieldInfo($table, $field);
+
+		if ($fieldInfo)
 			{
-			if ($row['Key_name'] == $indexName)
-				{
-				return true;
-				}
+			$sql = "RENAME COLUMN `{$field}` TO `{$newName}`";
+			$this->alters[$table][] = $sql;
 			}
 
-		return false;
+		return true;
 		}
 
 	/**
@@ -499,14 +508,13 @@ abstract class Migration
 		return $this->runSQL("rename table `{$oldName}` to `{$newName}`");
 		}
 
-	private function alter(string $type, string $table, string $field, string $extra = '', string $newName = '') : void
+	private function alter(string $type, string $table, string $field, string $extra = '') : void
 		{
-		$sql = $type . ' COLUMN `' . $field . '`';
+		$sql = $type . " COLUMN `{$field}`";
 
 		if ('CHANGE' == $type)
 			{
-			$field = $newName ?: $field;
-			$sql .= ' `' . $field . '`';
+			$sql .= " `{$field}`";
 			}
 
 		if ('DROP' != $type)
@@ -525,14 +533,6 @@ abstract class Migration
 		{
 		$fields = \PHPFUI\ORM::describeTable($table);
 
-		foreach ($fields as $field)
-			{
-			if ($field->name == $fieldName)
-				{
-				return $field;
-				}
-			}
-
-		return null;
+		return $fields[$fieldName] ?? null;
 		}
 	}

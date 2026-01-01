@@ -23,9 +23,17 @@ class Clicks extends \PHPFUI\ConstantContact\Base
 	 * @param int $url_id The ID that uniquely identifies a single link URL for which you want to get a clicks report.
 	 * @param string $limit The number of tracking activities to return on a page.
 	 */
-	public function get(string $campaign_activity_id, ?int $url_id = null, ?string $limit = null) : array
+	public function get(string $campaign_activity_id, ?int $url_id = null, ?string $limit = null) : ?array
 		{
 
 		return $this->doGet(['campaign_activity_id' => $campaign_activity_id, 'url_id' => $url_id, 'limit' => $limit, ]);
 		}
+
+	public function getTyped(string $campaign_activity_id, ?int $url_id = null, ?string $limit = null) : ?\PHPFUI\ConstantContact\Definition\ClicksTrackingActivitiesPage
+		{
+		$data = $this->get($campaign_activity_id, $url_id, $limit);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\ClicksTrackingActivitiesPage($data) : null;
+		}
+
 	}

@@ -21,9 +21,17 @@ class ContactsTagsDelete extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\TagIdList500Limit $body An array of string values (`tag_id`s) to delete.
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\TagIdList500Limit $body) : array
+	public function post(\PHPFUI\ConstantContact\Definition\TagIdList500Limit $body) : ?array
 		{
 
 		return $this->doPost(['body' => $body->getData(), ]);
 		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\TagIdList500Limit $body) : ?\PHPFUI\ConstantContact\Definition\ActivityTagging
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\ActivityTagging($data) : null;
+		}
+
 	}

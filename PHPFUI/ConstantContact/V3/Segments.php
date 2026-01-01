@@ -23,11 +23,19 @@ class Segments extends \PHPFUI\ConstantContact\Base
 	 * @param string $limit The number of segments to return on a page.
 	 * @param string $sort_by Specify the segment sort order to use. Sort by name (`sort_by=name`) in ascending order, or sort by date (`sort_by=date`) in descending order with the most recently updated segments listed first.
 	 */
-	public function get(?string $limit = null, ?string $sort_by = null) : array
+	public function get(?string $limit = null, ?string $sort_by = null) : ?array
 		{
 
 		return $this->doGet(['limit' => $limit, 'sort_by' => $sort_by, ]);
 		}
+
+	public function getTyped(?string $limit = null, ?string $sort_by = null) : ?\PHPFUI\ConstantContact\Definition\SegmentsDTO
+		{
+		$data = $this->get($limit, $sort_by);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\SegmentsDTO($data) : null;
+		}
+
 
 	/**
 	 * POST (create) a Segment
@@ -61,9 +69,17 @@ class Segments extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\SegmentData $body The segment `name` and `segment_criteria` (requires single-string escaped JSON).
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\SegmentData $body) : array
+	public function post(\PHPFUI\ConstantContact\Definition\SegmentData $body) : ?array
 		{
 
 		return $this->doPost(['body' => $body->getData(), ]);
 		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\SegmentData $body) : ?\PHPFUI\ConstantContact\Definition\SegmentDetail
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\SegmentDetail($data) : null;
+		}
+
 	}

@@ -26,14 +26,14 @@ Out of the box, `mysqldump-php` supports backing up table structures, the data i
 
 ## Requirements
 
-- PHP 7.4 or 8.x with PDO - [see supported versions](https://www.php.net/supported-versions.php)
-- MySQL 5.7 or newer (and compatible MariaDB)
+- PHP 8.2 or newer with PDO - [see supported versions](https://www.php.net/supported-versions.php)
+- MySQL 8.0 or newer (and compatible MariaDB)
 
 ## Installing
 
 Install using [Composer](https://getcomposer.org/):
 
-```
+```console
 composer require druidfi/mysqldump-php
 ```
 
@@ -139,8 +139,12 @@ All options:
 - **if-not-exists**
   - Only create a new table when a table of the same name does not already exist. No error message is thrown if the table already exists. 
 - **compress**
-  - Possible values: `Bzip2|Gzip|Gzipstream|None`, default is `None`
-  - Could be specified using the consts: `CompressManagerFactory::GZIP`, `CompressManagerFactory::BZIP2` or `CompressManagerFactory::NONE`
+  - Possible values: `Bzip2|Gzip|Gzipstream|Zstd|Lz4|None`, default is `None`
+  - Could be specified using the consts: `CompressManagerFactory::GZIP`, `CompressManagerFactory::BZIP2`, `CompressManagerFactory::ZSTD`, `CompressManagerFactory::LZ4` or `CompressManagerFactory::NONE`
+- **compress-level**
+  - Compression level to use (integer), default is `0` (no compression level specified)
+  - For Zstd: 1-22 (default: 3)
+  - For Lz4: 1-12 (default: 1)
 - **reset-auto-increment**
   - Removes the AUTO_INCREMENT option from the database definition
   - Useful when used with no-data, so when db is recreated, it will start from 1 instead of using an old value
@@ -171,6 +175,8 @@ All options:
   - MySQL docs [5.7](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html#option_mysqldump_hex-blob)
 - **insert-ignore**
   - MySQL docs [5.7](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html#option_mysqldump_insert-ignore)
+- **replace**
+  - Use REPLACE INTO instead of INSERT INTO statements. Cannot be used together with insert-ignore.
 - **lock-tables**
   - MySQL docs [5.7](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html#option_mysqldump_lock-tables)
 - **net_buffer_length**
@@ -219,7 +225,7 @@ To dump a database, you need the following privileges:
   - If "lock tables" option was enabled.
 - **PROCESS**
   - If you don’t use the --no-tablespaces option.
-    
+
 Use **SHOW GRANTS FOR user@host;** to know what privileges user has. See the following link for more information:
 
 - [Which are the minimum privileges required to get a backup of a MySQL database schema?](https://dba.stackexchange.com/questions/55546/which-are-the-minimum-privileges-required-to-get-a-backup-of-a-mysql-database-sc/55572#55572)
@@ -237,28 +243,20 @@ are not available in mysqldump.
 
 Local setup for tests:
 
-```
-docker compose up -d --build
-docker compose exec php81 /app/tests/scripts/create_users.sh
-docker compose exec php81 /app/tests/scripts/create_users.sh db2
-docker compose exec php81 /app/tests/scripts/create_users.sh db3
-docker compose exec -w /app/tests/scripts php74 ./test.sh
-docker compose exec -w /app/tests/scripts php80 ./test.sh
-docker compose exec -w /app/tests/scripts php81 ./test.sh
-docker compose exec -w /app/tests/scripts php82 ./test.sh
-docker compose exec -w /app/tests/scripts php74 ./test.sh db2
-docker compose exec -w /app/tests/scripts php80 ./test.sh db2
-docker compose exec -w /app/tests/scripts php81 ./test.sh db2
-docker compose exec -w /app/tests/scripts php82 ./test.sh db2
-docker compose exec -w /app/tests/scripts php74 ./test.sh db3
-docker compose exec -w /app/tests/scripts php80 ./test.sh db3
-docker compose exec -w /app/tests/scripts php81 ./test.sh db3
-docker compose exec -w /app/tests/scripts php82 ./test.sh db3
+```console
+composer install
+docker compose up --wait --build
+docker compose exec -w /app/tests/scripts php82 ./test.sh mysql
+docker compose exec -w /app/tests/scripts php83 ./test.sh mysql
+docker compose exec -w /app/tests/scripts php84 ./test.sh mysql
+docker compose exec -w /app/tests/scripts php82 ./test.sh mariadb
+docker compose exec -w /app/tests/scripts php83 ./test.sh mariadb
+docker compose exec -w /app/tests/scripts php84 ./test.sh mariadb
 ```
 
 ## Credits
 
-Forked from Diego Torres's version which have latest updates from 2020. Use it for PHP 7.3 and older.
+Forked from Diego Torres's version which have latest updates from 2020. Use it for PHP 8.1 and older.
 https://github.com/ifsnop/mysqldump-php
 
 Originally based on James Elliott's script from 2009.

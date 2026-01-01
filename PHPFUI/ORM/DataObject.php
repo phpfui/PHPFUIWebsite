@@ -7,7 +7,7 @@ namespace PHPFUI\ORM;
  */
 class DataObject implements \ArrayAccess
 	{
-	/** @param array<string, string> $current */
+	/** @param array<string, string | null | int | bool | float> $current */
 	public function __construct(protected array $current)
 		{
 		}
@@ -33,6 +33,14 @@ class DataObject implements \ArrayAccess
 		throw new \PHPFUI\ORM\Exception(self::class . " {$field} is not a valid field");
 		}
 
+	/**
+	 * Allows for empty($object->field) to work correctly
+	 */
+  public function __isset(string $field) : bool
+		{
+		return \array_key_exists($field, $this->current) || ! empty($this->current[$field . \PHPFUI\ORM::$idSuffix]);
+		}
+
 	public function __set(string $field, mixed $value) : void
 		{
 		if (! \array_key_exists($field, $this->current))
@@ -48,9 +56,14 @@ class DataObject implements \ArrayAccess
 		return ! \count($this->current);
 		}
 
+	public function initFieldDefinitions() : static
+		{
+		return $this;
+		}
+
 	public function isset(string $field) : bool
 		{
-		return \array_key_exists($field, $this->current);
+		return $this->__isset($field);
 		}
 
 	public function offsetExists($offset) : bool
@@ -58,22 +71,22 @@ class DataObject implements \ArrayAccess
 		return \array_key_exists($offset, $this->current);
 		}
 
+	/**
+	 * Low level get access to underlying data to implement ArrayAccess
+	 */
 	public function offsetGet($offset) : mixed
 		{
-		if (\array_key_exists($offset, $this->current))
-			{
-			return $this->current[$offset];
-			}
+		$this->validateFieldExists($offset);
 
-		throw new \PHPFUI\ORM\Exception(self::class . " {$offset} is not defined");
+		return $this->current[$offset] ?? null;
 		}
 
-  public function offsetSet($offset, $value) : void
+	/**
+	 * Low level set access to underlying data to implement ArrayAccess
+	 */
+	public function offsetSet($offset, $value) : void
 		{
-		if (! \array_key_exists($offset, $this->current))
-			{
-			throw new \PHPFUI\ORM\Exception(self::class . " {$offset} is not defined");
-			}
+		$this->validateFieldExists($offset);
 		$this->current[$offset] = $value;
 		}
 
@@ -86,5 +99,16 @@ class DataObject implements \ArrayAccess
 	public function toArray() : array
 		{
 		return $this->current;
+		}
+
+	protected function validateFieldExists(string $field) : void
+		{
+		if (! $this->__isset($field))
+			{
+			$message = static::class . "::{$field} is not a valid field";
+			\PHPFUI\ORM::log(\Psr\Log\LogLevel::ERROR, $message);
+
+			throw new \PHPFUI\ORM\Exception($message);
+			}
 		}
 	}

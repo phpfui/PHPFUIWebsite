@@ -21,7 +21,7 @@ class Schedules extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param string $campaign_activity_id The unique ID for an email campaign activity.
 	 */
-	public function delete(string $campaign_activity_id) : bool
+	public function delete(string $campaign_activity_id) : ?array
 		{
 
 		return $this->doDelete(['campaign_activity_id' => $campaign_activity_id, ]);
@@ -38,19 +38,41 @@ class Schedules extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param string $campaign_activity_id The unique ID for an email campaign activity.
 	 */
-	public function get(string $campaign_activity_id) : array
+	public function get(string $campaign_activity_id) : ?array
 		{
 
 		return $this->doGet(['campaign_activity_id' => $campaign_activity_id, ]);
 		}
+	/**
+	 * @return ?array<\PHPFUI\ConstantContact\Definition\EmailScheduleResponse>
+	 */
+	public function getTyped(string $campaign_activity_id) : ?array
+		{
+		$data = $this->get($campaign_activity_id);
+		if (is_null($data))
+			{
+			return null;
+			}
+
+		$array = [];
+		foreach ($data as $object)
+			{
+			$array[] = new \PHPFUI\ConstantContact\Definition\EmailScheduleResponse($object);
+			}
+
+		return $array;
+		}
+
 
 	/**
 	 * POST (Create) an Email Campaign Activity Schedule
 	 *
-	 * Use this method to schedule when Constant Contact will send an email
-	 * campaign activity to contacts. Use the `scheduled_date` request body
-	 * property to enter the ISO-8601 format date that you want Constant Contact
-	 * to send the email campaign activity on.
+	 * Use this method to send an email campaign activity to contacts either
+	 * immediately or on a specific date. To send the email campaign activity
+	 * immediately, specify `0` for the `scheduled_date` request property (results
+	 * return an empty array). To send the email campaign activity on a specific
+	 * date, specify the date using the `scheduled_date` request property (results
+	 * return the scheduled date in an array).
 	 *
 	 * Before you schedule an email campaign activity, you must update the
 	 * email campaign activity and specify which contacts you want Constant
@@ -69,9 +91,29 @@ class Schedules extends \PHPFUI\ConstantContact\Base
 	 * @param string $campaign_activity_id The unique ID for an email campaign activity. You can only schedule email campaign activities that have the `primary_email` role.
 	 * @param \PHPFUI\ConstantContact\Definition\EmailScheduleInput $body A request body payload that contains the date that you want Constant Contact to send your email campaign activity on. Use `"0"` as the date to have Constant Contact immediately send the email campaign activity.
 	 */
-	public function post(string $campaign_activity_id, \PHPFUI\ConstantContact\Definition\EmailScheduleInput $body) : array
+	public function post(string $campaign_activity_id, \PHPFUI\ConstantContact\Definition\EmailScheduleInput $body) : ?array
 		{
 
 		return $this->doPost(['campaign_activity_id' => $campaign_activity_id, 'body' => $body->getData(), ]);
 		}
+	/**
+	 * @return ?array<\PHPFUI\ConstantContact\Definition\EmailScheduleResponse>
+	 */
+	public function postTyped(string $campaign_activity_id, \PHPFUI\ConstantContact\Definition\EmailScheduleInput $body) : ?array
+		{
+		$data = $this->post($campaign_activity_id, $body);
+		if (is_null($data))
+			{
+			return null;
+			}
+
+		$array = [];
+		foreach ($data as $object)
+			{
+			$array[] = new \PHPFUI\ConstantContact\Definition\EmailScheduleResponse($object);
+			}
+
+		return $array;
+		}
+
 	}

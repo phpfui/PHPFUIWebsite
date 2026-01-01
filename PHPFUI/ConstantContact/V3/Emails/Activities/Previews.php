@@ -28,9 +28,17 @@ class Previews extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param string $campaign_activity_id The unique ID for an email campaign activity.
 	 */
-	public function get(string $campaign_activity_id) : array
+	public function get(string $campaign_activity_id) : ?array
 		{
 
 		return $this->doGet(['campaign_activity_id' => $campaign_activity_id, ]);
 		}
+
+	public function getTyped(string $campaign_activity_id) : ?\PHPFUI\ConstantContact\Definition\EmailCampaignActivityPreview
+		{
+		$data = $this->get($campaign_activity_id);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\EmailCampaignActivityPreview($data) : null;
+		}
+
 	}

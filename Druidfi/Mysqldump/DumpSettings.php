@@ -16,6 +16,7 @@ class DumpSettings
         'exclude-tables' => [],
         'include-views' => [],
         'compress' => 'None',
+        'compress-level' => 0,
         'init_commands' => [],
         'no-data' => [],
         'if-not-exists' => false,
@@ -32,6 +33,7 @@ class DumpSettings
         'events' => false,
         'hex-blob' => true, /* faster than escaped content */
         'insert-ignore' => false,
+        'replace' => false,
         'net_buffer_length' => 1000000,
         'no-autocommit' => true,
         'no-create-info' => false,
@@ -72,6 +74,10 @@ class DumpSettings
             throw new Exception('Include-tables and exclude-tables should be arrays');
         }
 
+        if ($this->settings['replace'] && $this->settings['insert-ignore']) {
+            throw new Exception('Cannot use both replace and insert-ignore options simultaneously');
+        }
+
         // If no include-views is passed in, dump the same views as tables, mimic mysqldump behaviour.
         if (!isset($settings['include-views'])) {
             $this->settings['include-views'] = $this->settings['include-tables'];
@@ -81,6 +87,11 @@ class DumpSettings
     public function getCompressMethod(): string
     {
         return $this->settings['compress'] ?? CompressManagerFactory::NONE;
+    }
+
+    public function getCompressLevel(): int
+    {
+        return (int) ($this->settings['compress-level'] ?? 0);
     }
 
     public function getDefaultCharacterSet(): string

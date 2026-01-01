@@ -21,18 +21,12 @@ use Druidfi\Mysqldump\TypeAdapter\TypeAdapterInterface;
 use Druidfi\Mysqldump\TypeAdapter\TypeAdapterMysql;
 use Exception;
 use PDO;
-use PDOException;
 
 class Mysqldump
 {
     // Database
-    private string $dsn;
-    private ?string $user;
-    private ?string $pass;
-    private string $host;
-    private string $dbName;
-    private PDO $conn;
-    private array $pdoOptions;
+    private DatabaseConnector $connector;
+    private ?PDO $conn = null;
     private CompressInterface $io;
     private TypeAdapterInterface $db;
 
@@ -77,91 +71,43 @@ class Mysqldump
         array   $pdoOptions = []
     )
     {
-        $this->dsn = $this->parseDsn($dsn);
-        $this->user = $user;
-        $this->pass = $pass;
+        $this->connector = new DatabaseConnector($dsn, $user, $pass, $pdoOptions);
         $this->settings = new DumpSettings($settings);
-        $this->pdoOptions = $pdoOptions;
     }
 
-    /**
-     * Parse DSN string and extract dbname value
-     * Several examples of a DSN string
-     *   mysql:host=localhost;dbname=testdb
-     *   mysql:host=localhost;port=3307;dbname=testdb
-     *   mysql:unix_socket=/tmp/mysql.sock;dbname=testdb
-     *
-     * @param string $dsn dsn string to parse
-     * @throws Exception
-     */
-    private function parseDsn(string $dsn): string
-    {
-        if (empty($dsn) || !($pos = strpos($dsn, ':'))) {
-            throw new Exception('Empty DSN string');
-        }
-
-        $dbType = strtolower(substr($dsn, 0, $pos));
-
-        if (empty($dbType)) {
-            throw new Exception('Missing database type from DSN string');
-        }
-
-        $data = [];
-
-        foreach (explode(';', substr($dsn, $pos + 1)) as $kvp) {
-            if (strpos($kvp, '=') !== false) {
-                list($param, $value) = explode('=', $kvp);
-                $data[trim(strtolower($param))] = $value;
-            }
-        }
-
-        if (empty($data['host']) && empty($data['unix_socket'])) {
-            throw new Exception('Missing host from DSN string');
-        }
-
-        if (empty($data['dbname'])) {
-            throw new Exception('Missing database name from DSN string');
-        }
-
-        $this->host = (!empty($data['host'])) ? $data['host'] : $data['unix_socket'];
-        $this->dbName = $data['dbname'];
-
-        return $dsn;
-    }
 
     /**
-     * Connect with PDO.
+     * Connect with PDO using the DatabaseConnector.
      *
      * @throws Exception
      */
     private function connect()
     {
-        try {
-            $options = array_replace_recursive([
-                PDO::ATTR_PERSISTENT => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                // Don't convert empty strings to SQL NULL values on data fetches.
-                PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
-            ], $this->pdoOptions);
-
-            $this->conn = new PDO($this->dsn, $this->user, $this->pass, $options);
-        } catch (PDOException $e) {
-            $message = sprintf("Connection to %s failed with message: %s", $this->host, $e->getMessage());
-            throw new Exception($message);
-        }
-
-        $this->db = $this->getAdapter();
+        $this->conn = $this->connector->connect();
+        $this->db = $this->getAdapter($this->conn);
     }
 
-    public function getAdapter(): TypeAdapterInterface
+    public function getAdapter(PDO $conn): TypeAdapterInterface
     {
-        return new self::$adapterClass($this->conn, $this->settings);
+        return new self::$adapterClass($conn, $this->settings);
     }
 
     private function write(string $data): int
     {
         return $this->io->write($data);
+    }
+
+    private function getInsertType(): string
+    {
+        if ($this->settings->isEnabled('replace')) {
+            return 'REPLACE';
+        }
+
+        if ($this->settings->isEnabled('insert-ignore')) {
+            return 'INSERT  IGNORE';
+        }
+
+        return 'INSERT';
     }
 
     /**
@@ -183,7 +129,10 @@ class Mysqldump
         $this->connect();
 
         // Create a new compressManager to manage compressed output
-        $this->io = CompressManagerFactory::create($this->settings->getCompressMethod());
+        $this->io = CompressManagerFactory::create(
+            $this->settings->getCompressMethod(),
+            $this->settings->getCompressLevel()
+        );
 
         // Create output file
         $this->io->open($destination);
@@ -203,10 +152,10 @@ class Mysqldump
         $this->write($this->db->backupParameters());
 
         if ($this->settings->isEnabled('databases')) {
-            $this->write($this->db->getDatabaseHeader($this->dbName));
+            $this->write($this->db->getDatabaseHeader($this->connector->getDbName()));
 
             if ($this->settings->isEnabled('add-drop-database')) {
-                $this->write($this->db->addDropDatabase($this->dbName));
+                $this->write($this->db->addDropDatabase($this->connector->getDbName()));
             }
         }
 
@@ -219,7 +168,7 @@ class Mysqldump
         $this->getDatabaseStructureEvents();
 
         if ($this->settings->isEnabled('databases')) {
-            $this->write($this->db->databases($this->dbName));
+            $this->write($this->db->databases($this->connector->getDbName()));
         }
 
         // If there still are some tables/views in include-tables array, that means that some tables or views weren't
@@ -265,8 +214,8 @@ class Mysqldump
             "--" . PHP_EOL .
             "-- Host: %s\tDatabase: %s" . PHP_EOL .
             "-- ------------------------------------------------------" . PHP_EOL,
-            $this->host,
-            $this->dbName
+            $this->connector->getHost(),
+            $this->connector->getDbName()
         );
 
         if (!empty($version = $this->db->getVersion())) {
@@ -306,12 +255,12 @@ class Mysqldump
         // Listing all tables from database
         if (empty($includedTables)) {
             // include all tables for now, blacklisting happens later
-            foreach ($this->conn->query($this->db->showTables($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showTables($this->connector->getDbName())) as $row) {
                 $this->tables[] = current($row);
             }
         } else {
             // include only the tables mentioned in include-tables
-            foreach ($this->conn->query($this->db->showTables($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showTables($this->connector->getDbName())) as $row) {
                 if (in_array(current($row), $includedTables, true)) {
                     $this->tables[] = current($row);
                     $elem = array_search(current($row), $includedTables);
@@ -332,12 +281,12 @@ class Mysqldump
         // Listing all views from database
         if (empty($includedViews)) {
             // include all views for now, blacklisting happens later
-            foreach ($this->conn->query($this->db->showViews($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showViews($this->connector->getDbName())) as $row) {
                 $this->views[] = current($row);
             }
         } else {
             // include only the tables mentioned in include-tables
-            foreach ($this->conn->query($this->db->showViews($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showViews($this->connector->getDbName())) as $row) {
                 if (in_array(current($row), $includedViews, true)) {
                     $this->views[] = current($row);
                     $elem = array_search(current($row), $includedViews);
@@ -354,7 +303,7 @@ class Mysqldump
     {
         // Listing all triggers from database
         if (!$this->settings->skipTriggers()) {
-            foreach ($this->conn->query($this->db->showTriggers($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showTriggers($this->connector->getDbName())) as $row) {
                 $this->triggers[] = $row['Trigger'];
             }
         }
@@ -367,7 +316,7 @@ class Mysqldump
     {
         // Listing all procedures from database
         if ($this->settings->isEnabled('routines')) {
-            foreach ($this->conn->query($this->db->showProcedures($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showProcedures($this->connector->getDbName())) as $row) {
                 $this->procedures[] = $row['procedure_name'];
             }
         }
@@ -380,7 +329,7 @@ class Mysqldump
     {
         // Listing all functions from database
         if ($this->settings->isEnabled('routines')) {
-            foreach ($this->conn->query($this->db->showFunctions($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showFunctions($this->connector->getDbName())) as $row) {
                 $this->functions[] = $row['function_name'];
             }
         }
@@ -393,7 +342,7 @@ class Mysqldump
     {
         // Listing all events from database
         if ($this->settings->isEnabled('events')) {
-            foreach ($this->conn->query($this->db->showEvents($this->dbName)) as $row) {
+            foreach ($this->conn->query($this->db->showEvents($this->connector->getDbName())) as $row) {
                 $this->events[] = $row['event_name'];
             }
         }
@@ -685,7 +634,7 @@ class Mysqldump
     {
         if (!$this->settings->skipComments()) {
             $ret = "--" . PHP_EOL .
-                "-- Dumping routines for database '" . $this->dbName . "'" . PHP_EOL .
+                "-- Dumping routines for database '" . $this->connector->getDbName() . "'" . PHP_EOL .
                 "--" . PHP_EOL . PHP_EOL;
             $this->write($ret);
         }
@@ -708,7 +657,7 @@ class Mysqldump
     {
         if (!$this->settings->skipComments()) {
             $ret = "--" . PHP_EOL .
-                "-- Dumping routines for database '" . $this->dbName . "'" . PHP_EOL .
+                "-- Dumping routines for database '" . $this->connector->getDbName() . "'" . PHP_EOL .
                 "--" . PHP_EOL . PHP_EOL;
             $this->write($ret);
         }
@@ -732,7 +681,7 @@ class Mysqldump
     {
         if (!$this->settings->skipComments()) {
             $ret = "--" . PHP_EOL .
-                "-- Dumping events for database '" . $this->dbName . "'" . PHP_EOL .
+                "-- Dumping events for database '" . $this->connector->getDbName() . "'" . PHP_EOL .
                 "--" . PHP_EOL . PHP_EOL;
             $this->write($ret);
         }
@@ -836,7 +785,7 @@ class Mysqldump
         $resultSet = $this->conn->query($stmt);
         $resultSet->setFetchMode(PDO::FETCH_ASSOC);
 
-        $ignore = $this->settings->isEnabled('insert-ignore') ? '  IGNORE' : '';
+        $insertType = $this->getInsertType();
         $count = 0;
 
         $isInfoCallable = $this->infoCallable && is_callable($this->infoCallable);
@@ -853,14 +802,14 @@ class Mysqldump
             if ($onlyOnce || !$this->settings->isEnabled('extended-insert')) {
                 if ($this->settings->isEnabled('complete-insert') && count($colNames)) {
                     $line .= sprintf(
-                        'INSERT%s INTO `%s` (%s) VALUES (%s)',
-                        $ignore,
+                        '%s INTO `%s` (%s) VALUES (%s)',
+                        $insertType,
                         $tableName,
                         implode(', ', $colNames),
                         $valueList
                     );
                 } else {
-                    $line .= sprintf('INSERT%s INTO `%s` VALUES (%s)', $ignore, $tableName, $valueList);
+                    $line .= sprintf('%s INTO `%s` VALUES (%s)', $insertType, $tableName, $valueList);
                 }
                 $onlyOnce = false;
             } else {
@@ -1103,5 +1052,13 @@ class Mysqldump
     public function setInfoHook(callable $callable)
     {
         $this->infoCallable = $callable;
+    }
+
+    /**
+     * Set a callable that will be used to transform column values.
+     */
+    public function setTransformColumnValueHook(callable $callable)
+    {
+        $this->transformColumnValueCallable = $callable;
     }
 }

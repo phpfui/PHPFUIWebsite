@@ -32,7 +32,7 @@ namespace PHPFUI\ORM;
  *
  * | Validator Name | Description | Parameters  |
  * | -------------- | ----------- | ----------- |
- * | alnum          | Numbers and characters only (ctype_alnum) | None |
+ * | alpha_numeric  | Numbers and characters only (ctype_alnum) | None |
  * | alpha          | Characters only (ctype_alpha) | None |
  * | bool           | Must be one or zero | None |
  * | card           | Credit card number (LUHN validation) | None |
@@ -46,8 +46,8 @@ namespace PHPFUI\ORM;
  * | domain         | Valid domain | None |
  * | email          | Valid email | None |
  * | ends_with      | Field must end with (case sensitive) | comma separated list of strings |
- * | enum           | MySQL enum value, case insensitive | comma separated list of identifiers<br>**Example:** enum:Get,Post,Put,Delete |
- * | enum_exact     | MySQL enum value, case sensitive | comma separated list of identifiers<br>**Example:** enum:ssl,tls |
+ * | enum           | MySQL enum value, case insensitive | comma separated list of identifiers. **Example:** enum:Get,Post,Put,Delete |
+ * | enum_exact     | MySQL enum value, case sensitive | comma separated list of identifiers. **Example:** enum:ssl,tls |
  * | eq_field       | Equal to field | field, required |
  * | equal          | Value must be equal | value, required |
  * | gt_field       | Greater Than field | field, required |
@@ -58,10 +58,10 @@ namespace PHPFUI\ORM;
  * | istarts_with   | Field must start with (case insensitive) | comma separated list of strings |
  * | lt_field       | Less Than field | field, required |
  * | lte_field      | Less Than or Equal to field | field, required |
- * | maxlength      | Length must be greater or equal | Optional length, else MySQL limit |
- * | maxvalue       | Value must be greater or equal | value, required |
- * | minlength      | Must be less than or equal | number, default field size |
- * | minvalue       | Must be less than or equal | value, required |
+ * | maxlength      | Length must be less than or equal | Optional length, else MySQL limit |
+ * | maxvalue       | Value must be less than or equal | value, required |
+ * | minlength      | Must be greater than or equal | number, default field size |
+ * | minvalue       | Must be greater than or equal | value, required |
  * | month_day_year | Loosely formatted date (M-D-Y) | None |
  * | month_year     | Loosely formatted Month Year | None |
  * | neq_field      | Not Equal to field | field, required |
@@ -84,6 +84,21 @@ namespace PHPFUI\ORM;
  * * eq_field
  * * neq_field
  *
+ * **Example:**
+ * ```php
+ * class Event extends \PHPFUI\ORM\Validator
+ *   {
+ *   public static array $validators = [
+ *     'endTime' => ['maxlength', 'gt_field:startTime'],
+ *     'lastRegistrationDate' => ['required', 'date', 'lte_field:eventDate'],
+ *     'newMemberDiscount' => ['required', 'number', 'lte_field:price'],
+ *     'publicDate' => ['date', 'lte_field:registrationStartDate', 'lte_field:eventDate'],
+ *     'registrationStartDate' => ['date', 'lte_field:lastRegistrationDate', 'lte_field:eventDate'],
+ *     'startTime' => ['maxlength', 'lt_field:endTime'],
+ *   ];
+ *   }
+ * ```
+ *
  * Field validators take another field name as a parameter and perform the specified condition test. To compare against a specific value, use minvalue, maxvalue, equal or not_equal.
  *
  * ## Unique Parameters
@@ -91,7 +106,7 @@ namespace PHPFUI\ORM;
  *
  * If there are parameters, the first parameter must be a field of the current record. If this is the only parameter, or if the next parameter is also a field of the record, then the unique test is only done with the value of this field set to the current record's value.
  *
- * If the next parameter is not a field of the record, it is used as a value to match for the preceeding field for the unique test.
+ * If the next parameter is not a field of the record, it is used as a value to match for the preceding field for the unique test.
  *
  * The above repeats until all parameters are exhausted.
  *
@@ -112,7 +127,7 @@ namespace PHPFUI\ORM;
  * You can reverse any validator by preceding the validator with an ! (exclamation mark).
  *
  * **Example:**
- * !starts_with:/ will fail if the field starts with a /
+ * !starts_with:/ will fail if the field starts with a / character
  *
  * ## OR Operator
  * You can validate a field if any one of the validators passes.  Use the vertical bar (|) to separate validators. If one of the validators passes, then the the field is valid.
@@ -145,8 +160,7 @@ abstract class Validator
 
 	protected string $currentField = '';
 
-	/** @var array<int, array<mixed>> */
-	protected array $currentFieldDefinitions = [];
+	protected \PHPFUI\ORM\FieldDefinition $currentFieldDefinitions;
 
 	protected bool $currentNot = false;
 
@@ -155,7 +169,7 @@ abstract class Validator
 
 	protected bool $currentRequired = false;
 
-	/** @var array<string, array<mixed>> */
+	/** @var array<string, \PHPFUI\ORM\FieldDefinition> */
 	protected array $fieldDefinitions = [];
 
 	/** @var array<string, array<string>> */
@@ -232,11 +246,10 @@ abstract class Validator
 	 * Gets the errors for a value with the record definition and associated validators
 	 *
 	 * @param array<string> $validators
-	 * @param array<int, array<string>> $fieldDefinitions
 	 *
 	 * @return array<string> of errors of translated text
 	 */
-	private function getFieldErrors(mixed $value, array $validators, array $fieldDefinitions) : array
+	private function getFieldErrors(mixed $value, array $validators, \PHPFUI\ORM\FieldDefinition $fieldDefinitions) : array
 		{
 		$errors = [];
 
@@ -400,7 +413,7 @@ abstract class Validator
 			return '';
 			}
 
-		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), (int)($parts[$day] ?? 0), (int)($parts[$year] ?? 0)), 'date', ['value' => $value]);
+		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), (int)($parts[$day] ?? 0), (int)$parts[$year]), 'date', ['value' => $value]);
 		}
 
 	private function validate_dateISO(mixed $value) : string
@@ -409,7 +422,7 @@ abstract class Validator
 		$month = 1;
 		$day = 2;
 		$parts = \explode('-', (string)$value);
-		$year = \sprintf('%04d', (int)($parts[$year] ?? 0));
+		$year = \sprintf('%04d', (int)$parts[$year]);
 		$month = \sprintf('%02d', (int)($parts[$month] ?? 0));
 		$day = \sprintf('%02d', (int)($parts[$day] ?? 0));
 
@@ -450,7 +463,7 @@ abstract class Validator
 			return '';
 			}
 
-		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), (int)($parts[$day] ?? 0), (int)($parts[$year] ?? 0)), 'day_month_year', ['value' => $value]);
+		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), (int)$parts[$day], (int)($parts[$year] ?? 0)), 'day_month_year', ['value' => $value]);
 		}
 
 	private function validate_domain(mixed $value) : string
@@ -586,9 +599,13 @@ abstract class Validator
 
 	private function validate_maxlength(mixed $value) : string
 		{
-		$length = $this->currentParameters[0] ?? $this->currentFieldDefinitions[\PHPFUI\ORM\Record::LENGTH_INDEX];
+		if ($this->currentFieldDefinitions->length <= 0)
+			{
+			return '';	// zero length fields can't have a max length test
+			}
 
-		// @phpstan-ignore-next-line
+		$length = $this->currentParameters[0] ?? $this->currentFieldDefinitions->length;
+
 		return $this->testIt(\strlen((string)$value) <= $length, 'maxlength', ['value' => $value, 'length' => $length]);
 		}
 
@@ -604,9 +621,8 @@ abstract class Validator
 
 	private function validate_minlength(mixed $value) : string
 		{
-		$length = $this->currentParameters[0] ?? $this->currentFieldDefinitions[\PHPFUI\ORM\Record::LENGTH_INDEX];
+		$length = $this->currentParameters[0] ?? $this->currentFieldDefinitions->length;
 
-		// @phpstan-ignore-next-line
 		return $this->testIt(\strlen((string)$value) >= $length, 'minlength', ['value' => $value, 'length' => $length]);
 		}
 
@@ -633,7 +649,7 @@ abstract class Validator
 			return '';
 			}
 
-		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), (int)($parts[$day] ?? 0), (int)($parts[$year] ?? 0)), 'month_day_year', ['value' => $value]);
+		return $this->testIt(\checkdate((int)$parts[$month], (int)($parts[$day] ?? 0), (int)($parts[$year] ?? 0)), 'month_day_year', ['value' => $value]);
 		}
 
 	private function validate_month_year(mixed $value) : string
@@ -643,7 +659,7 @@ abstract class Validator
 		$day = 1;
 		$parts = \explode('/', \str_replace(self::$dateSeparators, '/', (string)$value));
 
-		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), $day, (int)($parts[$year] ?? 0)), 'month_year', ['value' => $value]);
+		return $this->testIt(\checkdate((int)$parts[$month], $day, (int)($parts[$year] ?? 0)), 'month_year', ['value' => $value]);
 		}
 
 	private function validate_neq_field(mixed $value) : string
@@ -711,7 +727,7 @@ abstract class Validator
 
 	private function validate_unique(mixed $value) : string
 		{
-		$class = '\\' . \PHPFUI\ORM::$tableNamespace . '\\' . $this->record->getTableName();
+		$class = '\\' . \PHPFUI\ORM::$tableNamespace . '\\' . \PHPFUI\ORM::getBaseClassName($this->record->getTableName());
 		$table = new $class();
 		// look up the record in the table.  Can't be itself.
 		$condition = new \PHPFUI\ORM\Condition();
@@ -756,7 +772,7 @@ abstract class Validator
 
 		$table->setWhere($condition);
 
-		return $this->testIt(0 == (\is_countable($table) ? \count($table) : 0), 'unique', ['value' => $value]);
+		return $this->testIt(0 == (\is_countable($table) ? \count($table) : 0), 'unique', ['value' => $this->record->{$this->currentField}]);
 		}
 
 	private function validate_url(mixed $value) : string
@@ -779,17 +795,15 @@ abstract class Validator
 		$day = 1;
 		$parts = \explode('/', \str_replace(self::$dateSeparators, '/', (string)$value));
 
-		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), $day, (int)($parts[$year] ?? 0)), 'year_month', ['value' => $value]);
+		return $this->testIt(\checkdate((int)($parts[$month] ?? 0), $day, (int)$parts[$year]), 'year_month', ['value' => $value]);
 		}
 
 	/**
 	 * Validate one rule.
 	 *
-	 * @param array<int, array<mixed>> $fieldDefinitions
-	 *
 	 * @return array<string> of errors of translated text
 	 */
-	private function validateRule(string $validator, mixed $value, array $fieldDefinitions) : array
+	private function validateRule(string $validator, mixed $value, \PHPFUI\ORM\FieldDefinition $fieldDefinitions) : array
 		{
 		$this->currentFieldDefinitions = $fieldDefinitions;
 		$this->currentNot = false;

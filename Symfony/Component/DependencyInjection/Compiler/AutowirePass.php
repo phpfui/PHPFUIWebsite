@@ -761,10 +761,6 @@ class AutowirePass extends AbstractRecursivePass
             return $originalType;
         }
 
-        if (\PHP_VERSION_ID < 80400 && $this->container->getReflectionClass($resolvedType, false)->isFinal()) {
-            return $originalType;
-        }
-
         return $resolvedType;
     }
 }

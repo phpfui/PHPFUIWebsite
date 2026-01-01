@@ -32,65 +32,57 @@ use SebastianBergmann\Complexity\CyclomaticComplexityCalculatingVisitor;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
- *
- * @phpstan-type CodeUnitFunctionType = array{
- *     name: string,
- *     namespacedName: string,
- *     namespace: string,
- *     signature: string,
- *     startLine: int,
- *     endLine: int,
- *     ccn: int
- * }
- * @phpstan-type CodeUnitMethodType = array{
- *     methodName: string,
- *     signature: string,
- *     visibility: string,
- *     startLine: int,
- *     endLine: int,
- *     ccn: int
- * }
- * @phpstan-type CodeUnitClassType = array{
- *     name: string,
- *     namespacedName: string,
- *     namespace: string,
- *     startLine: int,
- *     endLine: int,
- *     methods: array<string, CodeUnitMethodType>
- * }
- * @phpstan-type CodeUnitTraitType = array{
- *     name: string,
- *     namespacedName: string,
- *     namespace: string,
- *     startLine: int,
- *     endLine: int,
- *     methods: array<string, CodeUnitMethodType>
- * }
  */
 final class CodeUnitFindingVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var array<string, CodeUnitClassType>
+     * @var non-empty-string
+     */
+    private string $file;
+
+    /**
+     * @var array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Interface_>
+     */
+    private array $interfaces = [];
+
+    /**
+     * @var array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Class_>
      */
     private array $classes = [];
 
     /**
-     * @var array<string, CodeUnitTraitType>
+     * @var array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Trait_>
      */
     private array $traits = [];
 
     /**
-     * @var array<string, CodeUnitFunctionType>
+     * @var array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Function_>
      */
     private array $functions = [];
 
-    public function enterNode(Node $node): void
+    /**
+     * @param non-empty-string $file
+     */
+    public function __construct(string $file)
     {
+        $this->file = $file;
+    }
+
+    public function enterNode(Node $node): null
+    {
+        if ($node instanceof Interface_) {
+            $this->processInterface($node);
+        }
+
         if ($node instanceof Class_) {
             if ($node->isAnonymous()) {
-                return;
+                return null;
             }
 
+            $this->processClass($node);
+        }
+
+        if ($node instanceof Enum_) {
             $this->processClass($node);
         }
 
@@ -98,27 +90,52 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
             $this->processTrait($node);
         }
 
-        if (!$node instanceof ClassMethod && !$node instanceof Function_) {
-            return;
-        }
-
-        if ($node instanceof ClassMethod) {
-            $parentNode = $node->getAttribute('parent');
-
-            if ($parentNode instanceof Class_ && $parentNode->isAnonymous()) {
-                return;
-            }
-
-            $this->processMethod($node);
-
-            return;
+        if (!$node instanceof Function_) {
+            return null;
         }
 
         $this->processFunction($node);
+
+        return null;
+    }
+
+    public function leaveNode(Node $node): null
+    {
+        if ($node instanceof Class_ && $node->isAnonymous()) {
+            return null;
+        }
+
+        if (!$node instanceof Class_ && !$node instanceof Trait_) {
+            return null;
+        }
+
+        $traits = [];
+
+        foreach ($node->getTraitUses() as $traitUse) {
+            foreach ($traitUse->traits as $trait) {
+                $traits[] = $trait->toString();
+            }
+        }
+
+        if ($traits === []) {
+            return null;
+        }
+
+        $this->postProcessClassOrTrait($node, $traits);
+
+        return null;
     }
 
     /**
-     * @return array<string, CodeUnitClassType>
+     * @return array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Interface_>
+     */
+    public function interfaces(): array
+    {
+        return $this->interfaces;
+    }
+
+    /**
+     * @return array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Class_>
      */
     public function classes(): array
     {
@@ -126,7 +143,7 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return array<string, CodeUnitTraitType>
+     * @return array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Trait_>
      */
     public function traits(): array
     {
@@ -134,7 +151,7 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * @return array<string, CodeUnitFunctionType>
+     * @return array<string, \SebastianBergmann\CodeCoverage\StaticAnalysis\Function_>
      */
     public function functions(): array
     {
@@ -210,32 +227,68 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
         return $type->toString();
     }
 
-    private function visibility(ClassMethod $node): string
+    private function visibility(ClassMethod $node): Visibility
     {
         if ($node->isPrivate()) {
-            return 'private';
+            return Visibility::Private;
         }
 
         if ($node->isProtected()) {
-            return 'protected';
+            return Visibility::Protected;
         }
 
-        return 'public';
+        return Visibility::Public;
     }
 
-    private function processClass(Class_ $node): void
+    private function processInterface(Interface_ $node): void
+    {
+        $name             = $node->name->toString();
+        $namespacedName   = $node->namespacedName->toString();
+        $parentInterfaces = [];
+
+        foreach ($node->extends as $parentInterface) {
+            $parentInterfaces[] = $parentInterface->toString();
+        }
+
+        $this->interfaces[$namespacedName] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Interface_(
+            $name,
+            $namespacedName,
+            $this->namespace($namespacedName, $name),
+            $node->getStartLine(),
+            $node->getEndLine(),
+            $parentInterfaces,
+        );
+    }
+
+    private function processClass(Class_|Enum_ $node): void
     {
         $name           = $node->name->toString();
         $namespacedName = $node->namespacedName->toString();
+        $parentClass    = null;
+        $interfaces     = [];
 
-        $this->classes[$namespacedName] = [
-            'name'           => $name,
-            'namespacedName' => $namespacedName,
-            'namespace'      => $this->namespace($namespacedName, $name),
-            'startLine'      => $node->getStartLine(),
-            'endLine'        => $node->getEndLine(),
-            'methods'        => [],
-        ];
+        if (!$node instanceof Enum_) {
+            if ($node->extends instanceof Name) {
+                $parentClass = $node->extends->toString();
+            }
+
+            foreach ($node->implements as $interface) {
+                $interfaces[] = $interface->toString();
+            }
+        }
+
+        $this->classes[$namespacedName] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Class_(
+            $name,
+            $namespacedName,
+            $this->namespace($namespacedName, $name),
+            $this->file,
+            $node->getStartLine(),
+            $node->getEndLine(),
+            $parentClass,
+            $interfaces,
+            [],
+            $this->processMethods($node->getMethods()),
+        );
     }
 
     private function processTrait(Trait_ $node): void
@@ -243,57 +296,39 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
         $name           = $node->name->toString();
         $namespacedName = $node->namespacedName->toString();
 
-        $this->traits[$namespacedName] = [
-            'name'           => $name,
-            'namespacedName' => $namespacedName,
-            'namespace'      => $this->namespace($namespacedName, $name),
-            'startLine'      => $node->getStartLine(),
-            'endLine'        => $node->getEndLine(),
-            'methods'        => [],
-        ];
+        $this->traits[$namespacedName] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Trait_(
+            $name,
+            $namespacedName,
+            $this->namespace($namespacedName, $name),
+            $this->file,
+            $node->getStartLine(),
+            $node->getEndLine(),
+            [],
+            $this->processMethods($node->getMethods()),
+        );
     }
 
-    private function processMethod(ClassMethod $node): void
+    /**
+     * @param list<ClassMethod> $nodes
+     *
+     * @return array<non-empty-string, Method>
+     */
+    private function processMethods(array $nodes): array
     {
-        $parentNode = $node->getAttribute('parent');
+        $methods = [];
 
-        if ($parentNode instanceof Interface_) {
-            return;
+        foreach ($nodes as $node) {
+            $methods[$node->name->toString()] = new Method(
+                $node->name->toString(),
+                $node->getStartLine(),
+                $node->getEndLine(),
+                $this->signature($node),
+                $this->visibility($node),
+                $this->cyclomaticComplexity($node),
+            );
         }
 
-        assert($parentNode instanceof Class_ || $parentNode instanceof Trait_ || $parentNode instanceof Enum_);
-        assert(isset($parentNode->name));
-        assert(isset($parentNode->namespacedName));
-        assert($parentNode->namespacedName instanceof Name);
-
-        $parentName           = $parentNode->name->toString();
-        $parentNamespacedName = $parentNode->namespacedName->toString();
-
-        if ($parentNode instanceof Class_) {
-            $storage = &$this->classes;
-        } else {
-            $storage = &$this->traits;
-        }
-
-        if (!isset($storage[$parentNamespacedName])) {
-            $storage[$parentNamespacedName] = [
-                'name'           => $parentName,
-                'namespacedName' => $parentNamespacedName,
-                'namespace'      => $this->namespace($parentNamespacedName, $parentName),
-                'startLine'      => $parentNode->getStartLine(),
-                'endLine'        => $parentNode->getEndLine(),
-                'methods'        => [],
-            ];
-        }
-
-        $storage[$parentNamespacedName]['methods'][$node->name->toString()] = [
-            'methodName' => $node->name->toString(),
-            'signature'  => $this->signature($node),
-            'visibility' => $this->visibility($node),
-            'startLine'  => $node->getStartLine(),
-            'endLine'    => $node->getEndLine(),
-            'ccn'        => $this->cyclomaticComplexity($node),
-        ];
+        return $methods;
     }
 
     private function processFunction(Function_ $node): void
@@ -305,15 +340,15 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
         $name           = $node->name->toString();
         $namespacedName = $node->namespacedName->toString();
 
-        $this->functions[$namespacedName] = [
-            'name'           => $name,
-            'namespacedName' => $namespacedName,
-            'namespace'      => $this->namespace($namespacedName, $name),
-            'signature'      => $this->signature($node),
-            'startLine'      => $node->getStartLine(),
-            'endLine'        => $node->getEndLine(),
-            'ccn'            => $this->cyclomaticComplexity($node),
-        ];
+        $this->functions[$namespacedName] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Function_(
+            $name,
+            $namespacedName,
+            $this->namespace($namespacedName, $name),
+            $node->getStartLine(),
+            $node->getEndLine(),
+            $this->signature($node),
+            $this->cyclomaticComplexity($node),
+        );
     }
 
     private function namespace(string $namespacedName, string $name): string
@@ -356,5 +391,45 @@ final class CodeUnitFindingVisitor extends NodeVisitorAbstract
         }
 
         return $node->toString();
+    }
+
+    /**
+     * @param list<non-empty-string> $traits
+     */
+    private function postProcessClassOrTrait(Class_|Trait_ $node, array $traits): void
+    {
+        $name = $node->namespacedName->toString();
+
+        if ($node instanceof Class_) {
+            assert(isset($this->classes[$name]));
+
+            $this->classes[$name] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Class_(
+                $this->classes[$name]->name(),
+                $this->classes[$name]->namespacedName(),
+                $this->classes[$name]->namespace(),
+                $this->classes[$name]->file(),
+                $this->classes[$name]->startLine(),
+                $this->classes[$name]->endLine(),
+                $this->classes[$name]->parentClass(),
+                $this->classes[$name]->interfaces(),
+                $traits,
+                $this->classes[$name]->methods(),
+            );
+
+            return;
+        }
+
+        assert(isset($this->traits[$name]));
+
+        $this->traits[$name] = new \SebastianBergmann\CodeCoverage\StaticAnalysis\Trait_(
+            $this->traits[$name]->name(),
+            $this->traits[$name]->namespacedName(),
+            $this->traits[$name]->namespace(),
+            $this->traits[$name]->file(),
+            $this->traits[$name]->startLine(),
+            $this->traits[$name]->endLine(),
+            $traits,
+            $this->traits[$name]->methods(),
+        );
     }
 }

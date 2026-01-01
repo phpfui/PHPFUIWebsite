@@ -24,7 +24,7 @@ class Email extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param string $campaign_id The unique ID for the email campaign you are deleting.
 	 */
-	public function delete(string $campaign_id) : bool
+	public function delete(string $campaign_id) : ?array
 		{
 
 		return $this->doDelete(['campaign_id' => $campaign_id, ]);
@@ -40,11 +40,19 @@ class Email extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param string $campaign_id The ID (UUID format) that uniquely identifies this email campaign.
 	 */
-	public function get(string $campaign_id) : array
+	public function get(string $campaign_id) : ?array
 		{
 
 		return $this->doGet(['campaign_id' => $campaign_id, ]);
 		}
+
+	public function getTyped(string $campaign_id) : ?\PHPFUI\ConstantContact\Definition\EmailCampaign
+		{
+		$data = $this->get($campaign_id);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\EmailCampaign($data) : null;
+		}
+
 
 	/**
 	 * PATCH (Update) an Email Campaign Name
@@ -56,9 +64,17 @@ class Email extends \PHPFUI\ConstantContact\Base
 	 * @param string $campaign_id The unique identifier for an email campaign.
 	 * @param \PHPFUI\ConstantContact\Definition\EmailCampaignName $body A JSON payload that contains the new email campaign name.
 	 */
-	public function patch(string $campaign_id, \PHPFUI\ConstantContact\Definition\EmailCampaignName $body) : array
+	public function patch(string $campaign_id, \PHPFUI\ConstantContact\Definition\EmailCampaignName $body) : ?array
 		{
 
 		return $this->doPatch(['campaign_id' => $campaign_id, 'body' => $body->getData(), ]);
 		}
+
+	public function patchTyped(string $campaign_id, \PHPFUI\ConstantContact\Definition\EmailCampaignName $body) : ?\PHPFUI\ConstantContact\Definition\EmailCampaign
+		{
+		$data = $this->patch($campaign_id, $body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\EmailCampaign($data) : null;
+		}
+
 	}

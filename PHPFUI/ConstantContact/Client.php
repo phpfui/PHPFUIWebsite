@@ -20,6 +20,8 @@ class Client
 
 	private string $body = '';
 
+	private $guzzleFactory = null;
+
 	private \GuzzleHttp\HandlerStack $guzzleHandler;
 
 	private string $host = '';
@@ -120,16 +122,13 @@ class Client
 	/**
 	 * Issue a delete request.  This is not normally called directly, but by the V3 namespace classes.
 	 */
-	public function delete(string $url) : bool
+	public function delete(string $url) : ?array
 		{
 		try
 			{
-			$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders(), 'handler' => $this->guzzleHandler, ]);
-			$response = $guzzle->request('DELETE', $url);
+			$response = $this->getGuzzleClient()->request('DELETE', $url);
 
-			$this->process($response);
-
-			return $this->statusCode >= 200 && $this->statusCode < 300;
+			return $this->process($response);
 			}
 		catch (\GuzzleHttp\Exception\RequestException $e)
 			{
@@ -137,13 +136,13 @@ class Client
 			$this->statusCode = $e->getResponse()->getStatusCode();
 			}
 
-		return false;
+		return null;
 		}
 
 	/**
 	 * Issue a get request.  This is not normally called directly, but by the V3 namespace classes.
 	 */
-	public function get(string $url, array $parameters) : array
+	public function get(string $url, array $parameters) : ?array
 		{
 		try
 			{
@@ -158,8 +157,7 @@ class Client
 					}
 				}
 
-			$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders(), 'handler' => $this->guzzleHandler, ]);
-			$response = $guzzle->request('GET', $url);
+			$response = $this->getGuzzleClient()->request('GET', $url);
 
 			return $this->process($response);
 			}
@@ -169,7 +167,7 @@ class Client
 			$this->statusCode = $e->getResponse()->getStatusCode();
 			}
 
-		return [];
+		return null;
 		}
 
 	/**
@@ -215,9 +213,40 @@ class Client
 		return $this->body;
 		}
 
+	/**
+	 * Return a new GuzzleHttp\Client with the appropriate headers and handlers set.
+	 *
+	 * If a Guzzle factory has been set, then the factory method will be called.
+	 *
+	 * @param array<string, int|string> $headers override the default headers
+	 */
+	public function getGuzzleClient(string $body = '', array $headers = []) : \GuzzleHttp\Client
+		{
+		$config = [
+			'headers' => $this->getHeaders($headers),
+			'handler' => $this->guzzleHandler, ];
+
+		if (\strlen($body))
+			{
+			$config['body'] = $body;
+			}
+
+		return $this->guzzleFactory ? \call_user_func($this->guzzleFactory, $config) : new \GuzzleHttp\Client($config);
+		}
+
+	public function getGuzzleFactory() : ?callable
+		{
+		return $this->guzzleFactory;
+		}
+
 	public function getLastError() : string
 		{
 		return $this->lastError;
+		}
+
+	public function getSessionCallback() : ?callable
+		{
+		return $this->sessionCallback;
 		}
 
 	public function getStatusCode() : int
@@ -237,8 +266,7 @@ class Client
 			return [];
 			}
 
-		$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders(), 'handler' => $this->guzzleHandler, ]);
-		$response = $guzzle->request('GET', 'https://api.cc.email' . $this->next);
+		$response = $this->getGuzzleClient()->request('GET', 'https://api.cc.email' . $this->next);
 
 		return $this->process($response);
 		}
@@ -246,7 +274,7 @@ class Client
 	/**
 	 * Issue a patch request.  This is not normally called directly, but by the V3 namespace classes.
 	 */
-	public function patch(string $url, array $parameters) : array
+	public function patch(string $url, array $parameters) : ?array
 		{
 		return $this->put($url, $parameters, 'PATCH');
 		}
@@ -254,15 +282,11 @@ class Client
 	/**
 	 * Issue a post request.  This is not normally called directly, but by the V3 namespace classes.
 	 */
-	public function post(string $url, array $parameters) : array
+	public function post(string $url, array $parameters) : ?array
 		{
 		try
 			{
-			$json = \json_encode($parameters['body'], JSON_PRETTY_PRINT);
-			$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders(),
-				'handler' => $this->guzzleHandler,
-				'body' => $json, ]);
-			$response = $guzzle->request('POST', $url);
+			$response = $this->getGuzzleClient(\json_encode($parameters['body'], JSON_PRETTY_PRINT))->request('POST', $url);
 
 			return $this->process($response);
 			}
@@ -272,18 +296,19 @@ class Client
 			$this->statusCode = $e->getResponse()->getStatusCode();
 			}
 
-		return [];
+		return null;
 		}
 
 	/**
 	 * Issue a put request.  This is not normally called directly, but by the V3 namespace classes.
 	 */
-	public function put(string $url, array $parameters, string $method = 'PUT') : array
+	public function put(string $url, array $parameters, string $method = 'PUT') : ?array
 		{
 		try
 			{
 			$json = \json_encode($parameters['body'], JSON_PRETTY_PRINT);
-			$guzzle = new \GuzzleHttp\Client(['headers' => $this->getHeaders(
+			$guzzle = $this->getGuzzleClient(
+				$json,
 				[
 					'Connection' => 'keep-alive',
 					'Content-Length' => \strlen($json),
@@ -291,10 +316,7 @@ class Client
 					'Host' => $this->host,
 					'Accept' => '*/*'
 				]
-			),
-				'handler' => $this->guzzleHandler,
-				'body' => $json, ]);
-
+			);
 			$response = $guzzle->request($method, $url);
 
 			return $this->process($response);
@@ -305,7 +327,7 @@ class Client
 			$this->statusCode = $e->getResponse()->getStatusCode();
 			}
 
-		return [];
+		return null;
 		}
 
 	/**
@@ -339,6 +361,24 @@ class Client
 	public function removeScope(string $scope) : self
 		{
 		unset($this->scopes[$scope]);
+
+		return $this;
+		}
+
+	/**
+	 * This library uses GuzzleHttp\Client to make CC API calls.  If you want to use your own GuzzleHttp\Client, you should create a factory callable method and set it.
+	 *
+	 * If the factory callable is set, it will be called with the appropriate $config array passed as the first parameter.
+	 *
+	 * Callback function signature:
+	 *
+	 *  - function(array $config) : \GuzzleHttp\Client
+	 *
+	 * @see [graham-campbell/guzzle-factory](https://packagist.org/packages/graham-campbell/guzzle-factory) for an example factory
+	 */
+	public function setGuzzleFactory(?callable $factory) : self
+		{
+		$this->guzzleFactory = $factory;
 
 		return $this;
 		}
@@ -430,14 +470,11 @@ class Client
 			$this->accessToken = $data['access_token'] ?? '';
 			$this->refreshToken = $data['refresh_token'] ?? '';
 
-			\curl_close($ch);
-
 			return isset($data['access_token'], $data['refresh_token']);
 			}
 
 		$this->statusCode = \curl_errno($ch);
 		$this->lastError = \curl_error($ch);
-		\curl_close($ch);
 
 		return false;
 		}
@@ -452,7 +489,7 @@ class Client
 		], $additional);
 		}
 
-	private function process(\Psr\Http\Message\ResponseInterface $response) : array
+	private function process(\Psr\Http\Message\ResponseInterface $response) : ?array
 		{
 		$this->next = '';
 		$this->lastError = $response->getReasonPhrase();
@@ -472,7 +509,7 @@ class Client
 		$this->lastError = \json_last_error_msg();
 		$this->statusCode = \json_last_error();
 
-		return [];
+		return null;
 		}
 
 	private function session(string $key, ?string $value) : string

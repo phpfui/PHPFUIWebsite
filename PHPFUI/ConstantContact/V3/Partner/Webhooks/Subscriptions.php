@@ -18,9 +18,29 @@ class Subscriptions extends \PHPFUI\ConstantContact\Base
 	 * webhook subscriptions.
 	 *
 	 */
-	public function get() : array
+	public function get() : ?array
 		{
 
 		return $this->doGet([]);
 		}
+	/**
+	 * @return ?array<\PHPFUI\ConstantContact\Definition\WebhooksSubscriptionCollection>
+	 */
+	public function getTyped() : ?array
+		{
+		$data = $this->get();
+		if (is_null($data))
+			{
+			return null;
+			}
+
+		$array = [];
+		foreach ($data as $object)
+			{
+			$array[] = new \PHPFUI\ConstantContact\Definition\WebhooksSubscriptionCollection($object);
+			}
+
+		return $array;
+		}
+
 	}

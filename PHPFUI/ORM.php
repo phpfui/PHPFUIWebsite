@@ -63,7 +63,7 @@ class ORM
 		}
 
 	/**
-	 * @return array<\PHPFUI\ORM\Schema\Field>
+	 * @return array<string, \PHPFUI\ORM\Schema\Field>
 	 */
 	public static function describeTable(string $table) : array
 		{
@@ -90,6 +90,29 @@ class ORM
 	public static function executeStatement(\PDOStatement $statement, array $input = []) : ?\PDOStatement
 		{
 		return self::getInstance()->executeStatement($statement, $input);
+		}
+
+	/**
+	 * @param array<string, string | resource | null> $data
+	 *
+	 * @return array<string, string> resources converted to strings if using postgre
+	 */
+	public static function expandResources(array $data) : array
+		{
+		if (! self::getInstance()->postGre)
+			{
+			return $data;
+			}
+
+		foreach ($data as $key => $value)
+			{
+			if (\is_resource($value))
+				{
+				$data[$key] = \stream_get_contents($value);
+				}
+			}
+
+		return $data;
 		}
 
 	/**
@@ -133,6 +156,14 @@ class ORM
 	public static function getDataObjectCursor(string $sql = 'select 0 limit 0', array $input = []) : \PHPFUI\ORM\DataObjectCursor
 		{
 		return self::getInstance()->getDataObjectCursor($sql, $input);
+		}
+
+	/**
+	 * @return array<string, \PHPFUI\ORM\Schema\ForeignKey>
+	 */
+	public static function getForeignKeys(string $table) : array
+		{
+		return self::getInstance()->getForeignKeys($table);
 		}
 
 	/**
@@ -216,7 +247,7 @@ class ORM
 	/**
 	 * @param array<mixed> $input
 	 *
-	 * @return array<string, string> a single row of the first matching record or an empty array if an error
+	 * @return array<string, ?string> a single row of the first matching record or an empty array if an error
 	 */
 	public static function getRow(string $sql, array $input = []) : array
 		{
@@ -273,9 +304,16 @@ class ORM
 	/**
 	 * @return string  primary key of the last record inserted
 	 */
-	public static function lastInsertId(string $name = '') : string
+	public static function lastInsertId(string $name = '', string $table = '') : string
 		{
-		return self::getInstance()->lastInsertId($name);
+		$pdo = self::getInstance();
+
+		if ($pdo->postGre && $table)
+			{
+			$name = $table . '_' . $name . '_seq';
+			}
+
+		return $pdo->lastInsertId($name);
 		}
 
 	/**

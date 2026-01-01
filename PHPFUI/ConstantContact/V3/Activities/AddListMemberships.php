@@ -22,9 +22,17 @@ class AddListMemberships extends \PHPFUI\ConstantContact\Base
 	 *
 	 * @param \PHPFUI\ConstantContact\Definition\ListActivityAddContacts $body The JSON payload used to create the 'add contacts to lists' activity
 	 */
-	public function post(\PHPFUI\ConstantContact\Definition\ListActivityAddContacts $body) : array
+	public function post(\PHPFUI\ConstantContact\Definition\ListActivityAddContacts $body) : ?array
 		{
 
 		return $this->doPost(['body' => $body->getData(), ]);
 		}
+
+	public function postTyped(\PHPFUI\ConstantContact\Definition\ListActivityAddContacts $body) : ?\PHPFUI\ConstantContact\Definition\ActivityListsMembership
+		{
+		$data = $this->post($body);
+
+		return $data ? new \PHPFUI\ConstantContact\Definition\ActivityListsMembership($data) : null;
+		}
+
 	}
