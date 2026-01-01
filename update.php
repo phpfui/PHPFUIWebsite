@@ -7,7 +7,7 @@ if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	}
 else
 	{
-	$php = '/usr/bin/php8.2-cli';
+	$php = '/usr/bin/php8.5-cli';
 	$composer = 'composer.phar';
 	}
 
