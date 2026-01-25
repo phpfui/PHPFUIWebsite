@@ -12,6 +12,8 @@
 namespace Symfony\Component\PropertyInfo\Extractor;
 
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tags\Factory\StaticMethod;
+use phpDocumentor\Reflection\DocBlock\Tags\Generic;
 use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
@@ -20,6 +22,7 @@ use phpDocumentor\Reflection\Types\ContextFactory;
 use Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyDocBlockExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\Type as LegacyType;
 use Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper;
 use Symfony\Component\TypeInfo\Exception\LogicException;
 use Symfony\Component\TypeInfo\Type;
@@ -68,6 +71,10 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
             throw new \LogicException(\sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', __CLASS__));
         }
 
+        if (!is_subclass_of(Generic::class, StaticMethod::class)) {
+            throw new \LogicException('symfony/property-info v6 does not support phpdocumentor/reflection-docblock v6. Please stick to ^5.2 in your composer.json file.');
+        }
+
         $this->docBlockFactory = $docBlockFactory ?: DocBlockFactory::createInstance();
         $this->contextFactory = new ContextFactory();
         $this->typeContextFactory = new TypeContextFactory();
@@ -113,6 +120,91 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
         $contents = $docBlock->getDescription()->render();
 
         return '' === $contents ? null : $contents;
+    }
+
+    /**
+     * @deprecated since Symfony 7.3, use "getType" instead
+     */
+    public function getTypes(string $class, string $property, array $context = []): ?array
+    {
+        trigger_deprecation('symfony/property-info', '7.3', 'The "%s()" method is deprecated, use "%s::getType()" instead.', __METHOD__, self::class);
+
+        [$docBlock, $source, $prefix] = $this->findDocBlock($class, $property);
+        if (!$docBlock) {
+            return null;
+        }
+
+        $tag = match ($source) {
+            self::PROPERTY => 'var',
+            self::ACCESSOR => 'return',
+            self::MUTATOR => 'param',
+        };
+
+        $parentClass = null;
+        $types = [];
+        /** @var DocBlock\Tags\Var_|DocBlock\Tags\Return_|DocBlock\Tags\Param $tag */
+        foreach ($docBlock->getTagsByName($tag) as $tag) {
+            if ($tag && !$tag instanceof InvalidTag && null !== $tag->getType()) {
+                foreach ($this->phpDocTypeHelper->getTypes($tag->getType()) as $type) {
+                    switch ($type->getClassName()) {
+                        case 'self':
+                        case 'static':
+                            $resolvedClass = $class;
+                            break;
+
+                        case 'parent':
+                            if (false !== $resolvedClass = $parentClass ??= get_parent_class($class)) {
+                                break;
+                            }
+                            // no break
+
+                        default:
+                            $types[] = $type;
+                            continue 2;
+                    }
+
+                    $types[] = new LegacyType(LegacyType::BUILTIN_TYPE_OBJECT, $type->isNullable(), $resolvedClass, $type->isCollection(), $type->getCollectionKeyTypes(), $type->getCollectionValueTypes());
+                }
+            }
+        }
+
+        if (!isset($types[0])) {
+            return null;
+        }
+
+        if (!\in_array($prefix, $this->arrayMutatorPrefixes, true)) {
+            return $types;
+        }
+
+        return [new LegacyType(LegacyType::BUILTIN_TYPE_ARRAY, false, null, true, new LegacyType(LegacyType::BUILTIN_TYPE_INT), $types[0])];
+    }
+
+    /**
+     * @deprecated since Symfony 7.3, use "getTypeFromConstructor" instead
+     */
+    public function getTypesFromConstructor(string $class, string $property): ?array
+    {
+        trigger_deprecation('symfony/property-info', '7.3', 'The "%s()" method is deprecated, use "%s::getTypeFromConstructor()" instead.', __METHOD__, self::class);
+
+        $docBlock = $this->getDocBlockFromConstructor($class, $property);
+
+        if (!$docBlock) {
+            return null;
+        }
+
+        $types = [];
+        /** @var DocBlock\Tags\Var_|DocBlock\Tags\Return_|DocBlock\Tags\Param $tag */
+        foreach ($docBlock->getTagsByName('param') as $tag) {
+            if ($tag && null !== $tag->getType()) {
+                $types[] = $this->phpDocTypeHelper->getTypes($tag->getType());
+            }
+        }
+
+        if (!isset($types[0]) || [] === $types[0]) {
+            return null;
+        }
+
+        return array_merge([], ...$types);
     }
 
     public function getType(string $class, string $property, array $context = []): ?Type
@@ -303,19 +395,24 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
     {
         $prefixes = self::ACCESSOR === $type ? $this->accessorPrefixes : $this->mutatorPrefixes;
         $prefix = null;
+        $method = null;
 
         foreach ($prefixes as $prefix) {
             $methodName = $prefix.$ucFirstProperty;
 
             try {
-                $reflectionMethod = new \ReflectionMethod($class, $methodName);
-                if ($reflectionMethod->isStatic()) {
+                $method = new \ReflectionMethod($class, $methodName);
+                if ($method->isStatic()) {
+                    continue;
+                }
+
+                if (self::ACCESSOR === $type && \in_array((string) $method->getReturnType(), ['void', 'never'], true)) {
                     continue;
                 }
 
                 if (
-                    (self::ACCESSOR === $type && 0 === $reflectionMethod->getNumberOfRequiredParameters())
-                    || (self::MUTATOR === $type && $reflectionMethod->getNumberOfParameters() >= 1)
+                    (self::ACCESSOR === $type && !$method->getNumberOfRequiredParameters())
+                    || (self::MUTATOR === $type && $method->getNumberOfParameters() >= 1)
                 ) {
                     break;
                 }
@@ -324,11 +421,11 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
             }
         }
 
-        if (!isset($reflectionMethod)) {
+        if (!$method) {
             return null;
         }
 
-        $reflector = $reflectionMethod->getDeclaringClass();
+        $reflector = $method->getDeclaringClass();
 
         foreach ($reflector->getTraits() as $trait) {
             if ($trait->hasMethod($methodName)) {
@@ -337,7 +434,7 @@ class PhpDocExtractor implements PropertyDescriptionExtractorInterface, Property
         }
 
         try {
-            return [$this->docBlockFactory->create($reflectionMethod, $this->createFromReflector($reflector)), $prefix];
+            return [$this->docBlockFactory->create($method, $this->createFromReflector($reflector)), $prefix];
         } catch (\InvalidArgumentException|\RuntimeException) {
             return null;
         }
