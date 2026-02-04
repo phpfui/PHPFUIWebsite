@@ -21,6 +21,9 @@ use const E_USER_DEPRECATED;
  * An arbitrarily large rational number.
  *
  * This class is immutable.
+ *
+ * Fractions are automatically simplified to lowest terms. For example, `2/4` becomes `1/2`.
+ * The denominator is always strictly positive; the sign is carried by the numerator.
  */
 final readonly class BigRational extends BigNumber
 {
@@ -334,6 +337,10 @@ final readonly class BigRational extends BigNumber
     {
         $that = BigRational::of($that);
 
+        if ($that->isZero()) {
+            throw DivisionByZeroException::divisionByZero();
+        }
+
         $numerator = $this->numerator->multipliedBy($that->denominator);
         $denominator = $this->denominator->multipliedBy($that->numerator);
 
@@ -413,22 +420,7 @@ final readonly class BigRational extends BigNumber
         return new BigRational($this->denominator, $this->numerator, true);
     }
 
-    /**
-     * Returns the absolute value of this BigRational.
-     *
-     * @pure
-     */
-    public function abs(): BigRational
-    {
-        return new BigRational($this->numerator->abs(), $this->denominator, false);
-    }
-
-    /**
-     * Returns the negated value of this BigRational.
-     *
-     * @pure
-     */
-    public function negated(): BigRational
+    public function negated(): static
     {
         return new BigRational($this->numerator->negated(), $this->denominator, false);
     }
