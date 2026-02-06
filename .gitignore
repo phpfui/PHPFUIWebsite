@@ -34,4 +34,5 @@ trackingCode.php
 .php-cs-fixer.cache
 codestyle.bat
 composer.lock
+*.wav
 
