@@ -113,7 +113,7 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
      *
      * @pure
      */
-    public static function ofNullable(BigNumber|int|float|string|null $value): ?static
+    final public static function ofNullable(BigNumber|int|float|string|null $value): ?static
     {
         if (is_null($value)) {
             return null;
@@ -229,7 +229,7 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
     }
 
     /**
-     * Checks if this number is strictly lower than the given one.
+     * Checks if this number is strictly less than the given one.
      *
      * @pure
      */
@@ -239,7 +239,7 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
     }
 
     /**
-     * Checks if this number is lower than or equal to the given one.
+     * Checks if this number is less than or equal to the given one.
      *
      * @pure
      */
@@ -360,6 +360,41 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
     abstract public function compareTo(BigNumber|int|float|string $that): int;
 
     /**
+     * Limits (clamps) this number between the given minimum and maximum values.
+     *
+     * If the number is lower than $min, returns a copy of $min.
+     * If the number is greater than $max, returns a copy of $max.
+     * Otherwise, returns this number unchanged.
+     *
+     * @param BigNumber|int|float|string $min The minimum. Must be convertible to an instance of the class this method is called on.
+     * @param BigNumber|int|float|string $max The maximum. Must be convertible to an instance of the class this method is called on.
+     *
+     * @throws MathException            If min/max are not convertible to an instance of the class this method is called on.
+     * @throws InvalidArgumentException If min is greater than max.
+     *
+     * @pure
+     */
+    final public function clamp(BigNumber|int|float|string $min, BigNumber|int|float|string $max): static
+    {
+        $min = static::of($min);
+        $max = static::of($max);
+
+        if ($min->isGreaterThan($max)) {
+            throw new InvalidArgumentException('Minimum value must be less than or equal to maximum value.');
+        }
+
+        if ($this->isLessThan($min)) {
+            return $min;
+        }
+
+        if ($this->isGreaterThan($max)) {
+            return $max;
+        }
+
+        return $this;
+    }
+
+    /**
      * Converts this number to a BigInteger.
      *
      * @throws RoundingNecessaryException If this number cannot be converted to a BigInteger without rounding.
@@ -387,7 +422,7 @@ abstract readonly class BigNumber implements JsonSerializable, Stringable
     /**
      * Converts this number to a BigDecimal with the given scale, using rounding if necessary.
      *
-     * @param int          $scale        The scale of the resulting `BigDecimal`.
+     * @param int          $scale        The scale of the resulting `BigDecimal`. Must be non-negative.
      * @param RoundingMode $roundingMode An optional rounding mode, defaults to Unnecessary.
      *
      * @throws RoundingNecessaryException If this number cannot be converted to the given scale without rounding.

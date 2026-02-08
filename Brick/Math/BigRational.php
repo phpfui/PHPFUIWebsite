@@ -333,7 +333,8 @@ final readonly class BigRational extends BigNumber
      *
      * @param BigNumber|int|float|string $that The divisor.
      *
-     * @throws MathException If the divisor is not a valid number, or is zero.
+     * @throws MathException           If the divisor is not a valid number.
+     * @throws DivisionByZeroException If the divisor is zero.
      *
      * @pure
      */
@@ -378,39 +379,6 @@ final readonly class BigRational extends BigNumber
     }
 
     /**
-     * Limits (clamps) this number between the given minimum and maximum values.
-     *
-     * If the number is lower than $min, returns a copy of $min.
-     * If the number is greater than $max, returns a copy of $max.
-     * Otherwise, returns this number unchanged.
-     *
-     * @param BigNumber|int|float|string $min The minimum. Must be convertible to a BigRational.
-     * @param BigNumber|int|float|string $max The maximum. Must be convertible to a BigRational.
-     *
-     * @throws MathException            If min/max are not convertible to a BigRational.
-     * @throws InvalidArgumentException If min is greater than max.
-     *
-     * @pure
-     */
-    public function clamp(BigNumber|int|float|string $min, BigNumber|int|float|string $max): BigRational
-    {
-        $min = BigRational::of($min);
-        $max = BigRational::of($max);
-
-        if ($min->isGreaterThan($max)) {
-            throw new InvalidArgumentException('Minimum value must be less than or equal to maximum value.');
-        }
-
-        if ($this->isLessThan($min)) {
-            return $min;
-        } elseif ($this->isGreaterThan($max)) {
-            return $max;
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns the reciprocal of this BigRational.
      *
      * The reciprocal has the numerator and denominator swapped.
@@ -424,6 +392,7 @@ final readonly class BigRational extends BigNumber
         return new BigRational($this->denominator, $this->numerator, true);
     }
 
+    #[Override]
     public function negated(): static
     {
         return new BigRational($this->numerator->negated(), $this->denominator, false);
