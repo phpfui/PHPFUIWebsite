@@ -31,6 +31,7 @@
  */
 namespace Google\ApiCore;
 
+use Exception;
 use Google\Protobuf\Any;
 use Google\Protobuf\Descriptor;
 use Google\Protobuf\DescriptorPool;
@@ -182,12 +183,22 @@ class Serializer
             $status = new \Google\Rpc\Status();
             $status->mergeFromString($metadata['grpc-status-details-bin'][0]);
             foreach ($status->getDetails() as $any) {
-                if (isset(KnownTypes::JSON_TYPES[$any->getTypeUrl()])) {
-                    $errors[] = $error = $any->unpack();
-                    $result[] = [
-                        '@type' => $any->getTypeUrl(),
-                    ] + self::serializeToPhpArray($error);
+                if (isset(KnownTypes::TYPE_URLS[$any->getTypeUrl()])) {
+                    $class = KnownTypes::TYPE_URLS[$any->getTypeUrl()];
+                    new $class(); // add known types to descriptor pool
                 }
+                try {
+                    $error = $any->unpack();
+                } catch (Exception $ex) {
+                    // failed to unpack the $any object - keep the object as-is instead
+                    $error = $any;
+                }
+                if (!is_null($errors)) {
+                    $errors[] = $error;
+                }
+                $result[] = [
+                    '@type' => $any->getTypeUrl(),
+                ] + self::serializeToPhpArray($error);
             }
             return $result;
         }
@@ -197,12 +208,10 @@ class Serializer
         // we are keeping it for now to be safe
         foreach ($metadata as $key => $values) {
             foreach ($values as $value) {
-                $decodedValue = [
-                    '@type' => $key,
-                ];
+                $decodedValue = ['@type' => $key];
                 if (self::hasBinaryHeaderSuffix($key)) {
-                    if (isset(KnownTypes::GRPC_TYPES[$key])) {
-                        $class = KnownTypes::GRPC_TYPES[$key];
+                    if (isset(KnownTypes::BIN_TYPES[$key])) {
+                        $class = KnownTypes::BIN_TYPES[$key];
                         /** @var Message $message */
                         $message = new $class();
                         try {
@@ -213,20 +222,14 @@ class Serializer
                             }
                         } catch (\Exception $e) {
                             // We encountered an error trying to deserialize the data
-                            $decodedValue += [
-                                'data' => '<Unable to deserialize data>',
-                            ];
+                            $decodedValue['data'] = '<Unable to deserialize data>';
                         }
                     } else {
                         // The metadata contains an unexpected binary type
-                        $decodedValue += [
-                            'data' => '<Unknown Binary Data>',
-                        ];
+                        $decodedValue['data'] = '<Unknown Binary Data>';
                     }
                 } else {
-                    $decodedValue += [
-                        'data' => $value,
-                    ];
+                    $decodedValue['data'] = $value;
                 }
                 $result[] = $decodedValue;
             }
@@ -250,7 +253,6 @@ class Serializer
                 $unpacked = $any->unpack();
                 $results[] = self::serializeToPhpArray($unpacked);
             } catch (\Exception $ex) {
-                echo "$ex\n";
                 // failed to unpack the $any object - show as unknown binary data
                 $results[] = [
                     'typeUrl' => $any->getTypeUrl(),
@@ -331,7 +333,7 @@ class Serializer
         list($fields, $fieldsToOneof) = $this->getDescriptorMaps($messageType);
         foreach ($fields as $field) {
             $key = $field->getName();
-            $getter = $this->getGetter($key);
+            $getter = self::getGetter($key);
             $v = $message->$getter();
 
             if (is_null($v)) {
@@ -341,7 +343,7 @@ class Serializer
             // Check and skip unset fields inside oneofs
             if (isset($fieldsToOneof[$key])) {
                 $oneofName = $fieldsToOneof[$key];
-                $oneofGetter =  $this->getGetter($oneofName);
+                $oneofGetter =  self::getGetter($oneofName);
                 if ($message->$oneofGetter() !== $key) {
                     continue;
                 }
@@ -449,7 +451,7 @@ class Serializer
                 $value = $this->decodeElement($field, $v);
             }
 
-            $setter = $this->getSetter($field->getName());
+            $setter = self::getSetter($field->getName());
             $message->$setter($value);
 
             // We must unset $value here, otherwise the protobuf c extension will mix up the references
@@ -539,7 +541,7 @@ class Serializer
 
     public static function loadKnownMetadataTypes()
     {
-        foreach (KnownTypes::GRPC_TYPES as $key => $class) {
+        foreach (KnownTypes::allKnownTypes() as $key => $class) {
             new $class();
         }
     }
