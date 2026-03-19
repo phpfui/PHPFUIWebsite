@@ -56,6 +56,7 @@ $updater->deleteFileInNamespace('DeepCopy', 'deep_copy.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions.php');
 $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
 $updater->deleteFileInNamespace('Google\Auth\Cache', 'Item.php');
+$updater->deleteFileInNamespace('voku', 'README.md');
 
 // update the public files
 exec($php . 'vendor/phpfui/instadoc/install.php www/PHPFUI');
