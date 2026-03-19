@@ -1,12 +1,16 @@
-HTTP Factories
-==============
+PSR Http Message
+================
 
-This repository holds all interfaces related to [PSR-17 (HTTP Factories)][psr-url].
+This repository holds all interfaces/classes/traits related to
+[PSR-7](http://www.php-fig.org/psr/psr-7/).
 
-Note that this is not a HTTP Factory implementation of its own. It is merely interfaces that describe the components of a HTTP Factory.
+Note that this is not a HTTP message implementation of its own. It is merely an
+interface that describes a HTTP message. See the specification for more details.
 
-The installable [package][package-url] and [implementations][implementation-url] are listed on Packagist.
+Usage
+-----
 
-[psr-url]: https://www.php-fig.org/psr/psr-17/
-[package-url]: https://packagist.org/packages/psr/http-factory
-[implementation-url]: https://packagist.org/providers/psr/http-factory-implementation
+Before reading the usage guide we recommend reading the PSR-7 interfaces method list:
+
+* [`PSR-7 Interfaces Method List`](docs/PSR7-Interfaces.md)
+* [`PSR-7 Usage Guide`](docs/PSR7-Usage.md)

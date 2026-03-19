@@ -16,11 +16,11 @@
 		"phpfui/phpunit-syntax-coverage": "^1.0",
 		"phpfui/translation": "^1.0",
 		"phpmailer/phpmailer": "^7.0",
-		"phpunit/phpunit": "^12.0",
+		"phpunit/phpunit": "^13.0",
 		"scrivo/highlight.php": "dev-master",
 		"symfony/dependency-injection": "^8.0",
 		"voku/portable-utf8": "^6.0",
-		"zbateson/mail-mime-parser": "^3.0",
+		"zbateson/mail-mime-parser": "^4.0",
 		"google/cloud-recaptcha-enterprise": "^2.0"
 	},
 	"config": {

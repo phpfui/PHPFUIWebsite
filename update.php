@@ -2,16 +2,14 @@
 
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
 	{
-	$php = 'php';
-	$composer = 'C:\ProgramData\ComposerSetup\bin\composer';
+	$php = 'php ';
+	$composer = 'composer';
 	}
 else
 	{
-	$php = '/usr/bin/php8.5-cli';
-	$composer = 'composer.phar';
+	$php = '/usr/bin/php8.5-cli ';
+	$composer = $php . 'composer.phar';
 	}
-
-$composer = $php . ' ' . $composer;
 
 exec($composer . ' self-update');
 
@@ -60,7 +58,7 @@ $updater->deleteFileInNamespace('GuzzleHttp', 'functions_include.php');
 $updater->deleteFileInNamespace('Google\Auth\Cache', 'Item.php');
 
 // update the public files
-exec($php . ' vendor/phpfui/instadoc/install.php www/PHPFUI');
+exec($php . 'vendor/phpfui/instadoc/install.php www/PHPFUI');
 
 // copy docs to correct locations
 $vendorDir = 'vendor/phpfui/';
@@ -79,7 +77,7 @@ foreach (new \DirectoryIterator($vendorDir . 'orm/docs') as $fileInfo)
 upperCaseFile('fpdf.php');
 
 // don't update if running under windows
-if ($php == 'php')
+if ($php == 'php ')
 	{
 	echo "Running under Windows, exiting.\n";
 	exit;
