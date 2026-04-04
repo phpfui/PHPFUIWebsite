@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Framework\MockObject\Rule;
 
+use function assert;
 use function count;
 use function sprintf;
 use Exception;
@@ -19,6 +20,8 @@ use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 use PHPUnit\Util\Test;
+use ReflectionException;
+use ReflectionMethod;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
@@ -119,6 +122,8 @@ final class Parameters implements ParametersRule
             );
         }
 
+        $parameters = $this->parameters($this->invocation);
+
         foreach ($this->parameters as $i => $parameter) {
             if ($parameter instanceof Callback && $parameter->isVariadic()) {
                 $other = $this->invocation->parameters();
@@ -132,7 +137,7 @@ final class Parameters implements ParametersRule
                 $other,
                 sprintf(
                     'Parameter %s for invocation %s does not match expected value.',
-                    $i,
+                    $parameters[$i] ?? (string) $i,
                     $this->invocation->toString(),
                 ),
             );
@@ -160,5 +165,29 @@ final class Parameters implements ParametersRule
         }
 
         Test::currentTestCase()->addToAssertionCount(1);
+    }
+
+    /**
+     * @return array<non-negative-int, non-empty-string>
+     */
+    private function parameters(BaseInvocation $invocation): array
+    {
+        $parameters = [];
+
+        try {
+            $reflector = new ReflectionMethod(
+                $invocation->className(),
+                $invocation->methodName(),
+            );
+
+            foreach ($reflector->getParameters() as $parameter) {
+                assert($parameter->getPosition() >= 0);
+
+                $parameters[$parameter->getPosition()] = '$' . $parameter->getName();
+            }
+        } catch (ReflectionException) {
+        }
+
+        return $parameters;
     }
 }

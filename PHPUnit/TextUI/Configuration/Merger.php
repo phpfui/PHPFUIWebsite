@@ -12,11 +12,14 @@ namespace PHPUnit\TextUI\Configuration;
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
 use function array_diff;
+use function array_key_exists;
+use function array_values;
 use function assert;
 use function dirname;
 use function explode;
 use function is_int;
 use function realpath;
+use function sprintf;
 use function time;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Runner\TestSuiteSorter;
@@ -335,7 +338,16 @@ final readonly class Merger
 
         if ($cliConfiguration->hasExtensions()) {
             foreach ($cliConfiguration->extensions() as $extension) {
-                $extensionBootstrappers[] = [
+                if (array_key_exists($extension, $extensionBootstrappers)) {
+                    EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                        sprintf(
+                            'Extension "%s" is configured more than once on the command line',
+                            $extension,
+                        ),
+                    );
+                }
+
+                $extensionBootstrappers[$extension] = [
                     'className'  => $extension,
                     'parameters' => [],
                 ];
@@ -343,7 +355,16 @@ final readonly class Merger
         }
 
         foreach ($xmlConfiguration->extensions() as $extension) {
-            $extensionBootstrappers[] = [
+            if (array_key_exists($extension->className(), $extensionBootstrappers)) {
+                EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                    sprintf(
+                        'Extension "%s" is configured more than once',
+                        $extension->className(),
+                    ),
+                );
+            }
+
+            $extensionBootstrappers[$extension->className()] = [
                 'className'  => $extension->className(),
                 'parameters' => $extension->parameters(),
             ];
@@ -358,27 +379,40 @@ final readonly class Merger
         $defaultColors     = Colors::default();
         $defaultThresholds = Thresholds::default();
 
-        $coverageClover                 = null;
-        $coverageCobertura              = null;
-        $coverageCrap4j                 = null;
-        $coverageCrap4jThreshold        = 30;
-        $coverageHtml                   = null;
-        $coverageHtmlLowUpperBound      = $defaultThresholds->lowUpperBound();
-        $coverageHtmlHighLowerBound     = $defaultThresholds->highLowerBound();
-        $coverageHtmlColorSuccessLow    = $defaultColors->successLow();
-        $coverageHtmlColorSuccessMedium = $defaultColors->successMedium();
-        $coverageHtmlColorSuccessHigh   = $defaultColors->successHigh();
-        $coverageHtmlColorWarning       = $defaultColors->warning();
-        $coverageHtmlColorDanger        = $defaultColors->danger();
-        $coverageHtmlCustomCssFile      = null;
-        $coverageOpenClover             = null;
-        $coveragePhp                    = null;
-        $coverageText                   = null;
-        $coverageTextShowUncoveredFiles = false;
-        $coverageTextShowOnlySummary    = false;
-        $coverageXml                    = null;
-        $coverageXmlIncludeSource       = true;
-        $coverageFromXmlConfiguration   = true;
+        $coverageClover                     = null;
+        $coverageCobertura                  = null;
+        $coverageCrap4j                     = null;
+        $coverageCrap4jThreshold            = 30;
+        $coverageHtml                       = null;
+        $coverageHtmlLowUpperBound          = $defaultThresholds->lowUpperBound();
+        $coverageHtmlHighLowerBound         = $defaultThresholds->highLowerBound();
+        $coverageHtmlColorSuccessLow        = $defaultColors->successLow();
+        $coverageHtmlColorSuccessLowDark    = $defaultColors->successLowDark();
+        $coverageHtmlColorSuccessMedium     = $defaultColors->successMedium();
+        $coverageHtmlColorSuccessMediumDark = $defaultColors->successMediumDark();
+        $coverageHtmlColorSuccessHigh       = $defaultColors->successHigh();
+        $coverageHtmlColorSuccessHighDark   = $defaultColors->successHighDark();
+        $coverageHtmlColorSuccessBar        = $defaultColors->successBar();
+        $coverageHtmlColorSuccessBarDark    = $defaultColors->successBarDark();
+        $coverageHtmlColorWarning           = $defaultColors->warning();
+        $coverageHtmlColorWarningDark       = $defaultColors->warningDark();
+        $coverageHtmlColorWarningBar        = $defaultColors->warningBar();
+        $coverageHtmlColorWarningBarDark    = $defaultColors->warningBarDark();
+        $coverageHtmlColorDanger            = $defaultColors->danger();
+        $coverageHtmlColorDangerDark        = $defaultColors->dangerDark();
+        $coverageHtmlColorDangerBar         = $defaultColors->dangerBar();
+        $coverageHtmlColorDangerBarDark     = $defaultColors->dangerBarDark();
+        $coverageHtmlColorBreadcrumbs       = $defaultColors->breadcrumbs();
+        $coverageHtmlColorBreadcrumbsDark   = $defaultColors->breadcrumbsDark();
+        $coverageHtmlCustomCssFile          = null;
+        $coverageOpenClover                 = null;
+        $coveragePhp                        = null;
+        $coverageText                       = null;
+        $coverageTextShowUncoveredFiles     = false;
+        $coverageTextShowOnlySummary        = false;
+        $coverageXml                        = null;
+        $coverageXmlIncludeSource           = true;
+        $coverageFromXmlConfiguration       = true;
 
         if ($cliConfiguration->hasNoCoverage() && $cliConfiguration->noCoverage()) {
             $coverageFromXmlConfiguration = false;
@@ -415,11 +449,24 @@ final readonly class Merger
                 $coverageHtmlHighLowerBound = $defaultThresholds->highLowerBound();
             }
 
-            $coverageHtmlColorSuccessLow    = $xmlConfiguration->codeCoverage()->html()->colorSuccessLow();
-            $coverageHtmlColorSuccessMedium = $xmlConfiguration->codeCoverage()->html()->colorSuccessMedium();
-            $coverageHtmlColorSuccessHigh   = $xmlConfiguration->codeCoverage()->html()->colorSuccessHigh();
-            $coverageHtmlColorWarning       = $xmlConfiguration->codeCoverage()->html()->colorWarning();
-            $coverageHtmlColorDanger        = $xmlConfiguration->codeCoverage()->html()->colorDanger();
+            $coverageHtmlColorSuccessLow        = $xmlConfiguration->codeCoverage()->html()->colorSuccessLow();
+            $coverageHtmlColorSuccessLowDark    = $xmlConfiguration->codeCoverage()->html()->colorSuccessLowDark();
+            $coverageHtmlColorSuccessMedium     = $xmlConfiguration->codeCoverage()->html()->colorSuccessMedium();
+            $coverageHtmlColorSuccessMediumDark = $xmlConfiguration->codeCoverage()->html()->colorSuccessMediumDark();
+            $coverageHtmlColorSuccessHigh       = $xmlConfiguration->codeCoverage()->html()->colorSuccessHigh();
+            $coverageHtmlColorSuccessHighDark   = $xmlConfiguration->codeCoverage()->html()->colorSuccessHighDark();
+            $coverageHtmlColorSuccessBar        = $xmlConfiguration->codeCoverage()->html()->colorSuccessBar();
+            $coverageHtmlColorSuccessBarDark    = $xmlConfiguration->codeCoverage()->html()->colorSuccessBarDark();
+            $coverageHtmlColorWarning           = $xmlConfiguration->codeCoverage()->html()->colorWarning();
+            $coverageHtmlColorWarningDark       = $xmlConfiguration->codeCoverage()->html()->colorWarningDark();
+            $coverageHtmlColorWarningBar        = $xmlConfiguration->codeCoverage()->html()->colorWarningBar();
+            $coverageHtmlColorWarningBarDark    = $xmlConfiguration->codeCoverage()->html()->colorWarningBarDark();
+            $coverageHtmlColorDanger            = $xmlConfiguration->codeCoverage()->html()->colorDanger();
+            $coverageHtmlColorDangerDark        = $xmlConfiguration->codeCoverage()->html()->colorDangerDark();
+            $coverageHtmlColorDangerBar         = $xmlConfiguration->codeCoverage()->html()->colorDangerBar();
+            $coverageHtmlColorDangerBarDark     = $xmlConfiguration->codeCoverage()->html()->colorDangerBarDark();
+            $coverageHtmlColorBreadcrumbs       = $xmlConfiguration->codeCoverage()->html()->colorBreadcrumbs();
+            $coverageHtmlColorBreadcrumbsDark   = $xmlConfiguration->codeCoverage()->html()->colorBreadcrumbsDark();
 
             if ($xmlConfiguration->codeCoverage()->html()->hasCustomCssFile()) {
                 $coverageHtmlCustomCssFile = $xmlConfiguration->codeCoverage()->html()->customCssFile();
@@ -428,7 +475,7 @@ final readonly class Merger
 
         if ($cliConfiguration->hasCoverageHtml()) {
             $coverageHtml = $cliConfiguration->coverageHtml();
-        } elseif ($coverageFromXmlConfiguration && $xmlConfiguration->codeCoverage()->hasHtml()) {
+        } elseif ($coverageFromXmlConfiguration && $xmlConfiguration->codeCoverage()->hasHtml() && $xmlConfiguration->codeCoverage()->html()->hasTarget()) {
             $coverageHtml = $xmlConfiguration->codeCoverage()->html()->target()->path();
         }
 
@@ -666,10 +713,12 @@ final readonly class Merger
             $logfileOtr = $xmlConfiguration->logging()->otr()->target()->path();
         }
 
+        $includeGitInformation             = false;
         $includeGitInformationInOtrLogfile = false;
 
-        if ($cliConfiguration->hasIncludeGitInformationInOtrLogfile()) {
-            $includeGitInformationInOtrLogfile = $cliConfiguration->includeGitInformationInOtrLogfile();
+        if ($cliConfiguration->hasIncludeGitInformation()) {
+            $includeGitInformation             = $cliConfiguration->includeGitInformation();
+            $includeGitInformationInOtrLogfile = $cliConfiguration->includeGitInformation();
         } elseif ($loggingFromXmlConfiguration && $xmlConfiguration->logging()->hasOtr()) {
             $includeGitInformationInOtrLogfile = $xmlConfiguration->logging()->otr()->includeGitInformation();
         }
@@ -955,6 +1004,7 @@ final readonly class Merger
                 $xmlConfiguration->source()->ignoreDirectDeprecations(),
                 $xmlConfiguration->source()->ignoreIndirectDeprecations(),
                 $xmlConfiguration->source()->identifyIssueTrigger(),
+                $xmlConfiguration->source()->issueTriggerResolvers(),
             ),
             $testResultCacheFile,
             $coverageClover,
@@ -965,10 +1015,23 @@ final readonly class Merger
             $coverageHtmlLowUpperBound,
             $coverageHtmlHighLowerBound,
             $coverageHtmlColorSuccessLow,
+            $coverageHtmlColorSuccessLowDark,
             $coverageHtmlColorSuccessMedium,
+            $coverageHtmlColorSuccessMediumDark,
             $coverageHtmlColorSuccessHigh,
+            $coverageHtmlColorSuccessHighDark,
+            $coverageHtmlColorSuccessBar,
+            $coverageHtmlColorSuccessBarDark,
             $coverageHtmlColorWarning,
+            $coverageHtmlColorWarningDark,
+            $coverageHtmlColorWarningBar,
+            $coverageHtmlColorWarningBarDark,
             $coverageHtmlColorDanger,
+            $coverageHtmlColorDangerDark,
+            $coverageHtmlColorDangerBar,
+            $coverageHtmlColorDangerBarDark,
+            $coverageHtmlColorBreadcrumbs,
+            $coverageHtmlColorBreadcrumbsDark,
             $coverageHtmlCustomCssFile,
             $coverageOpenClover,
             $coveragePhp,
@@ -1015,7 +1078,7 @@ final readonly class Merger
             $columns,
             $noExtensions,
             $pharExtensionDirectory,
-            $extensionBootstrappers,
+            array_values($extensionBootstrappers),
             $backupGlobals,
             $backupStaticProperties,
             $beStrictAboutChangesToGlobalState,
@@ -1050,6 +1113,7 @@ final readonly class Merger
             $logfileTeamcity,
             $logfileJunit,
             $logfileOtr,
+            $includeGitInformation,
             $includeGitInformationInOtrLogfile,
             $logfileTestdoxHtml,
             $logfileTestdoxText,

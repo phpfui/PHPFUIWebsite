@@ -17,10 +17,15 @@ use function max;
 use function sprintf;
 use function str_pad;
 use function strlen;
-use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Node\Directory;
 use SebastianBergmann\CodeCoverage\Node\File;
 use SebastianBergmann\CodeCoverage\Util\Percentage;
 
+/**
+ * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
+ *
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for phpunit/php-code-coverage
+ */
 final readonly class Text
 {
     private const string COLOR_GREEN  = "\x1b[30;42m";
@@ -39,12 +44,11 @@ final readonly class Text
         $this->showOnlySummary    = $showOnlySummary;
     }
 
-    public function process(CodeCoverage $coverage, bool $showColors = false): string
+    public function process(Directory $report, bool $showColors = false): string
     {
-        $hasBranchCoverage = $coverage->getData(true)->functionCoverage() !== [];
+        $hasBranchCoverage = $report->numberOfExecutableBranches() > 0;
 
         $output = PHP_EOL . PHP_EOL;
-        $report = $coverage->getReport();
 
         $colors = [
             'header'   => '',

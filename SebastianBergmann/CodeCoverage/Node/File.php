@@ -29,6 +29,8 @@ use SebastianBergmann\CodeCoverage\StaticAnalysis\Trait_;
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
  *
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for phpunit/php-code-coverage
+ *
  * @phpstan-import-type TestType from CodeCoverage
  * @phpstan-import-type LinesType from AnalysisResult
  */
@@ -378,7 +380,7 @@ final class File extends AbstractNode
             $trait->crap     = new CrapIndex($trait->ccn, $traitPathCoverage > 0 ? $traitPathCoverage : $traitLineCoverage)->asString();
 
             if ($trait->executableLines > 0 && $trait->coverage === 100) {
-                $this->numTestedClasses++;
+                $this->numTestedTraits++;
             }
         }
 

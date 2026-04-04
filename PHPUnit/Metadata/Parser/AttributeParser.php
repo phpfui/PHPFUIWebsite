@@ -37,6 +37,7 @@ use PHPUnit\Framework\Attributes\CoversNamespace;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DataProviderClosure;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\DependsExternal;
@@ -615,6 +616,13 @@ final readonly class AttributeParser implements Parser
                     assert($attributeInstance instanceof DataProviderExternal);
 
                     $result[] = Metadata::dataProvider($attributeInstance->className(), $attributeInstance->methodName(), $attributeInstance->validateArgumentCount());
+
+                    break;
+
+                case DataProviderClosure::class:
+                    assert($attributeInstance instanceof DataProviderClosure);
+
+                    $result[] = Metadata::dataProviderClosure($attributeInstance->closure(), $attributeInstance->validateArgumentCount());
 
                     break;
 
