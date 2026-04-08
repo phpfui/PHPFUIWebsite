@@ -15,6 +15,7 @@ use function array_values;
 use function in_array;
 use function strtolower;
 use Exception;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\MockObject\Rule\InvokedCount;
 use PHPUnit\Framework\MockObject\Rule\MethodName;
@@ -41,16 +42,24 @@ final class InvocationHandler
      * @var list<ConfigurableMethod>
      */
     private readonly array $configurableMethods;
+
+    /**
+     * @var class-string
+     */
+    private readonly string $className;
     private readonly bool $returnValueGeneration;
     private readonly bool $isMockObject;
-    private bool $sealed = false;
+    private bool $sealed                            = false;
+    private ?AssertionFailedError $assertionFailure = null;
 
     /**
      * @param list<ConfigurableMethod> $configurableMethods
+     * @param class-string             $className
      */
-    public function __construct(array $configurableMethods, bool $returnValueGeneration, bool $isMockObject = false)
+    public function __construct(array $configurableMethods, string $className, bool $returnValueGeneration, bool $isMockObject = false)
     {
         $this->configurableMethods   = $configurableMethods;
+        $this->className             = $className;
         $this->returnValueGeneration = $returnValueGeneration;
         $this->isMockObject          = $isMockObject;
     }
@@ -112,7 +121,7 @@ final class InvocationHandler
             throw new TestDoubleSealedException;
         }
 
-        $matcher = new Matcher($rule);
+        $matcher = new Matcher($rule, $this->className);
         $this->addMatcher($matcher);
 
         if ($this->isMockObject) {
@@ -152,6 +161,10 @@ final class InvocationHandler
                 }
             } catch (Exception $e) {
                 $exception = $e;
+
+                if ($this->assertionFailure === null && $e instanceof AssertionFailedError) {
+                    $this->assertionFailure = $e;
+                }
             }
         }
 
@@ -182,6 +195,10 @@ final class InvocationHandler
         foreach ($this->matchers as $matcher) {
             $matcher->verify();
         }
+
+        if ($this->assertionFailure !== null) {
+            throw $this->assertionFailure;
+        }
     }
 
     public function seal(bool $isMockObject): void
@@ -200,7 +217,7 @@ final class InvocationHandler
 
         foreach ($this->configurableMethods as $method) {
             if (!in_array($method->name(), $configuredMethods, true)) {
-                $matcher = new Matcher(new InvokedCount(0));
+                $matcher = new Matcher(new InvokedCount(0), $this->className);
 
                 $matcher->setMethodNameRule(new MethodName($method->name()));
 
