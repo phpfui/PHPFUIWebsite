@@ -19,6 +19,8 @@ use function sort;
 use ReflectionClass;
 use SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Test\Target\Mapper;
+use SebastianBergmann\CodeCoverage\Test\Target\Method;
+use SebastianBergmann\CodeCoverage\Test\Target\TargetCollection;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
@@ -37,7 +39,7 @@ final readonly class UnintentionallyCoveredCodeChecker
      * @throws ReflectionException
      * @throws UnintentionallyCoveredCodeException
      */
-    public function check(RawCodeCoverageData $data, array $linesToBeCovered, array $linesToBeUsed, Mapper $targetMapper, array $parentClassesExcludedFromCheck): true
+    public function check(RawCodeCoverageData $data, array $linesToBeCovered, array $linesToBeUsed, Mapper $targetMapper, array $parentClassesExcludedFromCheck, TargetCollection $covers, TargetCollection $uses): true
     {
         $allowedLines = $this->allowedLines(
             $linesToBeCovered,
@@ -57,6 +59,7 @@ final readonly class UnintentionallyCoveredCodeChecker
         $unintentionallyCoveredUnits = $this->process(
             $unintentionallyCoveredUnits,
             $parentClassesExcludedFromCheck,
+            $this->hasMethodLevelTargets($covers, $uses),
         );
 
         if ($unintentionallyCoveredUnits !== []) {
@@ -76,7 +79,7 @@ final readonly class UnintentionallyCoveredCodeChecker
      *
      * @return list<string>
      */
-    public function process(array $unintentionallyCoveredUnits, array $parentClassesExcludedFromCheck): array
+    public function process(array $unintentionallyCoveredUnits, array $parentClassesExcludedFromCheck, bool $methodLevelReporting = false): array
     {
         $unintentionallyCoveredUnits = array_unique($unintentionallyCoveredUnits);
         $processed                   = [];
@@ -106,7 +109,11 @@ final readonly class UnintentionallyCoveredCodeChecker
                 );
             }
 
-            $processed[] = $tmp[0];
+            if ($methodLevelReporting) {
+                $processed[] = $unintentionallyCoveredUnit;
+            } else {
+                $processed[] = $tmp[0];
+            }
         }
 
         $processed = array_unique($processed);
@@ -155,5 +162,18 @@ final readonly class UnintentionallyCoveredCodeChecker
         }
 
         return $allowedLines;
+    }
+
+    private function hasMethodLevelTargets(TargetCollection $covers, TargetCollection $uses): bool
+    {
+        foreach ([$covers, $uses] as $targets) {
+            foreach ($targets as $target) {
+                if ($target instanceof Method) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

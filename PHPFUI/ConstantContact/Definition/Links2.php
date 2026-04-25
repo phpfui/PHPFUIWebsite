@@ -5,14 +5,16 @@
 namespace PHPFUI\ConstantContact\Definition;
 
 /**
- * @property string $href
- * @property \PHPFUI\ConstantContact\Definition\Next2 $next Contains the next page link, if applicable.
+ * @property \PHPFUI\ConstantContact\Definition\Href $next
+ * @property \PHPFUI\ConstantContact\Definition\Href $prev
+ * @property \PHPFUI\ConstantContact\Definition\Href $Links2
  */
 class Links2 extends \PHPFUI\ConstantContact\Definition\Base
 	{
 	protected static array $fields = [
-		'href' => 'string',
-		'next' => '\PHPFUI\ConstantContact\Definition\Next2',
+		'next' => '\PHPFUI\ConstantContact\Definition\Href',
+		'prev' => '\PHPFUI\ConstantContact\Definition\Href',
+		'Links2' => '\PHPFUI\ConstantContact\Definition\Href',
 
 	];
 	}
