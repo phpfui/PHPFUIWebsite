@@ -7,20 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Logging\TeamCity;
+namespace PHPUnit\Framework\MockObject\Generator;
 
-use PHPUnit\Event\Test\Prepared;
-use PHPUnit\Event\Test\PreparedSubscriber;
+use function sprintf;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class TestPreparedSubscriber extends Subscriber implements PreparedSubscriber
+final class InvalidClassNameException extends \PHPUnit\Framework\Exception implements Exception
 {
-    public function notify(Prepared $event): void
+    public function __construct(string $className)
     {
-        $this->logger()->testPrepared();
+        parent::__construct(
+            sprintf(
+                'Cannot use "%s" as the name of a test double class because it is not a valid PHP class name',
+                $className,
+            ),
+        );
     }
 }
