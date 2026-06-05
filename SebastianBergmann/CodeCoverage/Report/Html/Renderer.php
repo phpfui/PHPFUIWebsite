@@ -12,7 +12,6 @@ namespace SebastianBergmann\CodeCoverage\Report\Html;
 use const ENT_HTML5;
 use const ENT_QUOTES;
 use const ENT_SUBSTITUTE;
-use function array_pop;
 use function count;
 use function htmlspecialchars;
 use function sprintf;
@@ -30,6 +29,33 @@ use SebastianBergmann\Template\Template;
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
  *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for phpunit/php-code-coverage
+ *
+ * @phpstan-type CoverageItemData array{
+ *     name: string,
+ *     numClasses?: int,
+ *     numTestedClasses?: int,
+ *     testedClassesPercent?: float,
+ *     testedClassesPercentAsString?: string,
+ *     numMethods: int,
+ *     numTestedMethods: int,
+ *     testedMethodsPercent: float,
+ *     testedMethodsPercentAsString: string,
+ *     numExecutableLines: int,
+ *     numExecutedLines: int,
+ *     linesExecutedPercent: float,
+ *     linesExecutedPercentAsString: string,
+ *     numExecutableBranches: int,
+ *     numExecutedBranches: int,
+ *     branchesExecutedPercent: float,
+ *     branchesExecutedPercentAsString: string,
+ *     numExecutablePaths: int,
+ *     numExecutedPaths: int,
+ *     pathsExecutedPercent: float,
+ *     pathsExecutedPercentAsString: string,
+ *     numFilesWithoutBranchCoverageData?: int,
+ *     icon?: string,
+ *     crap?: int|string,
+ * }
  */
 abstract class Renderer
 {
@@ -38,9 +64,10 @@ abstract class Renderer
     protected string $date;
     protected Thresholds $thresholds;
     protected bool $hasBranchCoverage;
+    protected bool $hasPathCoverage;
     protected string $version;
 
-    public function __construct(string $templatePath, string $generator, string $date, Thresholds $thresholds, bool $hasBranchCoverage)
+    public function __construct(string $templatePath, string $generator, string $date, Thresholds $thresholds, bool $hasBranchCoverage, bool $hasPathCoverage)
     {
         $this->templatePath      = $templatePath;
         $this->generator         = $generator;
@@ -48,23 +75,40 @@ abstract class Renderer
         $this->thresholds        = $thresholds;
         $this->version           = Version::id();
         $this->hasBranchCoverage = $hasBranchCoverage;
+        $this->hasPathCoverage   = $hasPathCoverage;
     }
 
     /**
-     * @param array<non-empty-string, float|int|string> $data
+     * @return non-empty-string
+     */
+    protected function templateNameForTier(string $base): string
+    {
+        if ($this->hasPathCoverage) {
+            return $this->templatePath . $base . '_branch_and_path.html';
+        }
+
+        if ($this->hasBranchCoverage) {
+            return $this->templatePath . $base . '_branch.html';
+        }
+
+        return $this->templatePath . $base . '.html';
+    }
+
+    /**
+     * @param CoverageItemData $data
      */
     protected function renderItemTemplate(Template $template, array $data): string
     {
         $numSeparator = '&nbsp;/&nbsp;';
 
         if (isset($data['numClasses']) && $data['numClasses'] > 0) {
-            $classesLevel = $this->colorLevel($data['testedClassesPercent']);
+            $classesLevel = $this->colorLevel($data['testedClassesPercent'] ?? 0.0);
 
-            $classesNumber = $data['numTestedClasses'] . $numSeparator .
+            $classesNumber = ($data['numTestedClasses'] ?? 0) . $numSeparator .
                 $data['numClasses'];
 
             $classesBar = $this->coverageBar(
-                $data['testedClassesPercent'],
+                $data['testedClassesPercent'] ?? 0.0,
             );
         } else {
             $classesLevel                         = '';
@@ -150,7 +194,7 @@ abstract class Renderer
         $template->setVar(
             [
                 'icon'                      => $data['icon'] ?? '',
-                'crap'                      => $data['crap'] ?? '',
+                'crap'                      => (string) ($data['crap'] ?? ''),
                 'name'                      => $data['name'],
                 'lines_bar'                 => $linesBar,
                 'lines_executed_percent'    => $data['linesExecutedPercentAsString'],
@@ -205,22 +249,19 @@ abstract class Renderer
     {
         $breadcrumbs = '';
         $path        = $node->pathAsArray();
-        $pathToRoot  = [];
-        $max         = count($path);
+        $depth       = count($path);
 
         if ($node instanceof FileNode) {
-            $max--;
-        }
-
-        for ($i = 0; $i < $max; $i++) {
-            $pathToRoot[] = str_repeat('../', $i);
+            $depth--;
         }
 
         foreach ($path as $step) {
             if ($step !== $node) {
+                $depth--;
+
                 $breadcrumbs .= $this->inactiveBreadcrumb(
                     $step,
-                    array_pop($pathToRoot),
+                    str_repeat('../', $depth),
                 );
             } else {
                 $breadcrumbs .= $this->activeBreadcrumb($step);
@@ -270,9 +311,8 @@ abstract class Renderer
     {
         $level = $this->colorLevel($percent);
 
-        $templateName = $this->templatePath . ($this->hasBranchCoverage ? 'coverage_bar_branch.html' : 'coverage_bar.html');
-        $template     = new Template(
-            $templateName,
+        $template = new Template(
+            $this->templatePath . 'coverage_bar.html',
             '{{',
             '}}',
         );

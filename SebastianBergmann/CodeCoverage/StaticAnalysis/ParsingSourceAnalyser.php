@@ -11,13 +11,12 @@ namespace SebastianBergmann\CodeCoverage\StaticAnalysis;
 
 use const T_COMMENT;
 use const T_DOC_COMMENT;
-use function array_merge;
-use function array_unique;
+use function array_keys;
+use function array_replace;
 use function assert;
 use function is_array;
+use function ksort;
 use function max;
-use function range;
-use function sort;
 use function sprintf;
 use function substr_count;
 use function token_get_all;
@@ -25,6 +24,7 @@ use function trim;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use SebastianBergmann\CodeCoverage\ParserException;
 use SebastianBergmann\LinesOfCode\LineCountingVisitor;
@@ -36,6 +36,13 @@ use SebastianBergmann\LinesOfCode\LineCountingVisitor;
  */
 final readonly class ParsingSourceAnalyser implements SourceAnalyser
 {
+    private Parser $parser;
+
+    public function __construct()
+    {
+        $this->parser = (new ParserFactory)->createForHostVersion();
+    }
+
     /**
      * @param non-empty-string $sourceCodeFile
      */
@@ -45,10 +52,8 @@ final readonly class ParsingSourceAnalyser implements SourceAnalyser
 
         assert($linesOfCode > 0);
 
-        $parser = (new ParserFactory)->createForHostVersion();
-
         try {
-            $nodes = $parser->parse($sourceCode);
+            $nodes = $this->parser->parse($sourceCode);
 
             assert($nodes !== null);
 
@@ -81,18 +86,18 @@ final readonly class ParsingSourceAnalyser implements SourceAnalyser
         }
         // @codeCoverageIgnoreEnd
 
-        $ignoredLines = array_unique(
-            array_merge(
-                $this->findLinesIgnoredByLineBasedAnnotations(
-                    $sourceCodeFile,
-                    $sourceCode,
-                    $useAnnotationsForIgnoringCode,
-                ),
-                $ignoredLinesFindingVisitor->ignoredLines(),
+        $ignoredLines = array_replace(
+            $this->findLinesIgnoredByLineBasedAnnotations(
+                $sourceCodeFile,
+                $sourceCode,
+                $useAnnotationsForIgnoringCode,
             ),
+            $ignoredLinesFindingVisitor->ignoredLines(),
         );
 
-        sort($ignoredLines);
+        ksort($ignoredLines);
+
+        $ignoredLines = array_keys($ignoredLines);
 
         return new AnalysisResult(
             $codeUnitFindingVisitor->interfaces(),
@@ -111,7 +116,7 @@ final readonly class ParsingSourceAnalyser implements SourceAnalyser
     }
 
     /**
-     * @return array<int, int>
+     * @return array<int, true>
      */
     private function findLinesIgnoredByLineBasedAnnotations(string $filename, string $source, bool $useAnnotationsForIgnoringCode): array
     {
@@ -128,32 +133,28 @@ final readonly class ParsingSourceAnalyser implements SourceAnalyser
                 continue;
             }
 
-            $comment = trim($token[1]);
+            $annotation = trim($token[1], "/ \n\r\t\0\x0B");
 
-            if ($comment === '// @codeCoverageIgnore' ||
-                $comment === '//@codeCoverageIgnore') {
-                $result[] = $token[2];
+            if ($annotation === '@codeCoverageIgnore') {
+                $result[$token[2]] = true;
 
                 continue;
             }
 
-            if ($comment === '// @codeCoverageIgnoreStart' ||
-                $comment === '//@codeCoverageIgnoreStart') {
+            if ($annotation === '@codeCoverageIgnoreStart') {
                 $start = $token[2];
 
                 continue;
             }
 
-            if ($comment === '// @codeCoverageIgnoreEnd' ||
-                $comment === '//@codeCoverageIgnoreEnd') {
+            if ($annotation === '@codeCoverageIgnoreEnd') {
                 if (false === $start) {
                     $start = $token[2];
                 }
 
-                $result = array_merge(
-                    $result,
-                    range($start, $token[2]),
-                );
+                for ($line = $start; $line <= $token[2]; $line++) {
+                    $result[$line] = true;
+                }
             }
         }
 

@@ -13,11 +13,11 @@ use function array_merge;
 use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
+use SebastianBergmann\CodeCoverage\Driver\Granularity;
 use SebastianBergmann\CodeCoverage\Node\Builder;
 use SebastianBergmann\CodeCoverage\Node\Directory;
-use SebastianBergmann\CodeCoverage\StaticAnalysis\CachingSourceAnalyser;
 use SebastianBergmann\CodeCoverage\StaticAnalysis\FileAnalyser;
-use SebastianBergmann\CodeCoverage\StaticAnalysis\ParsingSourceAnalyser;
+use SebastianBergmann\CodeCoverage\StaticAnalysis\Registry;
 use SebastianBergmann\CodeCoverage\Test\Target\MapBuilder;
 use SebastianBergmann\CodeCoverage\Test\Target\Mapper;
 use SebastianBergmann\CodeCoverage\Test\Target\TargetCollection;
@@ -39,11 +39,13 @@ final class CodeCoverage
     private const string UNCOVERED_FILES = 'UNCOVERED_FILES';
     private readonly Driver $driver;
     private readonly Filter $filter;
-    private ?FileAnalyser $analyser                  = null;
-    private ?Mapper $targetMapper                    = null;
+    private ?Mapper $targetMapper = null;
+
+    /**
+     * @var ?non-empty-string
+     */
     private ?string $cacheDirectory                  = null;
     private bool $checkForUnintentionallyCoveredCode = false;
-    private bool $collectBranchAndPathCoverage       = false;
     private bool $includeUncoveredFiles              = true;
     private bool $ignoreDeprecatedCode               = false;
     private bool $useAnnotationsForIgnoringCode      = true;
@@ -52,12 +54,16 @@ final class CodeCoverage
      * @var list<class-string>
      */
     private array $parentClassesExcludedFromUnintentionallyCoveredCodeCheck = [];
-    private ?string $currentId                                              = null;
-    private ?TestSize $currentSize                                          = null;
+
+    /**
+     * @var ?non-empty-string
+     */
+    private ?string $currentId     = null;
+    private ?TestSize $currentSize = null;
     private ProcessedCodeCoverageData $data;
 
     /**
-     * @var array<string, TestType>
+     * @var array<non-empty-string, TestType>
      */
     private array $tests             = [];
     private ?Directory $cachedReport = null;
@@ -132,7 +138,7 @@ final class CodeCoverage
     }
 
     /**
-     * @return array<string, TestType>
+     * @return array<non-empty-string, TestType>
      */
     public function getTests(): array
     {
@@ -140,13 +146,16 @@ final class CodeCoverage
     }
 
     /**
-     * @param array<string, TestType> $tests
+     * @param array<non-empty-string, TestType> $tests
      */
     public function setTests(array $tests): void
     {
         $this->tests = $tests;
     }
 
+    /**
+     * @param non-empty-string $id
+     */
     public function start(string $id, ?TestSize $size = null, bool $clear = false): void
     {
         if ($clear) {
@@ -175,6 +184,8 @@ final class CodeCoverage
     }
 
     /**
+     * @param ?non-empty-string $id
+     *
      * @throws ReflectionException
      * @throws TestIdMissingException
      * @throws UnintentionallyCoveredCodeException
@@ -247,7 +258,7 @@ final class CodeCoverage
             $linesToBeUsed,
             $size,
             $this->checkForUnintentionallyCoveredCode,
-            $this->targetMapper,
+            $this->targetMapper(),
             $this->parentClassesExcludedFromUnintentionallyCoveredCodeCheck,
             $covers,
             $uses,
@@ -327,6 +338,9 @@ final class CodeCoverage
         return $this->cacheDirectory !== null;
     }
 
+    /**
+     * @param non-empty-string $directory
+     */
     public function cacheStaticAnalysis(string $directory): void
     {
         $this->cacheDirectory = $directory;
@@ -339,6 +353,8 @@ final class CodeCoverage
 
     /**
      * @throws StaticAnalysisCacheNotConfiguredException
+     *
+     * @return non-empty-string
      */
     public function cacheDirectory(): string
     {
@@ -359,23 +375,31 @@ final class CodeCoverage
         $this->parentClassesExcludedFromUnintentionallyCoveredCodeCheck[] = $className;
     }
 
+    /**
+     * @throws BranchCoverageNotSupportedException
+     * @throws PathCoverageNotSupportedException
+     *
+     * @deprecated
+     */
     public function enableBranchAndPathCoverage(): void
     {
-        $this->driver->enableBranchAndPathCoverage();
-
-        $this->collectBranchAndPathCoverage = true;
+        $this->driver->setGranularity(Granularity::LineBranchAndPath);
     }
 
+    /**
+     * @deprecated
+     */
     public function disableBranchAndPathCoverage(): void
     {
-        $this->driver->disableBranchAndPathCoverage();
-
-        $this->collectBranchAndPathCoverage = false;
+        $this->driver->setGranularity(Granularity::Line);
     }
 
+    /**
+     * @deprecated
+     */
     public function collectsBranchAndPathCoverage(): bool
     {
-        return $this->collectBranchAndPathCoverage;
+        return $this->driver->granularity() === Granularity::LineBranchAndPath;
     }
 
     public function validate(TargetCollection $targets): ValidationResult
@@ -427,25 +451,10 @@ final class CodeCoverage
 
     private function analyser(): FileAnalyser
     {
-        if ($this->analyser !== null) {
-            return $this->analyser;
-        }
-
-        $sourceAnalyser = new ParsingSourceAnalyser;
-
-        if ($this->cachesStaticAnalysis()) {
-            $sourceAnalyser = new CachingSourceAnalyser(
-                $this->cacheDirectory,
-                $sourceAnalyser,
-            );
-        }
-
-        $this->analyser = new FileAnalyser(
-            $sourceAnalyser,
+        return Registry::analyser(
+            $this->cacheDirectory,
             $this->useAnnotationsForIgnoringCode,
             $this->ignoreDeprecatedCode,
         );
-
-        return $this->analyser;
     }
 }

@@ -29,8 +29,7 @@ final class Directory extends Renderer
 {
     public function render(DirectoryNode $node, string $file): void
     {
-        $templateName = $this->templatePath . ($this->hasBranchCoverage ? 'directory_branch.html' : 'directory.html');
-        $template     = new Template($templateName, '{{', '}}');
+        $template = new Template($this->templateNameForTier('directory'), '{{', '}}');
 
         $this->setCommonTemplateVariables($template, $node);
 
@@ -116,13 +115,20 @@ final class Directory extends Renderer
                     $name,
                 );
                 $data['icon'] = sprintf('<img src="%s_icons/file-directory.svg" class="octicon" />', $up);
-            } elseif ($this->hasBranchCoverage) {
+            } elseif ($this->hasPathCoverage) {
                 $data['name'] = sprintf(
                     '%s <a class="small" href="%s.html">[line]</a> <a class="small" href="%s_branch.html">[branch]</a> <a class="small" href="%s_path.html">[path]</a>',
                     $name,
                     $name,
                     $name,
                     $name,
+                );
+            } elseif ($this->hasBranchCoverage) {
+                $data['name'] = sprintf(
+                    '%s <a class="small" href="%s.html">[line]</a> <a class="small" href="%s_branch.html">[branch]</a>',
+                    $node->name(),
+                    $node->name(),
+                    $node->name(),
                 );
             } else {
                 $data['name'] = sprintf(
@@ -133,10 +139,8 @@ final class Directory extends Renderer
             }
         }
 
-        $templateName = $this->templatePath . ($this->hasBranchCoverage ? 'directory_item_branch.html' : 'directory_item.html');
-
         return $this->renderItemTemplate(
-            new Template($templateName, '{{', '}}'),
+            new Template($this->templateNameForTier('directory_item'), '{{', '}}'),
             $data,
         );
     }
