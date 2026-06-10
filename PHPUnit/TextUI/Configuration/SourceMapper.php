@@ -10,9 +10,11 @@
 namespace PHPUnit\TextUI\Configuration;
 
 use const DIRECTORY_SEPARATOR;
+use function array_values;
 use function file_get_contents;
 use function file_put_contents;
 use function is_array;
+use function is_string;
 use function preg_match;
 use function realpath;
 use function serialize;
@@ -57,12 +59,21 @@ final class SourceMapper
             return;
         }
 
+        $validated = [];
+
+        foreach ($map as $file => $included) {
+            if (!is_string($file) || $file === '' || $included !== true) {
+                return;
+            }
+
+            $validated[$file] = true;
+        }
+
         if (self::$files === null) {
             self::$files = new SplObjectStorage;
         }
 
-        /** @phpstan-ignore offsetAssign.valueType */
-        self::$files[$source] = $map;
+        self::$files[$source] = $validated;
     }
 
     /**
@@ -82,15 +93,17 @@ final class SourceMapper
 
         $directories = $this->aggregateDirectories($source->includeDirectories());
 
-        foreach ($directories as $path => [$prefixes, $suffixes]) {
+        foreach ($directories as ['path' => $path, 'prefixes' => $prefixes, 'suffixes' => $suffixes]) {
             $basePath = realpath($path);
 
             foreach ((new FileIteratorFacade)->getFilesAsArray($path, $suffixes, $prefixes) as $file) {
                 $file = realpath($file);
 
-                if (!$file) {
+                // @codeCoverageIgnoreStart
+                if ($file === false) {
                     continue;
                 }
+                // @codeCoverageIgnoreEnd
 
                 if ($this->isInHiddenDirectory($file, $basePath)) {
                     continue;
@@ -103,7 +116,7 @@ final class SourceMapper
         foreach ($source->includeFiles() as $file) {
             $file = realpath($file->path());
 
-            if (!$file) {
+            if ($file === false) {
                 continue;
             }
 
@@ -112,13 +125,15 @@ final class SourceMapper
 
         $directories = $this->aggregateDirectories($source->excludeDirectories());
 
-        foreach ($directories as $path => [$prefixes, $suffixes]) {
+        foreach ($directories as ['path' => $path, 'prefixes' => $prefixes, 'suffixes' => $suffixes]) {
             foreach ((new FileIteratorFacade)->getFilesAsArray($path, $suffixes, $prefixes) as $file) {
                 $file = realpath($file);
 
-                if (!$file) {
+                // @codeCoverageIgnoreStart
+                if ($file === false) {
                     continue;
                 }
+                // @codeCoverageIgnoreEnd
 
                 if (!isset($files[$file])) {
                     continue;
@@ -131,7 +146,7 @@ final class SourceMapper
         foreach ($source->excludeFiles() as $file) {
             $file = realpath($file->path());
 
-            if (!$file) {
+            if ($file === false) {
                 continue;
             }
 
@@ -162,9 +177,11 @@ final class SourceMapper
             foreach ((new FileIteratorFacade)->getFilesAsArray($directory->path(), $directory->suffix(), $directory->prefix()) as $file) {
                 $file = realpath($file);
 
-                if (!$file) {
+                // @codeCoverageIgnoreStart
+                if ($file === false) {
                     continue;
                 }
+                // @codeCoverageIgnoreEnd
 
                 unset($files[$file]);
             }
@@ -177,7 +194,7 @@ final class SourceMapper
 
             $path = realpath($file->path());
 
-            if (!$path) {
+            if ($path === false) {
                 continue;
             }
 
@@ -197,33 +214,36 @@ final class SourceMapper
     }
 
     /**
-     * @return array<string,array{list<string>,list<string>}>
+     * @return list<array{path: non-empty-string, prefixes: list<non-empty-string>, suffixes: list<non-empty-string>}>
      */
     private function aggregateDirectories(FilterDirectoryCollection $directories): array
     {
         $aggregated = [];
 
         foreach ($directories as $directory) {
-            if (!isset($aggregated[$directory->path()])) {
-                $aggregated[$directory->path()] = [
-                    0 => [],
-                    1 => [],
+            $path = $directory->path();
+
+            if (!isset($aggregated[$path])) {
+                $aggregated[$path] = [
+                    'path'     => $path,
+                    'prefixes' => [],
+                    'suffixes' => [],
                 ];
             }
 
             $prefix = $directory->prefix();
 
             if ($prefix !== '') {
-                $aggregated[$directory->path()][0][] = $prefix;
+                $aggregated[$path]['prefixes'][] = $prefix;
             }
 
             $suffix = $directory->suffix();
 
             if ($suffix !== '') {
-                $aggregated[$directory->path()][1][] = $suffix;
+                $aggregated[$path]['suffixes'][] = $suffix;
             }
         }
 
-        return $aggregated;
+        return array_values($aggregated);
     }
 }

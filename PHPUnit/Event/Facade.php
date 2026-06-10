@@ -102,6 +102,7 @@ final class Facade
                 new Telemetry\SystemStopWatchWithOffset($offset),
                 new Telemetry\SystemMemoryMeter,
                 new SystemGarbageCollectorStatusProvider,
+                new Telemetry\SystemCpuTimeMeter,
             ),
         );
 
@@ -142,6 +143,7 @@ final class Facade
             new Telemetry\SystemStopWatch,
             new Telemetry\SystemMemoryMeter,
             new SystemGarbageCollectorStatusProvider,
+            new Telemetry\SystemCpuTimeMeter,
         );
     }
 
@@ -247,6 +249,13 @@ final class Facade
             TestRunner\DeprecationTriggered::class,
             TestRunner\NoticeTriggered::class,
             TestRunner\WarningTriggered::class,
+            TestRunner\Issue\DeprecationTriggered::class,
+            TestRunner\ErrorTriggered::class,
+            TestRunner\Issue\NoticeTriggered::class,
+            TestRunner\PhpDeprecationTriggered::class,
+            TestRunner\PhpNoticeTriggered::class,
+            TestRunner\PhpWarningTriggered::class,
+            TestRunner\Issue\WarningTriggered::class,
             TestRunner\GarbageCollectionDisabled::class,
             TestRunner\GarbageCollectionTriggered::class,
             TestRunner\GarbageCollectionEnabled::class,

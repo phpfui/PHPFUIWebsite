@@ -11,6 +11,8 @@ namespace PHPUnit\Framework;
 
 use function array_merge;
 use function assert;
+use function get_parent_class;
+use function preg_match;
 use PHPUnit\Metadata\Api\DataProvider;
 use PHPUnit\Metadata\Api\Groups;
 use PHPUnit\Metadata\Api\ProvidedData;
@@ -22,6 +24,7 @@ use PHPUnit\Metadata\ExcludeStaticPropertyFromBackup;
 use PHPUnit\Metadata\Parser\Registry as MetadataRegistry;
 use PHPUnit\Metadata\PreserveGlobalState;
 use PHPUnit\Runner\ErrorHandler;
+use PHPUnit\Runner\Filter\MethodNameFilterCompiler;
 use PHPUnit\TextUI\Configuration\Registry as ConfigurationRegistry;
 use ReflectionClass;
 
@@ -29,6 +32,8 @@ use ReflectionClass;
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
+ *
+ * @phpstan-type BackupSettings array{backupGlobals: ?true, backupGlobalsExcludeList: list<string>, backupStaticProperties: ?true, backupStaticPropertiesExcludeList: array<class-string, list<non-empty-string>>}
  */
 final readonly class TestBuilder
 {
@@ -45,7 +50,8 @@ final readonly class TestBuilder
 
         $data = null;
 
-        if ($this->requirementsSatisfied($className, $methodName)) {
+        if ($this->requirementsSatisfied($className, $methodName) &&
+            !$this->filterExcludesMethod($className, $methodName)) {
             try {
                 ErrorHandler::instance()->enterTestCaseContext($className, $methodName);
 
@@ -55,7 +61,7 @@ final readonly class TestBuilder
             }
         }
 
-        if ($data !== null) {
+        if ($data !== null && $data !== []) {
             return $this->buildDataProviderTestSuite(
                 $methodName,
                 $className,
@@ -69,6 +75,12 @@ final readonly class TestBuilder
 
         $test = new $className($methodName);
 
+        if ($data === []) {
+            $test->setEmptyDataProviderSkipMessage(
+                'The data provider for this test provided no data, which is explicitly permitted',
+            );
+        }
+
         $this->configureTestCase(
             $test,
             $this->shouldTestMethodBeRunInSeparateProcess($className, $methodName),
@@ -80,11 +92,11 @@ final readonly class TestBuilder
     }
 
     /**
-     * @param non-empty-string                                                                                                                                                  $methodName
-     * @param class-string<TestCase>                                                                                                                                            $className
-     * @param array<ProvidedData>                                                                                                                                               $data
-     * @param array{backupGlobals: ?true, backupGlobalsExcludeList: list<string>, backupStaticProperties: ?true, backupStaticPropertiesExcludeList: array<string,list<string>>} $backupSettings
-     * @param list<non-empty-string>                                                                                                                                            $groups
+     * @param non-empty-string       $methodName
+     * @param class-string<TestCase> $className
+     * @param array<ProvidedData>    $data
+     * @param BackupSettings         $backupSettings
+     * @param list<non-empty-string> $groups
      */
     private function buildDataProviderTestSuite(string $methodName, string $className, array $data, bool $runTestInSeparateProcess, ?bool $preserveGlobalState, array $backupSettings, array $groups): DataProviderTestSuite
     {
@@ -116,7 +128,7 @@ final readonly class TestBuilder
     }
 
     /**
-     * @param array{backupGlobals: ?true, backupGlobalsExcludeList: list<string>, backupStaticProperties: ?true, backupStaticPropertiesExcludeList: array<string,list<string>>} $backupSettings
+     * @param BackupSettings $backupSettings
      */
     private function configureTestCase(TestCase $test, bool $runTestInSeparateProcess, ?bool $preserveGlobalState, array $backupSettings): void
     {
@@ -142,14 +154,17 @@ final readonly class TestBuilder
             $test->setBackupStaticProperties(ConfigurationRegistry::get()->backupStaticProperties());
         }
 
-        $test->setBackupStaticPropertiesExcludeList($backupSettings['backupStaticPropertiesExcludeList']);
+        /** @var array<class-string, list<non-empty-string>> $backupStaticPropertiesExcludeList */
+        $backupStaticPropertiesExcludeList = $backupSettings['backupStaticPropertiesExcludeList'];
+
+        $test->setBackupStaticPropertiesExcludeList($backupStaticPropertiesExcludeList);
     }
 
     /**
      * @param class-string<TestCase> $className
      * @param non-empty-string       $methodName
      *
-     * @return array{backupGlobals: ?true, backupGlobalsExcludeList: list<string>, backupStaticProperties: ?true, backupStaticPropertiesExcludeList: array<string,list<string>>}
+     * @return BackupSettings
      */
     private function backupSettings(string $className, string $methodName): array
     {
@@ -258,9 +273,13 @@ final readonly class TestBuilder
      */
     private function shouldTestMethodBeRunInSeparateProcess(string $className, string $methodName): bool
     {
-        if (MetadataRegistry::parser()->forClass($className)->isRunTestsInSeparateProcesses()->isNotEmpty()) {
-            return true;
-        }
+        $class = $className;
+
+        do {
+            if (MetadataRegistry::parser()->forClass($class)->isRunTestsInSeparateProcesses()->isNotEmpty()) {
+                return true;
+            }
+        } while (($class = get_parent_class($class)) !== false);
 
         if (MetadataRegistry::parser()->forMethod($className, $methodName)->isRunInSeparateProcess()->isNotEmpty()) {
             return true;
@@ -276,5 +295,32 @@ final readonly class TestBuilder
     private function requirementsSatisfied(string $className, string $methodName): bool
     {
         return (new Requirements)->requirementsNotSatisfiedFor($className, $methodName) === [];
+    }
+
+    /**
+     * @param class-string<TestCase> $className
+     * @param non-empty-string       $methodName
+     */
+    private function filterExcludesMethod(string $className, string $methodName): bool
+    {
+        $configuration = ConfigurationRegistry::get();
+
+        if (!$configuration->hasFilter()) {
+            return false;
+        }
+
+        $regularExpression = MethodNameFilterCompiler::compile($configuration->filter());
+
+        if ($regularExpression === null) {
+            return false;
+        }
+
+        $result = @preg_match($regularExpression, $className . '::' . $methodName);
+
+        if ($result === false) {
+            return false;
+        }
+
+        return $result === 0;
     }
 }

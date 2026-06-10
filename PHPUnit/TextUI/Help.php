@@ -46,9 +46,11 @@ final class Help
             $this->hasColor = $withColor;
         }
 
+        $maxLength = (int) ($width / 2) - 4;
+
         foreach ($this->elements() as $options) {
             foreach ($options as $option) {
-                if (isset($option['arg'])) {
+                if (isset($option['arg']) && strlen($option['arg']) <= $maxLength) {
                     $this->lengthOfLongestOptionName = max($this->lengthOfLongestOptionName, strlen($option['arg']));
                 }
             }
@@ -87,9 +89,14 @@ final class Help
                 }
 
                 if (isset($option['arg'])) {
-                    $arg = str_pad($option['arg'], $this->lengthOfLongestOptionName);
+                    if (strlen($option['arg']) > $this->lengthOfLongestOptionName) {
+                        $buffer .= self::LEFT_MARGIN . $option['arg'] . PHP_EOL;
+                        $buffer .= str_repeat(' ', $this->lengthOfLongestOptionName + 3) . $option['desc'] . PHP_EOL;
+                    } else {
+                        $arg = str_pad($option['arg'], $this->lengthOfLongestOptionName);
 
-                    $buffer .= self::LEFT_MARGIN . $arg . ' ' . $option['desc'] . PHP_EOL;
+                        $buffer .= self::LEFT_MARGIN . $arg . ' ' . $option['desc'] . PHP_EOL;
+                    }
                 }
             }
 
@@ -120,19 +127,31 @@ final class Help
                 }
 
                 if (isset($option['arg'])) {
-                    $arg = Color::colorize('fg-green', str_pad($option['arg'], $this->lengthOfLongestOptionName));
-                    $arg = preg_replace_callback(
-                        '/(<[^>]+>)/',
-                        static fn (array $matches) => Color::colorize('fg-cyan', $matches[0]),
-                        $arg,
-                    );
+                    if (strlen($option['arg']) > $this->lengthOfLongestOptionName) {
+                        $buffer .= self::LEFT_MARGIN . Color::colorize('fg-green', $option['arg']) . PHP_EOL;
 
-                    $desc = explode(PHP_EOL, wordwrap($option['desc'], $this->columnsAvailableForDescription, PHP_EOL));
+                        $desc = explode(PHP_EOL, wordwrap($option['desc'], $this->columnsAvailableForDescription, PHP_EOL));
 
-                    $buffer .= self::LEFT_MARGIN . $arg . ' ' . $desc[0] . PHP_EOL;
+                        $buffer .= str_repeat(' ', $this->lengthOfLongestOptionName + 3) . $desc[0] . PHP_EOL;
 
-                    for ($i = 1; $i < count($desc); $i++) {
-                        $buffer .= str_repeat(' ', $this->lengthOfLongestOptionName + 3) . $desc[$i] . PHP_EOL;
+                        for ($i = 1; $i < count($desc); $i++) {
+                            $buffer .= str_repeat(' ', $this->lengthOfLongestOptionName + 3) . $desc[$i] . PHP_EOL;
+                        }
+                    } else {
+                        $arg = Color::colorize('fg-green', str_pad($option['arg'], $this->lengthOfLongestOptionName));
+                        $arg = preg_replace_callback(
+                            '/(<[^>]+>)/',
+                            static fn (array $matches) => Color::colorize('fg-cyan', $matches[0]),
+                            $arg,
+                        );
+
+                        $desc = explode(PHP_EOL, wordwrap($option['desc'], $this->columnsAvailableForDescription, PHP_EOL));
+
+                        $buffer .= self::LEFT_MARGIN . $arg . ' ' . $desc[0] . PHP_EOL;
+
+                        for ($i = 1; $i < count($desc); $i++) {
+                            $buffer .= str_repeat(' ', $this->lengthOfLongestOptionName + 3) . $desc[$i] . PHP_EOL;
+                        }
                     }
                 }
             }
@@ -164,6 +183,7 @@ final class Help
                 ['arg' => '--cache-directory <dir>', 'desc' => 'Specify cache directory'],
                 ['arg' => '--generate-configuration', 'desc' => 'Generate configuration file with suggested settings'],
                 ['arg' => '--migrate-configuration', 'desc' => 'Migrate configuration file to current format'],
+                ['arg' => '--validate-configuration', 'desc' => 'Validate XML configuration file'],
                 ['arg' => '--generate-baseline <file>', 'desc' => 'Generate baseline for issues'],
                 ['arg' => '--use-baseline <file>', 'desc' => 'Use baseline to ignore issues'],
                 ['arg' => '--ignore-baseline', 'desc' => 'Do not use baseline to ignore issues'],
@@ -181,12 +201,15 @@ final class Help
                 ['arg' => '--uses <name>', 'desc' => 'Only run tests that intend to use <name>'],
                 ['arg' => '--requires-php-extension <name>', 'desc' => 'Only run tests that require PHP extension <name>'],
                 ['arg' => '--list-test-files', 'desc' => 'List available test files'],
+                ['arg' => '--list-test-ids', 'desc' => 'List available tests as test IDs'],
                 ['arg' => '--list-tests', 'desc' => 'List available tests'],
                 ['arg' => '--list-tests-xml <file>', 'desc' => 'List available tests in XML format'],
                 ['arg' => '--filter <pattern>', 'desc' => 'Filter which tests to run'],
                 ['arg' => '--exclude-filter <pattern>', 'desc' => 'Exclude tests for the specified filter pattern'],
                 ['arg' => '--test-suffix <suffixes>', 'desc' => 'Only search for test in files with specified suffix(es). Default: Test.php,.phpt'],
                 ['arg' => '--test-files-file <file>', 'desc' => 'Only run test files listed in file (one file by line)'],
+                ['arg' => '--run-test-id <test-id>', 'desc' => 'Only run the test identified by the specified test ID'],
+                ['arg' => '--test-id-filter-file <file>', 'desc' => 'Only run tests listed by test ID in file (one test ID per line)'],
             ],
 
             'Execution' => [
@@ -196,6 +219,7 @@ final class Help
                 ['spacer' => ''],
 
                 ['arg'    => '--strict-coverage', 'desc' => 'Be strict about code coverage metadata'],
+                ['arg'    => '--require-coverage-contribution', 'desc' => 'Be strict about tests that do not contribute to code coverage'],
                 ['arg'    => '--strict-global-state', 'desc' => 'Be strict about changes to global state'],
                 ['arg'    => '--disallow-test-output', 'desc' => 'Be strict about output during tests'],
                 ['arg'    => '--enforce-time-limit', 'desc' => 'Enforce time limit based on test size'],
@@ -203,15 +227,15 @@ final class Help
                 ['arg'    => '--do-not-report-useless-tests', 'desc' => 'Do not report tests that do not test anything'],
                 ['spacer' => ''],
 
-                ['arg'    => '--stop-on-defect', 'desc' => 'Stop after first error, failure, warning, or risky test'],
-                ['arg'    => '--stop-on-error', 'desc' => 'Stop after first error'],
-                ['arg'    => '--stop-on-failure', 'desc' => 'Stop after first failure'],
-                ['arg'    => '--stop-on-warning', 'desc' => 'Stop after first warning'],
-                ['arg'    => '--stop-on-risky', 'desc' => 'Stop after first risky test'],
-                ['arg'    => '--stop-on-deprecation', 'desc' => 'Stop after first test that triggered a deprecation'],
-                ['arg'    => '--stop-on-notice', 'desc' => 'Stop after first test that triggered a notice'],
-                ['arg'    => '--stop-on-skipped', 'desc' => 'Stop after first skipped test'],
-                ['arg'    => '--stop-on-incomplete', 'desc' => 'Stop after first incomplete test'],
+                ['arg'    => '--stop-on-defect[=<n>]', 'desc' => 'Stop after first (or n-th) error, failure, warning, or risky test'],
+                ['arg'    => '--stop-on-error[=<n>]', 'desc' => 'Stop after first (or n-th) error'],
+                ['arg'    => '--stop-on-failure[=<n>]', 'desc' => 'Stop after first (or n-th) failure'],
+                ['arg'    => '--stop-on-warning[=<n>]', 'desc' => 'Stop after first (or n-th) warning'],
+                ['arg'    => '--stop-on-risky[=<n>]', 'desc' => 'Stop after first (or n-th) risky test'],
+                ['arg'    => '--stop-on-deprecation[=<n>]', 'desc' => 'Stop after first (or n-th) test that triggered a deprecation'],
+                ['arg'    => '--stop-on-notice[=<n>]', 'desc' => 'Stop after first (or n-th) test that triggered a notice'],
+                ['arg'    => '--stop-on-skipped[=<n>]', 'desc' => 'Stop after first (or n-th) skipped test'],
+                ['arg'    => '--stop-on-incomplete[=<n>]', 'desc' => 'Stop after first (or n-th) incomplete test'],
                 ['spacer' => ''],
 
                 ['arg'    => '--fail-on-empty-test-suite', 'desc' => 'Signal failure using shell exit code when no tests were run'],
@@ -243,7 +267,7 @@ final class Help
                 ['arg'    => '--do-not-cache-result', 'desc' => 'Do not write test results to cache file'],
                 ['spacer' => ''],
 
-                ['arg' => '--order-by <order>', 'desc' => 'Run tests in order: default|defects|depends|duration|no-depends|random|reverse|size'],
+                ['arg' => '--order-by <order>', 'desc' => 'Run tests in order: default|defects|depends|duration-ascending|duration-descending|no-depends|random|reverse|size-ascending|size-descending'],
                 ['arg' => '--resolve-dependencies', 'desc' => 'Alias for "--order-by depends"'],
                 ['arg' => '--ignore-dependencies', 'desc' => 'Alias for "--order-by no-depends"'],
                 ['arg' => '--random-order', 'desc' => 'Alias for "--order-by random"'],
@@ -255,6 +279,7 @@ final class Help
                 ['arg' => '--colors=<flag>', 'desc' => 'Use colors in output ("never", "auto" or "always")'],
                 ['arg'    => '--columns <n>', 'desc' => 'Number of columns to use for progress output'],
                 ['arg'    => '--columns max', 'desc' => 'Use maximum number of columns for progress output'],
+                ['arg'    => '--diff-context <n>', 'desc' => 'Number of context lines shown around changes in diffs (default: 3)'],
                 ['arg'    => '--stderr', 'desc' => 'Write to STDERR instead of STDOUT'],
                 ['spacer' => ''],
 
@@ -275,6 +300,7 @@ final class Help
                 ['arg'    => '--reverse-list', 'desc' => 'Print defects in reverse order'],
                 ['spacer' => ''],
 
+                ['arg'    => '--compact', 'desc' => 'Replace default progress and result output with compact format'],
                 ['arg'    => '--teamcity', 'desc' => 'Replace default progress and result output with TeamCity format'],
                 ['arg'    => '--testdox', 'desc' => 'Replace default result output with TestDox format'],
                 ['arg'    => '--testdox-summary', 'desc' => 'Repeat TestDox output for tests with errors, failures, or issues'],
@@ -310,8 +336,10 @@ final class Help
                 ['arg' => '--exclude-source-from-xml-coverage', 'desc' => 'Exclude <source> element from code coverage report in XML format'],
                 ['arg' => '--warm-coverage-cache', 'desc' => 'Warm static analysis cache'],
                 ['arg' => '--coverage-filter <dir>', 'desc' => 'Include <dir> in code coverage reporting'],
-                ['arg' => '--path-coverage', 'desc' => 'Report path coverage in addition to line coverage'],
+                ['arg' => '--branch-coverage', 'desc' => 'Report branch coverage in addition to line coverage'],
+                ['arg' => '--path-coverage', 'desc' => 'Report path coverage in addition to line/branch coverage'],
                 ['arg' => '--disable-coverage-ignore', 'desc' => 'Disable metadata for ignoring code coverage'],
+                ['arg' => '--disable-coverage-targeting', 'desc' => 'Disable metadata for code coverage targeting'],
                 ['arg' => '--no-coverage', 'desc' => 'Ignore code coverage reporting configured in the XML configuration file'],
             ],
             ...(defined('__PHPUNIT_PHAR__') ? ['PHAR' => [
