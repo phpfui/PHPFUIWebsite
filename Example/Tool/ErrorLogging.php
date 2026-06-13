@@ -161,6 +161,12 @@ class ErrorLogging
 
 		if (! self::$client)
 			{
+			$logFile = self::$settings->optional('logFile');
+			if (strlen($logFile))
+				{
+				file_put_contents($logFile, $message . "\n", FILE_APPEND);
+				}
+
 			return;
 			}
 
