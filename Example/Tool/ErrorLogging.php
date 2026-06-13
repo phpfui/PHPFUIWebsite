@@ -164,7 +164,7 @@ class ErrorLogging
 			$logFile = self::$settings->optional('logFile');
 			if (strlen($logFile))
 				{
-				file_put_contents($logFile, $message . "\n", FILE_APPEND);
+				file_put_contents($logFile, $message . "<br><br>\n\n", FILE_APPEND);
 				}
 
 			return;

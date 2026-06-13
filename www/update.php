@@ -9,3 +9,9 @@ $repo->run('pull');
 @\unlink('../FileManager.serial');
 @\unlink('../ChildClasses.serial');
 \header('location: /');
+$config = new \Example\Setting\Slack();
+$logFile = $config->optional('logFile');
+if ($logFile)
+	{
+	@\unlink($logFile)
+	}
