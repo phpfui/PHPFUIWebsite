@@ -2,12 +2,12 @@
 
 include '../common.php';
 
-\header('HTTP/1.1 404 Not Found');
-$page = new \PHPFUI\Page();
-$page->add(new \PHPFUI\SubHeader('Site is temporarily down for maintenance'));
-echo $page;
-
-exit();
+//\header('HTTP/1.1 404 Not Found');
+//$page = new \PHPFUI\Page();
+//$page->add(new \PHPFUI\SubHeader('Site is temporarily down for maintenance'));
+//echo $page;
+//
+//exit();
 
 \set_time_limit(99999);
 
