@@ -98,7 +98,7 @@ class PHPFUIPage implements \PHPFUI\Interfaces\NanoClass
 				$menu = $controller->getMenu();
 				$title = 'Tom Petty Buried Treasure Playlists';
 				$menuItem = new \PHPFUI\MenuItem($title, '#');
-				$menuItem->setLinkObject(new \PHPFUI\Link('https://www.phpfui.com/BuriedTreasure', $title));
+				$menuItem->setLinkObject(new \PHPFUI\Link('/BuriedTreasure', $title, false));
 				$menu->addMenuItem($menuItem);
 				}
 

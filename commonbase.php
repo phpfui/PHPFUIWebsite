@@ -1,23 +1,42 @@
 <?php
+
+define ('PROJECT_ROOT', __DIR__);
+define ('PUBLIC_ROOT', __DIR__ . '/www');
+
 // allow the autoloader and db to be included from any script that needs it.
-
-if (! defined('PROJECT_ROOT'))
+function classNameExists($className)
 	{
-	define ('PROJECT_ROOT', __DIR__);
-	define ('PUBLIC_ROOT', __DIR__ . '/www');
+	$dir = (strpos($className, '\\') === false) ? '\\NoNameSpace\\' : '\\';
+	$path = PROJECT_ROOT . $dir . "{$className}.php";
+	$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
 
-	// allow the autoloader to be included from any script that needs it.
-	function autoload(string $className) : void
-		{
-		$path = str_replace('\\', DIRECTORY_SEPARATOR, PROJECT_ROOT . "/{$className}.php");
-		if (file_exists($path))
-			{
-			@include_once $path;
-			}
-		}
-
-	spl_autoload_register('autoload');
-	$errorLogger = new \Example\Tool\ErrorLogging();
+	return is_file($path) ? $path : '';
 	}
 
+function autoload($className)
+	{
+	$path = classNameExists($className);
+	if ($path)
+		{
+		include $path;
+		}
+	}
+
+function emailServerName() : string
+	{
+	$parts = explode('.', $_SERVER['SERVER_NAME'] ?? 'localhost');
+	while(\count($parts) > 2)
+		{
+		array_shift($parts);
+		}
+	if (count($parts) == 1)
+		{
+		$parts[] = 'example';
+		}
+
+	return strtolower(implode('.', $parts));
+	}
+
+spl_autoload_register('autoload');
 date_default_timezone_set('America/New_York');
+$errorLogger = new \Example\Tool\ErrorLogging();

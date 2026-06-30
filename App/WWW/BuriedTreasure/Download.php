@@ -45,11 +45,11 @@ class Download extends \App\View\WWWBase implements \PHPFUI\Interfaces\NanoClass
 		{
 		$this->page->addHeader('Download Buried Treasure Data');
 		$ul = new \PHPFUI\UnorderedList();
-		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/Download/album', 'Albums', false)));
-		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/Download/artist', 'Artists', false)));
-		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/Download/episodes', 'Episodes', false)));
-		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/Download/show', 'Shows', false)));
-		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/Download/title', 'Titles', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Download/album', 'Albums', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Download/artist', 'Artists', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Download/episodes', 'Episodes', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Download/show', 'Shows', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Download/title', 'Titles', false)));
 		$this->page->addPageContent($ul);
 		}
 

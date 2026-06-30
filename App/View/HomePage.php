@@ -2,7 +2,7 @@
 
 namespace App\View;
 
-class HomePage extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
+class HomePage extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function __construct(\PHPFUI\Interfaces\NanoController $controller)
 		{

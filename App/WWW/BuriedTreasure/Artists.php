@@ -2,6 +2,6 @@
 
 namespace App\WWW;
 
-class Artists extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
+class Artists extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	}

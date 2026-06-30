@@ -2,6 +2,6 @@
 
 namespace App\WWW;
 
-class Titles extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
+class Titles extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	}

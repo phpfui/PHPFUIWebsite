@@ -2,7 +2,7 @@
 
 namespace App\WWW;
 
-class Shows extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
+class Shows extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function home() : void
 		{
@@ -15,7 +15,7 @@ class Shows extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoCl
 			{
 			$id = $row['showId'] - 1;
 
-			return new \PHPFUI\Link("/Shows/info/{$id}", $row['showId'], false);
+			return new \PHPFUI\Link("/BuriedTreasure/Shows/info/{$id}", $row['showId'], false);
 			});
 		$view->setSearchColumns($headers)->setHeaders($headers)->setSortableColumns($headers);
 
@@ -26,7 +26,7 @@ class Shows extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoCl
 		{
 		if (null === $showId)
 			{
-			$this->page->redirect('/Shows/info/0');
+			$this->page->redirect('/BuriedTreasure/Shows/info/0');
 
 			return;
 			}
@@ -54,9 +54,9 @@ class Shows extends \App\View\WWWPublicBase implements \PHPFUI\Interfaces\NanoCl
 		$view->alwaysShowPaginator(false);
 		$headers = ['sequence', 'title', 'artist', 'album'];
 		$view->setHeaders($headers);
-		$view->addCustomColumn('title', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Titles/shows/{$row['titleId']}", $row['title'], false));
-		$view->addCustomColumn('artist', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Artists/shows/{$row['artistId']}", $row['artist'], false));
-		$view->addCustomColumn('album', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Albums/shows/{$row['albumId']}", $row['album'], false));
+		$view->addCustomColumn('title', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Titles/shows/{$row['titleId']}", $row['title'], false));
+		$view->addCustomColumn('artist', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Artists/shows/{$row['artistId']}", $row['artist'], false));
+		$view->addCustomColumn('album', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Albums/shows/{$row['albumId']}", $row['album'], false));
 
 		$parts = \explode('\\', $view->getBaseUrl());
 		\array_pop($parts);

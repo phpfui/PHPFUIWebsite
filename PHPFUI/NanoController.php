@@ -45,6 +45,8 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 
 	private string $homePageClass = '';
 
+	private string $homePageUri = '';
+
 	private string $invokedPath = '';
 
 	private string $missingClass = '';
@@ -150,7 +152,7 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		$urlParts = \parse_url($this->uri);
 		$uri = \trim($urlParts['path'] ?? '', '/');
 
-		if ('' == $uri)
+		if ($this->homePageUri == $uri)
 			{
 			if ($this->homePageClass)
 				{
@@ -163,6 +165,9 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 		$parts = \explode('/', $uri);
 		$class = \explode('\\', $this->rootNamespace);
 
+		echo new \PHPFUI\Debug($parts);
+		echo new \PHPFUI\Debug($class);
+
 		foreach ($parts as $index => $method)
 			{
 			if (\strlen($method) && \ctype_lower($method[0]))
@@ -171,19 +176,30 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 
 				if ($classObject)
 					{
+					echo new \PHPFUI\Debug($classObject);
+					exit;
+
 					return $classObject;
 					}
+
+				echo new \PHPFUI\Debug('punt');
+				exit;
 
 				return $this->punt($class, $parts, $index - 1);
 				}
 			elseif (! \ctype_alpha($method[0] ?? ''))
 				{
 				// not alpha start, need to punt
+				echo new \PHPFUI\Debug('need to punt');
+				exit;
+
 				return $this->punt($class, $parts, $index);
 				}
 			// add the part the class
 			$class[] = $method;
 			}
+		echo new \PHPFUI\Debug('final punt');
+		exit;
 
 		return $this->punt($class, $parts, $index);
 		}
@@ -210,6 +226,16 @@ class NanoController implements \PHPFUI\Interfaces\NanoController
 	public function setHomePageClass(string $homePageClass = 'App\\HomePage') : static
 		{
 		$this->homePageClass = $homePageClass;
+
+		return $this;
+		}
+
+	/**
+	 * If no URI is equal to this, then display the homePageClass
+	 */
+	public function setHomePageUri(string $homePageUri = '') : static
+		{
+		$this->homePageUri = $homePageUri;
 
 		return $this;
 		}
