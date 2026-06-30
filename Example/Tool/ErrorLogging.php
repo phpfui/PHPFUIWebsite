@@ -162,7 +162,11 @@ class ErrorLogging
 		if (! self::$client)
 			{
 			$logFile = self::$settings->optional('logFile');
-			if (strlen($logFile))
+			if ($logFile === 'php://STDOUT')
+				{
+				echo $message . "<br><br>\n\n";
+				}
+			elseif (strlen($logFile))
 				{
 				file_put_contents($logFile, $message . "<br><br>\n\n", FILE_APPEND);
 				}

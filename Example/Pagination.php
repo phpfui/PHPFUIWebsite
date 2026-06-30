@@ -20,7 +20,7 @@ class Pagination extends \Example\Page
 		$a = $form->getAlwaysShow();
 		$this->addBody(new \PHPFUI\Header('Pagination Example'));
 
-		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/Pagination.php?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}&a={$a}");
+		$paginate = new \PHPFUI\Pagination($p, $o, "/Examples/pagination?p=PAGE&o={$o}&ff={$ff}&c={$c}&w={$w}&a={$a}");
 
 		if ($c)
 			{

@@ -86,7 +86,7 @@ class Page extends \PHPFUI\Page
 		$file = \array_pop($parts);
 		$class = \str_replace('.php', '', $file);
 
-		if (\ctype_upper($class[0]))
+		if (\ctype_lower($class[0]))
 			{
 			$this->setDebug(1);
 
@@ -171,22 +171,22 @@ class Page extends \PHPFUI\Page
 	public static function getMenu() : \PHPFUI\Menu
 		{
 		$options = [
-			'Abide' => '/Examples/Abide.php',
-			'Abide Validation' => '/Examples/AbideValidation.php',
-			'Accordion To From List' => '/Examples/AccordionToFromList.php',
-			'AutoComplete' => '/Examples/AutoComplete.php',
-			'CheckBoxMenu' => '/Examples/CheckBoxMenu.php',
-			'Composer Version Checker' => '/Examples/ComposerVersion.php',
-			'EMail Button Generator' => '/Examples/EMailButtonGenerator.php',
-			'GPX to Cue Sheet' => '/Examples/GPX2CueSheet.php',
-			'RWGPS to Cue Sheet' => '/Examples/RWGPS2CueSheet.php',
-			'Kitchen Sink' => '/Examples/KitchenSink.php',
-			'Orbit Carousel' => '/Examples/Orbit.php',
-			'Orderable Table' => '/Examples/OrderableTable.php',
-			'Pagination' => '/Examples/Pagination.php',
-			'SelectAutoComplete' => '/Examples/SelectAutoComplete.php',
-			'Sortable Table' => '/Examples/SortableTable.php',
-			'To From List' => '/Examples/ToFromList.php',
+			'Abide' => '/Examples/abide',
+			'Abide Validation' => '/Examples/abideValidation',
+			'Accordion To From List' => '/Examples/accordionToFromList',
+			'AutoComplete' => '/Examples/autoComplete',
+			'CheckBoxMenu' => '/Examples/checkBoxMenu',
+			'Composer Version Checker' => '/Examples/composerVersion',
+			'EMail Button Generator' => '/Examples/eMailButtonGenerator',
+			'GPX to Cue Sheet' => '/Examples/gPX2CueSheet',
+			'RWGPS to Cue Sheet' => '/Examples/rWGPS2CueSheet',
+			'Kitchen Sink' => '/Examples/kitchenSink',
+			'Orbit Carousel' => '/Examples/orbit',
+			'Orderable Table' => '/Examples/orderableTable',
+			'Pagination' => '/Examples/pagination',
+			'SelectAutoComplete' => '/Examples/selectAutoComplete',
+			'Sortable Table' => '/Examples/sortableTable',
+			'To From List' => '/Examples/toFromList',
 		];
 
 		$exampleMenu = new \PHPFUI\Menu();
@@ -195,7 +195,7 @@ class Page extends \PHPFUI\Page
 			{
 			$menuItem = new \PHPFUI\MenuItem($name, $url);
 
-			if (\str_contains($_SERVER['REQUEST_URI'], $url))
+			if ($_SERVER['REQUEST_URI'] == $url)
 				{
 				$menuItem->setActive();
 				}
@@ -216,7 +216,7 @@ class Page extends \PHPFUI\Page
 		$div = new \PHPFUI\HTML5Element('div');
 		$stickyTitleBar = new \PHPFUI\Sticky($div);
 		$link = new \PHPFUI\Link('/', 'PHPFUI', false);
-		$exampleLink = new \PHPFUI\Link('/Examples/index.php', 'Examples', false);
+		$exampleLink = new \PHPFUI\Link('/Examples/index', 'Examples', false);
 		$titleBar = new \PHPFUI\TitleBar($link . ' - ' . $exampleLink);
 		$hamburger = new \PHPFUI\FAIcon('fas', 'bars', '#');
 		$hamburger->addClass('show-for-small-only');

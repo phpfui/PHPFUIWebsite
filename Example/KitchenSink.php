@@ -66,7 +66,7 @@ class KitchenSink extends \Example\Page
 						$first = false;
 						$menu->addMenuItem(new \PHPFUI\MenuItem('Choose a Section'));
 						}
-					$menu->addMenuItem(new \PHPFUI\MenuItem($title, "/Examples/KitchenSink.php?dir={$title}"));
+					$menu->addMenuItem(new \PHPFUI\MenuItem($title, "/Examples/kitchenSink?dir={$title}"));
 					}
 				}
 			else
@@ -88,7 +88,7 @@ class KitchenSink extends \Example\Page
 			}
 		else
 			{
-			$this->sections->add(new \PHPFUI\Button('Back to the Future', '/Examples/KitchenSink.php'));
+			$this->sections->add(new \PHPFUI\Button('Back to the Future', '/Examples/kitchenSink'));
 			}
 		}
 

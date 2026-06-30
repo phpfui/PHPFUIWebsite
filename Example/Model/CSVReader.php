@@ -53,7 +53,7 @@ class CSVReader implements \Iterator
 
 		if ($this->fh)
 			{
-			$array = \fgetcsv($this->fh, 0, $this->delimiter);
+			$array = \fgetcsv($this->fh, 0, $this->delimiter, escape:"\\");
 
 			if ($array)
 				{
@@ -89,7 +89,7 @@ class CSVReader implements \Iterator
 
 		if ($this->fh && $this->headerRow)
 			{
-			$this->headers = \fgetcsv($this->fh, 0, $this->delimiter);
+			$this->headers = \fgetcsv($this->fh, 0, $this->delimiter, escape:"\\");
 			}
 		$this->next();
 		}
