@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WWW;
+namespace App\WWW\BuriedTreasure;
 
-class ContactUs extends \App\View\WWWBase implements \PHPFUI\Interfaces\NanoClass
+class ContactUs extends \App\View\BuriedTreasure\WWWBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function home() : void
 		{

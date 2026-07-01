@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WWW\Admin;
+namespace App\WWW\BuriedTreasure\Admin;
 
-class Shows extends \App\View\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
+class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function edit(\App\Record\Show $show = new \App\Record\Show()) : void
 		{

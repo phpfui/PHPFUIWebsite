@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WWW\Admin;
+namespace App\WWW\BuriedTreasure\Admin;
 
-class Albums extends \App\View\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
+class Albums extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function edit(\App\Record\Album $album = new \App\Record\Album()) : void
 		{

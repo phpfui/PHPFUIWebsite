@@ -56,7 +56,7 @@ class WWWPublicBase extends WWWBase implements \Stringable
 				continue;
 				}
 			$plural = \ucfirst($field . 's');
-			$view->addCustomColumn($field, static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/$plural}/shows/" . $row[$field . 'Id'], $row[$field], false));
+			$view->addCustomColumn($field, static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/{$plural}/shows/" . $row[$field . 'Id'], $row[$field], false));
 			}
 		$view->addCustomColumn('showId', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link('/BuriedTreasure/Shows/info/' . ($row['showId'] - 1), $row['showId'], false));
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WWW;
+namespace App\WWW\BuriedTreasure;
 
-class Download extends \App\View\WWWBase implements \PHPFUI\Interfaces\NanoClass
+class Download extends \App\View\BuriedTreasure\WWWBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function album() : void
 		{

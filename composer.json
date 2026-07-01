@@ -4,6 +4,7 @@
 		"alek13/slack": "^2.2",
 		"composer/semver": ">=3.2",
 		"druidfi/mysqldump-php": "^2.0",
+		"google/cloud-recaptcha-enterprise": "^2.0",
 		"league/geotools": "^1.0",
 		"nikic/php-parser": "^5.0",
 		"nxp/math-executor": ">=2.0",
@@ -21,8 +22,12 @@
 		"symfony/dependency-injection": "^8.0",
 		"voku/portable-utf8": "^6.0",
 		"zbateson/mail-mime-parser": "^4.0",
-		"google/cloud-recaptcha-enterprise": "^2.0"
-	},
+		"cebe/markdown": "^1.2",
+		"gitonomy/gitlib": "^1.3",
+		"guzzlehttp/guzzle": "^7.5",
+		"laminas/laminas-uri": "^2.10",
+		"psr-php7/log": "^1.0"
+		},
 	"config": {
 		"allow-plugins": {
 			"php-http/discovery": true

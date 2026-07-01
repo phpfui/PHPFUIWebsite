@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WWW;
+namespace App\WWW\BuriedTreasure;
 
 class Shows extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\Interfaces\NanoClass
 	{

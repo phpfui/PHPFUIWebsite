@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WWW\Admin;
+namespace App\WWW\BuriedTreasure\Admin;
 
-class Titles extends \App\View\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
+class Titles extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Interfaces\NanoClass
 	{
 	public function edit(\App\Record\Title $title = new \App\Record\Title()) : void
 		{
