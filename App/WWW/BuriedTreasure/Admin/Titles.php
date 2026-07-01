@@ -15,7 +15,7 @@ class Titles extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\In
 
 		$this->addHeaderFromMethod(__METHOD__, $title->title);
 
-		$view = new \App\View\Edit($this->page);
+		$view = new \App\View\BuriedTreasure\Edit($this->page);
 		$this->page->addPageContent($view->edit($title));
 		}
 
@@ -23,7 +23,7 @@ class Titles extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\In
 		{
 		$this->page->addHeader('Merge Titles');
 
-		$view = new \App\View\Cleanup($this->page, new \App\Table\Title());
+		$view = new \App\View\BuriedTreasure\Cleanup($this->page, new \App\Table\Title());
 		$this->page->addPageContent($view->list());
 		}
 	}

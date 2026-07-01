@@ -15,7 +15,7 @@ class Artists extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\I
 
 		$this->addHeaderFromMethod(__METHOD__, $artist->artist);
 
-		$view = new \App\View\Edit($this->page);
+		$view = new \App\View\BuriedTreasure\Edit($this->page);
 		$this->page->addPageContent($view->edit($artist));
 		}
 
@@ -23,7 +23,7 @@ class Artists extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\I
 		{
 		$this->page->addHeader('Merge Artists');
 
-		$view = new \App\View\Cleanup($this->page, new \App\Table\Artist());
+		$view = new \App\View\BuriedTreasure\Cleanup($this->page, new \App\Table\Artist());
 		$this->page->addPageContent($view->list());
 		}
 	}

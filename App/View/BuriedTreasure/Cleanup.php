@@ -100,7 +100,7 @@ class Cleanup
 
 		foreach ($rows as $row)
 			{
-			$results[] = new \PHPFUI\Link("/Admin/{$url}s/edit/{$row[$currentField . 'Id']}", $row[$currentField], false);
+			$results[] = new \PHPFUI\Link("/BuriedTreasure/Admin/{$url}s/edit/{$row[$currentField . 'Id']}", $row[$currentField], false);
 			}
 
 		return \implode('<br>', $results);
@@ -121,7 +121,7 @@ class Cleanup
 		{
 		$url = \ucfirst($this->lcType);
 
-		return new \PHPFUI\Link("/Admin/{$url}s/edit/{$row[$this->lcType . 'Id']}", $row[$this->lcType], false);
+		return new \PHPFUI\Link("/BuriedTreasure/Admin/{$url}s/edit/{$row[$this->lcType . 'Id']}", $row[$this->lcType], false);
 		}
 
 	/**

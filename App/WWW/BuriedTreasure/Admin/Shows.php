@@ -15,7 +15,7 @@ class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Int
 
 		$this->addHeaderFromMethod(__METHOD__, 'Show ' . $show->showId);
 
-		$view = new \App\View\Show($this->page);
+		$view = new \App\View\BuriedTreasure\Show($this->page);
 		$this->page->addPageContent($view->edit($show));
 		}
 
@@ -26,14 +26,14 @@ class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Int
 
 		if (! $showSequence->loaded())
 			{
-			$this->page->redirect('/Admin/Shows/0');
+			$this->page->redirect('/BuriedTreasure/Admin/Shows/0');
 
 			return;
 			}
 
 		$this->addHeaderFromMethod(__METHOD__, "{$showSequence->showId} Position {$showSequence->sequence}");
 
-		$view = new \App\View\Show($this->page);
+		$view = new \App\View\BuriedTreasure\Show($this->page);
 		$this->page->addPageContent($view->editSequence($showSequence));
 		}
 
@@ -41,7 +41,7 @@ class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Int
 		{
 		if (null === $showId)
 			{
-			$this->page->redirect('/Admin/Shows/0');
+			$this->page->redirect('/BuriedTreasure/Admin/Shows/0');
 
 			return;
 			}
@@ -69,10 +69,10 @@ class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Int
 		$view->alwaysShowPaginator(false);
 		$headers = ['sequence', 'title', 'artist', 'album'];
 		$view->setHeaders($headers);
-		$view->addCustomColumn('sequence', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Admin/Shows/editSequence/{$row['showId']}/{$row['sequence']}", $row['sequence'], false));
-		$view->addCustomColumn('title', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Admin/Titles/edit/{$row['titleId']}", $row['title'], false));
-		$view->addCustomColumn('artist', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Admin/Artists/edit/{$row['artistId']}", $row['artist'], false));
-		$view->addCustomColumn('album', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/Admin/Albums/edit/{$row['albumId']}", $row['album'], false));
+		$view->addCustomColumn('sequence', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Admin/Shows/editSequence/{$row['showId']}/{$row['sequence']}", $row['sequence'], false));
+		$view->addCustomColumn('title', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Admin/Titles/edit/{$row['titleId']}", $row['title'], false));
+		$view->addCustomColumn('artist', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Admin/Artists/edit/{$row['artistId']}", $row['artist'], false));
+		$view->addCustomColumn('album', static fn (array $row) : \PHPFUI\Link => new \PHPFUI\Link("/BuriedTreasure/Admin/Albums/edit/{$row['albumId']}", $row['album'], false));
 
 		$parts = \explode('\\', $view->getBaseUrl());
 		\array_pop($parts);
@@ -83,7 +83,7 @@ class Shows extends \App\View\BuriedTreasure\WWWAdminBase implements \PHPFUI\Int
 		$paginator->setFastForward(25);
 		$this->page->addPageContent($paginator);
 
-		$episodeView = new \App\View\Episode($this->page);
+		$episodeView = new \App\View\BuriedTreasure\Episode($this->page);
 		$this->page->addPageContent($episodeView->edit($show));
 
 		$this->page->addPageContent($view);
