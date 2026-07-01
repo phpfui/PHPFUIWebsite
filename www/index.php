@@ -10,7 +10,7 @@ $controller = new \PHPFUI\NanoController($uri);
 
 if (str_starts_with($uri, '/BuriedTreasure'))
 	{
-	$path = __DIR__ . '/data/buriedtreasure.sqlite';
+	$path = __DIR__ . '/../data/buriedtreasure.sqlite';
 	\PHPFUI\ORM::addConnection(new \PHPFUI\ORM\PDOInstance('sqlite:' . $path));
 	\PHPFUI\ORM::setLogger(new \PHPFUI\ORM\StandardErrorLogger());
 	\PHPFUI\Translation\Translator::setTranslationDirectory(__DIR__ . '/languages');
