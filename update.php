@@ -62,11 +62,11 @@ exec($composer . ' self-update');
 include 'commonbase.php';
 
 //// get the latest
-$repo = new \Gitonomy\Git\Repository(__DIR__);
+$repo = new \Gitonomy\Git\Repository(__DIR__, ['logger' => $errorLogger]);
 $repo->run('checkout', ['master']);
 $repo->run('pull');
 
-$updater = new ComposerUpdate();
+$updater = new \ComposerUpdate();
 exec($composer . ' update');
 
 // Localize files

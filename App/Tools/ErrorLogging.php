@@ -1,8 +1,8 @@
 <?php
 
-namespace Example\Tool;
+namespace App\Tools;
 
-class ErrorLogging
+class ErrorLogging implements \Psr\Log\LoggerInterface
 	{
 	private static ?\Maknz\Slack\Client $client = null;
 
@@ -20,12 +20,116 @@ class ErrorLogging
 
 	public function __construct()
 		{
-		self::$settings = new \Example\Setting\Slack();
 		\register_shutdown_function([self::class, 'check_for_fatal']);
 		\set_error_handler([self::class, 'log_error'], \E_ALL);
 		\set_exception_handler([self::class, 'log_exception']);
 //		\ini_set('display_errors', 'off');
 		\error_reporting(\E_ALL);
+		self::$settings = new \Example\Setting\Slack();
+		}
+
+	/**
+	 * System is unusable.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function emergency(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Action must be taken immediately.
+	 *
+	 * Example: Entire website down, database unavailable, etc. This should
+	 * trigger the SMS alerts and wake you up.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function alert(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Critical conditions.
+	 *
+	 * Example: Application component unavailable, unexpected exception.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function critical(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Runtime errors that do not require immediate action but should typically
+	 * be logged and monitored.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function error(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Exceptional occurrences that are not errors.
+	 *
+	 * Example: Use of deprecated APIs, poor use of an API, undesirable things
+	 * that are not necessarily wrong.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function warning(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Normal but significant events.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function notice(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Interesting events.
+	 *
+	 * Example: User logs in, SQL logs.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function info(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Detailed debug information.
+	 *
+	 * @param mixed[] $context
+	 */
+	public function debug(string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
+		}
+
+	/**
+	 * Logs with an arbitrary level.
+	 *
+	 * @param mixed $level
+	 * @param mixed[] $context
+	 *
+	 * @throws \Psr\Log\InvalidArgumentException
+	 */
+	public function log($level, string|\Stringable $message, array $context = []): void
+		{
+		self::sendMessage((string)$message, __METHOD__);
 		}
 
 	/**
@@ -48,7 +152,7 @@ class ErrorLogging
 		self::$messages = [];
 		}
 
-	public static function debug(mixed $message, string $location = '') : void
+	public static function debugIt(mixed $message, string $location = '') : void
 		{
 		if (empty(self::$settings->optional('debug')))
 			{
@@ -162,11 +266,7 @@ class ErrorLogging
 		if (! self::$client)
 			{
 			$logFile = self::$settings->optional('logFile');
-			if ($logFile === 'php://STDOUT')
-				{
-				echo $message . "<br><br>\n\n";
-				}
-			elseif (strlen($logFile))
+			if (strlen($logFile))
 				{
 				file_put_contents($logFile, $message . "<br><br>\n\n", FILE_APPEND);
 				}
@@ -182,11 +282,6 @@ class ErrorLogging
 		catch (\Exception $e)
 			{
 			}
-		}
-
-	public static function warning(string $message) : void
-		{
-		self::sendMessage($message, 'warning');
 		}
 
 	private static function initialize() : void

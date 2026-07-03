@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace Example\Tool;
 
 class SessionManager
 	{
@@ -37,7 +37,7 @@ class SessionManager
 			\session_start();
 			\PHPFUI\Session::cycleFlash();
 			}
-		catch (\Exception)
+		catch (\Exception $e)
 			{
 			$_SESSION = [];
 			\session_write_close();

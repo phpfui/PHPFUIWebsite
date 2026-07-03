@@ -2,4 +2,4 @@
 
 include '../common.php';
 
-\Example\Tool\SessionManager::purgeOld();
+\App\Tools\SessionManager::purgeOld();

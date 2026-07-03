@@ -6,8 +6,7 @@ define ('PUBLIC_ROOT', __DIR__ . '/www');
 // allow the autoloader and db to be included from any script that needs it.
 function classNameExists($className)
 	{
-	$dir = (strpos($className, '\\') === false) ? '\\NoNameSpace\\' : '\\';
-	$path = PROJECT_ROOT . $dir . "{$className}.php";
+	$path = PROJECT_ROOT . "\\{$className}.php";
 	$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
 
 	return is_file($path) ? $path : '';
@@ -39,4 +38,4 @@ function emailServerName() : string
 
 spl_autoload_register('autoload');
 date_default_timezone_set('America/New_York');
-$errorLogger = new \Example\Tool\ErrorLogging();
+$errorLogger = new \App\Tools\ErrorLogging();
