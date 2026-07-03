@@ -2,7 +2,7 @@
 
 include '../common.php';
 
-$repo = new \Gitonomy\Git\Repository(PROJECT_ROOT);
+$repo = new \Gitonomy\Git\Repository(PROJECT_ROOT, ['logger' => $errorLogger]);
 $wc = $repo->getWorkingCopy();
 $wc->checkout('master');
 $repo->run('pull');
@@ -13,5 +13,5 @@ $config = new \Example\Setting\Slack();
 $logFile = $config->optional('logFile');
 if ($logFile)
 	{
-	@\unlink($logFile)
+	@\unlink($logFile);
 	}

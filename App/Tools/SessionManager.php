@@ -1,6 +1,6 @@
 <?php
 
-namespace Example\Tool;
+namespace App\Tools;
 
 class SessionManager
 	{

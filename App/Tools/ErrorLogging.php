@@ -266,9 +266,13 @@ class ErrorLogging implements \Psr\Log\LoggerInterface
 		if (! self::$client)
 			{
 			$logFile = self::$settings->optional('logFile');
-			if (strlen($logFile))
+			if ('php://STDOUT' == $logFile)
 				{
-				file_put_contents($logFile, $message . "<br><br>\n\n", FILE_APPEND);
+				echo $message . "<br>\n";
+				}
+			elseif (strlen($logFile))
+				{
+				file_put_contents ($logFile, $message . "<br><br>\n\n", FILE_APPEND);
 				}
 
 			return;
