@@ -2,6 +2,8 @@
 
 include '../common.php';
 
+\App\Tools\SessionManager::purgeOld();
+
 $repo = new \Gitonomy\Git\Repository(PROJECT_ROOT, ['logger' => $errorLogger]);
 $wc = $repo->getWorkingCopy();
 $wc->checkout('master');
