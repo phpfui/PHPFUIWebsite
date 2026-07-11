@@ -13,6 +13,7 @@ class SessionManager
 		{
 		$endTime = \time() - $secondsBack;
 
+		$count = 0;
 		$dir = self::getDirectory();
 		for($i = 0; $i < 256; ++$i)
 			{
@@ -21,9 +22,11 @@ class SessionManager
 				if (\filemtime($file) < $endTime)
 					{
 					\unlink($file);
+					++$count;
 					}
 				}
 			}
+		echo "Purged {$count} session files";
 		}
 
 	public static function start() : void
