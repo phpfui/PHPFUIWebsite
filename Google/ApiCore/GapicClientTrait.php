@@ -158,6 +158,16 @@ trait GapicClientTrait
     }
 
     /**
+     * Get the default scopes required by the service.
+     *
+     * @return array
+     */
+    public static function getServiceScopes(): array
+    {
+        return self::$serviceScopes;
+    }
+
+    /**
      * Initiates an orderly shutdown in which preexisting calls continue but new
      * calls are immediately cancelled.
      *
@@ -344,10 +354,18 @@ trait GapicClientTrait
                 $options['credentialsConfig']['quotaProject'] ?? null
             );
         } else {
+            $enableRegionalAccessBoundary = filter_var(
+                getenv('GOOGLE_AUTH_TRUST_BOUNDARY_ENABLE_EXPERIMENT'),
+                FILTER_VALIDATE_BOOLEAN
+            );
+            $isRegional = str_ends_with($options['apiEndpoint'], '.rep.googleapis.com')
+                || str_ends_with($options['apiEndpoint'], '.rep.sandbox.googleapis.com');
             $this->credentialsWrapper = $this->createCredentialsWrapper(
                 $options['credentials'],
-                $options['credentialsConfig'],
-                $options['universeDomain']
+                $options['credentialsConfig'] + [
+                    'enableRegionalAccessBoundary' => $enableRegionalAccessBoundary && !$isRegional
+                ],
+                $options['universeDomain'],
             );
         }
 
