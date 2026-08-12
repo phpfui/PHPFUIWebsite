@@ -77,6 +77,7 @@ use ReflectionMethod;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
 use SebastianBergmann\Comparator\Comparator;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
+use SebastianBergmann\Exporter\ObjectExporter;
 use SebastianBergmann\Invoker\TimeoutException;
 use SebastianBergmann\ObjectEnumerator\Enumerator;
 use Throwable;
@@ -146,7 +147,12 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     /**
      * @var list<Comparator>
      */
-    private array $customComparators                         = [];
+    private array $customComparators = [];
+
+    /**
+     * @var list<ObjectExporter>
+     */
+    private array $customObjectExporters                     = [];
     private ?Event\Code\TestMethod $testValueObjectForEvents = null;
     private bool $wasPrepared                                = false;
 
@@ -166,6 +172,26 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     private array $expectedUserDeprecationMessageRegularExpression = [];
     private ?string $emptyDataProviderSkipMessage                  = null;
     private ?Throwable $throwableFromDeferredIssue                 = null;
+
+    /**
+     * @var positive-int
+     */
+    private int $repetition = 1;
+
+    /**
+     * @var positive-int
+     */
+    private int $totalRepetitions = 1;
+
+    /**
+     * @var positive-int
+     */
+    private int $attempt = 1;
+
+    /**
+     * @var positive-int
+     */
+    private int $maxAttempts = 1;
 
     /**
      * @param non-empty-string $name
@@ -623,7 +649,9 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
                 $this->valueObjectForEvents(),
             );
 
-            if (!$this->usesDataProvider()) {
+            // a repeated test method is registered as passed once all of its
+            // repetitions have finished without failure or error
+            if (!$this->usesDataProvider() && $this->totalRepetitions === 1) {
                 PassedTests::instance()->testMethodPassed(
                     $this->valueObjectForEvents(),
                     $this->testResult,
@@ -652,6 +680,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         $this->globalStateCapture->restoreErrorHandlers($this, $emitter, $this->inIsolation);
         $this->globalStateCapture->restoreGlobals($this, $emitter);
         $this->unregisterCustomComparators();
+        $this->unregisterCustomObjectExporters();
         libxml_clear_errors();
 
         $this->testValueObjectForEvents = null;
@@ -978,6 +1007,96 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     }
 
     /**
+     * @return positive-int
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function repetition(): int
+    {
+        return $this->repetition;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function totalRepetitions(): int
+    {
+        return $this->totalRepetitions;
+    }
+
+    /**
+     * @param positive-int $repetition
+     * @param positive-int $totalRepetitions
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function setRepetition(int $repetition, int $totalRepetitions): void
+    {
+        $this->repetition       = $repetition;
+        $this->totalRepetitions = $totalRepetitions;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function attempt(): int
+    {
+        return $this->attempt;
+    }
+
+    /**
+     * @return positive-int
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function maxAttempts(): int
+    {
+        return $this->maxAttempts;
+    }
+
+    /**
+     * @param positive-int $attempt
+     * @param positive-int $maxAttempts
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function setAttempt(int $attempt, int $maxAttempts): void
+    {
+        $this->attempt     = $attempt;
+        $this->maxAttempts = $maxAttempts;
+    }
+
+    /**
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function setStatus(TestStatus $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function markSkippedForRepeatAbort(int $failedRepetition): void
+    {
+        $message = sprintf(
+            'Remaining repetition skipped after failure in repetition %d',
+            $failedRepetition,
+        );
+
+        Event\Facade::emitter()->testSkipped(
+            $this->valueObjectForEvents(),
+            $message,
+        );
+
+        $this->status = TestStatus::skipped($message);
+    }
+
+    /**
      * Returns a matcher that matches when the method is executed
      * zero or more times.
      *
@@ -1067,14 +1186,12 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
 
     final protected function expectOutputRegex(string $expectedRegex): void
     {
-        $this->warnAboutMultipleOutputExpectations();
-
         $this->outputBuffer->expectRegularExpression($expectedRegex);
     }
 
     final protected function expectOutputString(string $expectedString): void
     {
-        $this->warnAboutMultipleOutputExpectations();
+        $this->warnAboutConflictingOutputStringExpectation($expectedString);
 
         $this->outputBuffer->expectString($expectedString);
     }
@@ -1174,6 +1291,13 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         Event\Facade::emitter()->testRegisteredComparator($comparator::class);
 
         $this->customComparators[] = $comparator;
+    }
+
+    final protected function registerObjectExporter(ObjectExporter $objectExporter): void
+    {
+        Exporter::registerObjectExporter($objectExporter);
+
+        $this->customObjectExporters[] = $objectExporter;
     }
 
     /**
@@ -1347,15 +1471,11 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         $testArguments = array_merge($this->data, array_values($this->dependencyInput));
 
-        $this->errorLogCapture->start();
-
         try {
             $testResult = $this->invokeTestMethod($this->methodName, $testArguments);
 
             $this->errorLogCapture->verify();
         } catch (Throwable $exception) {
-            $this->errorLogCapture->handleError();
-
             if (!$this->exceptionExpectation->shouldBeVerifiedFor($exception)) {
                 throw $exception;
             }
@@ -1644,6 +1764,15 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         $this->customComparators = [];
     }
 
+    private function unregisterCustomObjectExporters(): void
+    {
+        foreach ($this->customObjectExporters as $objectExporter) {
+            Exporter::unregisterObjectExporter($objectExporter);
+        }
+
+        $this->customObjectExporters = [];
+    }
+
     private function shouldRunInSeparateProcess(): bool
     {
         if ($this->inIsolation) {
@@ -1713,12 +1842,12 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         );
     }
 
-    private function warnAboutMultipleOutputExpectations(): void
+    private function warnAboutConflictingOutputStringExpectation(string $expectedString): void
     {
-        if ($this->outputBuffer->hasExpectation()) {
+        if ($this->outputBuffer->conflictsWithExpectedString($expectedString)) {
             Event\Facade::emitter()->testTriggeredPhpunitWarning(
                 $this->valueObjectForEvents(),
-                'Only one expectation on output can be configured: expectOutputString() and expectOutputRegex() cannot be combined and must not be called more than once',
+                'Output cannot be expected to be identical to more than one string; expectOutputString() was already called with a different argument',
             );
         }
     }

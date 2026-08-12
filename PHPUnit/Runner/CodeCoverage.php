@@ -10,7 +10,9 @@
 namespace PHPUnit\Runner;
 
 use function assert;
+use function class_exists;
 use function implode;
+use function is_subclass_of;
 use function sprintf;
 use function sys_get_temp_dir;
 use DateTimeImmutable;
@@ -20,6 +22,7 @@ use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
 use PHPUnit\TextUI\Configuration\Configuration;
 use PHPUnit\TextUI\Output\Printer;
 use PHPUnit\Util\Filesystem;
+use ReflectionClass;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Driver\Granularity;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
@@ -28,6 +31,7 @@ use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\Facade as ReportFacade;
 use SebastianBergmann\CodeCoverage\Report\Html\Colors;
 use SebastianBergmann\CodeCoverage\Report\Html\CustomCssFile;
+use SebastianBergmann\CodeCoverage\Report\Html\Views;
 use SebastianBergmann\CodeCoverage\Report\Thresholds;
 use SebastianBergmann\CodeCoverage\Serialization\Serializer;
 use SebastianBergmann\CodeCoverage\StaticAnalysis\CacheWarmer;
@@ -76,16 +80,23 @@ final class CodeCoverage
 
     public function init(Configuration $configuration, CodeCoverageFilterRegistry $codeCoverageFilterRegistry, bool $extensionRequiresCodeCoverageCollection): CodeCoverageInitializationStatus
     {
-        $codeCoverageFilterRegistry->init($configuration);
+        $codeCoverageFilterRegistry->init($configuration, $extensionRequiresCodeCoverageCollection);
 
         if (!$configuration->hasCoverageReport() && !$extensionRequiresCodeCoverageCollection) {
             return CodeCoverageInitializationStatus::NOT_REQUESTED;
+        }
+
+        $coverageDriver = null;
+
+        if ($configuration->hasCoverageDriver()) {
+            $coverageDriver = $configuration->coverageDriver();
         }
 
         $this->activate(
             $codeCoverageFilterRegistry->get(),
             $configuration->branchCoverage(),
             $configuration->pathCoverage(),
+            $coverageDriver,
         );
 
         if (!$this->isActive()) {
@@ -388,6 +399,14 @@ final class CodeCoverage
                     $customCssFile = CustomCssFile::from($configuration->coverageHtmlCustomCssFile());
                 }
 
+                if ($configuration->coverageHtmlClassView() && $configuration->coverageHtmlFileView()) {
+                    $views = Views::FileViewAndClassView;
+                } elseif ($configuration->coverageHtmlClassView()) {
+                    $views = Views::OnlyClassView;
+                } else {
+                    $views = Views::OnlyFileView;
+                }
+
                 $facade->renderHtml(
                     $configuration->coverageHtml(),
                     sprintf(
@@ -419,6 +438,7 @@ final class CodeCoverage
                         $configuration->coverageHtmlHighLowerBound(),
                     ),
                     $customCssFile,
+                    $views,
                 );
 
                 $this->codeCoverageGenerationSucceeded($printer);
@@ -476,6 +496,23 @@ final class CodeCoverage
         }
     }
 
+    public function warnAboutFilesThatCouldNotBeParsed(): void
+    {
+        if (!$this->isActive()) {
+            return;
+        }
+
+        foreach ($this->codeCoverage->parseErrors() as $file => $message) {
+            EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                sprintf(
+                    'Cannot parse %s (%s), code coverage for this file is based on raw data reported by the code coverage driver',
+                    $file,
+                    $message,
+                ),
+            );
+        }
+    }
+
     public function warnIfFilterIsNotConfigured(CodeCoverageFilterRegistry $codeCoverageFilterRegistry, Configuration $configuration): void
     {
         if (!$codeCoverageFilterRegistry->get()->isEmpty()) {
@@ -512,7 +549,7 @@ final class CodeCoverage
         $this->deactivate();
     }
 
-    private function activate(Filter $filter, bool $branchCoverage, bool $pathCoverage): void
+    private function activate(Filter $filter, bool $branchCoverage, bool $pathCoverage, ?string $driverClass = null): void
     {
         try {
             $granularity = Granularity::Line;
@@ -522,19 +559,15 @@ final class CodeCoverage
             }
 
             if ($pathCoverage) {
-                $granularity = Granularity::LineBranchAndPath;
-            }
-
-            /**
-             * @todo This needs to be removed once code coverage drivers are supported that can collect branch coverage without path coverage
-             */
-            if ($branchCoverage || $pathCoverage) {
                 $branchCoverage = true;
-                $pathCoverage   = true;
                 $granularity    = Granularity::LineBranchAndPath;
             }
 
-            $this->driver = (new Selector)->select($filter, $granularity);
+            if ($driverClass !== null) {
+                $this->driver = $this->instantiateDriver($driverClass, $filter, $granularity);
+            } else {
+                $this->driver = (new Selector)->select($filter, $granularity);
+            }
 
             $this->codeCoverage = new \SebastianBergmann\CodeCoverage\CodeCoverage(
                 $this->driver,
@@ -552,6 +585,60 @@ final class CodeCoverage
 
             EventFacade::emitter()->testRunnerTriggeredPhpunitWarning($message);
         }
+    }
+
+    /**
+     * @phpstan-ignore return.internalClass
+     */
+    private function instantiateDriver(string $driverClass, Filter $filter, Granularity $granularity): Driver
+    {
+        if (!class_exists($driverClass)) {
+            throw new CodeCoverageDriverException(
+                sprintf(
+                    'Configured code coverage driver class "%s" does not exist',
+                    $driverClass,
+                ),
+            );
+        }
+
+        /** @phpstan-ignore classConstant.internalClass */
+        if (!is_subclass_of($driverClass, Driver::class)) {
+            throw new CodeCoverageDriverException(
+                sprintf(
+                    'Configured code coverage driver class "%s" does not extend %s',
+                    $driverClass,
+                    /** @phpstan-ignore classConstant.internalClass */
+                    Driver::class,
+                ),
+            );
+        }
+
+        $reflection = new ReflectionClass($driverClass);
+
+        if (!$reflection->isInstantiable()) {
+            throw new CodeCoverageDriverException(
+                sprintf(
+                    'Configured code coverage driver class "%s" is not instantiable',
+                    $driverClass,
+                ),
+            );
+        }
+
+        $constructor = $reflection->getConstructor();
+
+        if ($constructor !== null && $constructor->getNumberOfRequiredParameters() > 0) {
+            $driver = $reflection->newInstance($filter);
+        } else {
+            $driver = $reflection->newInstance();
+        }
+
+        /** @phpstan-ignore instanceof.internalClass */
+        assert($driver instanceof Driver);
+
+        /** @phpstan-ignore method.internalClass */
+        $driver->setGranularity($granularity);
+
+        return $driver;
     }
 
     private function codeCoverageGenerationStart(Printer $printer, string $format): void

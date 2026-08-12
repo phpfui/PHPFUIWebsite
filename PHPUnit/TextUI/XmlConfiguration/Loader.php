@@ -110,6 +110,7 @@ final readonly class Loader
 
         try {
             $xsdFilename = (new SchemaFinder)->find(Version::series());
+            // @codeCoverageIgnoreStart
         } catch (CannotFindSchemaException $e) {
             throw new Exception(
                 $e->getMessage(),
@@ -117,6 +118,7 @@ final readonly class Loader
                 $e,
             );
         }
+        // @codeCoverageIgnoreEnd
 
         $configurationFileRealpath = realpath($filename);
 
@@ -408,6 +410,23 @@ final readonly class Loader
             $issueTriggerResolvers[] = $className;
         }
 
+        $deprecationFilters     = [];
+        $deprecationFilterNodes = $xpath->query('source/deprecationFilters/deprecationFilter');
+
+        assert($deprecationFilterNodes instanceof DOMNodeList);
+
+        foreach ($deprecationFilterNodes as $node) {
+            assert($node instanceof DOMElement);
+
+            $className = $node->getAttribute('className');
+
+            if ($className === '') {
+                continue;
+            }
+
+            $deprecationFilters[] = $className;
+        }
+
         return new Source(
             $baseline,
             false,
@@ -430,11 +449,13 @@ final readonly class Loader
             $ignoreIndirectDeprecations,
             $identifyIssueTrigger,
             $issueTriggerResolvers,
+            $deprecationFilters,
         );
     }
 
     private function codeCoverage(string $filename, DOMXPath $xpath): CodeCoverage
     {
+        $driver                    = null;
         $pathCoverage              = false;
         $branchCoverage            = false;
         $includeUncoveredFiles     = true;
@@ -444,6 +465,8 @@ final readonly class Loader
         $element = $this->element($xpath, 'coverage');
 
         if ($element !== null) {
+            $driver = $this->parseStringAttribute($element, 'driver');
+
             $pathCoverage = $this->parseBooleanAttribute(
                 $element,
                 'pathCoverage',
@@ -537,6 +560,8 @@ final readonly class Loader
 
             $html = new CodeCoverageHtml(
                 $outputDirectory,
+                $this->parseBooleanAttribute($element, 'classView', true),
+                $this->parseBooleanAttribute($element, 'fileView', true),
                 $this->parseNonNegativeIntegerAttribute($element, 'lowUpperBound', max(0, $defaultThresholds->lowUpperBound())),
                 $this->parseNonNegativeIntegerAttribute($element, 'highLowerBound', max(0, $defaultThresholds->highLowerBound())),
                 $this->parseColorAttributeWithDefault($element, 'colorSuccessLow', $defaultColors->successLow()),
@@ -621,6 +646,7 @@ final readonly class Loader
         }
 
         return new CodeCoverage(
+            $driver,
             $pathCoverage,
             $branchCoverage,
             $includeUncoveredFiles,
@@ -776,6 +802,23 @@ final readonly class Loader
         );
     }
 
+    private function parseRecordTestRunHistoryAttribute(DOMElement $element): bool
+    {
+        if ($element->hasAttribute('recordTestRunHistory')) {
+            return $this->parseBooleanAttribute($element, 'recordTestRunHistory', true);
+        }
+
+        if ($element->hasAttribute('cacheResult')) {
+            EventFacade::emitter()->testRunnerTriggeredPhpunitDeprecation(
+                'The "cacheResult" attribute is deprecated and will be removed in PHPUnit 14. Use "recordTestRunHistory" instead.',
+            );
+
+            return $this->parseBooleanAttribute($element, 'cacheResult', true);
+        }
+
+        return true;
+    }
+
     private function parseBooleanAttribute(DOMElement $element, string $attribute, bool $default): bool
     {
         if (!$element->hasAttribute($attribute)) {
@@ -886,9 +929,11 @@ final readonly class Loader
      */
     private function parseColorAttributeWithDefault(DOMElement $element, string $attribute, string $default): string
     {
+        // @codeCoverageIgnoreStart
         if ($default === '') {
             throw new Exception(sprintf('Default value for "%s" must not be empty', $attribute));
         }
+        // @codeCoverageIgnoreEnd
 
         if (!$element->hasAttribute($attribute)) {
             return $default;
@@ -1189,7 +1234,7 @@ final readonly class Loader
 
         return new PHPUnit(
             $cacheDirectory,
-            $this->parseBooleanAttribute($documentElement, 'cacheResult', true),
+            $this->parseRecordTestRunHistoryAttribute($documentElement),
             $this->parseColumns($document),
             $this->parseColors($document),
             $this->parseBooleanAttribute($documentElement, 'stderr', false),
@@ -1210,16 +1255,31 @@ final readonly class Loader
             $this->parseBooleanAttribute($documentElement, 'processIsolation', false),
             $this->parseBooleanAttribute($documentElement, 'failOnAllIssues', false),
             $this->parseBooleanAttribute($documentElement, 'failOnDeprecation', false),
+            $documentElement->hasAttribute('failOnDeprecation'),
+            $this->parseBooleanAttribute($documentElement, 'failOnSelfDeprecation', false),
+            $documentElement->hasAttribute('failOnSelfDeprecation'),
+            $this->parseBooleanAttribute($documentElement, 'failOnDirectDeprecation', false),
+            $documentElement->hasAttribute('failOnDirectDeprecation'),
+            $this->parseBooleanAttribute($documentElement, 'failOnIndirectDeprecation', false),
+            $documentElement->hasAttribute('failOnIndirectDeprecation'),
             $this->parseBooleanAttribute($documentElement, 'failOnPhpunitDeprecation', false),
+            $documentElement->hasAttribute('failOnPhpunitDeprecation'),
             $this->parseBooleanAttribute($documentElement, 'failOnPhpunitNotice', false),
+            $documentElement->hasAttribute('failOnPhpunitNotice'),
             $this->parseBooleanAttribute($documentElement, 'failOnPhpunitWarning', true),
+            $documentElement->hasAttribute('failOnPhpunitWarning'),
             $this->parseBooleanAttribute($documentElement, 'failOnEmptyTestSuite', false),
             $documentElement->hasAttribute('failOnEmptyTestSuite'),
             $this->parseBooleanAttribute($documentElement, 'failOnIncomplete', false),
+            $documentElement->hasAttribute('failOnIncomplete'),
             $this->parseBooleanAttribute($documentElement, 'failOnNotice', false),
+            $documentElement->hasAttribute('failOnNotice'),
             $this->parseBooleanAttribute($documentElement, 'failOnRisky', false),
+            $documentElement->hasAttribute('failOnRisky'),
             $this->parseBooleanAttribute($documentElement, 'failOnSkipped', false),
+            $documentElement->hasAttribute('failOnSkipped'),
             $this->parseBooleanAttribute($documentElement, 'failOnWarning', false),
+            $documentElement->hasAttribute('failOnWarning'),
             (int) $this->parseBooleanAttribute($documentElement, 'stopOnDefect', false),
             (int) $this->parseBooleanAttribute($documentElement, 'stopOnDeprecation', false),
             (int) $this->parseBooleanAttribute($documentElement, 'stopOnError', false),
@@ -1252,6 +1312,7 @@ final readonly class Loader
             $this->parsePositiveIntegerAttribute($documentElement, 'numberOfTestsBeforeGarbageCollection', 100),
             $shortenArraysForExportThreshold,
             $this->parsePositiveIntegerAttribute($documentElement, 'diffContext', 3),
+            $this->parseBooleanAttribute($documentElement, 'warnWhenPhpIsNotConfiguredForDevelopment', false),
         );
     }
 
@@ -1532,12 +1593,16 @@ final readonly class Loader
         foreach ($schemaFinder->available() as $version) {
             try {
                 $xsdFilename = $schemaFinder->find($version);
+                // @codeCoverageIgnoreStart
             } catch (CannotFindSchemaException) {
                 continue;
             }
+            // @codeCoverageIgnoreEnd
 
             if (!$validator->validate($document, $xsdFilename)->hasValidationErrors()) {
+                // @codeCoverageIgnoreStart
                 return;
+                // @codeCoverageIgnoreEnd
             }
         }
 

@@ -45,6 +45,14 @@ final readonly class TestSuiteBuilder
      */
     public function build(Configuration $configuration): TestSuite
     {
+        $numberOfRuns = $configuration->repeat();
+        $maxAttempts  = $configuration->retry();
+
+        if ($numberOfRuns > 1) {
+            // the --repeat CLI option takes precedence over the --retry CLI option
+            $maxAttempts = 1;
+        }
+
         if ($configuration->hasCliArguments() || $configuration->hasTestFilesFile()) {
             $arguments = [];
 
@@ -95,11 +103,15 @@ final readonly class TestSuiteBuilder
                 $testSuite = $this->testSuiteFromPath(
                     $arguments[0],
                     $configuration->testSuffixes(),
+                    $numberOfRuns,
+                    $maxAttempts,
                 );
             } else {
                 $testSuite = $this->testSuiteFromPathList(
                     $arguments,
                     $configuration->testSuffixes(),
+                    $numberOfRuns,
+                    $maxAttempts,
                 );
             }
         }
@@ -114,6 +126,8 @@ final readonly class TestSuiteBuilder
                 $configuration->testSuite(),
                 $configuration->ignoreTestSelectionInXmlConfiguration() ? [] : $configuration->includeTestSuites(),
                 $configuration->ignoreTestSelectionInXmlConfiguration() ? [] : $configuration->excludeTestSuites(),
+                $numberOfRuns,
+                $maxAttempts,
             );
         }
 
@@ -125,17 +139,19 @@ final readonly class TestSuiteBuilder
     /**
      * @param non-empty-string       $path
      * @param list<non-empty-string> $suffixes
+     * @param positive-int           $numberOfRuns
+     * @param positive-int           $maxAttempts
      *
      * @throws \PHPUnit\Framework\Exception
      */
-    private function testSuiteFromPath(string $path, array $suffixes, ?TestSuite $suite = null): TestSuite
+    private function testSuiteFromPath(string $path, array $suffixes, int $numberOfRuns, int $maxAttempts, ?TestSuite $suite = null): TestSuite
     {
         if (str_ends_with($path, '.phpt') && is_file($path)) {
             if ($suite === null) {
                 $suite = TestSuite::empty($path);
             }
 
-            $suite->addTestFile($path);
+            $suite->addTestFile($path, [], $numberOfRuns, $maxAttempts);
 
             return $suite;
         }
@@ -147,7 +163,7 @@ final readonly class TestSuiteBuilder
                 $suite = TestSuite::empty('CLI Arguments');
             }
 
-            $suite->addTestFiles($files);
+            $suite->addTestFiles($files, $numberOfRuns, $maxAttempts);
 
             return $suite;
         }
@@ -161,10 +177,10 @@ final readonly class TestSuiteBuilder
         }
 
         if ($suite === null) {
-            return TestSuite::fromClassReflector($testClass);
+            return TestSuite::fromClassReflector($testClass, [], $numberOfRuns, $maxAttempts);
         }
 
-        $suite->addTestSuite($testClass);
+        $suite->addTestSuite($testClass, [], $numberOfRuns, $maxAttempts);
 
         return $suite;
     }
@@ -172,15 +188,17 @@ final readonly class TestSuiteBuilder
     /**
      * @param list<non-empty-string> $paths
      * @param list<non-empty-string> $suffixes
+     * @param positive-int           $numberOfRuns
+     * @param positive-int           $maxAttempts
      *
      * @throws \PHPUnit\Framework\Exception
      */
-    private function testSuiteFromPathList(array $paths, array $suffixes): TestSuite
+    private function testSuiteFromPathList(array $paths, array $suffixes, int $numberOfRuns, int $maxAttempts): TestSuite
     {
         $suite = TestSuite::empty('CLI Arguments');
 
         foreach ($paths as $path) {
-            $this->testSuiteFromPath($path, $suffixes, $suite);
+            $this->testSuiteFromPath($path, $suffixes, $numberOfRuns, $maxAttempts, $suite);
         }
 
         return $suite;

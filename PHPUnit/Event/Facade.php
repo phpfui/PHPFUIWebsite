@@ -120,6 +120,22 @@ final class Facade
         }
     }
 
+    /**
+     * @throws EventsAreAlreadyBeingCollectedException
+     */
+    public function startCollectingEvents(): void
+    {
+        $this->deferredDispatcher()->startCollectingEvents();
+    }
+
+    /**
+     * @throws EventsAreNotBeingCollectedException
+     */
+    public function stopCollectingEvents(): EventCollection
+    {
+        return $this->deferredDispatcher()->stopCollectingEvents();
+    }
+
     public function seal(): void
     {
         $this->deferredDispatcher()->flush();
@@ -200,6 +216,8 @@ final class Facade
             Test\ComparatorRegistered::class,
             Test\CustomTestMethodInvocationUsed::class,
             Test\ConsideredRisky::class,
+            Test\AttemptErrored::class,
+            Test\AttemptFailed::class,
             Test\DeprecationTriggered::class,
             Test\Errored::class,
             Test\ErrorTriggered::class,

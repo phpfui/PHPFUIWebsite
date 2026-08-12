@@ -23,6 +23,7 @@ use function unlink;
 use function var_export;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Event\NoPreviousThrowableException;
+use PHPUnit\Event\TestRunner\ChildProcessReason;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ProcessIsolationException;
 use PHPUnit\Framework\TestCase;
@@ -88,14 +89,22 @@ final class SeparateProcessTestRunner
 
         $coverage = CodeCoverage::instance()->isActive() ? 'true' : 'false';
 
+        // the branches below that are excluded from code coverage are only
+        // taken when PHPUnit is used from its PHAR distribution, whereas code
+        // coverage is only collected when PHPUnit is used from a Composer
+        // installation
         if (defined('PHPUNIT_COMPOSER_INSTALL')) {
             $composerAutoload = var_export(PHPUNIT_COMPOSER_INSTALL, true);
         } else {
+            // @codeCoverageIgnoreStart
             $composerAutoload = '\'\'';
+            // @codeCoverageIgnoreEnd
         }
 
         if (defined('__PHPUNIT_PHAR__')) {
+            // @codeCoverageIgnoreStart
             $phar = var_export(__PHPUNIT_PHAR__, true);
+            // @codeCoverageIgnoreEnd
         } else {
             $phar = '\'\'';
         }
@@ -106,8 +115,8 @@ final class SeparateProcessTestRunner
         $includePath     = var_export(get_include_path(), true);
         // must do these fixes because TestCaseMethod.tpl has unserialize('{data}') in it, and we can't break BC
         // the lines above used to use addcslashes() rather than var_export(), which breaks null byte escape sequences
+        // $dataName is not quoted in the template so that an integer data set name does not become a string
         $data                    = "'." . $data . ".'";
-        $dataName                = "'.(" . $dataName . ").'";
         $dependencyInput         = "'." . $dependencyInput . ".'";
         $includePath             = "'." . $includePath . ".'";
         $offset                  = hrtime();
@@ -138,6 +147,10 @@ final class SeparateProcessTestRunner
             'data'                           => $data,
             'dataName'                       => $dataName,
             'dependencyInput'                => $dependencyInput,
+            'repetition'                     => (string) $test->repetition(),
+            'totalRepetitions'               => (string) $test->totalRepetitions(),
+            'attempt'                        => (string) $test->attempt(),
+            'maxAttempts'                    => (string) $test->maxAttempts(),
             'constants'                      => $constants,
             'globals'                        => $globals,
             'include_path'                   => $includePath,
@@ -160,7 +173,7 @@ final class SeparateProcessTestRunner
 
         assert($code !== '');
 
-        JobRunnerRegistry::runTestJob(new Job($code, requiresXdebug: $requiresXdebug), $processResultFile, $test, $processResultNonce);
+        JobRunnerRegistry::runTestJob(new Job($code, ChildProcessReason::TestRequiringProcessIsolation, requiresXdebug: $requiresXdebug), $processResultFile, $test, $processResultNonce);
 
         @unlink($serializedConfiguration);
     }

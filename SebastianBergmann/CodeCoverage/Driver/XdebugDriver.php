@@ -33,31 +33,8 @@ use SebastianBergmann\CodeCoverage\Filter;
  *
  * @see https://xdebug.org/docs/code_coverage#xdebug_get_code_coverage
  *
- * @phpstan-type XdebugLinesCoverageType array<positive-int, int>
- * @phpstan-type XdebugBranchCoverageType array{
- *     op_start: int,
- *     op_end: int,
- *     line_start: int,
- *     line_end: int,
- *     hit: int,
- *     out: array<int, int>,
- *     out_hit: array<int, int>,
- * }
- * @phpstan-type XdebugPathCoverageType array{
- *     path: array<int, int>,
- *     hit: int,
- * }
- * @phpstan-type XdebugFunctionCoverageType array{
- *     branches: array<int, XdebugBranchCoverageType>,
- *     paths: array<int, XdebugPathCoverageType>,
- * }
- * @phpstan-type XdebugFunctionsCoverageType array<non-empty-string, XdebugFunctionCoverageType>
- * @phpstan-type XdebugPathAndBranchesCoverageType array{
- *     lines: XdebugLinesCoverageType,
- *     functions: XdebugFunctionsCoverageType,
- * }
- * @phpstan-type XdebugCodeCoverageWithoutPathCoverageType array<non-empty-string, XdebugLinesCoverageType>
- * @phpstan-type XdebugCodeCoverageWithPathCoverageType array<non-empty-string, XdebugPathAndBranchesCoverageType>
+ * @phpstan-import-type CodeCoverageWithoutPathCoverageType from RawCodeCoverageData as XdebugCodeCoverageWithoutPathCoverageType
+ * @phpstan-import-type CodeCoverageWithPathCoverageType from RawCodeCoverageData as XdebugCodeCoverageWithPathCoverageType
  */
 final class XdebugDriver extends Driver
 {
@@ -81,10 +58,10 @@ final class XdebugDriver extends Driver
 
     public function start(): void
     {
-        $flags = XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE;
+        $flags = XDEBUG_CC_UNUSED;
 
         if ($this->granularity() === Granularity::LineBranchAndPath) {
-            $flags |= XDEBUG_CC_BRANCH_CHECK;
+            $flags |= XDEBUG_CC_DEAD_CODE | XDEBUG_CC_BRANCH_CHECK;
         }
 
         xdebug_start_code_coverage($flags);
@@ -104,7 +81,11 @@ final class XdebugDriver extends Driver
 
         $this->ensureWithoutPathCoverage($data);
 
-        return RawCodeCoverageData::fromXdebugWithoutPathCoverage($data);
+        // This line executes after xdebug_get_code_coverage() took the snapshot
+        // and can therefore never be attributed to a test
+        // @codeCoverageIgnoreStart
+        return RawCodeCoverageData::fromLineCoverage($data);
+        // @codeCoverageIgnoreEnd
     }
 
     public function name(): string

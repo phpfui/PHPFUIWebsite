@@ -20,13 +20,14 @@ use function max;
 use function shuffle;
 use function usort;
 use PHPUnit\Framework\DataProviderTestSuite;
+use PHPUnit\Framework\IterativeTestSuite;
 use PHPUnit\Framework\Reorderable;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
-use PHPUnit\Runner\ResultCache\NullResultCache;
-use PHPUnit\Runner\ResultCache\ResultCache;
-use PHPUnit\Runner\ResultCache\ResultCacheId;
+use PHPUnit\Runner\TestRunHistory\NullTestRunHistory;
+use PHPUnit\Runner\TestRunHistory\TestRunHistory;
+use PHPUnit\Runner\TestRunHistory\TestRunHistoryId;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
@@ -59,7 +60,7 @@ final class TestSuiteSorter
      */
     private array $defectSortOrder = [];
 
-    public function __construct(private readonly ResultCache $cache = new NullResultCache)
+    public function __construct(private readonly TestRunHistory $testRunHistory = new NullTestRunHistory)
     {
     }
 
@@ -95,6 +96,12 @@ final class TestSuiteSorter
             // @codeCoverageIgnoreEnd
         }
 
+        // the repetitions of a repeated test and the attempts of a retried test
+        // always run in their original order
+        if ($suite instanceof IterativeTestSuite) {
+            return;
+        }
+
         if ($suite instanceof TestSuite) {
             foreach ($suite as $_suite) {
                 $this->reorderTestsInSuite($_suite, $order, $resolveDependencies, $orderDefects);
@@ -110,35 +117,37 @@ final class TestSuiteSorter
 
     private function sort(TestSuite $suite, int $order, bool $resolveDependencies, int $orderDefects): void
     {
-        if ($suite->tests() === []) {
+        $tests = $suite->tests();
+
+        if ($tests === []) {
             return;
         }
 
         if ($order === self::ORDER_REVERSED) {
-            $suite->setTests($this->reverse($suite->tests()));
+            $tests = $this->reverse($tests);
         } elseif ($order === self::ORDER_RANDOMIZED) {
-            $suite->setTests($this->randomize($suite->tests()));
+            $tests = $this->randomize($tests);
         } elseif ($order === self::ORDER_DURATION_ASCENDING) {
-            $suite->setTests($this->sortByDuration($suite->tests()));
+            $tests = $this->sortByDuration($tests);
         } elseif ($order === self::ORDER_DURATION_DESCENDING) {
-            $suite->setTests($this->sortByDurationDescending($suite->tests()));
+            $tests = $this->sortByDurationDescending($tests);
         } elseif ($order === self::ORDER_SIZE_ASCENDING) {
-            $suite->setTests($this->sortBySize($suite->tests()));
+            $tests = $this->sortBySize($tests);
         } elseif ($order === self::ORDER_SIZE_DESCENDING) {
-            $suite->setTests($this->sortBySizeDescending($suite->tests()));
+            $tests = $this->sortBySizeDescending($tests);
         }
 
         if ($orderDefects === self::ORDER_DEFECTS_FIRST) {
-            $suite->setTests($this->sortDefectsFirst($suite->tests()));
+            $tests = $this->sortDefectsFirst($tests);
         }
 
         if ($resolveDependencies && !($suite instanceof DataProviderTestSuite)) {
-            $tests = $suite->tests();
-
             /** @noinspection PhpParamsInspection */
             /** @phpstan-ignore argument.type */
-            $suite->setTests($this->resolveDependencies($tests));
+            $tests = $this->resolveDependencies($tests);
         }
+
+        $suite->setTests($tests);
     }
 
     private function addSuiteToDefectSortOrder(TestSuite $suite): void
@@ -151,7 +160,7 @@ final class TestSuiteSorter
             $sortId = $test->sortId();
 
             if (!isset($this->defectSortOrder[$sortId])) {
-                $this->defectSortOrder[$sortId] = $this->cache->status(ResultCacheId::fromReorderable($test))->sortWeight();
+                $this->defectSortOrder[$sortId] = $this->testRunHistory->status(TestRunHistoryId::fromReorderable($test))->sortWeight();
             }
 
             $max = max($max, $this->defectSortOrder[$sortId]);
@@ -298,7 +307,7 @@ final class TestSuiteSorter
         }
 
         if ($test instanceof Reorderable) {
-            return $this->cache->time(ResultCacheId::fromReorderable($test));
+            return $this->testRunHistory->time(TestRunHistoryId::fromReorderable($test));
         }
 
         return 0.0;

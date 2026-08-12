@@ -161,22 +161,8 @@ final class NamePrettifier
 
         $buffer = preg_replace_callback_array(
             [
-                '/(?!^)([A-Z])/' => static function (array $matches): string
-                {
-                    if (!isset($matches[1]) || !is_string($matches[1])) {
-                        return ' ';
-                    }
-
-                    return ' ' . strtolower($matches[1]);
-                },
-                '/(\d+)/' => static function (array $matches): string
-                {
-                    if (!isset($matches[1]) || !is_string($matches[1])) {
-                        return ' ';
-                    }
-
-                    return ' ' . $matches[1];
-                },
+                '/(?!^)([A-Z])/' => self::separateUppercaseLetter(...),
+                '/(\d+)/'        => self::separateNumber(...),
             ],
             $name,
         );
@@ -190,6 +176,10 @@ final class NamePrettifier
 
         if ($test->usesDataProvider()) {
             $key .= '#' . $test->dataName();
+        }
+
+        if ($test->totalRepetitions() > 1) {
+            $key .= '#' . $test->repetition();
         }
 
         if ($colorize) {
@@ -225,6 +215,10 @@ final class NamePrettifier
             $result .= $this->prettifyDataSet($test, $colorize);
         }
 
+        if ($test->totalRepetitions() > 1) {
+            $result .= $this->prettifyRepetition($test, $colorize);
+        }
+
         $this->prettifiedTestCases[$key] = $result;
 
         return $result;
@@ -246,6 +240,21 @@ final class NamePrettifier
                 Sanitizer::sanitizeBidirectionalControlCharacters($test->dataName()),
             ),
         );
+    }
+
+    private function prettifyRepetition(TestCase $test, bool $colorize): string
+    {
+        $buffer = sprintf(
+            ' (repetition %d of %d)',
+            $test->repetition(),
+            $test->totalRepetitions(),
+        );
+
+        if ($colorize) {
+            return Color::dim($buffer);
+        }
+
+        return $buffer;
     }
 
     /**
@@ -465,5 +474,21 @@ final class NamePrettifier
 
             return [$this->prettifyTestMethodName($test->name()), false];
         }
+    }
+
+    /**
+     * @param array{string, string} $matches
+     */
+    private static function separateUppercaseLetter(array $matches): string
+    {
+        return ' ' . strtolower($matches[1]);
+    }
+
+    /**
+     * @param array{string, string} $matches
+     */
+    private static function separateNumber(array $matches): string
+    {
+        return ' ' . $matches[1];
     }
 }

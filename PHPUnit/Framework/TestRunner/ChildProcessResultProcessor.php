@@ -22,10 +22,12 @@ use PHPUnit\Event\Code\ThrowableBuilder;
 use PHPUnit\Event\Emitter;
 use PHPUnit\Event\EventCollection;
 use PHPUnit\Event\Facade;
+use PHPUnit\Event\TestRunner\ChildProcessReason;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestStatus\TestStatus;
 use PHPUnit\Runner\CodeCoverage;
 use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TestRunner\TestResult\PassedTests;
@@ -70,6 +72,8 @@ final readonly class ChildProcessResultProcessor
 
             assert($test instanceof TestCase);
 
+            $test->setStatus(TestStatus::error($exception->getMessage()));
+
             $this->emitter->testErrored(
                 TestMethodBuilder::fromTestCase($test),
                 ThrowableBuilder::from($exception),
@@ -83,13 +87,15 @@ final readonly class ChildProcessResultProcessor
 
             if (strlen($serializedProcessResult) < $nonceLength ||
                 !hash_equals($processResultNonce, substr($serializedProcessResult, 0, $nonceLength))) {
-                $this->emitter->childProcessErrored();
+                $message = 'Test was run in child process and the result file was tampered with or written by an unexpected process';
 
-                $exception = new AssertionFailedError(
-                    'Test was run in child process and the result file was tampered with or written by an unexpected process',
-                );
+                $this->emitter->childProcessErrored(ChildProcessReason::TestRequiringProcessIsolation, $message);
+
+                $exception = new AssertionFailedError($message);
 
                 assert($test instanceof TestCase);
+
+                $test->setStatus(TestStatus::error($exception->getMessage()));
 
                 $this->emitter->testErrored(
                     TestMethodBuilder::fromTestCase($test),
@@ -113,16 +119,22 @@ final readonly class ChildProcessResultProcessor
             !property_exists($childResult, 'events') ||
             !property_exists($childResult, 'passedTests') ||
             !property_exists($childResult, 'testResult') ||
+            !property_exists($childResult, 'status') ||
             !property_exists($childResult, 'numAssertions') ||
             !$childResult->events instanceof EventCollection ||
             !$childResult->passedTests instanceof PassedTests ||
+            !$childResult->status instanceof TestStatus ||
             !is_int($childResult->numAssertions) ||
             $childResult->numAssertions < 0) {
-            $this->emitter->childProcessErrored();
+            $message = 'Test was run in child process and ended unexpectedly';
 
-            $exception = new AssertionFailedError('Test was run in child process and ended unexpectedly');
+            $this->emitter->childProcessErrored(ChildProcessReason::TestRequiringProcessIsolation, $message);
+
+            $exception = new AssertionFailedError($message);
 
             assert($test instanceof TestCase);
+
+            $test->setStatus(TestStatus::error($exception->getMessage()));
 
             $this->emitter->testErrored(
                 TestMethodBuilder::fromTestCase($test),
@@ -143,6 +155,7 @@ final readonly class ChildProcessResultProcessor
         assert($test instanceof TestCase);
 
         $test->setResult($childResult->testResult);
+        $test->setStatus($childResult->status);
         $test->addToAssertionCount($childResult->numAssertions);
 
         if (!$this->codeCoverage->isActive()) {

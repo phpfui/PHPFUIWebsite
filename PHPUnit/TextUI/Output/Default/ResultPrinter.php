@@ -128,6 +128,8 @@ final class ResultPrinter
             $this->printRiskyTests($result);
         }
 
+        $this->printRetriedTests($result);
+
         if ($this->displayPhpunitNotices) {
             $this->printDetailsOnTestsThatTriggeredPhpunitNotices($result);
         }
@@ -412,6 +414,31 @@ final class ResultPrinter
 
         $this->printListHeaderWithNumber($elements['numberOfTestsWithIssues'], 'risky test');
         $this->printList($elements['elements']);
+    }
+
+    private function printRetriedTests(TestResult $result): void
+    {
+        if (!$result->hasRetriedTests()) {
+            return;
+        }
+
+        $elements = [];
+
+        foreach ($result->retriedTests() as $id => $failedAttempts) {
+            $plural = '';
+
+            if ($failedAttempts !== 1) {
+                $plural = 's';
+            }
+
+            $elements[] = [
+                'title' => $id,
+                'body'  => sprintf('%d failed attempt%s', $failedAttempts, $plural),
+            ];
+        }
+
+        $this->printListHeaderWithNumber(count($elements), 'retried test');
+        $this->printList($elements);
     }
 
     private function printIncompleteTests(TestResult $result): void
@@ -766,6 +793,7 @@ final class ResultPrinter
             return '';
         }
 
+        // @codeCoverageIgnoreStart
         return sprintf(
             '%s%s:%d%s',
             $single ? '' : '  ',
@@ -773,5 +801,6 @@ final class ResultPrinter
             $reason->line(),
             PHP_EOL,
         );
+        // @codeCoverageIgnoreEnd
     }
 }

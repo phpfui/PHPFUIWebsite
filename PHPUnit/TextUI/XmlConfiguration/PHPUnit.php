@@ -22,7 +22,7 @@ final readonly class PHPUnit
      * @var ?non-empty-string
      */
     private ?string $cacheDirectory;
-    private bool $cacheResult;
+    private bool $recordTestRunHistory;
     private int|string $columns;
 
     /**
@@ -55,16 +55,31 @@ final readonly class PHPUnit
     private bool $processIsolation;
     private bool $failOnAllIssues;
     private bool $failOnDeprecation;
+    private bool $hasFailOnDeprecation;
+    private bool $failOnSelfDeprecation;
+    private bool $hasFailOnSelfDeprecation;
+    private bool $failOnDirectDeprecation;
+    private bool $hasFailOnDirectDeprecation;
+    private bool $failOnIndirectDeprecation;
+    private bool $hasFailOnIndirectDeprecation;
     private bool $failOnPhpunitDeprecation;
+    private bool $hasFailOnPhpunitDeprecation;
     private bool $failOnPhpunitNotice;
+    private bool $hasFailOnPhpunitNotice;
     private bool $failOnPhpunitWarning;
+    private bool $hasFailOnPhpunitWarning;
     private bool $failOnEmptyTestSuite;
     private bool $hasFailOnEmptyTestSuite;
     private bool $failOnIncomplete;
+    private bool $hasFailOnIncomplete;
     private bool $failOnNotice;
+    private bool $hasFailOnNotice;
     private bool $failOnRisky;
+    private bool $hasFailOnRisky;
     private bool $failOnSkipped;
+    private bool $hasFailOnSkipped;
     private bool $failOnWarning;
+    private bool $hasFailOnWarning;
 
     /**
      * @var non-negative-int
@@ -169,6 +184,7 @@ final readonly class PHPUnit
      * @var non-negative-int
      */
     private int $shortenArraysForExportThreshold;
+    private bool $warnWhenPhpIsNotConfiguredForDevelopment;
 
     /**
      * @param ?non-empty-string                         $cacheDirectory
@@ -194,10 +210,10 @@ final readonly class PHPUnit
      * @param non-negative-int                          $shortenArraysForExportThreshold
      * @param positive-int                              $diffContext
      */
-    public function __construct(?string $cacheDirectory, bool $cacheResult, int|string $columns, string $colors, bool $stderr, bool $displayDetailsOnAllIssues, bool $displayDetailsOnIncompleteTests, bool $displayDetailsOnSkippedTests, bool $displayDetailsOnTestsThatTriggerDeprecations, bool $displayDetailsOnPhpunitDeprecations, bool $displayDetailsOnPhpunitNotices, bool $displayDetailsOnTestsThatTriggerErrors, bool $displayDetailsOnTestsThatTriggerNotices, bool $displayDetailsOnTestsThatTriggerWarnings, bool $reverseDefectList, bool $requireCoverageMetadata, bool $requireSealedMockObjects, ?string $bootstrap, array $bootstrapForTestSuite, bool $processIsolation, bool $failOnAllIssues, bool $failOnDeprecation, bool $failOnPhpunitDeprecation, bool $failOnPhpunitNotice, bool $failOnPhpunitWarning, bool $failOnEmptyTestSuite, bool $hasFailOnEmptyTestSuite, bool $failOnIncomplete, bool $failOnNotice, bool $failOnRisky, bool $failOnSkipped, bool $failOnWarning, int $stopOnDefect, int $stopOnDeprecation, int $stopOnError, int $stopOnFailure, int $stopOnIncomplete, int $stopOnNotice, int $stopOnRisky, int $stopOnSkipped, int $stopOnWarning, ?string $extensionsDirectory, bool $beStrictAboutChangesToGlobalState, bool $beStrictAboutOutputDuringTests, bool $beStrictAboutTestsThatDoNotTestAnything, bool $beStrictAboutCoverageMetadata, bool $requireCoverageContribution, bool $enforceTimeLimit, int $defaultTimeLimit, int $timeoutForSmallTests, int $timeoutForMediumTests, int $timeoutForLargeTests, ?string $defaultTestSuite, int $executionOrder, bool $resolveDependencies, bool $defectsFirst, bool $backupGlobals, bool $backupStaticProperties, bool $testdoxPrinter, bool $testdoxPrinterSummary, bool $controlGarbageCollector, int $numberOfTestsBeforeGarbageCollection, int $shortenArraysForExportThreshold, int $diffContext)
+    public function __construct(?string $cacheDirectory, bool $recordTestRunHistory, int|string $columns, string $colors, bool $stderr, bool $displayDetailsOnAllIssues, bool $displayDetailsOnIncompleteTests, bool $displayDetailsOnSkippedTests, bool $displayDetailsOnTestsThatTriggerDeprecations, bool $displayDetailsOnPhpunitDeprecations, bool $displayDetailsOnPhpunitNotices, bool $displayDetailsOnTestsThatTriggerErrors, bool $displayDetailsOnTestsThatTriggerNotices, bool $displayDetailsOnTestsThatTriggerWarnings, bool $reverseDefectList, bool $requireCoverageMetadata, bool $requireSealedMockObjects, ?string $bootstrap, array $bootstrapForTestSuite, bool $processIsolation, bool $failOnAllIssues, bool $failOnDeprecation, bool $hasFailOnDeprecation, bool $failOnSelfDeprecation, bool $hasFailOnSelfDeprecation, bool $failOnDirectDeprecation, bool $hasFailOnDirectDeprecation, bool $failOnIndirectDeprecation, bool $hasFailOnIndirectDeprecation, bool $failOnPhpunitDeprecation, bool $hasFailOnPhpunitDeprecation, bool $failOnPhpunitNotice, bool $hasFailOnPhpunitNotice, bool $failOnPhpunitWarning, bool $hasFailOnPhpunitWarning, bool $failOnEmptyTestSuite, bool $hasFailOnEmptyTestSuite, bool $failOnIncomplete, bool $hasFailOnIncomplete, bool $failOnNotice, bool $hasFailOnNotice, bool $failOnRisky, bool $hasFailOnRisky, bool $failOnSkipped, bool $hasFailOnSkipped, bool $failOnWarning, bool $hasFailOnWarning, int $stopOnDefect, int $stopOnDeprecation, int $stopOnError, int $stopOnFailure, int $stopOnIncomplete, int $stopOnNotice, int $stopOnRisky, int $stopOnSkipped, int $stopOnWarning, ?string $extensionsDirectory, bool $beStrictAboutChangesToGlobalState, bool $beStrictAboutOutputDuringTests, bool $beStrictAboutTestsThatDoNotTestAnything, bool $beStrictAboutCoverageMetadata, bool $requireCoverageContribution, bool $enforceTimeLimit, int $defaultTimeLimit, int $timeoutForSmallTests, int $timeoutForMediumTests, int $timeoutForLargeTests, ?string $defaultTestSuite, int $executionOrder, bool $resolveDependencies, bool $defectsFirst, bool $backupGlobals, bool $backupStaticProperties, bool $testdoxPrinter, bool $testdoxPrinterSummary, bool $controlGarbageCollector, int $numberOfTestsBeforeGarbageCollection, int $shortenArraysForExportThreshold, int $diffContext, bool $warnWhenPhpIsNotConfiguredForDevelopment)
     {
         $this->cacheDirectory                               = $cacheDirectory;
-        $this->cacheResult                                  = $cacheResult;
+        $this->recordTestRunHistory                         = $recordTestRunHistory;
         $this->columns                                      = $columns;
         $this->colors                                       = $colors;
         $this->stderr                                       = $stderr;
@@ -218,16 +234,31 @@ final readonly class PHPUnit
         $this->processIsolation                             = $processIsolation;
         $this->failOnAllIssues                              = $failOnAllIssues;
         $this->failOnDeprecation                            = $failOnDeprecation;
+        $this->hasFailOnDeprecation                         = $hasFailOnDeprecation;
+        $this->failOnSelfDeprecation                        = $failOnSelfDeprecation;
+        $this->hasFailOnSelfDeprecation                     = $hasFailOnSelfDeprecation;
+        $this->failOnDirectDeprecation                      = $failOnDirectDeprecation;
+        $this->hasFailOnDirectDeprecation                   = $hasFailOnDirectDeprecation;
+        $this->failOnIndirectDeprecation                    = $failOnIndirectDeprecation;
+        $this->hasFailOnIndirectDeprecation                 = $hasFailOnIndirectDeprecation;
         $this->failOnPhpunitDeprecation                     = $failOnPhpunitDeprecation;
+        $this->hasFailOnPhpunitDeprecation                  = $hasFailOnPhpunitDeprecation;
         $this->failOnPhpunitNotice                          = $failOnPhpunitNotice;
+        $this->hasFailOnPhpunitNotice                       = $hasFailOnPhpunitNotice;
         $this->failOnPhpunitWarning                         = $failOnPhpunitWarning;
+        $this->hasFailOnPhpunitWarning                      = $hasFailOnPhpunitWarning;
         $this->failOnEmptyTestSuite                         = $failOnEmptyTestSuite;
         $this->hasFailOnEmptyTestSuite                      = $hasFailOnEmptyTestSuite;
         $this->failOnIncomplete                             = $failOnIncomplete;
+        $this->hasFailOnIncomplete                          = $hasFailOnIncomplete;
         $this->failOnNotice                                 = $failOnNotice;
+        $this->hasFailOnNotice                              = $hasFailOnNotice;
         $this->failOnRisky                                  = $failOnRisky;
+        $this->hasFailOnRisky                               = $hasFailOnRisky;
         $this->failOnSkipped                                = $failOnSkipped;
+        $this->hasFailOnSkipped                             = $hasFailOnSkipped;
         $this->failOnWarning                                = $failOnWarning;
+        $this->hasFailOnWarning                             = $hasFailOnWarning;
         $this->stopOnDefect                                 = $stopOnDefect;
         $this->stopOnDeprecation                            = $stopOnDeprecation;
         $this->stopOnError                                  = $stopOnError;
@@ -260,6 +291,7 @@ final readonly class PHPUnit
         $this->numberOfTestsBeforeGarbageCollection         = $numberOfTestsBeforeGarbageCollection;
         $this->shortenArraysForExportThreshold              = $shortenArraysForExportThreshold;
         $this->diffContext                                  = $diffContext;
+        $this->warnWhenPhpIsNotConfiguredForDevelopment     = $warnWhenPhpIsNotConfiguredForDevelopment;
     }
 
     /**
@@ -284,9 +316,9 @@ final readonly class PHPUnit
         return $this->cacheDirectory;
     }
 
-    public function cacheResult(): bool
+    public function recordTestRunHistory(): bool
     {
-        return $this->cacheResult;
+        return $this->recordTestRunHistory;
     }
 
     public function columns(): int|string
@@ -412,9 +444,49 @@ final readonly class PHPUnit
         return $this->failOnDeprecation;
     }
 
+    public function hasFailOnDeprecation(): bool
+    {
+        return $this->hasFailOnDeprecation;
+    }
+
+    public function failOnSelfDeprecation(): bool
+    {
+        return $this->failOnSelfDeprecation;
+    }
+
+    public function hasFailOnSelfDeprecation(): bool
+    {
+        return $this->hasFailOnSelfDeprecation;
+    }
+
+    public function failOnDirectDeprecation(): bool
+    {
+        return $this->failOnDirectDeprecation;
+    }
+
+    public function hasFailOnDirectDeprecation(): bool
+    {
+        return $this->hasFailOnDirectDeprecation;
+    }
+
+    public function failOnIndirectDeprecation(): bool
+    {
+        return $this->failOnIndirectDeprecation;
+    }
+
+    public function hasFailOnIndirectDeprecation(): bool
+    {
+        return $this->hasFailOnIndirectDeprecation;
+    }
+
     public function failOnPhpunitDeprecation(): bool
     {
         return $this->failOnPhpunitDeprecation;
+    }
+
+    public function hasFailOnPhpunitDeprecation(): bool
+    {
+        return $this->hasFailOnPhpunitDeprecation;
     }
 
     public function failOnPhpunitNotice(): bool
@@ -422,9 +494,19 @@ final readonly class PHPUnit
         return $this->failOnPhpunitNotice;
     }
 
+    public function hasFailOnPhpunitNotice(): bool
+    {
+        return $this->hasFailOnPhpunitNotice;
+    }
+
     public function failOnPhpunitWarning(): bool
     {
         return $this->failOnPhpunitWarning;
+    }
+
+    public function hasFailOnPhpunitWarning(): bool
+    {
+        return $this->hasFailOnPhpunitWarning;
     }
 
     public function failOnEmptyTestSuite(): bool
@@ -442,9 +524,19 @@ final readonly class PHPUnit
         return $this->failOnIncomplete;
     }
 
+    public function hasFailOnIncomplete(): bool
+    {
+        return $this->hasFailOnIncomplete;
+    }
+
     public function failOnNotice(): bool
     {
         return $this->failOnNotice;
+    }
+
+    public function hasFailOnNotice(): bool
+    {
+        return $this->hasFailOnNotice;
     }
 
     public function failOnRisky(): bool
@@ -452,14 +544,29 @@ final readonly class PHPUnit
         return $this->failOnRisky;
     }
 
+    public function hasFailOnRisky(): bool
+    {
+        return $this->hasFailOnRisky;
+    }
+
     public function failOnSkipped(): bool
     {
         return $this->failOnSkipped;
     }
 
+    public function hasFailOnSkipped(): bool
+    {
+        return $this->hasFailOnSkipped;
+    }
+
     public function failOnWarning(): bool
     {
         return $this->failOnWarning;
+    }
+
+    public function hasFailOnWarning(): bool
+    {
+        return $this->hasFailOnWarning;
     }
 
     /**
@@ -702,5 +809,10 @@ final readonly class PHPUnit
     public function diffContext(): int
     {
         return $this->diffContext;
+    }
+
+    public function warnWhenPhpIsNotConfiguredForDevelopment(): bool
+    {
+        return $this->warnWhenPhpIsNotConfiguredForDevelopment;
     }
 }

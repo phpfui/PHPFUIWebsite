@@ -72,7 +72,7 @@ final class CodeCoverage
     {
         $this->driver = $driver;
         $this->filter = $filter;
-        $this->data   = new ProcessedCodeCoverageData;
+        $this->data   = new ProcessedCodeCoverageData($driver->collectsHitCounts());
     }
 
     /**
@@ -94,7 +94,7 @@ final class CodeCoverage
     {
         $this->currentId    = null;
         $this->currentSize  = null;
-        $this->data         = new ProcessedCodeCoverageData;
+        $this->data         = new ProcessedCodeCoverageData($this->driver->collectsHitCounts());
         $this->tests        = [];
         $this->cachedReport = null;
     }
@@ -151,6 +151,21 @@ final class CodeCoverage
     public function setTests(array $tests): void
     {
         $this->tests = $tests;
+    }
+
+    /**
+     * Returns the files that could not be parsed for static analysis,
+     * mapped to the parser's error message.
+     *
+     * Code coverage for these files is based on the raw data reported by the
+     * driver: no refinement of executable lines, no dead code detection, and
+     * no information about code units.
+     *
+     * @return array<non-empty-string, non-empty-string>
+     */
+    public function parseErrors(): array
+    {
+        return $this->analyser()->parseErrors();
     }
 
     /**
