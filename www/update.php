@@ -2,30 +2,32 @@
 
 include '../common.php';
 
+echo "\App\Tools\SessionManager::purgeOld();<br>\n";
 \App\Tools\SessionManager::purgeOld();
 
+echo "repo = new \Gitonomy\Git\Repository(PROJECT_ROOT, ['logger' => errorLogger]);<br>\n";
 $repo = new \Gitonomy\Git\Repository(PROJECT_ROOT, ['logger' => $errorLogger]);
-echo "repo = new \Gitonomy\Git\Repository(PROJECT_ROOT, ['logger' => $errorLogger]);\n<br>";
+echo "wc = repo->getWorkingCopy();<br>\n";
 $wc = $repo->getWorkingCopy();
-echo "wc = repo->getWorkingCopy();\n<br>";
+echo "wc->checkout('master');<br>\n";
 $wc->checkout('master');
-echo "wc->checkout('master');\n<br>";
+echo "repo->run('pull');<br>\n";
 $repo->run('pull');
-echo "repo->run('pull');\n<br>";
+echo "@\unlink('../FileManager.serial');<br>\n";
 @\unlink('../FileManager.serial');
-echo "@\unlink('../FileManager.serial');\n<br>";
+echo "@\unlink('../ChildClasses.serial');<br>\n";
 @\unlink('../ChildClasses.serial');
-echo "@\unlink('../ChildClasses.serial');\n<br>";
+echo "\header('location: /');<br>\n";
 \header('location: /');
-echo "\header('location: /');\n<br>";
-:LINE 1 * 1 1 [HTML] 0
-echo "config = new \Example\Setting\Slack();\n<br>";
+echo "config = new \Example\Setting\Slack();<br>\n";
+$config = new \Example\Setting\Slack();
+echo "logFile = config->optional('logFile');<br>\n";
 $logFile = $config->optional('logFile');
-echo "logFile = config->optional('logFile');\n<br>";
+echo "if (logFile)<br>\n";
 if ($logFile)
-echo "if (logFile)\n<br>";
 	{
-echo "	@\unlink($logFile);\n<br>";
+echo "	@\unlink(logFile);<br>\n";
 	@\unlink($logFile);
 	}
-echo "done";
+echo "done<br>\n";
+
