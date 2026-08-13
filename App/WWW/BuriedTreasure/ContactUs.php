@@ -10,6 +10,7 @@ class ContactUs extends \App\View\BuriedTreasure\WWWBase implements \PHPFUI\Inte
 		$this->page->addHeader($title);
 		$form = new \PHPFUI\Form($this->page);
 		$submit = new \PHPFUI\Submit($title);
+		$settings = new \App\Settings\Admin();
 
 		if ($form->isMyCallback($submit))
 			{
@@ -46,7 +47,6 @@ class ContactUs extends \App\View\BuriedTreasure\WWWBase implements \PHPFUI\Inte
 
 				return;
 				}
-			$settings = new \App\Settings\Admin();
 
 			if ($settings->slackWebhook)
 				{
@@ -64,6 +64,16 @@ class ContactUs extends \App\View\BuriedTreasure\WWWBase implements \PHPFUI\Inte
 
 			return;
 			}
+
+		if (! $settings->slackWebhook)
+			{
+			$callOut = new \PHPFUI\Callout('alert');
+			$callOut->add('Sorry, we are not accepting submisssions at this time.');
+			$this->page->addPageContent($callOut);
+
+			return;
+			}
+
 		$post = \PHPFUI\Session::getFlash('post');
 		$name = new \PHPFUI\Input\Text('name', 'Your Name', $post['name'] ?? '');
 		$name->setRequired();

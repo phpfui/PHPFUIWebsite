@@ -12,6 +12,7 @@ class Admin extends \App\View\BuriedTreasure\WWWPublicBase implements \PHPFUI\In
 		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Admin/Artists', 'Artists', false)));
 		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Admin/Titles', 'Titles', false)));
 		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Admin/Shows/0', 'Shows', false)));
+		$ul->addItem(new \PHPFUI\ListItem(new \PHPFUI\Link('/BuriedTreasure/Admin/Rank/request', 'Rank', false)));
 		$this->page->addPageContent($ul);
 		}
 	}
