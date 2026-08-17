@@ -168,5 +168,10 @@ function upperCaseFile(string $file)
 		unlink($file);
 		}
 	file_put_contents($file, $contents);
+
+	if (! file_exists('FPDF.php'))
+		{
+		\copy('NoNameSpace/FPDF.php', 'FPDF.php');
+		}
 	}
 
