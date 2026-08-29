@@ -20,7 +20,7 @@ use RuntimeException;
  * @author Espen Hovlandsdal <espen@hovlandsdal.com>
  * @copyright Copyright (c) Espen Hovlandsdal
  * @license http://www.opensource.org/licenses/mit-license MIT License
- * @link https://github.com/rexxars/html-validator
+ * @link https://github.com/phpfui/html-validator
  */
 class Response {
 
@@ -80,7 +80,7 @@ class Response {
         }
 
         try {
-            $body = (string) $response->getBody();
+            $body = $response->getBody();
             json_decode($body, true);
             if (json_last_error()) {
                 throw new ServerException(json_last_error_msg());
@@ -96,7 +96,7 @@ class Response {
     private function parse() {
         $data = json_decode($this->httpResponse->getBody(), true);
 
-        foreach ($data['messages'] as $message) {
+        foreach ($data['messages'] ?? [] as $message) {
             $msg = new Message($message);
             $this->messages[] = $msg;
 

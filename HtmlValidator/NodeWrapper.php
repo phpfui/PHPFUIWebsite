@@ -17,7 +17,7 @@ namespace HtmlValidator;
  * @author Espen Hovlandsdal <espen@hovlandsdal.com>
  * @copyright Copyright (c) Espen Hovlandsdal
  * @license http://www.opensource.org/licenses/mit-license MIT License
- * @link https://github.com/rexxars/html-validator
+ * @link https://github.com/phpfui/html-validator
  */
 class NodeWrapper {
 
