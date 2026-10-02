@@ -13,7 +13,7 @@
 		"phpfui/icalendar": "^1.0",
 		"phpfui/instadoc": "^1.0",
 		"phpfui/mysql-slow-log-parser": "^1.0",
-		"phpfui/orm": "^3.0",
+		"phpfui/orm": "^4.0",
 		"phpfui/phpunit-syntax-coverage": "^1.0",
 		"phpfui/translation": "^1.0",
 		"phpmailer/phpmailer": "^7.0",
@@ -24,7 +24,7 @@
 		"zbateson/mail-mime-parser": "^4.0",
 		"cebe/markdown": "^1.2",
 		"gitonomy/gitlib": "^1.3",
-		"guzzlehttp/guzzle": "^7.5",
+		"guzzlehttp/guzzle": "^8.0",
 		"laminas/laminas-uri": "^2.10",
 		"psr-php7/log": "^1.0"
 		},
