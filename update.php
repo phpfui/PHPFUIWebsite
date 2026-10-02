@@ -169,7 +169,7 @@ function upperCaseFile(string $file)
 		}
 	file_put_contents($file, $contents);
 
-	if (! file_exists('FPDF.php'))
+	if (! file_exists('FPDF.php') || filesize('FPDF.php') < 50000)
 		{
 		\copy('NoNameSpace/FPDF.php', 'FPDF.php');
 		}
